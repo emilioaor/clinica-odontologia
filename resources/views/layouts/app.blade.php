@@ -52,13 +52,13 @@
 
                                 <ul class="dropdown-menu" role="menu">
                                     <li>
-                                        <a href="#">
+                                        <a href="{{ route('product.create') }}">
                                             <i class="glyphicon glyphicon-plus"></i>
                                             Agregar producto
                                         </a>
                                     </li>
                                     <li>
-                                        <a href="#">
+                                        <a href="{{ route('product.index') }}">
                                             <i class="glyphicon glyphicon-list-alt"></i>
                                             Lista de productos
                                         </a>
@@ -95,7 +95,7 @@
                             <li class="dropdown">
                                 <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
                                     <i class="glyphicon glyphicon-user"></i>
-                                    {{ Auth::user()->name }}
+                                    {{ Auth::user()->username }}
                                     <span class="caret"></span>
                                 </a>
 
@@ -126,6 +126,15 @@
                 </div>
             </div>
         </nav>
+
+        @if(Session::has('alert-type') && Session::has('alert-message'))
+            <div class="container">
+                <div class="alert {{ Session::get('alert-type') }} alert-dismissible" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <strong>¡Atención!</strong> {{ Session::get('alert-message') }}
+                </div>
+            </div>
+        @endif
 
         @yield('content')
     </div>

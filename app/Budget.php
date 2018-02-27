@@ -29,6 +29,8 @@ class Budget extends Model
         'tax_value',
         'shaping_label',
         'shaping_value',
+        'subtotal_footer_label',
+        'subtotal_footer_value',
         'total_footer_label',
         'total_footer_value',
         'amount_paid_label',
@@ -37,6 +39,10 @@ class Budget extends Model
         'notes_value',
         'terms_label',
         'terms_value',
+        'table_description_label',
+        'table_quantity_label',
+        'table_price_label',
+        'table_total_label'
 
     ];
 

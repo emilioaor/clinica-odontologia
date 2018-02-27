@@ -72,13 +72,13 @@
 
                                 <ul class="dropdown-menu" role="menu">
                                     <li>
-                                        <a href="#">
+                                        <a href="{{ route('budget.create') }}">
                                             <i class="glyphicon glyphicon-plus"></i>
                                             Generar cotización
                                         </a>
                                     </li>
                                     <li>
-                                        <a href="#">
+                                        <a href="{{ route('budget.index') }}">
                                             <i class="glyphicon glyphicon-list-alt"></i>
                                             Lista de cotizaciones
                                         </a>

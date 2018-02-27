@@ -1,0 +1,96 @@
+.register-budget {
+  &__header {
+
+  }
+
+  &__dates {
+    article {
+      &:first-child {
+        padding-right: 0;
+      }
+
+      &:last-child {
+        padding-left: 0;
+      }
+    }
+
+    .total {
+      background-color: #f4f4f4;
+      padding: .6rem 0 .3rem;
+      input {
+        font-weight: bold;
+        border-color: #f4f4f4;
+      }
+      p {
+        font-weight: bold;
+        margin-top: .7rem;
+      }
+      .input-hover {
+        &:hover, &:focus {
+          border: 1px #ccc solid!important;
+        }
+      }
+    }
+  }
+
+  &__table {
+    margin-top: 3rem;
+    .input-hover {
+      text-align: left!important;
+      height: 3rem;
+    }
+
+    th, td {
+      border: none!important;
+    }
+
+    thead {
+      background-color: #222;
+      .input-hover {
+        color: #ffffff;
+        border-color: #222;
+        &:focus, &:hover {
+          border-color: #ffffff;
+        }
+      }
+    }
+    tbody {
+      td {
+        padding: .3rem .5rem !important;
+      }
+      a {
+        display: block;
+        text-align: center;
+        margin-top: .6rem;
+        cursor: pointer;
+      }
+    }
+  }
+
+  input {
+    transition: none;
+    &[name="title"] {
+      font-size: 2.75em;
+      height: 5rem;
+    }
+
+    &[name="public_id"] {
+      text-align: right;
+    }
+
+    &[name="client_label"] {
+      text-align: left;
+    }
+
+  }
+  .input-hover {
+    background-color: transparent;
+    border: 1px #FFFFFF solid;
+    outline: none;
+    box-shadow: none;
+    text-align: right;
+    &:hover, &:focus {
+      border: 1px #eeeeee solid;
+    }
+  }
+}

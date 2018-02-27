@@ -8350,3 +8350,102 @@ button.close {
   }
 }
 
+.register-budget__dates article:first-child {
+  padding-right: 0;
+}
+
+.register-budget__dates article:last-child {
+  padding-left: 0;
+}
+
+.register-budget__dates .total {
+  background-color: #f4f4f4;
+  padding: .6rem 0 .3rem;
+}
+
+.register-budget__dates .total input {
+  font-weight: bold;
+  border-color: #f4f4f4;
+}
+
+.register-budget__dates .total p {
+  font-weight: bold;
+  margin-top: .7rem;
+}
+
+.register-budget__dates .total .input-hover:hover,
+.register-budget__dates .total .input-hover:focus {
+  border: 1px #ccc solid !important;
+}
+
+.register-budget__table {
+  margin-top: 3rem;
+}
+
+.register-budget__table .input-hover {
+  text-align: left !important;
+  height: 3rem;
+}
+
+.register-budget__table th,
+.register-budget__table td {
+  border: none !important;
+}
+
+.register-budget__table thead {
+  background-color: #222;
+}
+
+.register-budget__table thead .input-hover {
+  color: #ffffff;
+  border-color: #222;
+}
+
+.register-budget__table thead .input-hover:focus,
+.register-budget__table thead .input-hover:hover {
+  border-color: #ffffff;
+}
+
+.register-budget__table tbody td {
+  padding: .3rem .5rem !important;
+}
+
+.register-budget__table tbody a {
+  display: block;
+  text-align: center;
+  margin-top: .6rem;
+  cursor: pointer;
+}
+
+.register-budget input {
+  -webkit-transition: none;
+  transition: none;
+}
+
+.register-budget input[name="title"] {
+  font-size: 2.75em;
+  height: 5rem;
+}
+
+.register-budget input[name="public_id"] {
+  text-align: right;
+}
+
+.register-budget input[name="client_label"] {
+  text-align: left;
+}
+
+.register-budget .input-hover {
+  background-color: transparent;
+  border: 1px #FFFFFF solid;
+  outline: none;
+  -webkit-box-shadow: none;
+          box-shadow: none;
+  text-align: right;
+}
+
+.register-budget .input-hover:hover,
+.register-budget .input-hover:focus {
+  border: 1px #eeeeee solid;
+}
+

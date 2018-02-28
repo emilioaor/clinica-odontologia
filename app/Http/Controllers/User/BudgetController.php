@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use PDF;
 
 class BudgetController extends Controller
 {
@@ -47,8 +48,6 @@ class BudgetController extends Controller
         DB::beginTransaction();
 
         $budget = new Budget($request->all());
-        $budget->subtotal_footer_value = 1000; // TODO quitar ?
-        $budget->total_footer_value = 1000; // TODO quitar ?
         $budget->save();
 
         foreach ($request->details as $detail) {
@@ -65,7 +64,7 @@ class BudgetController extends Controller
 
         DB::commit();
 
-        return new JsonResponse(['success' => true, 'redirect' => route('budget.index')]);
+        return new JsonResponse(['success' => true, 'redirect' => route('budget.edit', ['budget' => $budget->id])]);
 
     }
 
@@ -88,7 +87,16 @@ class BudgetController extends Controller
      */
     public function edit($id)
     {
-        //
+        $budget = Budget::where('id', $id)->with('budgetDetails')->first();
+
+        if (! $budget) {
+            abort(404);
+        }
+
+        $budget->details = $budget->budgetDetails;
+        $products = Product::all();
+
+        return view('user.budget.edit', compact('budget', 'products'));
     }
 
     /**
@@ -112,5 +120,45 @@ class BudgetController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    /**
+     * Carga el logo de la cotizacion
+     *
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function uploadLogo(Request $request)
+    {
+        $base64 = explode(',', $request->logo);
+
+        $logo = base64_decode($base64[1]);
+        $extension = str_replace('image/png', '', $base64[0]) !== $base64[0] ? '.png' : '.jpg';
+
+        $filename = time() . $extension;
+        $path = public_path('uploads') . '/' . $filename;
+
+        file_put_contents($path, $logo);
+
+        return new JsonResponse(['success' => true, 'filename' => $filename]);
+    }
+
+    /**
+     * Genera un pdf de una cotizacion
+     *
+     * @param $id
+     * @return mixed
+     */
+    public function generatePdf($id)
+    {
+        $budget = Budget::find($id);
+
+        if (! $budget) {
+            abort(404);
+        }
+
+        $pdf = PDF::loadView('user.budget.pdf', compact('budget'));
+
+        return $pdf->stream();
     }
 }

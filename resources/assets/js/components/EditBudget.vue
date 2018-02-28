@@ -646,10 +646,14 @@
                                     <p class="error" v-if="errors.any()">
                                         Disculpe, hay algunos errores en la cotización
                                     </p>
-                                    <button class="btn btn-primary btn-lg" @click="validateForm()" v-if="! loading">
-                                        <i class="glyphicon glyphicon-save"></i>
-                                        Generar cotización
+                                    <button class="btn btn-warning btn-lg" @click="validateForm()" v-if="! loading && false">
+                                        <i class="glyphicon glyphicon-share"></i>
+                                        Actualizar cotización
                                     </button>
+                                    <a v-bind:href="'/user/budget/' + form.id + '/generatePdf'" target="_blank" class="btn btn-info btn-lg" v-if="! loading">
+                                        <i class="glyphicon glyphicon-share"></i>
+                                        Generar PDF
+                                    </a>
                                     <img src="/img/loading.gif" v-if="loading">
                                 </div>
                             </div>
@@ -678,7 +682,7 @@
     import Datepicker from 'vuejs-datepicker';
 
     export default {
-        props: ['products'],
+        props: ['products', 'formData'],
         components: {
             Datepicker
         },
@@ -692,48 +696,7 @@
                 showDiscount: false,
                 showShipping: false,
                 logo: '',
-                form: {
-                    public_id: '',
-                    business_name: '',
-                    business_logo: '',
-                    title: 'COTIZACIÓN',
-                    client_label: 'Para:',
-                    client_value: '',
-                    creation_date_label: 'Fecha de emisión',
-                    creation_date_value: null,
-                    expiration_date_label: 'Fecha de expiración',
-                    expiration_date_value: null,
-                    total_head_label: 'Total:',
-                    total_head_value: null,
-                    discount_label: 'Descuento',
-                    discount_type: 1,
-                    discount_value: null,
-                    tax_label: 'Iva',
-                    tax_type: 1,
-                    tax_value: null,
-                    shaping_label: 'Envio',
-                    shaping_value: null,
-                    subtotal_footer_label: 'Subtotal',
-                    subtotal_footer_value: '',
-                    total_footer_label: 'Total',
-                    total_footer_value: '',
-                    amount_paid_label: 'Monto pagado:',
-                    amount_paid_value: null,
-                    notes_label: 'Notas:',
-                    notes_value: '',
-                    terms_label: 'Terminos y condiciones:',
-                    term_value: '',
-                    table_description_label: 'Item',
-                    table_quantity_label: 'Cant.',
-                    table_price_label: 'Precio',
-                    table_total_label: 'Total',
-                    currency_symbol: '',
-                    details: [{
-                        price: 0,
-                        quantity: 1,
-                        product_id: null
-                    }]
-                }
+                form: JSON.parse(this.formData)
             }
         },
 
@@ -752,7 +715,6 @@
                 this.form.subtotal_footer_value = this.getSubTotal();
                 this.form.total_footer_value = this.getTotal();
                 this.form.total_head_value = this.getFinalTotal();
-                this.form.currency_symbol = this.currencySymbol;
 
                 axios.post('/user/budget', this.form)
                     .then((res) => {

@@ -21,6 +21,7 @@ Vue.use(VeeValidate);
 Vue.component('register-product', require('./components/RegisterProduct.vue'));
 Vue.component('edit-product', require('./components/EditProduct.vue'));
 Vue.component('register-budget', require('./components/RegisterBudget.vue'));
+Vue.component('edit-budget', require('./components/EditBudget.vue'));
 
 const app = new Vue({
     el: '#app'

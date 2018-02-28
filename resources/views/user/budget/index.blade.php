@@ -28,7 +28,11 @@
                                 @if(count($budgets))
                                     @foreach($budgets as $budget)
                                         <tr>
-                                            <td>{{ $budget->public_id }}</td>
+                                            <td>
+                                                <a href="{{ route('budget.edit', ['budget' => $budget->id]) }}">
+                                                    {{ $budget->public_id }}
+                                                </a>
+                                            </td>
                                             <td>{{ $budget->client_value }}</td>
                                             <td>{{ $budget->created_at->format('d-m-Y') }}</td>
                                             <td>{{ $budget->total_head_value }}</td>

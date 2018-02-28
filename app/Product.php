@@ -53,4 +53,14 @@ class Product extends Model
     {
         return true;
     }
+
+    /**
+     * Todos los detalles que apuntan a este producto
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function budgetDetails()
+    {
+        return $this->hasMany(BudgetDetail::class, 'product_id');
+    }
 }

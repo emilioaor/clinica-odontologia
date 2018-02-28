@@ -42,7 +42,8 @@ class Budget extends Model
         'table_description_label',
         'table_quantity_label',
         'table_price_label',
-        'table_total_label'
+        'table_total_label',
+        'currency_symbol'
 
     ];
 

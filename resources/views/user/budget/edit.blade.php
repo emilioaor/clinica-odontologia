@@ -1,7 +1,8 @@
 @extends('layouts.app')
 
 @section('content')
-    <edit-product
-        view-data = "{{ json_encode($product) }}"
-    ></edit-product>
+    <edit-budget
+        products = "{{ json_encode($products) }}"
+        form-data = "{{ json_encode($budget) }}"
+    ></edit-budget>
 @endsection

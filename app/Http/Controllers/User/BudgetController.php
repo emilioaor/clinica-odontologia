@@ -87,7 +87,7 @@ class BudgetController extends Controller
      */
     public function edit($id)
     {
-        $budget = Budget::where('id', $id)->with('budgetDetails')->first();
+        $budget = Budget::where('public_id', $id)->with('budgetDetails')->first();
 
         if (! $budget) {
             abort(404);
@@ -108,7 +108,27 @@ class BudgetController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        DB::beginTransaction();
+
+        $budget = Budget::where('public_id', $id)->with('budgetDetails')->firstOrFail();
+        $budget->update($request->all());
+
+        $budget->budgetDetails()->delete();
+
+        foreach ($request->details as $detail) {
+            $budgetDetail = new BudgetDetail($detail);
+            $budgetDetail->budget_id = $budget->id;
+            $budgetDetail->save();
+        }
+
+        DB::commit();
+
+        $this->sessionMessage('message.budget.update');
+
+        return new JsonResponse([
+            'success' => true,
+            'redirect' => route('budget.edit', ['budget' => $id])
+        ]);
     }
 
     /**
@@ -151,7 +171,7 @@ class BudgetController extends Controller
      */
     public function generatePdf($id)
     {
-        $budget = Budget::find($id);
+        $budget = Budget::where('public_id', $id)->first();
 
         if (! $budget) {
             abort(404);

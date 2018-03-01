@@ -15,7 +15,7 @@ class CreateTableBudgets extends Migration
     {
         Schema::create('budgets', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('public_id');
+            $table->string('public_id', 10)->unique();
             $table->string('business_name');
             $table->string('business_logo')->nullable();
             $table->string('title')->nullable();

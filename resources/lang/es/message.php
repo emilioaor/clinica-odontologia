@@ -6,5 +6,6 @@ return [
     'product.update' => 'Producto actualizado',
 
     'budget.create' => 'Cotización generada',
+    'budget.update' => 'Cotización actualizada',
 
 ];

@@ -127,6 +127,7 @@
                                                     <datepicker
                                                         name = "creation_date_value"
                                                         id = "creation_date_value"
+                                                        v-bind:value="form.creation_date_value"
                                                         language="es"
                                                         input-class = "form-control"
                                                         format = "dd-MM-yyyy"
@@ -152,6 +153,7 @@
                                                     <datepicker
                                                             name = "expiration_date_value"
                                                             id = "expiration_date_value"
+                                                            v-bind:value="form.expiration_date_value"
                                                             language="es"
                                                             input-class = "form-control"
                                                             format = "dd-MM-yyyy"
@@ -646,11 +648,11 @@
                                     <p class="error" v-if="errors.any()">
                                         Disculpe, hay algunos errores en la cotización
                                     </p>
-                                    <button class="btn btn-warning btn-lg" @click="validateForm()" v-if="! loading && false">
-                                        <i class="glyphicon glyphicon-share"></i>
+                                    <button class="btn btn-warning btn-lg" @click="validateForm()" v-if="! loading">
+                                        <i class="glyphicon glyphicon-floppy-save"></i>
                                         Actualizar cotización
                                     </button>
-                                    <a v-bind:href="'/user/budget/' + form.id + '/generatePdf'" target="_blank" class="btn btn-info btn-lg" v-if="! loading">
+                                    <a v-bind:href="'/user/budget/' + form.public_id + '/generatePdf'" target="_blank" class="btn btn-info btn-lg" v-if="! loading">
                                         <i class="glyphicon glyphicon-share"></i>
                                         Generar PDF
                                     </a>
@@ -700,6 +702,18 @@
             }
         },
 
+        mounted: function () {
+
+            this.showTax = (this.form.tax_value !== null && this.form.tax_value !== '');
+            this.showDiscount = (this.form.discount_value !== null && this.form.discount_value !== '');
+            this.showShipping = (this.form.shaping_value !== null && this.form.shaping_value !== '');
+            this.currencySymbol = this.form.currency_symbol;
+
+            if (this.form.business_logo !== null && this.form.business_logo !== '') {
+                this.logo = '/uploads/' + this.form.business_logo;
+            }
+        },
+
         methods: {
             validateForm: function () {
                 this.$validator.validateAll().then((res) => {
@@ -716,7 +730,7 @@
                 this.form.total_footer_value = this.getTotal();
                 this.form.total_head_value = this.getFinalTotal();
 
-                axios.post('/user/budget', this.form)
+                axios.put('/user/budget/' + this.form.public_id, this.form)
                     .then((res) => {
                         if (res.data.success) {
                             location.href = res.data.redirect;

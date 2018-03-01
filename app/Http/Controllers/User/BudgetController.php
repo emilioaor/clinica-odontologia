@@ -76,7 +76,7 @@ class BudgetController extends Controller
      */
     public function show($id)
     {
-        //
+        abort(404);
     }
 
     /**
@@ -139,7 +139,7 @@ class BudgetController extends Controller
      */
     public function destroy($id)
     {
-        //
+        abort(404);
     }
 
     /**

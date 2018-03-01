@@ -8,4 +8,7 @@ return [
     'budget.create' => 'Cotización generada',
     'budget.update' => 'Cotización actualizada',
 
+    'config.changePassword.current' => 'Contraseña actual es incorrecta',
+    'config.changePassword.confirmation' => 'Contraseña no coinciden',
+    'config.changePassword.success' => 'Contraseña actualizada',
 ];

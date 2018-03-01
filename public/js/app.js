@@ -1079,7 +1079,7 @@ module.exports=function(e){function t(a){if(n[a])return n[a].exports;var r=n[a]=
 /***/ (function(module, exports, __webpack_require__) {
 
 __webpack_require__(12);
-module.exports = __webpack_require__(53);
+module.exports = __webpack_require__(56);
 
 
 /***/ }),
@@ -1113,6 +1113,7 @@ Vue.component('register-product', __webpack_require__(41));
 Vue.component('edit-product', __webpack_require__(44));
 Vue.component('register-budget', __webpack_require__(47));
 Vue.component('edit-budget', __webpack_require__(50));
+Vue.component('change-password', __webpack_require__(53));
 
 var app = new Vue({
   el: '#app'
@@ -55865,6 +55866,449 @@ if (false) {
 
 /***/ }),
 /* 53 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+var normalizeComponent = __webpack_require__(1)
+/* script */
+var __vue_script__ = __webpack_require__(54)
+/* template */
+var __vue_template__ = __webpack_require__(55)
+/* template functional */
+  var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = null
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources/assets/js/components/ChangePassword.vue"
+if (Component.esModule && Object.keys(Component.esModule).some(function (key) {  return key !== "default" && key.substr(0, 2) !== "__"})) {  console.error("named exports are not supported in *.vue files.")}
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-60e349c4", Component.options)
+  } else {
+    hotAPI.reload("data-v-60e349c4", Component.options)
+' + '  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 54 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+    data: function data() {
+        return {
+            loading: false,
+            errorList: [],
+            form: {
+                current_password: '',
+                password: '',
+                password_confirmation: ''
+            }
+        };
+    },
+
+    methods: {
+        validateForm: function validateForm() {
+            var _this = this;
+
+            this.errorList = false;
+
+            this.$validator.validateAll().then(function (res) {
+                if (res) {
+                    _this.sendForm();
+                }
+            });
+        },
+
+        sendForm: function sendForm() {
+            var _this2 = this;
+
+            this.loading = true;
+
+            axios.put('config/changePassword', this.form).then(function (res) {
+
+                if (res.data.success) {
+                    location.href = res.data.redirect;
+                } else {
+                    _this2.loading = false;
+
+                    if (res.data.errors) {
+                        _this2.errorList = res.data.errors;
+                    }
+                }
+
+                return res;
+            }).catch(function (err) {
+                _this2.loading = false;
+
+                return err;
+            });
+        }
+    }
+});
+
+/***/ }),
+/* 55 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("section", [
+    _c("div", { staticClass: "row" }, [
+      _c("div", { staticClass: "col-sm-12" }, [
+        _c("div", { staticClass: "panel panel-default" }, [
+          _c("div", { staticClass: "panel-body" }, [
+            _vm.errorList.length
+              ? _c("div", { staticClass: "alert alert-danger" }, [
+                  _c(
+                    "ul",
+                    _vm._l(_vm.errorList, function(error) {
+                      return _c("li", [
+                        _vm._v(
+                          "\n                                " +
+                            _vm._s(error) +
+                            "\n                            "
+                        )
+                      ])
+                    })
+                  )
+                ])
+              : _vm._e(),
+            _vm._v(" "),
+            _c(
+              "form",
+              {
+                on: {
+                  submit: function($event) {
+                    $event.preventDefault()
+                    _vm.validateForm()
+                  }
+                }
+              },
+              [
+                _c("div", { staticClass: "row" }, [
+                  _c("div", { staticClass: "col-sm-4" }, [
+                    _c(
+                      "div",
+                      {
+                        staticClass: "form-group",
+                        class: { has_error: _vm.errors.has("current_password") }
+                      },
+                      [
+                        _c("label", { attrs: { for: "current_password" } }, [
+                          _vm._v("Contraseña actual")
+                        ]),
+                        _vm._v(" "),
+                        _c("input", {
+                          directives: [
+                            {
+                              name: "model",
+                              rawName: "v-model",
+                              value: _vm.form.current_password,
+                              expression: "form.current_password"
+                            },
+                            { name: "validate", rawName: "v-validate" }
+                          ],
+                          staticClass: "form-control",
+                          attrs: {
+                            type: "password",
+                            placeholder: "Contraseña actual",
+                            id: "current_password",
+                            name: "current_password",
+                            "data-vv-rules": "required"
+                          },
+                          domProps: { value: _vm.form.current_password },
+                          on: {
+                            input: function($event) {
+                              if ($event.target.composing) {
+                                return
+                              }
+                              _vm.$set(
+                                _vm.form,
+                                "current_password",
+                                $event.target.value
+                              )
+                            }
+                          }
+                        }),
+                        _vm._v(" "),
+                        _vm.errors.firstByRule("current_password", "required")
+                          ? _c("p", { staticClass: "text-danger" }, [
+                              _vm._v(
+                                "\n                                        Campo requerido\n                                    "
+                              )
+                            ])
+                          : _vm._e()
+                      ]
+                    )
+                  ]),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "col-sm-4" }, [
+                    _c("div", { staticClass: "form-group" }, [
+                      _c("label", { attrs: { for: "current_password" } }, [
+                        _vm._v("Nueva contraseña")
+                      ]),
+                      _vm._v(" "),
+                      _c("input", {
+                        directives: [
+                          {
+                            name: "model",
+                            rawName: "v-model",
+                            value: _vm.form.password,
+                            expression: "form.password"
+                          },
+                          { name: "validate", rawName: "v-validate" }
+                        ],
+                        staticClass: "form-control",
+                        attrs: {
+                          type: "password",
+                          placeholder: "Nueva contraseña",
+                          id: "password",
+                          name: "password",
+                          "data-vv-rules":
+                            "required|confirmed:password_confirmation"
+                        },
+                        domProps: { value: _vm.form.password },
+                        on: {
+                          input: function($event) {
+                            if ($event.target.composing) {
+                              return
+                            }
+                            _vm.$set(_vm.form, "password", $event.target.value)
+                          }
+                        }
+                      }),
+                      _vm._v(" "),
+                      _vm.errors.firstByRule("password", "required")
+                        ? _c("p", { staticClass: "text-danger" }, [
+                            _vm._v(
+                              "\n                                        Campo requerido\n                                    "
+                            )
+                          ])
+                        : _vm._e(),
+                      _vm._v(" "),
+                      _vm.errors.firstByRule("password", "confirmed")
+                        ? _c("p", { staticClass: "text-danger" }, [
+                            _vm._v(
+                              "\n                                        Contraseñas no coinciden\n                                    "
+                            )
+                          ])
+                        : _vm._e()
+                    ])
+                  ]),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "col-sm-4" }, [
+                    _c("div", { staticClass: "form-group" }, [
+                      _c("label", { attrs: { for: "current_password" } }, [
+                        _vm._v("Confirmar contraseña")
+                      ]),
+                      _vm._v(" "),
+                      _c("input", {
+                        directives: [
+                          {
+                            name: "model",
+                            rawName: "v-model",
+                            value: _vm.form.password_confirmation,
+                            expression: "form.password_confirmation"
+                          },
+                          { name: "validate", rawName: "v-validate" }
+                        ],
+                        staticClass: "form-control",
+                        attrs: {
+                          type: "password",
+                          placeholder: "Confirmar contraseña",
+                          id: "password_confirmation",
+                          name: "password_confirmation",
+                          "data-vv-rules": "required"
+                        },
+                        domProps: { value: _vm.form.password_confirmation },
+                        on: {
+                          input: function($event) {
+                            if ($event.target.composing) {
+                              return
+                            }
+                            _vm.$set(
+                              _vm.form,
+                              "password_confirmation",
+                              $event.target.value
+                            )
+                          }
+                        }
+                      }),
+                      _vm._v(" "),
+                      _vm.errors.firstByRule(
+                        "password_confirmation",
+                        "required"
+                      )
+                        ? _c("p", { staticClass: "text-danger" }, [
+                            _vm._v(
+                              "\n                                        Campo requerido\n                                    "
+                            )
+                          ])
+                        : _vm._e()
+                    ])
+                  ])
+                ]),
+                _vm._v(" "),
+                _c("div", { staticClass: "row" }, [
+                  _c("div", { staticClass: "col-xs-12" }, [
+                    _vm.loading
+                      ? _c("img", { attrs: { src: "/img/loading.gif" } })
+                      : _vm._e(),
+                    _vm._v(" "),
+                    !_vm.loading
+                      ? _c("button", { staticClass: "btn btn-success" }, [
+                          _c("i", { staticClass: "glyphicon glyphicon-saved" }),
+                          _vm._v(
+                            "\n                                    Cambiar contraseña\n                                "
+                          )
+                        ])
+                      : _vm._e()
+                  ])
+                ])
+              ]
+            )
+          ])
+        ])
+      ])
+    ])
+  ])
+}
+var staticRenderFns = []
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-60e349c4", module.exports)
+  }
+}
+
+/***/ }),
+/* 56 */
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin

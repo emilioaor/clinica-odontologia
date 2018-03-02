@@ -21,7 +21,7 @@ class Product extends Model
      */
     public function priceFormat()
     {
-        return number_format($this->price, 2, ',', '.');
+        return number_format($this->price, 2);
     }
 
     /**
@@ -31,7 +31,7 @@ class Product extends Model
      */
     public function priceFormatWithSymbol()
     {
-        return $this->getCurrencySymbol() . ' ' . $this->priceFormat();
+        return $this->getCurrencySymbol() . $this->priceFormat() . ' USD';
     }
 
     /**
@@ -41,7 +41,7 @@ class Product extends Model
      */
     public function getCurrencySymbol()
     {
-        return 'VEF';
+        return '$';
     }
 
     /**

@@ -34,8 +34,8 @@
                                                 </a>
                                             </td>
                                             <td>{{ $budget->client_value }}</td>
-                                            <td>{{ $budget->created_at->format('d-m-Y') }}</td>
-                                            <td>{{ $budget->total_head_value }}</td>
+                                            <td>{{ $budget->created_at->format('m/d/Y') }}</td>
+                                            <td>{{ '$' . number_format($budget->total_head_value, 2) . ' USD' }}</td>
                                         </tr>
                                     @endforeach
                                 @else

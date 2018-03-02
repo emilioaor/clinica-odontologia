@@ -23,6 +23,7 @@ Vue.component('edit-product', require('./components/EditProduct.vue'));
 Vue.component('register-budget', require('./components/RegisterBudget.vue'));
 Vue.component('edit-budget', require('./components/EditBudget.vue'));
 Vue.component('change-password', require('./components/ChangePassword.vue'));
+Vue.component('business-config', require('./components/BusinessConfig.vue'));
 
 const app = new Vue({
     el: '#app'

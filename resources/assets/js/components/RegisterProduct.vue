@@ -31,12 +31,11 @@
                                                 v-validate
                                                 data-vv-rules="required"
                                                 v-bind:disabled="loading"
+                                                v-bind:class="{'input-error': errors.has('name')}"
                                                 >
-                                        <span class="help-block" v-if="errors.firstByRule('name', 'required')">
-                                            <strong>
-                                                Este campo es requerido
-                                            </strong>
-                                        </span>
+                                        <p class="error" v-if="errors.firstByRule('name', 'required')">
+                                            Este campo es requerido
+                                        </p>
                                     </div>
                                 </div>
                                 <div class="col-sm-4">
@@ -52,12 +51,11 @@
                                                 v-validate
                                                 data-vv-rules="required"
                                                 v-bind:disabled="loading"
+                                                v-bind:class="{'input-error': errors.has('price')}"
                                                 >
-                                        <span class="help-block" v-if="errors.firstByRule('price', 'required')">
-                                            <strong>
-                                                Este campo es requerido
-                                            </strong>
-                                        </span>
+                                        <p class="error" v-if="errors.firstByRule('price', 'required')">
+                                            Este campo es requerido
+                                        </p>
                                     </div>
                                 </div>
                             </div>

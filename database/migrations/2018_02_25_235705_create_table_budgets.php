@@ -16,8 +16,6 @@ class CreateTableBudgets extends Migration
         Schema::create('budgets', function (Blueprint $table) {
             $table->increments('id');
             $table->string('public_id', 10)->unique();
-            $table->string('business_name');
-            $table->string('business_logo')->nullable();
             $table->string('title')->nullable();
             $table->string('client_label')->nullable();
             $table->string('client_value');
@@ -49,7 +47,6 @@ class CreateTableBudgets extends Migration
             $table->string('table_quantity_label')->nullable();
             $table->string('table_price_label')->nullable();
             $table->string('table_total_label')->nullable();
-            $table->string('currency_symbol', 3);
             $table->timestamps();
         });
     }

@@ -11,4 +11,6 @@ return [
     'config.changePassword.current' => 'Contraseña actual es incorrecta',
     'config.changePassword.confirmation' => 'Contraseña no coinciden',
     'config.changePassword.success' => 'Contraseña actualizada',
+    'config.business.update' => 'Emisor actualizado',
+
 ];

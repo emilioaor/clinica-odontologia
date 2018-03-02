@@ -21,29 +21,13 @@
                                 <!-- Left -->
                                 <div class="col-xs-5">
                                     <div class="form-group">
-                                        <div class="register-budget__logo" onclick="document.querySelector('#logo').click()">
-                                            <h3 v-if="logo === ''">
-                                                <i class="glyphicon glyphicon-plus"></i>
-                                                Logo
-                                            </h3>
+                                        <div class="register-budget__logo" v-if="logo !== null && logo !== ''">
                                             <img v-bind:src="logo">
-                                            <input type="file" id="logo" @change="uploadLogo()">
                                         </div>
                                     </div>
                                     <div class="form-group">
-                                        <input
-                                                type="text"
-                                                class="form-control"
-                                                id="business_name"
-                                                name="business_name"
-                                                placeholder="Emisór de la cotización"
-                                                v-model="form.business_name"
-                                                v-validate
-                                                data-vv-rules="required"
-                                                v-bind:class="{'input-error': errors.has('business_name')}"
-                                                >
-                                        <p class="error" v-if="errors.firstByRule('business_name', 'required')">
-                                            Emisór de la cotización es requerido
+                                        <p>
+                                            {{ business_name }}
                                         </p>
                                     </div>
 
@@ -176,7 +160,7 @@
                                                 </article>
 
                                                 <article class="col-xs-6">
-                                                    <p>{{ currencySymbol + ' ' + getFinalTotal() }}</p>
+                                                    <p>{{ currencySymbol + getFinalTotal() + currencySymbol2 }}</p>
                                                 </article>
                                             </div>
                                         </div>
@@ -274,7 +258,7 @@
                                                     <input
                                                             type="text"
                                                             class="form-control"
-                                                            v-bind:value="currencySymbol + ' ' + detail.price"
+                                                            v-bind:value="currencySymbol + detail.price + currencySymbol2"
                                                             disabled
                                                             >
                                                 </td>
@@ -282,7 +266,7 @@
                                                     <input
                                                             type="text"
                                                             class="form-control"
-                                                            v-bind:value="currencySymbol + ' ' + (detail.price * detail.quantity)"
+                                                            v-bind:value="currencySymbol + (detail.price * detail.quantity) + currencySymbol2"
                                                             disabled
                                                             >
 
@@ -340,7 +324,7 @@
                                                                 class="form-control"
                                                                 id="subtotal_footer_value"
                                                                 name="subtotal_footer_value"
-                                                                v-bind:value="currencySymbol + ' ' + getSubTotal()"
+                                                                v-bind:value="currencySymbol + getSubTotal() + currencySymbol2"
                                                                 disabled
                                                                 >
                                                     </article>
@@ -550,7 +534,7 @@
                                                                 class="form-control"
                                                                 id="total_footer_value"
                                                                 name="total_footer_value"
-                                                                v-bind:value="currencySymbol + ' ' + getTotal()"
+                                                                v-bind:value="currencySymbol + getTotal() + currencySymbol2"
                                                                 disabled
                                                                 >
                                                     </article>
@@ -663,18 +647,6 @@
                     </div>
                 </div>
 
-                <!-- Controls -->
-                <div class="col-md-2">
-                    <div class="panel panel-default">
-                        <div class="panel-body">
-
-                            <div class="form-group">
-                                <h5>Moneda</h5>
-                                <input type="text" class="form-control" v-model="currencySymbol" maxlength="3">
-                            </div>
-                        </div>
-                    </div>
-                </div>
             </div>
         </div>
     </section>
@@ -684,7 +656,7 @@
     import Datepicker from 'vuejs-datepicker';
 
     export default {
-        props: ['products', 'formData'],
+        props: ['products', 'formData', 'userLogo', 'userBusinessName'],
         components: {
             Datepicker
         },
@@ -692,12 +664,14 @@
         data: function () {
             return {
                 loading: false,
-                currencySymbol: 'VEF',
+                currencySymbol: '$',
+                currencySymbol2: ' USD',
+                logo: '/uploads/' + this.userLogo,
+                business_name: this.userBusinessName,
                 productList: JSON.parse(this.products),
                 showTax: false,
                 showDiscount: false,
                 showShipping: false,
-                logo: '',
                 form: JSON.parse(this.formData)
             }
         },
@@ -707,11 +681,6 @@
             this.showTax = (this.form.tax_value !== null && this.form.tax_value !== '');
             this.showDiscount = (this.form.discount_value !== null && this.form.discount_value !== '');
             this.showShipping = (this.form.shaping_value !== null && this.form.shaping_value !== '');
-            this.currencySymbol = this.form.currency_symbol;
-
-            if (this.form.business_logo !== null && this.form.business_logo !== '') {
-                this.logo = '/uploads/' + this.form.business_logo;
-            }
         },
 
         methods: {

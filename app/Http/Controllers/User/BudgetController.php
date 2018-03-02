@@ -64,7 +64,7 @@ class BudgetController extends Controller
 
         DB::commit();
 
-        return new JsonResponse(['success' => true, 'redirect' => route('budget.edit', ['budget' => $budget->id])]);
+        return new JsonResponse(['success' => true, 'redirect' => route('budget.edit', ['budget' => $budget->public_id])]);
 
     }
 
@@ -140,27 +140,6 @@ class BudgetController extends Controller
     public function destroy($id)
     {
         abort(404);
-    }
-
-    /**
-     * Carga el logo de la cotizacion
-     *
-     * @param Request $request
-     * @return JsonResponse
-     */
-    public function uploadLogo(Request $request)
-    {
-        $base64 = explode(',', $request->logo);
-
-        $logo = base64_decode($base64[1]);
-        $extension = str_replace('image/png', '', $base64[0]) !== $base64[0] ? '.png' : '.jpg';
-
-        $filename = time() . $extension;
-        $path = public_path('uploads') . '/' . $filename;
-
-        file_put_contents($path, $logo);
-
-        return new JsonResponse(['success' => true, 'filename' => $filename]);
     }
 
     /**

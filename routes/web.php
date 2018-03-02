@@ -15,10 +15,11 @@ Route::group(['prefix' => 'user', 'middleware' => 'auth'], function() {
 
     // Cotizacion
     Route::resource('budget', 'User\BudgetController');
-    Route::post('budget/uploadLogo', 'User\BudgetController@uploadLogo');
     Route::get('budget/{budget}/generatePdf', 'User\BudgetController@generatePdf');
 
     // Configuracion
     Route::get('config', 'User\ConfigController@config')->name('config');
     Route::put('config/changePassword', 'User\ConfigController@changePassword')->name('config.changePassword');
+    Route::post('config/uploadLogo', 'User\ConfigController@uploadLogo')->name('config.logo');
+    Route::put('config/business', 'User\ConfigController@updateBusiness')->name('config.business');
 });

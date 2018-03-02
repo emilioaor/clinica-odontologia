@@ -27,8 +27,9 @@
                                                 v-model="form.current_password"
                                                 v-validate
                                                 data-vv-rules="required"
+                                                v-bind:class="{'input-error': errors.has('current_password')}"
                                                 >
-                                        <p class="text-danger" v-if="errors.firstByRule('current_password', 'required')">
+                                        <p class="error" v-if="errors.firstByRule('current_password', 'required')">
                                             Campo requerido
                                         </p>
                                     </div>
@@ -46,11 +47,12 @@
                                                 v-model="form.password"
                                                 v-validate
                                                 data-vv-rules="required|confirmed:password_confirmation"
+                                                v-bind:class="{'input-error': errors.has('password')}"
                                                 >
-                                        <p class="text-danger" v-if="errors.firstByRule('password', 'required')">
+                                        <p class="error" v-if="errors.firstByRule('password', 'required')">
                                             Campo requerido
                                         </p>
-                                        <p class="text-danger" v-if="errors.firstByRule('password', 'confirmed')">
+                                        <p class="error" v-if="errors.firstByRule('password', 'confirmed')">
                                             Contraseñas no coinciden
                                         </p>
                                     </div>
@@ -68,8 +70,9 @@
                                                 v-model="form.password_confirmation"
                                                 v-validate
                                                 data-vv-rules="required"
+                                                v-bind:class="{'input-error': errors.has('password_confirmation')}"
                                                 >
-                                        <p class="text-danger" v-if="errors.firstByRule('password_confirmation', 'required')">
+                                        <p class="error" v-if="errors.firstByRule('password_confirmation', 'required')">
                                             Campo requerido
                                         </p>
                                     </div>

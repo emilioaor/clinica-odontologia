@@ -1079,7 +1079,7 @@ module.exports=function(e){function t(a){if(n[a])return n[a].exports;var r=n[a]=
 /***/ (function(module, exports, __webpack_require__) {
 
 __webpack_require__(12);
-module.exports = __webpack_require__(56);
+module.exports = __webpack_require__(59);
 
 
 /***/ }),
@@ -1114,6 +1114,7 @@ Vue.component('edit-product', __webpack_require__(44));
 Vue.component('register-budget', __webpack_require__(47));
 Vue.component('edit-budget', __webpack_require__(50));
 Vue.component('change-password', __webpack_require__(53));
+Vue.component('business-config', __webpack_require__(56));
 
 var app = new Vue({
   el: '#app'
@@ -49746,8 +49747,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
-//
-//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     data: function data() {
@@ -49852,6 +49851,7 @@ var render = function() {
                             { name: "validate", rawName: "v-validate" }
                           ],
                           staticClass: "form-control",
+                          class: { "input-error": _vm.errors.has("name") },
                           attrs: {
                             type: "text",
                             id: "name",
@@ -49873,12 +49873,10 @@ var render = function() {
                         }),
                         _vm._v(" "),
                         _vm.errors.firstByRule("name", "required")
-                          ? _c("span", { staticClass: "help-block" }, [
-                              _c("strong", [
-                                _vm._v(
-                                  "\n                                            Este campo es requerido\n                                        "
-                                )
-                              ])
+                          ? _c("p", { staticClass: "error" }, [
+                              _vm._v(
+                                "\n                                        Este campo es requerido\n                                    "
+                              )
                             ])
                           : _vm._e()
                       ]
@@ -49908,6 +49906,7 @@ var render = function() {
                             { name: "validate", rawName: "v-validate" }
                           ],
                           staticClass: "form-control",
+                          class: { "input-error": _vm.errors.has("price") },
                           attrs: {
                             type: "number",
                             id: "price",
@@ -49928,12 +49927,10 @@ var render = function() {
                         }),
                         _vm._v(" "),
                         _vm.errors.firstByRule("price", "required")
-                          ? _c("span", { staticClass: "help-block" }, [
-                              _c("strong", [
-                                _vm._v(
-                                  "\n                                            Este campo es requerido\n                                        "
-                                )
-                              ])
+                          ? _c("p", { staticClass: "error" }, [
+                              _vm._v(
+                                "\n                                        Este campo es requerido\n                                    "
+                              )
                             ])
                           : _vm._e()
                       ]
@@ -50030,8 +50027,6 @@ module.exports = Component.exports
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-//
-//
 //
 //
 //
@@ -50216,6 +50211,7 @@ var render = function() {
                             { name: "validate", rawName: "v-validate" }
                           ],
                           staticClass: "form-control",
+                          class: { "input-error": _vm.errors.has("name") },
                           attrs: {
                             type: "text",
                             id: "name",
@@ -50237,12 +50233,10 @@ var render = function() {
                         }),
                         _vm._v(" "),
                         _vm.errors.firstByRule("name", "required")
-                          ? _c("span", { staticClass: "help-block" }, [
-                              _c("strong", [
-                                _vm._v(
-                                  "\n                                            Este campo es requerido\n                                        "
-                                )
-                              ])
+                          ? _c("p", { staticClass: "error" }, [
+                              _vm._v(
+                                "\n                                        Este campo es requerido\n                                    "
+                              )
                             ])
                           : _vm._e()
                       ]
@@ -50272,6 +50266,7 @@ var render = function() {
                             { name: "validate", rawName: "v-validate" }
                           ],
                           staticClass: "form-control",
+                          class: { "input-error": _vm.errors.has("price") },
                           attrs: {
                             type: "number",
                             id: "price",
@@ -50292,12 +50287,10 @@ var render = function() {
                         }),
                         _vm._v(" "),
                         _vm.errors.firstByRule("price", "required")
-                          ? _c("span", { staticClass: "help-block" }, [
-                              _c("strong", [
-                                _vm._v(
-                                  "\n                                            Este campo es requerido\n                                        "
-                                )
-                              ])
+                          ? _c("p", { staticClass: "error" }, [
+                              _vm._v(
+                                "\n                                        Este campo es requerido\n                                    "
+                              )
                             ])
                           : _vm._e()
                       ]
@@ -51043,40 +51036,11 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
 
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
-    props: ['products'],
+    props: ['products', 'userLogo', 'userBusinessName'],
     components: {
         Datepicker: __WEBPACK_IMPORTED_MODULE_0_vuejs_datepicker___default.a
     },
@@ -51084,16 +51048,16 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     data: function data() {
         return {
             loading: false,
-            currencySymbol: 'VEF',
+            currencySymbol: '$',
+            currencySymbol2: ' USD',
             productList: JSON.parse(this.products),
             showTax: false,
             showDiscount: false,
             showShipping: false,
-            logo: '',
+            logo: '/uploads/' + this.userLogo,
+            business_name: this.userBusinessName,
             form: {
                 public_id: '',
-                business_name: '',
-                business_logo: '',
                 title: 'COTIZACIÓN',
                 client_label: 'Para:',
                 client_value: '',
@@ -51125,7 +51089,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 table_quantity_label: 'Cant.',
                 table_price_label: 'Precio',
                 table_total_label: 'Total',
-                currency_symbol: '',
                 details: [{
                     price: 0,
                     quantity: 1,
@@ -51153,7 +51116,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             this.form.subtotal_footer_value = this.getSubTotal();
             this.form.total_footer_value = this.getTotal();
             this.form.total_head_value = this.getFinalTotal();
-            this.form.currency_symbol = this.currencySymbol;
 
             axios.post('/user/budget', this.form).then(function (res) {
                 if (res.data.success) {
@@ -51279,37 +51241,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             var year = date.getFullYear();
 
             this.form.expiration_date_value = year + '-' + month + '-' + day;
-        },
-
-        uploadLogo: function uploadLogo() {
-            var _this3 = this;
-
-            var file = $('#logo')[0].files[0];
-            var reader = new FileReader();
-
-            reader.addEventListener('load', function () {
-                _this3.logo = reader.result;
-
-                _this3.upload();
-            });
-
-            reader.readAsDataURL(file);
-        },
-
-        upload: function upload() {
-            var _this4 = this;
-
-            axios.post('/user/budget/uploadLogo', { logo: this.logo }).then(function (res) {
-
-                if (res.data.success) {
-                    _this4.form.business_logo = res.data.filename;
-                } else {
-                    _this4.logo = '';
-                }
-            }).catch(function (err) {
-                alert('Error al cargar imagen, intente nuevamente');
-                _this4.logo = '';
-            });
         }
     }
 });
@@ -51346,82 +51277,21 @@ var render = function() {
               _c("div", { staticClass: "row" }, [
                 _c("div", { staticClass: "col-xs-5" }, [
                   _c("div", { staticClass: "form-group" }, [
-                    _c(
-                      "div",
-                      {
-                        staticClass: "register-budget__logo",
-                        attrs: {
-                          onclick: "document.querySelector('#logo').click()"
-                        }
-                      },
-                      [
-                        _vm.logo === ""
-                          ? _c("h3", [
-                              _c("i", {
-                                staticClass: "glyphicon glyphicon-plus"
-                              }),
-                              _vm._v(
-                                "\n                                            Logo\n                                        "
-                              )
-                            ])
-                          : _vm._e(),
-                        _vm._v(" "),
-                        _c("img", { attrs: { src: _vm.logo } }),
-                        _vm._v(" "),
-                        _c("input", {
-                          attrs: { type: "file", id: "logo" },
-                          on: {
-                            change: function($event) {
-                              _vm.uploadLogo()
-                            }
-                          }
-                        })
-                      ]
-                    )
+                    _vm.logo !== null && _vm.logo !== ""
+                      ? _c("div", { staticClass: "register-budget__logo" }, [
+                          _c("img", { attrs: { src: _vm.logo } })
+                        ])
+                      : _vm._e()
                   ]),
                   _vm._v(" "),
                   _c("div", { staticClass: "form-group" }, [
-                    _c("input", {
-                      directives: [
-                        {
-                          name: "model",
-                          rawName: "v-model",
-                          value: _vm.form.business_name,
-                          expression: "form.business_name"
-                        },
-                        { name: "validate", rawName: "v-validate" }
-                      ],
-                      staticClass: "form-control",
-                      class: { "input-error": _vm.errors.has("business_name") },
-                      attrs: {
-                        type: "text",
-                        id: "business_name",
-                        name: "business_name",
-                        placeholder: "Emisór de la cotización",
-                        "data-vv-rules": "required"
-                      },
-                      domProps: { value: _vm.form.business_name },
-                      on: {
-                        input: function($event) {
-                          if ($event.target.composing) {
-                            return
-                          }
-                          _vm.$set(
-                            _vm.form,
-                            "business_name",
-                            $event.target.value
-                          )
-                        }
-                      }
-                    }),
-                    _vm._v(" "),
-                    _vm.errors.firstByRule("business_name", "required")
-                      ? _c("p", { staticClass: "error" }, [
-                          _vm._v(
-                            "\n                                        Emisór de la cotización es requerido\n                                    "
-                          )
-                        ])
-                      : _vm._e()
+                    _c("p", [
+                      _vm._v(
+                        "\n                                        " +
+                          _vm._s(_vm.business_name) +
+                          "\n                                    "
+                      )
+                    ])
                   ]),
                   _vm._v(" "),
                   _c("div", { staticClass: "form-group" }, [
@@ -51746,7 +51616,9 @@ var render = function() {
                           _c("p", [
                             _vm._v(
                               _vm._s(
-                                _vm.currencySymbol + " " + _vm.getFinalTotal()
+                                _vm.currencySymbol +
+                                  _vm.getFinalTotal() +
+                                  _vm.currencySymbol2
                               )
                             )
                           ])
@@ -52035,7 +51907,10 @@ var render = function() {
                               staticClass: "form-control",
                               attrs: { type: "text", disabled: "" },
                               domProps: {
-                                value: _vm.currencySymbol + " " + detail.price
+                                value:
+                                  _vm.currencySymbol +
+                                  detail.price +
+                                  _vm.currencySymbol2
                               }
                             })
                           ]),
@@ -52047,8 +51922,8 @@ var render = function() {
                               domProps: {
                                 value:
                                   _vm.currencySymbol +
-                                  " " +
-                                  detail.price * detail.quantity
+                                  detail.price * detail.quantity +
+                                  _vm.currencySymbol2
                               }
                             })
                           ]),
@@ -52166,7 +52041,9 @@ var render = function() {
                                 },
                                 domProps: {
                                   value:
-                                    _vm.currencySymbol + " " + _vm.getSubTotal()
+                                    _vm.currencySymbol +
+                                    _vm.getSubTotal() +
+                                    _vm.currencySymbol2
                                 }
                               })
                             ])
@@ -52798,7 +52675,9 @@ var render = function() {
                                 },
                                 domProps: {
                                   value:
-                                    _vm.currencySymbol + " " + _vm.getTotal()
+                                    _vm.currencySymbol +
+                                    _vm.getTotal() +
+                                    _vm.currencySymbol2
                                 }
                               })
                             ])
@@ -53051,38 +52930,6 @@ var render = function() {
                     ? _c("img", { attrs: { src: "/img/loading.gif" } })
                     : _vm._e()
                 ])
-              ])
-            ])
-          ])
-        ]),
-        _vm._v(" "),
-        _c("div", { staticClass: "col-md-2" }, [
-          _c("div", { staticClass: "panel panel-default" }, [
-            _c("div", { staticClass: "panel-body" }, [
-              _c("div", { staticClass: "form-group" }, [
-                _c("h5", [_vm._v("Moneda")]),
-                _vm._v(" "),
-                _c("input", {
-                  directives: [
-                    {
-                      name: "model",
-                      rawName: "v-model",
-                      value: _vm.currencySymbol,
-                      expression: "currencySymbol"
-                    }
-                  ],
-                  staticClass: "form-control",
-                  attrs: { type: "text", maxlength: "3" },
-                  domProps: { value: _vm.currencySymbol },
-                  on: {
-                    input: function($event) {
-                      if ($event.target.composing) {
-                        return
-                      }
-                      _vm.currencySymbol = $event.target.value
-                    }
-                  }
-                })
               ])
             ])
           ])
@@ -53811,39 +53658,11 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
 
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
-    props: ['products', 'formData'],
+    props: ['products', 'formData', 'userLogo', 'userBusinessName'],
     components: {
         Datepicker: __WEBPACK_IMPORTED_MODULE_0_vuejs_datepicker___default.a
     },
@@ -53851,12 +53670,14 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     data: function data() {
         return {
             loading: false,
-            currencySymbol: 'VEF',
+            currencySymbol: '$',
+            currencySymbol2: ' USD',
+            logo: '/uploads/' + this.userLogo,
+            business_name: this.userBusinessName,
             productList: JSON.parse(this.products),
             showTax: false,
             showDiscount: false,
             showShipping: false,
-            logo: '',
             form: JSON.parse(this.formData)
         };
     },
@@ -53866,11 +53687,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         this.showTax = this.form.tax_value !== null && this.form.tax_value !== '';
         this.showDiscount = this.form.discount_value !== null && this.form.discount_value !== '';
         this.showShipping = this.form.shaping_value !== null && this.form.shaping_value !== '';
-        this.currencySymbol = this.form.currency_symbol;
-
-        if (this.form.business_logo !== null && this.form.business_logo !== '') {
-            this.logo = '/uploads/' + this.form.business_logo;
-        }
     },
 
     methods: {
@@ -54083,82 +53899,21 @@ var render = function() {
               _c("div", { staticClass: "row" }, [
                 _c("div", { staticClass: "col-xs-5" }, [
                   _c("div", { staticClass: "form-group" }, [
-                    _c(
-                      "div",
-                      {
-                        staticClass: "register-budget__logo",
-                        attrs: {
-                          onclick: "document.querySelector('#logo').click()"
-                        }
-                      },
-                      [
-                        _vm.logo === ""
-                          ? _c("h3", [
-                              _c("i", {
-                                staticClass: "glyphicon glyphicon-plus"
-                              }),
-                              _vm._v(
-                                "\n                                            Logo\n                                        "
-                              )
-                            ])
-                          : _vm._e(),
-                        _vm._v(" "),
-                        _c("img", { attrs: { src: _vm.logo } }),
-                        _vm._v(" "),
-                        _c("input", {
-                          attrs: { type: "file", id: "logo" },
-                          on: {
-                            change: function($event) {
-                              _vm.uploadLogo()
-                            }
-                          }
-                        })
-                      ]
-                    )
+                    _vm.logo !== null && _vm.logo !== ""
+                      ? _c("div", { staticClass: "register-budget__logo" }, [
+                          _c("img", { attrs: { src: _vm.logo } })
+                        ])
+                      : _vm._e()
                   ]),
                   _vm._v(" "),
                   _c("div", { staticClass: "form-group" }, [
-                    _c("input", {
-                      directives: [
-                        {
-                          name: "model",
-                          rawName: "v-model",
-                          value: _vm.form.business_name,
-                          expression: "form.business_name"
-                        },
-                        { name: "validate", rawName: "v-validate" }
-                      ],
-                      staticClass: "form-control",
-                      class: { "input-error": _vm.errors.has("business_name") },
-                      attrs: {
-                        type: "text",
-                        id: "business_name",
-                        name: "business_name",
-                        placeholder: "Emisór de la cotización",
-                        "data-vv-rules": "required"
-                      },
-                      domProps: { value: _vm.form.business_name },
-                      on: {
-                        input: function($event) {
-                          if ($event.target.composing) {
-                            return
-                          }
-                          _vm.$set(
-                            _vm.form,
-                            "business_name",
-                            $event.target.value
-                          )
-                        }
-                      }
-                    }),
-                    _vm._v(" "),
-                    _vm.errors.firstByRule("business_name", "required")
-                      ? _c("p", { staticClass: "error" }, [
-                          _vm._v(
-                            "\n                                        Emisór de la cotización es requerido\n                                    "
-                          )
-                        ])
-                      : _vm._e()
+                    _c("p", [
+                      _vm._v(
+                        "\n                                        " +
+                          _vm._s(_vm.business_name) +
+                          "\n                                    "
+                      )
+                    ])
                   ]),
                   _vm._v(" "),
                   _c("div", { staticClass: "form-group" }, [
@@ -54485,7 +54240,9 @@ var render = function() {
                           _c("p", [
                             _vm._v(
                               _vm._s(
-                                _vm.currencySymbol + " " + _vm.getFinalTotal()
+                                _vm.currencySymbol +
+                                  _vm.getFinalTotal() +
+                                  _vm.currencySymbol2
                               )
                             )
                           ])
@@ -54774,7 +54531,10 @@ var render = function() {
                               staticClass: "form-control",
                               attrs: { type: "text", disabled: "" },
                               domProps: {
-                                value: _vm.currencySymbol + " " + detail.price
+                                value:
+                                  _vm.currencySymbol +
+                                  detail.price +
+                                  _vm.currencySymbol2
                               }
                             })
                           ]),
@@ -54786,8 +54546,8 @@ var render = function() {
                               domProps: {
                                 value:
                                   _vm.currencySymbol +
-                                  " " +
-                                  detail.price * detail.quantity
+                                  detail.price * detail.quantity +
+                                  _vm.currencySymbol2
                               }
                             })
                           ]),
@@ -54905,7 +54665,9 @@ var render = function() {
                                 },
                                 domProps: {
                                   value:
-                                    _vm.currencySymbol + " " + _vm.getSubTotal()
+                                    _vm.currencySymbol +
+                                    _vm.getSubTotal() +
+                                    _vm.currencySymbol2
                                 }
                               })
                             ])
@@ -55537,7 +55299,9 @@ var render = function() {
                                 },
                                 domProps: {
                                   value:
-                                    _vm.currencySymbol + " " + _vm.getTotal()
+                                    _vm.currencySymbol +
+                                    _vm.getTotal() +
+                                    _vm.currencySymbol2
                                 }
                               })
                             ])
@@ -55817,38 +55581,6 @@ var render = function() {
               ])
             ])
           ])
-        ]),
-        _vm._v(" "),
-        _c("div", { staticClass: "col-md-2" }, [
-          _c("div", { staticClass: "panel panel-default" }, [
-            _c("div", { staticClass: "panel-body" }, [
-              _c("div", { staticClass: "form-group" }, [
-                _c("h5", [_vm._v("Moneda")]),
-                _vm._v(" "),
-                _c("input", {
-                  directives: [
-                    {
-                      name: "model",
-                      rawName: "v-model",
-                      value: _vm.currencySymbol,
-                      expression: "currencySymbol"
-                    }
-                  ],
-                  staticClass: "form-control",
-                  attrs: { type: "text", maxlength: "3" },
-                  domProps: { value: _vm.currencySymbol },
-                  on: {
-                    input: function($event) {
-                      if ($event.target.composing) {
-                        return
-                      }
-                      _vm.currencySymbol = $event.target.value
-                    }
-                  }
-                })
-              ])
-            ])
-          ])
         ])
       ])
     ])
@@ -55918,6 +55650,9 @@ module.exports = Component.exports
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+//
+//
+//
 //
 //
 //
@@ -56133,6 +55868,9 @@ var render = function() {
                             { name: "validate", rawName: "v-validate" }
                           ],
                           staticClass: "form-control",
+                          class: {
+                            "input-error": _vm.errors.has("current_password")
+                          },
                           attrs: {
                             type: "password",
                             placeholder: "Contraseña actual",
@@ -56156,7 +55894,7 @@ var render = function() {
                         }),
                         _vm._v(" "),
                         _vm.errors.firstByRule("current_password", "required")
-                          ? _c("p", { staticClass: "text-danger" }, [
+                          ? _c("p", { staticClass: "error" }, [
                               _vm._v(
                                 "\n                                        Campo requerido\n                                    "
                               )
@@ -56183,6 +55921,7 @@ var render = function() {
                           { name: "validate", rawName: "v-validate" }
                         ],
                         staticClass: "form-control",
+                        class: { "input-error": _vm.errors.has("password") },
                         attrs: {
                           type: "password",
                           placeholder: "Nueva contraseña",
@@ -56203,7 +55942,7 @@ var render = function() {
                       }),
                       _vm._v(" "),
                       _vm.errors.firstByRule("password", "required")
-                        ? _c("p", { staticClass: "text-danger" }, [
+                        ? _c("p", { staticClass: "error" }, [
                             _vm._v(
                               "\n                                        Campo requerido\n                                    "
                             )
@@ -56211,7 +55950,7 @@ var render = function() {
                         : _vm._e(),
                       _vm._v(" "),
                       _vm.errors.firstByRule("password", "confirmed")
-                        ? _c("p", { staticClass: "text-danger" }, [
+                        ? _c("p", { staticClass: "error" }, [
                             _vm._v(
                               "\n                                        Contraseñas no coinciden\n                                    "
                             )
@@ -56237,6 +55976,9 @@ var render = function() {
                           { name: "validate", rawName: "v-validate" }
                         ],
                         staticClass: "form-control",
+                        class: {
+                          "input-error": _vm.errors.has("password_confirmation")
+                        },
                         attrs: {
                           type: "password",
                           placeholder: "Confirmar contraseña",
@@ -56263,7 +56005,7 @@ var render = function() {
                         "password_confirmation",
                         "required"
                       )
-                        ? _c("p", { staticClass: "text-danger" }, [
+                        ? _c("p", { staticClass: "error" }, [
                             _vm._v(
                               "\n                                        Campo requerido\n                                    "
                             )
@@ -56309,6 +56051,339 @@ if (false) {
 
 /***/ }),
 /* 56 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+var normalizeComponent = __webpack_require__(1)
+/* script */
+var __vue_script__ = __webpack_require__(57)
+/* template */
+var __vue_template__ = __webpack_require__(58)
+/* template functional */
+  var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = null
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources/assets/js/components/BusinessConfig.vue"
+if (Component.esModule && Object.keys(Component.esModule).some(function (key) {  return key !== "default" && key.substr(0, 2) !== "__"})) {  console.error("named exports are not supported in *.vue files.")}
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-5d641a0a", Component.options)
+  } else {
+    hotAPI.reload("data-v-5d641a0a", Component.options)
+' + '  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 57 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+    props: ['userLogo', 'userBusinessName'],
+    data: function data() {
+        return {
+            loading: false,
+            form: {
+                logo: '',
+                business_name: this.userBusinessName
+            }
+        };
+    },
+
+    mounted: function mounted() {
+        if (this.userLogo !== null && this.userLogo !== '') {
+            this.form.logo = '/uploads/' + this.userLogo;
+        }
+    },
+
+    methods: {
+        uploadLogo: function uploadLogo() {
+            var _this = this;
+
+            var file = $('#logo')[0].files[0];
+            var reader = new FileReader();
+
+            reader.addEventListener('load', function () {
+                _this.form.logo = reader.result;
+
+                _this.upload();
+            });
+
+            reader.readAsDataURL(file);
+        },
+
+        upload: function upload() {
+            var _this2 = this;
+
+            axios.post('/user/config/uploadLogo', { logo: this.form.logo }).then(function (res) {
+
+                if (!res.data.success) {
+                    _this2.form.logo = '';
+                }
+            }).catch(function (err) {
+                alert('Error al cargar imagen, intente nuevamente');
+                _this2.form.logo = '';
+            });
+        },
+
+        validateForm: function validateForm() {
+            var _this3 = this;
+
+            this.$validator.validateAll().then(function (res) {
+                if (res) {
+                    _this3.sendForm();
+                }
+            });
+        },
+
+        sendForm: function sendForm() {
+            var _this4 = this;
+
+            this.loading = true;
+
+            axios.put('/user/config/business', { 'business_name': this.form.business_name }).then(function (res) {
+
+                if (res.data.success) {
+                    location.href = res.data.redirect;
+                }
+            }).catch(function (err) {
+                _this4.loading = false;
+            });
+        }
+    }
+});
+
+/***/ }),
+/* 58 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("section", [
+    _c("div", { staticClass: "row" }, [
+      _c("div", { staticClass: "col-sm-12" }, [
+        _c("div", { staticClass: "panel panel-default" }, [
+          _c("div", { staticClass: "panel-body" }, [
+            _c("div", { staticClass: "row" }, [
+              _c("div", { staticClass: "col-sm-4" }, [
+                _c("div", { staticClass: "form-group" }, [
+                  _c("label", { attrs: { for: "logo" } }, [_vm._v("Logo")]),
+                  _vm._v(" "),
+                  _c(
+                    "div",
+                    {
+                      staticClass: "register-budget__logo",
+                      attrs: {
+                        onclick: "document.querySelector('#logo').click()"
+                      }
+                    },
+                    [
+                      _vm.form.logo === ""
+                        ? _c("h3", [
+                            _c("i", { staticClass: "glyphicon glyphicon-plus" })
+                          ])
+                        : _vm._e(),
+                      _vm._v(" "),
+                      _c("img", { attrs: { src: _vm.form.logo } }),
+                      _vm._v(" "),
+                      _c("input", {
+                        attrs: { type: "file", id: "logo" },
+                        on: {
+                          change: function($event) {
+                            _vm.uploadLogo()
+                          }
+                        }
+                      })
+                    ]
+                  )
+                ])
+              ]),
+              _vm._v(" "),
+              _c("div", { staticClass: "col-sm-4" }, [
+                _c(
+                  "form",
+                  {
+                    on: {
+                      submit: function($event) {
+                        $event.preventDefault()
+                        _vm.validateForm()
+                      }
+                    }
+                  },
+                  [
+                    _c("div", { staticClass: "form-group" }, [
+                      _c("label", { attrs: { for: "business_name" } }, [
+                        _vm._v("Emisor para las cotizaciones")
+                      ]),
+                      _vm._v(" "),
+                      _c("input", {
+                        directives: [
+                          {
+                            name: "model",
+                            rawName: "v-model",
+                            value: _vm.form.business_name,
+                            expression: "form.business_name"
+                          },
+                          { name: "validate", rawName: "v-validate" }
+                        ],
+                        staticClass: "form-control",
+                        class: {
+                          "input-error": _vm.errors.has("business_name")
+                        },
+                        attrs: {
+                          type: "text",
+                          name: "business_name",
+                          id: "business_name",
+                          "data-vv-rules": "required"
+                        },
+                        domProps: { value: _vm.form.business_name },
+                        on: {
+                          input: function($event) {
+                            if ($event.target.composing) {
+                              return
+                            }
+                            _vm.$set(
+                              _vm.form,
+                              "business_name",
+                              $event.target.value
+                            )
+                          }
+                        }
+                      }),
+                      _vm._v(" "),
+                      _vm.errors.firstByRule("business_name", "required")
+                        ? _c("p", { staticClass: "error" }, [
+                            _vm._v(
+                              "\n                                        Campo requerido\n                                    "
+                            )
+                          ])
+                        : _vm._e()
+                    ]),
+                    _vm._v(" "),
+                    _c("div", { staticClass: "form-group" }, [
+                      _vm.loading
+                        ? _c("img", { attrs: { src: "/img/loading.gif" } })
+                        : _vm._e(),
+                      _vm._v(" "),
+                      !_vm.loading
+                        ? _c("button", { staticClass: "btn btn-warning" }, [
+                            _c("i", {
+                              staticClass: "glyphicon glyphicon-saved"
+                            }),
+                            _vm._v(
+                              "\n                                        Actualizar\n                                    "
+                            )
+                          ])
+                        : _vm._e()
+                    ])
+                  ]
+                )
+              ])
+            ])
+          ])
+        ])
+      ])
+    ])
+  ])
+}
+var staticRenderFns = []
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-5d641a0a", module.exports)
+  }
+}
+
+/***/ }),
+/* 59 */
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin

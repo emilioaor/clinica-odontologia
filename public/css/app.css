@@ -8496,11 +8496,11 @@ button.close {
   border: 1px #eeeeee solid;
 }
 
-.register-budget .input-error {
+.input-error {
   border: #a94442 solid 1px;
 }
 
-.register-budget .error {
+.error {
   color: #a94442;
   font-size: 11px;
 }

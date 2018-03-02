@@ -50912,94 +50912,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
 
 
 
@@ -51015,7 +50927,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             currencySymbol: '$',
             currencySymbol2: ' USD',
             productList: JSON.parse(this.products),
-            showTax: false,
             showDiscount: false,
             showShipping: false,
             logo: '/uploads/' + this.userLogo,
@@ -51033,17 +50944,12 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 discount_label: 'Descuento',
                 discount_type: 1,
                 discount_value: null,
-                tax_label: 'Iva',
-                tax_type: 1,
-                tax_value: null,
                 shaping_label: 'Envio',
                 shaping_value: null,
                 subtotal_footer_label: 'Subtotal',
                 subtotal_footer_value: '',
                 total_footer_label: 'Total',
                 total_footer_value: '',
-                amount_paid_label: 'Monto pagado:',
-                amount_paid_value: null,
                 notes_label: 'Notas:',
                 notes_value: '',
                 terms_label: 'Terminos y condiciones:',
@@ -51155,17 +51061,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 }
             }
 
-            // Iva
-            if (this.form.tax_value !== null && this.form.tax_value !== '') {
-                if (this.form.tax_type == 1) {
-                    // Porcentaje
-                    total += total * (parseFloat(this.form.tax_value) / 100);
-                } else {
-                    // Monto
-                    total += parseFloat(this.form.tax_value);
-                }
-            }
-
             // Envio
             if (this.form.shaping_value !== null && this.form.shaping_value !== '') {
                 total += parseFloat(this.form.shaping_value);
@@ -51176,10 +51071,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
         getFinalTotal: function getFinalTotal() {
             var total = this.getTotal();
-
-            if (this.form.amount_paid_value !== null && this.form.amount_paid_value !== '') {
-                total -= this.form.amount_paid_value;
-            }
 
             return total;
         },
@@ -52106,190 +51997,6 @@ var render = function() {
                         ])
                       : _vm._e(),
                     _vm._v(" "),
-                    _vm.showTax
-                      ? _c("div", { staticClass: "row" }, [
-                          _c(
-                            "div",
-                            { staticClass: "col-xs-5 col-xs-offset-7" },
-                            [
-                              _c("div", { staticClass: "form-group" }, [
-                                _c("div", { staticClass: "row" }, [
-                                  _c("div", { staticClass: "col-xs-2" }, [
-                                    _c("div", { staticClass: "text-center" }, [
-                                      _c(
-                                        "button",
-                                        {
-                                          staticClass: "btn btn-danger",
-                                          on: {
-                                            click: function($event) {
-                                              _vm.showTax = false
-                                              _vm.form.tax_value = null
-                                            }
-                                          }
-                                        },
-                                        [
-                                          _vm._v(
-                                            "\n                                                            X\n                                                        "
-                                          )
-                                        ]
-                                      )
-                                    ])
-                                  ]),
-                                  _vm._v(" "),
-                                  _c("article", { staticClass: "col-xs-4" }, [
-                                    _c("input", {
-                                      directives: [
-                                        {
-                                          name: "model",
-                                          rawName: "v-model",
-                                          value: _vm.form.tax_label,
-                                          expression: "form.tax_label"
-                                        }
-                                      ],
-                                      staticClass: "form-control input-hover",
-                                      attrs: {
-                                        type: "text",
-                                        id: "tax_label",
-                                        name: "tax_label"
-                                      },
-                                      domProps: { value: _vm.form.tax_label },
-                                      on: {
-                                        input: function($event) {
-                                          if ($event.target.composing) {
-                                            return
-                                          }
-                                          _vm.$set(
-                                            _vm.form,
-                                            "tax_label",
-                                            $event.target.value
-                                          )
-                                        }
-                                      }
-                                    })
-                                  ]),
-                                  _vm._v(" "),
-                                  _c("article", { staticClass: "col-xs-3" }, [
-                                    _c("input", {
-                                      directives: [
-                                        {
-                                          name: "model",
-                                          rawName: "v-model",
-                                          value: _vm.form.tax_value,
-                                          expression: "form.tax_value"
-                                        },
-                                        {
-                                          name: "validate",
-                                          rawName: "v-validate"
-                                        }
-                                      ],
-                                      staticClass: "form-control",
-                                      class: {
-                                        "input-error": _vm.errors.has(
-                                          "tax_value"
-                                        )
-                                      },
-                                      attrs: {
-                                        type: "number",
-                                        id: "tax_value",
-                                        name: "tax_value",
-                                        "data-vv-rules": "required"
-                                      },
-                                      domProps: { value: _vm.form.tax_value },
-                                      on: {
-                                        input: function($event) {
-                                          if ($event.target.composing) {
-                                            return
-                                          }
-                                          _vm.$set(
-                                            _vm.form,
-                                            "tax_value",
-                                            $event.target.value
-                                          )
-                                        }
-                                      }
-                                    }),
-                                    _vm._v(" "),
-                                    _vm.errors.firstByRule(
-                                      "tax_value",
-                                      "required"
-                                    )
-                                      ? _c("p", { staticClass: "error" }, [
-                                          _vm._v(
-                                            "\n                                                        Requerido\n                                                    "
-                                          )
-                                        ])
-                                      : _vm._e()
-                                  ]),
-                                  _vm._v(" "),
-                                  _c("div", { staticClass: "col-xs-3" }, [
-                                    _c(
-                                      "select",
-                                      {
-                                        directives: [
-                                          {
-                                            name: "model",
-                                            rawName: "v-model",
-                                            value: _vm.form.tax_type,
-                                            expression: "form.tax_type"
-                                          }
-                                        ],
-                                        staticClass: "form-control",
-                                        on: {
-                                          change: function($event) {
-                                            var $$selectedVal = Array.prototype.filter
-                                              .call(
-                                                $event.target.options,
-                                                function(o) {
-                                                  return o.selected
-                                                }
-                                              )
-                                              .map(function(o) {
-                                                var val =
-                                                  "_value" in o
-                                                    ? o._value
-                                                    : o.value
-                                                return val
-                                              })
-                                            _vm.$set(
-                                              _vm.form,
-                                              "tax_type",
-                                              $event.target.multiple
-                                                ? $$selectedVal
-                                                : $$selectedVal[0]
-                                            )
-                                          }
-                                        }
-                                      },
-                                      [
-                                        _c(
-                                          "option",
-                                          { attrs: { value: "1" } },
-                                          [_vm._v("%")]
-                                        ),
-                                        _vm._v(" "),
-                                        _c(
-                                          "option",
-                                          { attrs: { value: "2" } },
-                                          [
-                                            _vm._v(
-                                              _vm._s(
-                                                _vm.currencySymbol !== ""
-                                                  ? _vm.currencySymbol
-                                                  : "Monto"
-                                              )
-                                            )
-                                          ]
-                                        )
-                                      ]
-                                    )
-                                  ])
-                                ])
-                              ])
-                            ]
-                          )
-                        ])
-                      : _vm._e(),
-                    _vm._v(" "),
                     _vm.showShipping
                       ? _c("div", { staticClass: "row" }, [
                           _c(
@@ -52447,27 +52154,6 @@ var render = function() {
                               )
                             : _vm._e(),
                           _vm._v(" "),
-                          !_vm.showTax
-                            ? _c(
-                                "a",
-                                {
-                                  on: {
-                                    click: function($event) {
-                                      _vm.showTax = true
-                                    }
-                                  }
-                                },
-                                [
-                                  _c("i", {
-                                    staticClass: "glyphicon glyphicon-plus"
-                                  }),
-                                  _vm._v(
-                                    "\n                                                Iva\n                                            "
-                                  )
-                                ]
-                              )
-                            : _vm._e(),
-                          _vm._v(" "),
                           !_vm.showShipping
                             ? _c(
                                 "a",
@@ -52544,78 +52230,6 @@ var render = function() {
                                     _vm.currencySymbol +
                                     _vm.getTotal() +
                                     _vm.currencySymbol2
-                                }
-                              })
-                            ])
-                          ])
-                        ])
-                      ])
-                    ]),
-                    _vm._v(" "),
-                    _c("div", { staticClass: "row" }, [
-                      _c("div", { staticClass: "col-xs-5 col-xs-offset-7" }, [
-                        _c("div", { staticClass: "form-group" }, [
-                          _c("div", { staticClass: "row" }, [
-                            _c("article", { staticClass: "col-xs-6" }, [
-                              _c("input", {
-                                directives: [
-                                  {
-                                    name: "model",
-                                    rawName: "v-model",
-                                    value: _vm.form.amount_paid_label,
-                                    expression: "form.amount_paid_label"
-                                  }
-                                ],
-                                staticClass: "form-control input-hover",
-                                attrs: {
-                                  type: "text",
-                                  id: "amount_paid_label",
-                                  name: "amount_paid_label"
-                                },
-                                domProps: { value: _vm.form.amount_paid_label },
-                                on: {
-                                  input: function($event) {
-                                    if ($event.target.composing) {
-                                      return
-                                    }
-                                    _vm.$set(
-                                      _vm.form,
-                                      "amount_paid_label",
-                                      $event.target.value
-                                    )
-                                  }
-                                }
-                              })
-                            ]),
-                            _vm._v(" "),
-                            _c("article", { staticClass: "col-xs-6" }, [
-                              _c("input", {
-                                directives: [
-                                  {
-                                    name: "model",
-                                    rawName: "v-model",
-                                    value: _vm.form.amount_paid_value,
-                                    expression: "form.amount_paid_value"
-                                  }
-                                ],
-                                staticClass: "form-control",
-                                attrs: {
-                                  type: "number",
-                                  id: "amount_paid_value",
-                                  name: "amount_paid_value"
-                                },
-                                domProps: { value: _vm.form.amount_paid_value },
-                                on: {
-                                  input: function($event) {
-                                    if ($event.target.composing) {
-                                      return
-                                    }
-                                    _vm.$set(
-                                      _vm.form,
-                                      "amount_paid_value",
-                                      $event.target.value
-                                    )
-                                  }
                                 }
                               })
                             ])
@@ -53399,94 +53013,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
 
 
 
@@ -53505,7 +53031,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             business_name: this.userBusinessName,
             productList: JSON.parse(this.products),
             initDate: '',
-            showTax: false,
             showDiscount: false,
             showShipping: false,
             form: JSON.parse(this.formData)
@@ -53513,7 +53038,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     },
 
     mounted: function mounted() {
-        this.showTax = this.form.tax_value !== null && this.form.tax_value !== '';
         this.showDiscount = this.form.discount_value !== null && this.form.discount_value !== '';
         this.showShipping = this.form.shaping_value !== null && this.form.shaping_value !== '';
 
@@ -53608,17 +53132,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 }
             }
 
-            // Iva
-            if (this.form.tax_value !== null && this.form.tax_value !== '') {
-                if (this.form.tax_type == 1) {
-                    // Porcentaje
-                    total += total * (parseFloat(this.form.tax_value) / 100);
-                } else {
-                    // Monto
-                    total += parseFloat(this.form.tax_value);
-                }
-            }
-
             // Envio
             if (this.form.shaping_value !== null && this.form.shaping_value !== '') {
                 total += parseFloat(this.form.shaping_value);
@@ -53629,10 +53142,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
         getFinalTotal: function getFinalTotal() {
             var total = this.getTotal();
-
-            if (this.form.amount_paid_value !== null && this.form.amount_paid_value !== '') {
-                total -= this.form.amount_paid_value;
-            }
 
             return total;
         },
@@ -54561,190 +54070,6 @@ var render = function() {
                         ])
                       : _vm._e(),
                     _vm._v(" "),
-                    _vm.showTax
-                      ? _c("div", { staticClass: "row" }, [
-                          _c(
-                            "div",
-                            { staticClass: "col-xs-5 col-xs-offset-7" },
-                            [
-                              _c("div", { staticClass: "form-group" }, [
-                                _c("div", { staticClass: "row" }, [
-                                  _c("div", { staticClass: "col-xs-2" }, [
-                                    _c("div", { staticClass: "text-center" }, [
-                                      _c(
-                                        "button",
-                                        {
-                                          staticClass: "btn btn-danger",
-                                          on: {
-                                            click: function($event) {
-                                              _vm.showTax = false
-                                              _vm.form.tax_value = null
-                                            }
-                                          }
-                                        },
-                                        [
-                                          _vm._v(
-                                            "\n                                                            X\n                                                        "
-                                          )
-                                        ]
-                                      )
-                                    ])
-                                  ]),
-                                  _vm._v(" "),
-                                  _c("article", { staticClass: "col-xs-4" }, [
-                                    _c("input", {
-                                      directives: [
-                                        {
-                                          name: "model",
-                                          rawName: "v-model",
-                                          value: _vm.form.tax_label,
-                                          expression: "form.tax_label"
-                                        }
-                                      ],
-                                      staticClass: "form-control input-hover",
-                                      attrs: {
-                                        type: "text",
-                                        id: "tax_label",
-                                        name: "tax_label"
-                                      },
-                                      domProps: { value: _vm.form.tax_label },
-                                      on: {
-                                        input: function($event) {
-                                          if ($event.target.composing) {
-                                            return
-                                          }
-                                          _vm.$set(
-                                            _vm.form,
-                                            "tax_label",
-                                            $event.target.value
-                                          )
-                                        }
-                                      }
-                                    })
-                                  ]),
-                                  _vm._v(" "),
-                                  _c("article", { staticClass: "col-xs-3" }, [
-                                    _c("input", {
-                                      directives: [
-                                        {
-                                          name: "model",
-                                          rawName: "v-model",
-                                          value: _vm.form.tax_value,
-                                          expression: "form.tax_value"
-                                        },
-                                        {
-                                          name: "validate",
-                                          rawName: "v-validate"
-                                        }
-                                      ],
-                                      staticClass: "form-control",
-                                      class: {
-                                        "input-error": _vm.errors.has(
-                                          "tax_value"
-                                        )
-                                      },
-                                      attrs: {
-                                        type: "number",
-                                        id: "tax_value",
-                                        name: "tax_value",
-                                        "data-vv-rules": "required"
-                                      },
-                                      domProps: { value: _vm.form.tax_value },
-                                      on: {
-                                        input: function($event) {
-                                          if ($event.target.composing) {
-                                            return
-                                          }
-                                          _vm.$set(
-                                            _vm.form,
-                                            "tax_value",
-                                            $event.target.value
-                                          )
-                                        }
-                                      }
-                                    }),
-                                    _vm._v(" "),
-                                    _vm.errors.firstByRule(
-                                      "tax_value",
-                                      "required"
-                                    )
-                                      ? _c("p", { staticClass: "error" }, [
-                                          _vm._v(
-                                            "\n                                                        Requerido\n                                                    "
-                                          )
-                                        ])
-                                      : _vm._e()
-                                  ]),
-                                  _vm._v(" "),
-                                  _c("div", { staticClass: "col-xs-3" }, [
-                                    _c(
-                                      "select",
-                                      {
-                                        directives: [
-                                          {
-                                            name: "model",
-                                            rawName: "v-model",
-                                            value: _vm.form.tax_type,
-                                            expression: "form.tax_type"
-                                          }
-                                        ],
-                                        staticClass: "form-control",
-                                        on: {
-                                          change: function($event) {
-                                            var $$selectedVal = Array.prototype.filter
-                                              .call(
-                                                $event.target.options,
-                                                function(o) {
-                                                  return o.selected
-                                                }
-                                              )
-                                              .map(function(o) {
-                                                var val =
-                                                  "_value" in o
-                                                    ? o._value
-                                                    : o.value
-                                                return val
-                                              })
-                                            _vm.$set(
-                                              _vm.form,
-                                              "tax_type",
-                                              $event.target.multiple
-                                                ? $$selectedVal
-                                                : $$selectedVal[0]
-                                            )
-                                          }
-                                        }
-                                      },
-                                      [
-                                        _c(
-                                          "option",
-                                          { attrs: { value: "1" } },
-                                          [_vm._v("%")]
-                                        ),
-                                        _vm._v(" "),
-                                        _c(
-                                          "option",
-                                          { attrs: { value: "2" } },
-                                          [
-                                            _vm._v(
-                                              _vm._s(
-                                                _vm.currencySymbol !== ""
-                                                  ? _vm.currencySymbol
-                                                  : "Monto"
-                                              )
-                                            )
-                                          ]
-                                        )
-                                      ]
-                                    )
-                                  ])
-                                ])
-                              ])
-                            ]
-                          )
-                        ])
-                      : _vm._e(),
-                    _vm._v(" "),
                     _vm.showShipping
                       ? _c("div", { staticClass: "row" }, [
                           _c(
@@ -54902,27 +54227,6 @@ var render = function() {
                               )
                             : _vm._e(),
                           _vm._v(" "),
-                          !_vm.showTax
-                            ? _c(
-                                "a",
-                                {
-                                  on: {
-                                    click: function($event) {
-                                      _vm.showTax = true
-                                    }
-                                  }
-                                },
-                                [
-                                  _c("i", {
-                                    staticClass: "glyphicon glyphicon-plus"
-                                  }),
-                                  _vm._v(
-                                    "\n                                                Iva\n                                            "
-                                  )
-                                ]
-                              )
-                            : _vm._e(),
-                          _vm._v(" "),
                           !_vm.showShipping
                             ? _c(
                                 "a",
@@ -54999,78 +54303,6 @@ var render = function() {
                                     _vm.currencySymbol +
                                     _vm.getTotal() +
                                     _vm.currencySymbol2
-                                }
-                              })
-                            ])
-                          ])
-                        ])
-                      ])
-                    ]),
-                    _vm._v(" "),
-                    _c("div", { staticClass: "row" }, [
-                      _c("div", { staticClass: "col-xs-5 col-xs-offset-7" }, [
-                        _c("div", { staticClass: "form-group" }, [
-                          _c("div", { staticClass: "row" }, [
-                            _c("article", { staticClass: "col-xs-6" }, [
-                              _c("input", {
-                                directives: [
-                                  {
-                                    name: "model",
-                                    rawName: "v-model",
-                                    value: _vm.form.amount_paid_label,
-                                    expression: "form.amount_paid_label"
-                                  }
-                                ],
-                                staticClass: "form-control input-hover",
-                                attrs: {
-                                  type: "text",
-                                  id: "amount_paid_label",
-                                  name: "amount_paid_label"
-                                },
-                                domProps: { value: _vm.form.amount_paid_label },
-                                on: {
-                                  input: function($event) {
-                                    if ($event.target.composing) {
-                                      return
-                                    }
-                                    _vm.$set(
-                                      _vm.form,
-                                      "amount_paid_label",
-                                      $event.target.value
-                                    )
-                                  }
-                                }
-                              })
-                            ]),
-                            _vm._v(" "),
-                            _c("article", { staticClass: "col-xs-6" }, [
-                              _c("input", {
-                                directives: [
-                                  {
-                                    name: "model",
-                                    rawName: "v-model",
-                                    value: _vm.form.amount_paid_value,
-                                    expression: "form.amount_paid_value"
-                                  }
-                                ],
-                                staticClass: "form-control",
-                                attrs: {
-                                  type: "number",
-                                  id: "amount_paid_value",
-                                  name: "amount_paid_value"
-                                },
-                                domProps: { value: _vm.form.amount_paid_value },
-                                on: {
-                                  input: function($event) {
-                                    if ($event.target.composing) {
-                                      return
-                                    }
-                                    _vm.$set(
-                                      _vm.form,
-                                      "amount_paid_value",
-                                      $event.target.value
-                                    )
-                                  }
                                 }
                               })
                             ])

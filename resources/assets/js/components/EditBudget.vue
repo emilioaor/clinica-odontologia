@@ -346,59 +346,6 @@
                                         </div>
                                     </div>
 
-                                    <!-- Tax -->
-                                    <div class="row" v-if="showTax">
-                                        <div class="col-xs-5 col-xs-offset-7">
-                                            <div class="form-group">
-                                                <div class="row">
-                                                    <div class="col-xs-2">
-                                                        <div class="text-center">
-                                                            <button class="btn btn-danger" @click="showTax = false; form.tax_value = null">
-                                                                X
-                                                            </button>
-                                                        </div>
-                                                    </div>
-                                                    <article class="col-xs-4">
-                                                        <input
-                                                                type="text"
-                                                                class="form-control input-hover"
-                                                                id="tax_label"
-                                                                name="tax_label"
-                                                                v-model="form.tax_label"
-                                                                >
-                                                    </article>
-
-                                                    <article class="col-xs-3">
-                                                        <input
-                                                                type="number"
-                                                                class="form-control"
-                                                                id="tax_value"
-                                                                name="tax_value"
-                                                                v-model="form.tax_value"
-                                                                v-validate
-                                                                data-vv-rules="required"
-                                                                v-bind:class="{'input-error': errors.has('tax_value')}"
-                                                                >
-                                                        <p class="error" v-if="errors.firstByRule('tax_value', 'required')">
-                                                            Requerido
-                                                        </p>
-                                                    </article>
-
-                                                    <div class="col-xs-3">
-                                                        <select
-                                                                class="form-control"
-                                                                v-model="form.tax_type"
-                                                                >
-                                                            <option value="1">%</option>
-                                                            <option value="2">{{ currencySymbol !== '' ? currencySymbol : 'Monto' }}</option>
-                                                        </select>
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                        </div>
-                                    </div>
-
                                     <!-- Shipping -->
                                     <div class="row" v-if="showShipping">
                                         <div class="col-xs-5 col-xs-offset-7">
@@ -451,17 +398,13 @@
                                         </div>
                                     </div>
 
-                                    <!-- Select Tax, Discount, Shipping -->
+                                    <!-- Select Discount, Shipping -->
                                     <div class="row">
                                         <div class="col-xs-12">
                                             <p class="text-right">
                                                 <a @click="showDiscount = true" v-if="!showDiscount">
                                                     <i class="glyphicon glyphicon-plus"></i>
                                                     Descuento
-                                                </a>
-                                                <a @click="showTax = true" v-if="!showTax">
-                                                    <i class="glyphicon glyphicon-plus"></i>
-                                                    Iva
                                                 </a>
                                                 <a @click="showShipping = true" v-if="!showShipping">
                                                     <i class="glyphicon glyphicon-plus"></i>
@@ -495,37 +438,6 @@
                                                                 name="total_footer_value"
                                                                 v-bind:value="currencySymbol + getTotal() + currencySymbol2"
                                                                 disabled
-                                                                >
-                                                    </article>
-                                                </div>
-                                            </div>
-
-                                        </div>
-                                    </div>
-
-                                    <!-- Amount Paid -->
-                                    <div class="row">
-                                        <div class="col-xs-5 col-xs-offset-7">
-
-                                            <div class="form-group">
-                                                <div class="row">
-                                                    <article class="col-xs-6">
-                                                        <input
-                                                                type="text"
-                                                                class="form-control input-hover"
-                                                                id="amount_paid_label"
-                                                                name="amount_paid_label"
-                                                                v-model="form.amount_paid_label"
-                                                                >
-                                                    </article>
-
-                                                    <article class="col-xs-6">
-                                                        <input
-                                                                type="number"
-                                                                class="form-control"
-                                                                id="amount_paid_value"
-                                                                name="amount_paid_value"
-                                                                v-model="form.amount_paid_value"
                                                                 >
                                                     </article>
                                                 </div>
@@ -631,7 +543,6 @@
                 business_name: this.userBusinessName,
                 productList: JSON.parse(this.products),
                 initDate: '',
-                showTax: false,
                 showDiscount: false,
                 showShipping: false,
                 form: JSON.parse(this.formData)
@@ -639,7 +550,6 @@
         },
 
         mounted: function () {
-            this.showTax = (this.form.tax_value !== null && this.form.tax_value !== '');
             this.showDiscount = (this.form.discount_value !== null && this.form.discount_value !== '');
             this.showShipping = (this.form.shaping_value !== null && this.form.shaping_value !== '');
 
@@ -734,17 +644,6 @@
                     }
                 }
 
-                // Iva
-                if (this.form.tax_value !== null && this.form.tax_value !== '') {
-                    if (this.form.tax_type == 1) {
-                        // Porcentaje
-                        total += (total * (parseFloat(this.form.tax_value) / 100));
-                    } else {
-                        // Monto
-                        total += parseFloat(this.form.tax_value);
-                    }
-                }
-
                 // Envio
                 if (this.form.shaping_value !== null && this.form.shaping_value !== '') {
                     total += parseFloat(this.form.shaping_value);
@@ -755,10 +654,6 @@
 
             getFinalTotal: function () {
                 let total = this.getTotal();
-
-                if (this.form.amount_paid_value !== null && this.form.amount_paid_value !== '') {
-                    total -= this.form.amount_paid_value;
-                }
 
                 return total;
             },

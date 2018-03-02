@@ -26,17 +26,12 @@ class CreateTableBudgets extends Migration
             $table->string('discount_label')->nullable();
             $table->integer('discount_type')->nullable();
             $table->float('discount_value')->nullable();
-            $table->string('tax_label')->nullable();
-            $table->integer('tax_type')->nullable();
-            $table->float('tax_value')->nullable();
             $table->string('shaping_label')->nullable();
             $table->float('shaping_value')->nullable();
             $table->string('subtotal_footer_label')->nullable();
             $table->float('subtotal_footer_value', 10, 2);
             $table->string('total_footer_label')->nullable();
             $table->float('total_footer_value', 10, 2);
-            $table->string('amount_paid_label')->nullable();
-            $table->float('amount_paid_value', 10, 2)->nullable();
             $table->string('notes_label')->nullable();
             $table->text('notes_value')->nullable();
             $table->string('terms_label')->nullable();

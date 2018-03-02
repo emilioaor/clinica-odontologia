@@ -8,3 +8,17 @@
         user-business-name = "{{ Auth::user()->business_name }}"
     ></edit-budget>
 @endsection
+
+@section('js')
+    @if(Session::has('pdf') && Session::get('pdf') == $budget->public_id)
+
+        <script>
+
+            $(window).on("load", function() {
+                location.href = '{{ route('budget.pdf.download', ['budget' => $budget->public_id])  }}';
+            })
+
+        </script>
+
+    @endif
+@endsection

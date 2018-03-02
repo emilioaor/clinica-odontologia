@@ -15,7 +15,8 @@ Route::group(['prefix' => 'user', 'middleware' => 'auth'], function() {
 
     // Cotizacion
     Route::resource('budget', 'User\BudgetController');
-    Route::get('budget/{budget}/generatePdf', 'User\BudgetController@generatePdf');
+    Route::get('budget/{budget}/generatePdf', 'User\BudgetController@generatePdf')->name('budget.pdf.generate');
+    Route::get('budget/{budget}/downloadPdf', 'User\BudgetController@downloadPdf')->name('budget.pdf.download');
 
     // Configuracion
     Route::get('config', 'User\ConfigController@config')->name('config');

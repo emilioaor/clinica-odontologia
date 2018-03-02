@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Session;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use PDF;
 
@@ -70,6 +71,7 @@ class BudgetController extends Controller
         }
 
         $this->sessionMessage('message.budget.create');
+        Session::flash('pdf', $budget->public_id);
 
         DB::commit();
 
@@ -168,5 +170,24 @@ class BudgetController extends Controller
         $pdf = PDF::loadView('user.budget.pdf', compact('budget'));
 
         return $pdf->stream();
+    }
+
+    /**
+     * Descarga un pdf de una cotizacion
+     *
+     * @param $id
+     * @return mixed
+     */
+    public function downloadPdf($id)
+    {
+        $budget = Budget::where('public_id', $id)->first();
+
+        if (! $budget) {
+            abort(404);
+        }
+
+        $pdf = PDF::loadView('user.budget.pdf', compact('budget'));
+
+        return $pdf->download('Cotizacion #' . $budget->public_id);
     }
 }

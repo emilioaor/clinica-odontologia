@@ -72,24 +72,9 @@
                                     <div class="form-group">
                                         <div class="row">
                                             <div class="col-xs-8 col-xs-offset-4">
-                                                <div class="input-group">
-                                                    <span class="input-group-addon" id="basic-addon1">#</span>
-                                                    <input
-                                                            type="text"
-                                                            class="form-control"
-                                                            id="public_id"
-                                                            name="public_id"
-                                                            placeholder="Número"
-                                                            aria-describedby="basic-addon1"
-                                                            v-model="form.public_id"
-                                                            v-validate
-                                                            data-vv-rules="required"
-                                                            v-bind:class="{'input-error': errors.has('public_id')}"
-                                                            >
-                                                </div>
-                                                <p class="error" v-if="errors.firstByRule('public_id', 'required')">
-                                                    Número de cotización requerida
-                                                </p>
+                                                <h4 class="text-right">
+                                                    #{{ form.public_id }}
+                                                </h4>
                                             </div>
                                         </div>
                                     </div>
@@ -649,7 +634,7 @@
     import Datepicker from 'vuejs-datepicker';
 
     export default {
-        props: ['products', 'userLogo', 'userBusinessName'],
+        props: ['products', 'userLogo', 'userBusinessName', 'next'],
         components: {
             Datepicker
         },
@@ -666,7 +651,7 @@
                 logo: '/uploads/' + this.userLogo,
                 business_name: this.userBusinessName,
                 form: {
-                    public_id: '',
+                    public_id: this.next,
                     title: 'COTIZACIÓN',
                     client_label: 'Para:',
                     client_value: '',

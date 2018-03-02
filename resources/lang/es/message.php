@@ -12,5 +12,6 @@ return [
     'config.changePassword.confirmation' => 'Contraseña no coinciden',
     'config.changePassword.success' => 'Contraseña actualizada',
     'config.business.update' => 'Emisor actualizado',
+    'config.business.remember' => 'Antes de generar una cotización recuerde configurar su nombre y logo',
 
 ];

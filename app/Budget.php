@@ -53,4 +53,14 @@ class Budget extends Model
     {
         return $this->hasMany(BudgetDetail::class, 'budget_id');
     }
+
+    /**
+     * Genera el siguiente Public_id
+     *
+     * @return int
+     */
+    public static function nextPublicId()
+    {
+        return 860 + (Budget::count() + 1);
+    }
 }

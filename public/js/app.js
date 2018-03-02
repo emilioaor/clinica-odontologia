@@ -51021,26 +51021,11 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
 
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
-    props: ['products', 'userLogo', 'userBusinessName'],
+    props: ['products', 'userLogo', 'userBusinessName', 'next'],
     components: {
         Datepicker: __WEBPACK_IMPORTED_MODULE_0_vuejs_datepicker___default.a
     },
@@ -51057,7 +51042,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             logo: '/uploads/' + this.userLogo,
             business_name: this.userBusinessName,
             form: {
-                public_id: '',
+                public_id: this.next,
                 title: 'COTIZACIÓN',
                 client_label: 'Para:',
                 client_value: '',
@@ -51402,61 +51387,13 @@ var render = function() {
                   _c("div", { staticClass: "form-group" }, [
                     _c("div", { staticClass: "row" }, [
                       _c("div", { staticClass: "col-xs-8 col-xs-offset-4" }, [
-                        _c("div", { staticClass: "input-group" }, [
-                          _c(
-                            "span",
-                            {
-                              staticClass: "input-group-addon",
-                              attrs: { id: "basic-addon1" }
-                            },
-                            [_vm._v("#")]
-                          ),
-                          _vm._v(" "),
-                          _c("input", {
-                            directives: [
-                              {
-                                name: "model",
-                                rawName: "v-model",
-                                value: _vm.form.public_id,
-                                expression: "form.public_id"
-                              },
-                              { name: "validate", rawName: "v-validate" }
-                            ],
-                            staticClass: "form-control",
-                            class: {
-                              "input-error": _vm.errors.has("public_id")
-                            },
-                            attrs: {
-                              type: "text",
-                              id: "public_id",
-                              name: "public_id",
-                              placeholder: "Número",
-                              "aria-describedby": "basic-addon1",
-                              "data-vv-rules": "required"
-                            },
-                            domProps: { value: _vm.form.public_id },
-                            on: {
-                              input: function($event) {
-                                if ($event.target.composing) {
-                                  return
-                                }
-                                _vm.$set(
-                                  _vm.form,
-                                  "public_id",
-                                  $event.target.value
-                                )
-                              }
-                            }
-                          })
-                        ]),
-                        _vm._v(" "),
-                        _vm.errors.firstByRule("public_id", "required")
-                          ? _c("p", { staticClass: "error" }, [
-                              _vm._v(
-                                "\n                                                Número de cotización requerida\n                                            "
-                              )
-                            ])
-                          : _vm._e()
+                        _c("h4", { staticClass: "text-right" }, [
+                          _vm._v(
+                            "\n                                                #" +
+                              _vm._s(_vm.form.public_id) +
+                              "\n                                            "
+                          )
+                        ])
                       ])
                     ])
                   ]),
@@ -53643,21 +53580,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
 
 
 
@@ -54024,61 +53946,13 @@ var render = function() {
                   _c("div", { staticClass: "form-group" }, [
                     _c("div", { staticClass: "row" }, [
                       _c("div", { staticClass: "col-xs-8 col-xs-offset-4" }, [
-                        _c("div", { staticClass: "input-group" }, [
-                          _c(
-                            "span",
-                            {
-                              staticClass: "input-group-addon",
-                              attrs: { id: "basic-addon1" }
-                            },
-                            [_vm._v("#")]
-                          ),
-                          _vm._v(" "),
-                          _c("input", {
-                            directives: [
-                              {
-                                name: "model",
-                                rawName: "v-model",
-                                value: _vm.form.public_id,
-                                expression: "form.public_id"
-                              },
-                              { name: "validate", rawName: "v-validate" }
-                            ],
-                            staticClass: "form-control",
-                            class: {
-                              "input-error": _vm.errors.has("public_id")
-                            },
-                            attrs: {
-                              type: "text",
-                              id: "public_id",
-                              name: "public_id",
-                              placeholder: "Número",
-                              "aria-describedby": "basic-addon1",
-                              "data-vv-rules": "required"
-                            },
-                            domProps: { value: _vm.form.public_id },
-                            on: {
-                              input: function($event) {
-                                if ($event.target.composing) {
-                                  return
-                                }
-                                _vm.$set(
-                                  _vm.form,
-                                  "public_id",
-                                  $event.target.value
-                                )
-                              }
-                            }
-                          })
-                        ]),
-                        _vm._v(" "),
-                        _vm.errors.firstByRule("public_id", "required")
-                          ? _c("p", { staticClass: "error" }, [
-                              _vm._v(
-                                "\n                                                Número de cotización requerida\n                                            "
-                              )
-                            ])
-                          : _vm._e()
+                        _c("h4", { staticClass: "text-right" }, [
+                          _vm._v(
+                            "\n                                                #" +
+                              _vm._s(_vm.form.public_id) +
+                              "\n                                            "
+                          )
+                        ])
                       ])
                     ])
                   ]),

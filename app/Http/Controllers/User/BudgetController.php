@@ -7,6 +7,7 @@ use App\BudgetDetail;
 use App\Product;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use PDF;
@@ -32,6 +33,12 @@ class BudgetController extends Controller
      */
     public function create()
     {
+        if (empty(Auth::user()->logo) || empty(Auth::user()->business_name)) {
+            $this->sessionMessage('message.config.business.remember', self::ALERT_DANGER);
+
+            return redirect()->route('config');
+        }
+
         $products = Product::all();
 
         return view('user.budget.create', compact('products'));
@@ -48,6 +55,8 @@ class BudgetController extends Controller
         DB::beginTransaction();
 
         $budget = new Budget($request->all());
+        $budget->public_id = Budget::nextPublicId();
+
         $budget->save();
 
         foreach ($request->details as $detail) {

@@ -96,38 +96,12 @@
                                                     <datepicker
                                                         name = "creation_date_value"
                                                         id = "creation_date_value"
-                                                        v-bind:value="form.creation_date_value"
+                                                        v-model="initDate"
                                                         language="es"
                                                         input-class = "form-control"
                                                         format = "MM/dd/yyyy"
                                                         @input="setCreationDate($event)"
                                                     ></datepicker>
-                                                </article>
-                                            </div>
-                                        </div>
-
-                                        <div class="form-group">
-                                            <div class="row">
-                                                <article class="col-xs-6">
-                                                    <input
-                                                            type="text"
-                                                            class="form-control input-hover"
-                                                            id="expiration_date_label"
-                                                            name="expiration_date_label"
-                                                            v-model="form.expiration_date_label"
-                                                            >
-                                                </article>
-
-                                                <article class="col-xs-6">
-                                                    <datepicker
-                                                            name = "expiration_date_value"
-                                                            id = "expiration_date_value"
-                                                            v-bind:value="form.expiration_date_value"
-                                                            language="es"
-                                                            input-class = "form-control"
-                                                            format = "dd-MM-yyyy"
-                                                            @input="setExpirationDate($event)"
-                                                            ></datepicker>
                                                 </article>
                                             </div>
                                         </div>
@@ -612,6 +586,8 @@
                             </div>
                             <!-- /Footer -->
 
+                            <h4>This estimate is valid for 10 days</h4>
+
                             <div class="form-group">
                                 <div class="text-center">
                                     <p class="error" v-if="errors.any()">
@@ -654,6 +630,7 @@
                 logo: '/uploads/' + this.userLogo,
                 business_name: this.userBusinessName,
                 productList: JSON.parse(this.products),
+                initDate: '',
                 showTax: false,
                 showDiscount: false,
                 showShipping: false,
@@ -662,10 +639,15 @@
         },
 
         mounted: function () {
-
             this.showTax = (this.form.tax_value !== null && this.form.tax_value !== '');
             this.showDiscount = (this.form.discount_value !== null && this.form.discount_value !== '');
             this.showShipping = (this.form.shaping_value !== null && this.form.shaping_value !== '');
+
+            if (this.form.creation_date_value !== null && this.creation_date_value !== '') {
+                const date = this.form.creation_date_value.split('-');
+
+                this.initDate = new Date(date[0], parseInt(date[1]) - 1, date[2]);
+            }
         },
 
         methods: {
@@ -804,46 +786,6 @@
 
                 this.form.creation_date_value = year + '-' + month + '-' + day;
             },
-
-            setExpirationDate: function (date) {
-                let day = (date.getDate() < 10) ? '0' + date.getDate() : date.getDate();
-                let month = ((date.getMonth() + 1) < 10) ? '0' + (date.getMonth() + 1) : (date.getMonth() + 1);
-                let year = date.getFullYear();
-
-                this.form.expiration_date_value = year + '-' + month + '-' + day;
-            },
-
-            uploadLogo: function () {
-                const file = $('#logo')[0].files[0];
-                const reader = new FileReader();
-
-                reader.addEventListener('load', () => {
-                    this.logo = reader.result;
-
-                    this.upload();
-                });
-
-                reader.readAsDataURL(file);
-            },
-
-            upload: function () {
-                axios.post('/user/budget/uploadLogo', {logo: this.logo})
-                    .then((res) => {
-
-                        if (res.data.success) {
-                            this.form.business_logo = res.data.filename;
-
-                        } else {
-                            this.logo = '';
-                        }
-
-                    })
-                    .catch((err) => {
-                        alert('Error al cargar imagen, intente nuevamente');
-                        this.logo = '';
-                    })
-                ;
-            }
         }
     }
 </script>

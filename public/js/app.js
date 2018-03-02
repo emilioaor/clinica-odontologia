@@ -51000,28 +51000,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
 
 
 
@@ -51042,15 +51020,14 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             showShipping: false,
             logo: '/uploads/' + this.userLogo,
             business_name: this.userBusinessName,
+            initDate: new Date(),
             form: {
                 public_id: this.next,
                 title: 'COTIZACIÓN',
                 client_label: 'Para:',
                 client_value: '',
                 creation_date_label: 'Fecha de emisión',
-                creation_date_value: new Date(),
-                expiration_date_label: 'Fecha de expiración',
-                expiration_date_value: null,
+                creation_date_value: '',
                 total_head_label: 'Total:',
                 total_head_value: null,
                 discount_label: 'Descuento',
@@ -51082,6 +51059,16 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 }]
             }
         };
+    },
+
+    mounted: function mounted() {
+        var date = new Date();
+        var day = date.getDate() < 10 ? '0' + date.getDate() : date.getDate();
+        var month = date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1;
+        var year = date.getFullYear();
+
+        this.form.creation_date_value = year + '-' + month + '-' + day;
+        document.getElementById('creation_date_value').value = date;
     },
 
     methods: {
@@ -51219,14 +51206,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             var year = date.getFullYear();
 
             this.form.creation_date_value = year + '-' + month + '-' + day;
-        },
-
-        setExpirationDate: function setExpirationDate(date) {
-            var day = date.getDate() < 10 ? '0' + date.getDate() : date.getDate();
-            var month = date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1;
-            var year = date.getFullYear();
-
-            this.form.expiration_date_value = year + '-' + month + '-' + day;
         }
     }
 });
@@ -51444,71 +51423,19 @@ var render = function() {
                                 id: "creation_date_value",
                                 language: "es",
                                 "input-class": "form-control",
-                                format: "MM/dd/yyyy",
-                                value: new Date()
+                                format: "MM/dd/yyyy"
                               },
                               on: {
                                 input: function($event) {
                                   _vm.setCreationDate($event)
                                 }
-                              }
-                            })
-                          ],
-                          1
-                        )
-                      ])
-                    ]),
-                    _vm._v(" "),
-                    _c("div", { staticClass: "form-group" }, [
-                      _c("div", { staticClass: "row" }, [
-                        _c("article", { staticClass: "col-xs-6" }, [
-                          _c("input", {
-                            directives: [
-                              {
-                                name: "model",
-                                rawName: "v-model",
-                                value: _vm.form.expiration_date_label,
-                                expression: "form.expiration_date_label"
-                              }
-                            ],
-                            staticClass: "form-control input-hover",
-                            attrs: {
-                              type: "text",
-                              id: "expiration_date_label",
-                              name: "expiration_date_label"
-                            },
-                            domProps: { value: _vm.form.expiration_date_label },
-                            on: {
-                              input: function($event) {
-                                if ($event.target.composing) {
-                                  return
-                                }
-                                _vm.$set(
-                                  _vm.form,
-                                  "expiration_date_label",
-                                  $event.target.value
-                                )
-                              }
-                            }
-                          })
-                        ]),
-                        _vm._v(" "),
-                        _c(
-                          "article",
-                          { staticClass: "col-xs-6" },
-                          [
-                            _c("datepicker", {
-                              attrs: {
-                                name: "expiration_date_value",
-                                id: "expiration_date_value",
-                                language: "es",
-                                "input-class": "form-control",
-                                format: "dd-MM-yyyy"
                               },
-                              on: {
-                                input: function($event) {
-                                  _vm.setExpirationDate($event)
-                                }
+                              model: {
+                                value: _vm.initDate,
+                                callback: function($$v) {
+                                  _vm.initDate = $$v
+                                },
+                                expression: "initDate"
                               }
                             })
                           ],
@@ -52834,6 +52761,8 @@ var render = function() {
                   ]
                 )
               ]),
+              _vm._v(" "),
+              _c("h4", [_vm._v("This estimate is valid for 10 days")]),
               _vm._v(" "),
               _c("div", { staticClass: "form-group" }, [
                 _c("div", { staticClass: "text-center" }, [
@@ -53558,30 +53487,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
 
 
 
@@ -53599,6 +53504,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             logo: '/uploads/' + this.userLogo,
             business_name: this.userBusinessName,
             productList: JSON.parse(this.products),
+            initDate: '',
             showTax: false,
             showDiscount: false,
             showShipping: false,
@@ -53607,10 +53513,15 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     },
 
     mounted: function mounted() {
-
         this.showTax = this.form.tax_value !== null && this.form.tax_value !== '';
         this.showDiscount = this.form.discount_value !== null && this.form.discount_value !== '';
         this.showShipping = this.form.shaping_value !== null && this.form.shaping_value !== '';
+
+        if (this.form.creation_date_value !== null && this.creation_date_value !== '') {
+            var date = this.form.creation_date_value.split('-');
+
+            this.initDate = new Date(date[0], parseInt(date[1]) - 1, date[2]);
+        }
     },
 
     methods: {
@@ -53748,45 +53659,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             var year = date.getFullYear();
 
             this.form.creation_date_value = year + '-' + month + '-' + day;
-        },
-
-        setExpirationDate: function setExpirationDate(date) {
-            var day = date.getDate() < 10 ? '0' + date.getDate() : date.getDate();
-            var month = date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1;
-            var year = date.getFullYear();
-
-            this.form.expiration_date_value = year + '-' + month + '-' + day;
-        },
-
-        uploadLogo: function uploadLogo() {
-            var _this3 = this;
-
-            var file = $('#logo')[0].files[0];
-            var reader = new FileReader();
-
-            reader.addEventListener('load', function () {
-                _this3.logo = reader.result;
-
-                _this3.upload();
-            });
-
-            reader.readAsDataURL(file);
-        },
-
-        upload: function upload() {
-            var _this4 = this;
-
-            axios.post('/user/budget/uploadLogo', { logo: this.logo }).then(function (res) {
-
-                if (res.data.success) {
-                    _this4.form.business_logo = res.data.filename;
-                } else {
-                    _this4.logo = '';
-                }
-            }).catch(function (err) {
-                alert('Error al cargar imagen, intente nuevamente');
-                _this4.logo = '';
-            });
         }
     }
 });
@@ -54004,7 +53876,6 @@ var render = function() {
                               attrs: {
                                 name: "creation_date_value",
                                 id: "creation_date_value",
-                                value: _vm.form.creation_date_value,
                                 language: "es",
                                 "input-class": "form-control",
                                 format: "MM/dd/yyyy"
@@ -54013,65 +53884,13 @@ var render = function() {
                                 input: function($event) {
                                   _vm.setCreationDate($event)
                                 }
-                              }
-                            })
-                          ],
-                          1
-                        )
-                      ])
-                    ]),
-                    _vm._v(" "),
-                    _c("div", { staticClass: "form-group" }, [
-                      _c("div", { staticClass: "row" }, [
-                        _c("article", { staticClass: "col-xs-6" }, [
-                          _c("input", {
-                            directives: [
-                              {
-                                name: "model",
-                                rawName: "v-model",
-                                value: _vm.form.expiration_date_label,
-                                expression: "form.expiration_date_label"
-                              }
-                            ],
-                            staticClass: "form-control input-hover",
-                            attrs: {
-                              type: "text",
-                              id: "expiration_date_label",
-                              name: "expiration_date_label"
-                            },
-                            domProps: { value: _vm.form.expiration_date_label },
-                            on: {
-                              input: function($event) {
-                                if ($event.target.composing) {
-                                  return
-                                }
-                                _vm.$set(
-                                  _vm.form,
-                                  "expiration_date_label",
-                                  $event.target.value
-                                )
-                              }
-                            }
-                          })
-                        ]),
-                        _vm._v(" "),
-                        _c(
-                          "article",
-                          { staticClass: "col-xs-6" },
-                          [
-                            _c("datepicker", {
-                              attrs: {
-                                name: "expiration_date_value",
-                                id: "expiration_date_value",
-                                value: _vm.form.expiration_date_value,
-                                language: "es",
-                                "input-class": "form-control",
-                                format: "dd-MM-yyyy"
                               },
-                              on: {
-                                input: function($event) {
-                                  _vm.setExpirationDate($event)
-                                }
+                              model: {
+                                value: _vm.initDate,
+                                callback: function($$v) {
+                                  _vm.initDate = $$v
+                                },
+                                expression: "initDate"
                               }
                             })
                           ],
@@ -55397,6 +55216,8 @@ var render = function() {
                   ]
                 )
               ]),
+              _vm._v(" "),
+              _c("h4", [_vm._v("This estimate is valid for 10 days")]),
               _vm._v(" "),
               _c("div", { staticClass: "form-group" }, [
                 _c("div", { staticClass: "text-center" }, [

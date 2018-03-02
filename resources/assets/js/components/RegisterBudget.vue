@@ -99,34 +99,9 @@
                                                         language="es"
                                                         input-class = "form-control"
                                                         format = "MM/dd/yyyy"
-                                                        v-bind:value="new Date()"
+                                                        v-model="initDate"
                                                         @input="setCreationDate($event)"
                                                     ></datepicker>
-                                                </article>
-                                            </div>
-                                        </div>
-
-                                        <div class="form-group">
-                                            <div class="row">
-                                                <article class="col-xs-6">
-                                                    <input
-                                                            type="text"
-                                                            class="form-control input-hover"
-                                                            id="expiration_date_label"
-                                                            name="expiration_date_label"
-                                                            v-model="form.expiration_date_label"
-                                                            >
-                                                </article>
-
-                                                <article class="col-xs-6">
-                                                    <datepicker
-                                                            name = "expiration_date_value"
-                                                            id = "expiration_date_value"
-                                                            language="es"
-                                                            input-class = "form-control"
-                                                            format = "dd-MM-yyyy"
-                                                            @input="setExpirationDate($event)"
-                                                            ></datepicker>
                                                 </article>
                                             </div>
                                         </div>
@@ -611,6 +586,8 @@
                             </div>
                             <!-- /Footer -->
 
+                            <h4>This estimate is valid for 10 days</h4>
+
                             <div class="form-group">
                                 <div class="text-center">
                                     <p class="error" v-if="errors.any()">
@@ -623,6 +600,7 @@
                                     <img src="/img/loading.gif" v-if="loading">
                                 </div>
                             </div>
+
                         </div>
                     </div>
                 </div>
@@ -651,15 +629,14 @@
                 showShipping: false,
                 logo: '/uploads/' + this.userLogo,
                 business_name: this.userBusinessName,
+                initDate: new Date(),
                 form: {
                     public_id: this.next,
                     title: 'COTIZACIÓN',
                     client_label: 'Para:',
                     client_value: '',
                     creation_date_label: 'Fecha de emisión',
-                    creation_date_value: new Date(),
-                    expiration_date_label: 'Fecha de expiración',
-                    expiration_date_value: null,
+                    creation_date_value: '',
                     total_head_label: 'Total:',
                     total_head_value: null,
                     discount_label: 'Descuento',
@@ -691,6 +668,16 @@
                     }]
                 }
             }
+        },
+
+        mounted: function () {
+            const date = new Date();
+            let day = (date.getDate() < 10) ? '0' + date.getDate() : date.getDate();
+            let month = ((date.getMonth() + 1) < 10) ? '0' + (date.getMonth() + 1) : (date.getMonth() + 1);
+            let year = date.getFullYear();
+
+            this.form.creation_date_value = year + '-' + month + '-' + day;
+            document.getElementById('creation_date_value').value = date;
         },
 
         methods: {
@@ -829,14 +816,6 @@
 
                 this.form.creation_date_value = year + '-' + month + '-' + day;
             },
-
-            setExpirationDate: function (date) {
-                let day = (date.getDate() < 10) ? '0' + date.getDate() : date.getDate();
-                let month = ((date.getMonth() + 1) < 10) ? '0' + (date.getMonth() + 1) : (date.getMonth() + 1);
-                let year = date.getFullYear();
-
-                this.form.expiration_date_value = year + '-' + month + '-' + day;
-            }
         }
     }
 </script>

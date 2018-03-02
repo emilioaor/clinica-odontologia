@@ -21,8 +21,6 @@ class CreateTableBudgets extends Migration
             $table->string('client_value');
             $table->string('creation_date_label')->nullable();
             $table->date('creation_date_value')->nullable();
-            $table->string('expiration_date_label')->nullable();
-            $table->date('expiration_date_value')->nullable();
             $table->string('total_head_label')->nullable();
             $table->float('total_head_value', 10, 2);
             $table->string('discount_label')->nullable();

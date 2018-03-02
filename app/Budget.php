@@ -15,8 +15,6 @@ class Budget extends Model
         'client_value',
         'creation_date_label',
         'creation_date_value',
-        'expiration_date_label',
-        'expiration_date_value',
         'total_head_label',
         'total_head_value',
         'discount_label',

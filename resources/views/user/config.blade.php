@@ -12,8 +12,7 @@
         </div>
 
         <business-config
-                user-logo="{{ Auth::user()->logo }}"
-                user-business-name="{{ Auth::user()->business_name }}"
+                user = "{{ json_encode(Auth::user()) }}"
         ></business-config>
 
         <change-password></change-password>

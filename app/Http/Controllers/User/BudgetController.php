@@ -34,7 +34,14 @@ class BudgetController extends Controller
      */
     public function create()
     {
-        if (empty(Auth::user()->logo) || empty(Auth::user()->business_name)) {
+        $user = Auth::user();
+
+        if (empty($user->logo) ||
+            empty($user->business_name) ||
+            empty($user->address) ||
+            empty($user->email) ||
+            empty($user->phone)) {
+
             $this->sessionMessage('message.config.business.remember', self::ALERT_DANGER);
 
             return redirect()->route('config');

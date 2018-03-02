@@ -83,15 +83,20 @@ class ConfigController extends Controller
     }
 
     /**
-     * Actualiza el nombre del negocio
+     * Actualiza los datos del usario
      *
      * @param Request $request
      * @return JsonResponse
      */
     public function updateBusiness(Request $request)
     {
-        Auth::user()->business_name = $request->business_name;
-        Auth::user()->save();
+        $user = Auth::user();
+
+        $user->business_name = $request->business_name;
+        $user->address = $request->address;
+        $user->email = $request->email;
+        $user->phone = $request->phone;
+        $user->save();
 
         $this->sessionMessage('message.config.business.update');
 

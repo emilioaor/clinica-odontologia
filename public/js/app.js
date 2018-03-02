@@ -55092,23 +55092,113 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
-    props: ['userLogo', 'userBusinessName'],
+    props: ['user'],
     data: function data() {
         return {
             loading: false,
             form: {
                 logo: '',
-                business_name: this.userBusinessName
+                business_name: '',
+                phone: '',
+                email: '',
+                address: ''
             }
         };
     },
 
     mounted: function mounted() {
-        if (this.userLogo !== null && this.userLogo !== '') {
-            this.form.logo = '/uploads/' + this.userLogo;
+        var json = JSON.parse(this.user);
+
+        if (json.logo !== null && json.logo !== '') {
+            this.form.logo = '/uploads/' + json.logo;
         }
+
+        this.form.business_name = json.business_name;
+        this.form.phone = json.phone;
+        this.form.email = json.email;
+        this.form.address = json.address;
     },
 
     methods: {
@@ -55156,7 +55246,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
             this.loading = true;
 
-            axios.put('/user/config/business', { 'business_name': this.form.business_name }).then(function (res) {
+            axios.put('/user/config/business', this.form).then(function (res) {
 
                 if (res.data.success) {
                     location.href = res.data.redirect;
@@ -55216,7 +55306,7 @@ var render = function() {
                 ])
               ]),
               _vm._v(" "),
-              _c("div", { staticClass: "col-sm-4" }, [
+              _c("div", { staticClass: "col-sm-8" }, [
                 _c(
                   "form",
                   {
@@ -55228,70 +55318,231 @@ var render = function() {
                     }
                   },
                   [
-                    _c("div", { staticClass: "form-group" }, [
-                      _c("label", { attrs: { for: "business_name" } }, [
-                        _vm._v("Emisor para las cotizaciones")
+                    _c("div", { staticClass: "row" }, [
+                      _c("div", { staticClass: "col-sm-6" }, [
+                        _c("div", { staticClass: "form-group" }, [
+                          _c("label", { attrs: { for: "business_name" } }, [
+                            _vm._v("Emisor para las cotizaciones")
+                          ]),
+                          _vm._v(" "),
+                          _c("input", {
+                            directives: [
+                              {
+                                name: "model",
+                                rawName: "v-model",
+                                value: _vm.form.business_name,
+                                expression: "form.business_name"
+                              },
+                              { name: "validate", rawName: "v-validate" }
+                            ],
+                            staticClass: "form-control",
+                            class: {
+                              "input-error": _vm.errors.has("business_name")
+                            },
+                            attrs: {
+                              type: "text",
+                              name: "business_name",
+                              id: "business_name",
+                              placeholder: "Emisor para las cotizaciones",
+                              "data-vv-rules": "required"
+                            },
+                            domProps: { value: _vm.form.business_name },
+                            on: {
+                              input: function($event) {
+                                if ($event.target.composing) {
+                                  return
+                                }
+                                _vm.$set(
+                                  _vm.form,
+                                  "business_name",
+                                  $event.target.value
+                                )
+                              }
+                            }
+                          }),
+                          _vm._v(" "),
+                          _vm.errors.firstByRule("business_name", "required")
+                            ? _c("p", { staticClass: "error" }, [
+                                _vm._v(
+                                  "\n                                                Campo requerido\n                                            "
+                                )
+                              ])
+                            : _vm._e()
+                        ])
                       ]),
                       _vm._v(" "),
-                      _c("input", {
-                        directives: [
-                          {
-                            name: "model",
-                            rawName: "v-model",
-                            value: _vm.form.business_name,
-                            expression: "form.business_name"
-                          },
-                          { name: "validate", rawName: "v-validate" }
-                        ],
-                        staticClass: "form-control",
-                        class: {
-                          "input-error": _vm.errors.has("business_name")
-                        },
-                        attrs: {
-                          type: "text",
-                          name: "business_name",
-                          id: "business_name",
-                          "data-vv-rules": "required"
-                        },
-                        domProps: { value: _vm.form.business_name },
-                        on: {
-                          input: function($event) {
-                            if ($event.target.composing) {
-                              return
+                      _c("div", { staticClass: "col-sm-6" }, [
+                        _c("div", { staticClass: "form-group" }, [
+                          _c("label", { attrs: { for: "business_name" } }, [
+                            _vm._v("Telefono de contacto")
+                          ]),
+                          _vm._v(" "),
+                          _c("input", {
+                            directives: [
+                              {
+                                name: "model",
+                                rawName: "v-model",
+                                value: _vm.form.phone,
+                                expression: "form.phone"
+                              },
+                              { name: "validate", rawName: "v-validate" }
+                            ],
+                            staticClass: "form-control",
+                            class: { "input-error": _vm.errors.has("phone") },
+                            attrs: {
+                              type: "text",
+                              name: "phone",
+                              id: "phone",
+                              placeholder: "Telefono de contacto",
+                              "data-vv-rules": "required"
+                            },
+                            domProps: { value: _vm.form.phone },
+                            on: {
+                              input: function($event) {
+                                if ($event.target.composing) {
+                                  return
+                                }
+                                _vm.$set(_vm.form, "phone", $event.target.value)
+                              }
                             }
-                            _vm.$set(
-                              _vm.form,
-                              "business_name",
-                              $event.target.value
-                            )
-                          }
-                        }
-                      }),
-                      _vm._v(" "),
-                      _vm.errors.firstByRule("business_name", "required")
-                        ? _c("p", { staticClass: "error" }, [
-                            _vm._v(
-                              "\n                                        Campo requerido\n                                    "
-                            )
-                          ])
-                        : _vm._e()
+                          }),
+                          _vm._v(" "),
+                          _vm.errors.firstByRule("phone", "required")
+                            ? _c("p", { staticClass: "error" }, [
+                                _vm._v(
+                                  "\n                                                Campo requerido\n                                            "
+                                )
+                              ])
+                            : _vm._e()
+                        ])
+                      ])
                     ]),
                     _vm._v(" "),
-                    _c("div", { staticClass: "form-group" }, [
-                      _vm.loading
-                        ? _c("img", { attrs: { src: "/img/loading.gif" } })
-                        : _vm._e(),
+                    _c("div", { staticClass: "row" }, [
+                      _c("div", { staticClass: "col-sm-6" }, [
+                        _c("div", { staticClass: "form-group" }, [
+                          _c("label", { attrs: { for: "business_name" } }, [
+                            _vm._v("Email")
+                          ]),
+                          _vm._v(" "),
+                          _c("input", {
+                            directives: [
+                              {
+                                name: "model",
+                                rawName: "v-model",
+                                value: _vm.form.email,
+                                expression: "form.email"
+                              },
+                              { name: "validate", rawName: "v-validate" }
+                            ],
+                            staticClass: "form-control",
+                            class: { "input-error": _vm.errors.has("email") },
+                            attrs: {
+                              type: "email",
+                              name: "email",
+                              id: "email",
+                              placeholder: "Email",
+                              "data-vv-rules": "required|email"
+                            },
+                            domProps: { value: _vm.form.email },
+                            on: {
+                              input: function($event) {
+                                if ($event.target.composing) {
+                                  return
+                                }
+                                _vm.$set(_vm.form, "email", $event.target.value)
+                              }
+                            }
+                          }),
+                          _vm._v(" "),
+                          _vm.errors.firstByRule("email", "required")
+                            ? _c("p", { staticClass: "error" }, [
+                                _vm._v(
+                                  "\n                                                Campo requerido\n                                            "
+                                )
+                              ])
+                            : _vm._e(),
+                          _vm._v(" "),
+                          _vm.errors.firstByRule("email", "email")
+                            ? _c("p", { staticClass: "error" }, [
+                                _vm._v(
+                                  "\n                                                Formato invalido\n                                            "
+                                )
+                              ])
+                            : _vm._e()
+                        ])
+                      ]),
                       _vm._v(" "),
-                      !_vm.loading
-                        ? _c("button", { staticClass: "btn btn-warning" }, [
-                            _c("i", {
-                              staticClass: "glyphicon glyphicon-saved"
-                            }),
-                            _vm._v(
-                              "\n                                        Actualizar\n                                    "
-                            )
-                          ])
-                        : _vm._e()
+                      _c("div", { staticClass: "col-sm-6" }, [
+                        _c("div", { staticClass: "form-group" }, [
+                          _c("label", { attrs: { for: "business_name" } }, [
+                            _vm._v("Dirección")
+                          ]),
+                          _vm._v(" "),
+                          _c("input", {
+                            directives: [
+                              {
+                                name: "model",
+                                rawName: "v-model",
+                                value: _vm.form.address,
+                                expression: "form.address"
+                              },
+                              { name: "validate", rawName: "v-validate" }
+                            ],
+                            staticClass: "form-control",
+                            class: { "input-error": _vm.errors.has("address") },
+                            attrs: {
+                              type: "text",
+                              name: "address",
+                              id: "address",
+                              placeholder: "Dirección",
+                              "data-vv-rules": "required"
+                            },
+                            domProps: { value: _vm.form.address },
+                            on: {
+                              input: function($event) {
+                                if ($event.target.composing) {
+                                  return
+                                }
+                                _vm.$set(
+                                  _vm.form,
+                                  "address",
+                                  $event.target.value
+                                )
+                              }
+                            }
+                          }),
+                          _vm._v(" "),
+                          _vm.errors.firstByRule("address", "required")
+                            ? _c("p", { staticClass: "error" }, [
+                                _vm._v(
+                                  "\n                                                Campo requerido\n                                            "
+                                )
+                              ])
+                            : _vm._e()
+                        ])
+                      ])
+                    ]),
+                    _vm._v(" "),
+                    _c("div", { staticClass: "row" }, [
+                      _c("div", { staticClass: "col-sm-6" }, [
+                        _c("div", { staticClass: "form-group" }, [
+                          _vm.loading
+                            ? _c("img", { attrs: { src: "/img/loading.gif" } })
+                            : _vm._e(),
+                          _vm._v(" "),
+                          !_vm.loading
+                            ? _c("button", { staticClass: "btn btn-warning" }, [
+                                _c("i", {
+                                  staticClass: "glyphicon glyphicon-saved"
+                                }),
+                                _vm._v(
+                                  "\n                                                Actualizar\n                                            "
+                                )
+                              ])
+                            : _vm._e()
+                        ])
+                      ])
                     ])
                   ]
                 )

@@ -30,7 +30,7 @@
                                         <tr>
                                             <td>
                                                 <a href="{{ route('budget.edit', ['budget' => $budget->public_id]) }}">
-                                                    {{ $budget->public_id }}
+                                                    #{{ $budget->public_id }}
                                                 </a>
                                             </td>
                                             <td>{{ $budget->client_value }}</td>

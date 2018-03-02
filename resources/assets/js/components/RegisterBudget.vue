@@ -98,7 +98,8 @@
                                                         id = "creation_date_value"
                                                         language="es"
                                                         input-class = "form-control"
-                                                        format = "dd-MM-yyyy"
+                                                        format = "MM/dd/yyyy"
+                                                        v-bind:value="new Date()"
                                                         @input="setCreationDate($event)"
                                                     ></datepicker>
                                                 </article>
@@ -656,7 +657,7 @@
                     client_label: 'Para:',
                     client_value: '',
                     creation_date_label: 'Fecha de emisión',
-                    creation_date_value: null,
+                    creation_date_value: new Date(),
                     expiration_date_label: 'Fecha de expiración',
                     expiration_date_value: null,
                     total_head_label: 'Total:',

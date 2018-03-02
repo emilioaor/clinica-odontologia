@@ -6,7 +6,7 @@
                     <h1>
                         <i class="glyphicon glyphicon-th-list" v-if="! loading"></i>
                         <img src="/img/loading.gif" v-if="loading">
-                        Generar cotización
+                        Actualizar cotización
                     </h1>
                 </div>
             </div>
@@ -99,7 +99,7 @@
                                                         v-bind:value="form.creation_date_value"
                                                         language="es"
                                                         input-class = "form-control"
-                                                        format = "dd-MM-yyyy"
+                                                        format = "MM/dd/yyyy"
                                                         @input="setCreationDate($event)"
                                                     ></datepicker>
                                                 </article>

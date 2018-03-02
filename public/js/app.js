@@ -51021,6 +51021,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
 
 
 
@@ -51047,7 +51048,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 client_label: 'Para:',
                 client_value: '',
                 creation_date_label: 'Fecha de emisión',
-                creation_date_value: null,
+                creation_date_value: new Date(),
                 expiration_date_label: 'Fecha de expiración',
                 expiration_date_value: null,
                 total_head_label: 'Total:',
@@ -51443,7 +51444,8 @@ var render = function() {
                                 id: "creation_date_value",
                                 language: "es",
                                 "input-class": "form-control",
-                                format: "dd-MM-yyyy"
+                                format: "MM/dd/yyyy",
+                                value: new Date()
                               },
                               on: {
                                 input: function($event) {
@@ -53809,7 +53811,9 @@ var render = function() {
             _vm.loading
               ? _c("img", { attrs: { src: "/img/loading.gif" } })
               : _vm._e(),
-            _vm._v("\n                    Generar cotización\n                ")
+            _vm._v(
+              "\n                    Actualizar cotización\n                "
+            )
           ])
         ])
       ]),
@@ -54003,7 +54007,7 @@ var render = function() {
                                 value: _vm.form.creation_date_value,
                                 language: "es",
                                 "input-class": "form-control",
-                                format: "dd-MM-yyyy"
+                                format: "MM/dd/yyyy"
                               },
                               on: {
                                 input: function($event) {

@@ -1,4 +1,7 @@
 .register-budget {
+  .panel-body {
+    font-family: Calibri;
+  }
   &__logo {
     max-width: 50%;
     text-align: center;
@@ -103,10 +106,15 @@
   }
 
   input {
+    font-family: Calibri;
     transition: none;
     &[name="title"] {
-      font-size: 2.75em;
+      font-size: 25px;
       height: 5rem;
+      text-align: center;
+      width: 95%;
+      margin-left: 2.5%;
+      color: #ffffff;
     }
 
     &[name="public_id"] {
@@ -136,4 +144,75 @@
       border: 1px #eeeeee solid;
     }
   }
+  thead,tfoot {
+    input {
+      width: 95%;
+      margin-left: 2.5%;
+      color: #ffffff;
+      text-align: center !important;
+    }
+    input[disabled="disabled"] {
+      color: #555;
+    }
+    #table_description_label {
+      text-align: left !important;
+    }
+  }
+  a {
+    cursor: pointer;
+  }
+  #creation_date_value[readonly="readonly"] {
+    background-color: #ffffff;
+    cursor: pointer;
+  }
+  #client_label {
+    font-weight: bold;
+  }
+  #shaping_value,
+  #discount_value,
+  {
+    color: #555555;
+  }
 }
+
+h1 {
+  font-family: Calibri, Candara, Segoe, "Segoe UI", Optima, Arial, sans-serif;
+  font-size: 24px;
+  font-style: normal;
+  font-variant: normal;
+  font-weight: 500;
+  line-height: 26.4px;
+}
+h3 {
+  font-family: Calibri, Candara, Segoe, "Segoe UI", Optima, Arial, sans-serif;
+  font-size: 14px;
+  font-style: normal;
+  font-variant: normal;
+  font-weight: 500;
+  line-height: 15.4px;
+}
+p {
+  font-family: Calibri, Candara, Segoe, "Segoe UI", Optima, Arial, sans-serif;
+  font-size: 14px;
+  font-style: normal;
+  font-variant: normal;
+  font-weight: 400;
+  line-height: 20px;
+}
+blockquote {
+  font-family: Calibri, Candara, Segoe, "Segoe UI", Optima, Arial, sans-serif;
+  font-size: 21px;
+  font-style: normal;
+  font-variant: normal;
+  font-weight: 400;
+  line-height: 30px;
+}
+pre {
+  font-family: Calibri, Candara, Segoe, "Segoe UI", Optima, Arial, sans-serif;
+  font-size: 13px;
+  font-style: normal;
+  font-variant: normal;
+  font-weight: 400;
+  line-height: 18.5714px;
+}
+

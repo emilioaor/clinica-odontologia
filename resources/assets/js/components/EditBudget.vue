@@ -6,499 +6,487 @@
                     <h1>
                         <i class="glyphicon glyphicon-th-list" v-if="! loading"></i>
                         <img src="/img/loading.gif" v-if="loading">
-                        Actualizar cotización
+                        Generar cotización
                     </h1>
                 </div>
             </div>
+
             <div class="row">
                 <!-- Cotizador -->
                 <div class="col-md-10">
                     <div class="panel panel-default">
-                        <div class="panel-body register-budget__header">
+                        <div class="panel-body">
 
-                            <!-- Header -->
-                            <div class="row">
-                                <!-- Left -->
-                                <div class="col-xs-5">
-                                    <div class="form-group">
-                                        <div class="register-budget__logo" v-if="logo !== null && logo !== ''">
-                                            <img v-bind:src="logo">
+                            <table style="width: 100%">
+                                <!-- HEADER -->
+                                <tr style="color: #FFFFFF;">
+                                    <td style="width: 30%; background-color: #34a7ac">
+                                        <!-- Title -->
+                                        <div class="form-group">
+                                            <input
+                                                    type="text"
+                                                    class="form-control input-hover"
+                                                    id="title"
+                                                    name="title"
+                                                    placeholder="Titulo"
+                                                    v-model="form.title"
+                                                    >
                                         </div>
-                                    </div>
-                                    <div class="form-group">
-                                        <p>
-                                            {{ business_name }}
-                                        </p>
-                                    </div>
+                                    </td>
+                                    <td style="width: 70%;">
 
-                                    <div class="form-group">
+                                        <table style="width: 100%;">
+                                            <tr>
+                                                <td style="width: 100%; text-align: right;padding-bottom: 20px;" colspan="3">
+                                                    <!-- Logo -->
+                                                    <img    style="width: 100%; max-width: 200px;"
+                                                            v-bind:src="logo"
+                                                            >
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td style="width: 33.3333333%">
+                                                    <!-- Phone -->
+                                                    <p style="width: 96%; background-color: #38a9a8;height: 130px;margin: 0 0 0 4%;padding-top: 35px;text-align: center;font-size: 13px;position: relative;">
+                                                        <i class="glyphicon glyphicon-phone" style="position:absolute;top: 20px;left: 85px;font-size: 30px;"></i>
+                                                        <br>
+                                                        {{ userData.phone }}
+                                                    </p>
+                                                </td>
+                                                <td style="width: 33.3333333%">
+                                                    <!-- Address -->
+                                                    <p style="width: 96%; background-color: #408b88;height: 130px;margin: 0 0 0 4%;padding-top: 35px;text-align: center;font-size: 13px;position: relative;">
+                                                        <i class="glyphicon glyphicon-map-marker" style="position:absolute;top: 20px;left: 85px;font-size: 30px;"></i>
+                                                        <br>
+                                                        {{ userData.address }}
+                                                    </p>
+                                                </td>
+                                                <td style="width: 33.3333333%">
+                                                    <!-- Email -->
+                                                    <p style="width: 96%; background-color: #277f6a;height: 130px;margin: 0 0 0 4%;padding-top: 35px;text-align: center;font-size: 13px;position: relative;">
+                                                        <i class="glyphicon glyphicon-envelope" style="position:absolute;top: 20px;left: 85px;font-size: 30px;"></i>
+                                                        <br>
+                                                        {{ userData.email }}
+                                                    </p>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                </tr>
+                                <!-- /HEADER -->
+
+                                <!-- INFO -->
+                                <tr>
+                                    <td style="width: 30%;">
+                                        <!-- Client Info -->
+                                        <p style="margin: 25px 0 0 0;font-size: 16px;">
+                                            <strong>
+                                                {{ business_name }}
+                                            </strong>
+                                        </p>
+                                        <p style="margin: 0;">
+                                        <div class="form-group">
+                                            <div style="width: 50%;float:left;">
+                                                <input
+                                                        type="text"
+                                                        class="form-control input-hover"
+                                                        id="client_label"
+                                                        name="client_label"
+                                                        v-model="form.client_label"
+                                                        >
+                                            </div>
+                                            <div style="width: 50%;float:left;">
+                                                <input
+                                                        type="text"
+                                                        class="form-control"
+                                                        id="client_value"
+                                                        name="client_value"
+                                                        placeholder="Cliente"
+                                                        v-model="form.client_value"
+                                                        v-validate
+                                                        data-vv-rules="required"
+                                                        v-bind:class="{'input-error': errors.has('client_value')}"
+                                                        >
+                                                <p class="error" v-if="errors.firstByRule('client_value', 'required')">
+                                                    Cliente es requerido
+                                                </p>
+                                            </div>
+                                        </div>
+                                        </p>
+
+                                    </td>
+                                    <td style="width: 70%;">
+
+
+                                        <p style="width: 80%;text-align: right;float: left;color: #699797;font-weight: 600;margin-top: 25px;margin-bottom: 0;">
+                                            N°:
+                                        </p>
+                                        <p style="width: 20%;text-align: right;float: left;font-weight: 800;margin-top: 25px;margin-bottom: 0;">
+                                            #{{ form.public_id }}
+                                        </p>
+
+                                        <p style="width: 80%;text-align: right;float: left;color: #699797;font-weight: 600;margin-bottom: 0;">
+                                            <input
+                                                    type="text"
+                                                    class="form-control input-hover"
+                                                    id="creation_date_label"
+                                                    name="creation_date_label"
+                                                    v-model="form.creation_date_label"
+                                                    style="color: #699797;font-weight: 600;"
+                                                    >
+                                        </p>
+                                        <p style="width: 20%;text-align: right;float: left;font-weight: 800;margin-bottom: 0;">
+                                            <datepicker
+                                                    name = "creation_date_value"
+                                                    id = "creation_date_value"
+                                                    language="es"
+                                                    input-class = "form-control"
+                                                    format = "MM/dd/yyyy"
+                                                    v-model="initDate"
+                                                    @input="setCreationDate($event)"
+                                                    ></datepicker>
+                                        </p>
+
+                                    </td>
+                                </tr>
+                                <!-- /INFO -->
+                            </table>
+
+
+                            <!-- TABLE -->
+                            <table style="width: 100%;margin-top: 30px;">
+                                <thead>
+                                <tr style="background-color: #3ebbb5; text-align: center;color: #FFFFFF;height: 50px;font-weight: bold;font-size: 16px;">
+                                    <td style="width: 10%">#</td>
+                                    <td style="width: 50%">
                                         <input
                                                 type="text"
                                                 class="form-control input-hover"
-                                                id="client_label"
-                                                name="client_label"
-                                                v-model="form.client_label"
+                                                id="table_description_label"
+                                                name="table_description_label"
+                                                v-model="form.table_description_label"
                                                 >
+                                    </td>
+                                    <td style="width: 10%">
+                                        <input
+                                                type="text"
+                                                class="form-control input-hover"
+                                                id="table_quantity_label"
+                                                name="table_quantity_label"
+                                                v-model="form.table_quantity_label"
+                                                >
+                                    </td>
+                                    <td style="width: 15%">
+                                        <input
+                                                type="text"
+                                                class="form-control input-hover"
+                                                id="table_price_label"
+                                                name="table_price_label"
+                                                v-model="form.table_price_label"
+                                                >
+                                    </td>
+
+                                    <td style="width: 15%">
+                                        <input
+                                                type="text"
+                                                class="form-control input-hover"
+                                                id="table_total_label"
+                                                name="table_total_label"
+                                                v-model="form.table_total_label"
+                                                >
+                                    </td>
+                                </tr>
+                                </thead>
+                                <!-- Detail -->
+                                <tr style="height: 40px;color: #222" v-for="detail,id in form.details">
+                                    <td style="text-align: center;">
+                                        <a @click="removeDetail(id)">X</a>
+                                    </td>
+                                    <td>
+                                        <select
+                                                class="form-control"
+                                                v-model="detail.product_id"
+                                                v-bind:name="'productId' + id"
+                                                @change="changeProduct(detail)"
+                                                v-validate
+                                                data-vv-rules="min_value:1"
+                                                v-bind:class="{'input-error': errors.has('productId' + id)}"
+                                                >
+                                            <option value="null">- Selecciona un producto</option>
+                                            <option
+                                                    v-for="product in productList"
+                                                    v-bind:value="product.id"
+                                                    >
+                                                {{ product.name }}
+                                            </option>
+                                        </select>
+                                        <p class="error" v-if="errors.firstByRule('productId' + id, 'min_value')">
+                                            No olvide seleccionar el producto
+                                        </p>
+                                    </td>
+                                    <td>
+                                        <input
+                                                type="number"
+                                                class="form-control"
+                                                v-bind:name="'quantity' + id"
+                                                v-model="detail.quantity"
+                                                v-validate
+                                                data-vv-rules="required"
+                                                min="1"
+                                                v-bind:class="{'input-error': errors.has('quantity' + id)}"
+                                                >
+                                        <p class="error" v-if="errors.firstByRule('quantity' + id, 'required')">
+                                            Precio
+                                        </p>
+                                    </td>
+                                    <td>
                                         <input
                                                 type="text"
                                                 class="form-control"
-                                                id="client_value"
-                                                name="client_value"
-                                                placeholder="Cliente"
-                                                v-model="form.client_value"
-                                                v-validate
-                                                data-vv-rules="required"
-                                                v-bind:class="{'input-error': errors.has('client_value')}"
+                                                v-bind:value="currencySymbol + detail.price + currencySymbol2"
+                                                disabled
                                                 >
-                                        <p class="error" v-if="errors.firstByRule('client_value', 'required')">
-                                            Cliente es requerido
-                                        </p>
-                                    </div>
-                                </div>
+                                    </td>
+                                    <td>
+                                        <input
+                                                type="text"
+                                                class="form-control"
+                                                v-bind:value="currencySymbol + (detail.price * detail.quantity) + currencySymbol2"
+                                                disabled
+                                                >
 
-                                <!-- Right -->
-                                <div class="col-xs-5 col-xs-offset-2">
-                                    <div class="form-group">
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <td colspan="5">
+                                        <button
+                                                class="btn btn-default"
+                                                @click="addDetail()"
+                                                v-bind:disabled="form.details.length >= productList.length"
+                                                >
+                                            <i class="glyphicon glyphicon-plus"></i>
+                                            Agregar detalle
+                                        </button>
+                                        <p class="error" v-if="form.details.length >= productList.length">
+                                            Ya agrego un detalle para cada producto registrado
+                                        </p>
+                                    </td>
+                                </tr>
+
+                                <!-- /Detail -->
+
+                                <!-- Footer -->
+                                <tfoot>
+                                <tr style="background-color: #66bcc8;color: #FFFFFF;height: 35px;font-weight: bold;">
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td style="text-align: center;">
                                         <input
                                                 type="text"
                                                 class="form-control input-hover"
-                                                id="title"
-                                                name="title"
-                                                placeholder="Titulo"
-                                                v-model="form.title"
+                                                id="subtotal_footer_label"
+                                                name="subtotal_footer_label"
+                                                v-model="form.subtotal_footer_label"
                                                 >
-                                    </div>
+                                    </td>
+                                    <td style="text-align: center;">
+                                        <input
+                                                type="text"
+                                                class="form-control"
+                                                id="subtotal_footer_value"
+                                                name="subtotal_footer_value"
+                                                v-bind:value="currencySymbol + getSubTotal() + currencySymbol2"
+                                                disabled
+                                                >
+                                    </td>
+                                </tr>
 
-                                    <div class="form-group">
-                                        <div class="row">
-                                            <div class="col-xs-8 col-xs-offset-4">
-                                                <h4 class="text-right">
-                                                    #{{ form.public_id }}
-                                                </h4>
-                                            </div>
-                                        </div>
-                                    </div>
 
-                                    <section class="register-budget__dates">
-                                        <div class="form-group">
-                                            <div class="row">
-                                                <article class="col-xs-6">
-                                                    <input
-                                                            type="text"
-                                                            class="form-control input-hover"
-                                                            id="creation_date_label"
-                                                            name="creation_date_label"
-                                                            v-model="form.creation_date_label"
-                                                            >
-                                                </article>
-
-                                                <article class="col-xs-6">
-                                                    <datepicker
-                                                        name = "creation_date_value"
-                                                        id = "creation_date_value"
-                                                        v-model="initDate"
-                                                        language="es"
-                                                        input-class = "form-control"
-                                                        format = "MM/dd/yyyy"
-                                                        @input="setCreationDate($event)"
-                                                    ></datepicker>
-                                                </article>
-                                            </div>
-                                        </div>
-
-                                        <div class="form-group total">
-                                            <div class="row">
-                                                <article class="col-xs-6">
-                                                    <input
-                                                            type="text"
-                                                            class="form-control input-hover"
-                                                            id="total_head_label"
-                                                            name="total_head_label"
-                                                            v-model="form.total_head_label"
-                                                            >
-                                                </article>
-
-                                                <article class="col-xs-6">
-                                                    <p>{{ currencySymbol + getFinalTotal() + currencySymbol2 }}</p>
-                                                </article>
-                                            </div>
-                                        </div>
-                                    </section>
-
-                                </div>
-                            </div>
-                            <!-- /Header -->
-
-                            <!-- Table -->
-                            <div class="row">
-                                <div class="col-xs-12 register-budget__table">
-                                    <table class="table table-responsive">
-                                        <thead>
-                                            <tr>
-                                                <th width="51%">
-                                                    <input
-                                                            type="text"
-                                                            class="form-control input-hover"
-                                                            id="table_description_label"
-                                                            name="table_description_label"
-                                                            v-model="form.table_description_label"
-                                                            >
-                                                </th>
-                                                <th width="14%">
-                                                    <input
-                                                            type="text"
-                                                            class="form-control input-hover"
-                                                            id="table_quantity_label"
-                                                            name="table_quantity_label"
-                                                            v-model="form.table_quantity_label"
-                                                            >
-                                                </th>
-                                                <th width="16%">
-                                                    <input
-                                                            type="text"
-                                                            class="form-control input-hover"
-                                                            id="table_price_label"
-                                                            name="table_price_label"
-                                                            v-model="form.table_price_label"
-                                                            >
-                                                </th>
-                                                <th width="16%">
-                                                    <input
-                                                            type="text"
-                                                            class="form-control input-hover"
-                                                            id="table_total_label"
-                                                            name="table_total_label"
-                                                            v-model="form.table_total_label"
-                                                            >
-                                                </th>
-                                                <th width="3%"></th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr v-for="detail,id in form.details">
-                                                <td>
-                                                    <select
-                                                            class="form-control"
-                                                            v-model="detail.product_id"
-                                                            v-bind:name="'productId' + id"
-                                                            @change="changeProduct(detail)"
-                                                            v-validate
-                                                            data-vv-rules="min_value:1"
-                                                            v-bind:class="{'input-error': errors.has('productId' + id)}"
-                                                            >
-                                                        <option value="null">- Selecciona un producto</option>
-                                                        <option
-                                                            v-for="product in productList"
-                                                            v-bind:value="product.id"
-                                                            >
-                                                            {{ product.name }}
-                                                        </option>
-                                                    </select>
-                                                    <p class="error" v-if="errors.firstByRule('productId' + id, 'min_value')">
-                                                        No olvide seleccionar el producto
-                                                    </p>
-                                                </td>
-                                                <td>
-                                                    <input
-                                                            type="number"
-                                                            class="form-control"
-                                                            v-bind:name="'quantity' + id"
-                                                            v-model="detail.quantity"
-                                                            v-validate
-                                                            data-vv-rules="required"
-                                                            min="1"
-                                                            v-bind:class="{'input-error': errors.has('quantity' + id)}"
-                                                            >
-                                                    <p class="error" v-if="errors.firstByRule('quantity' + id, 'required')">
-                                                        Precio
-                                                    </p>
-                                                </td>
-                                                <td>
-                                                    <input
-                                                            type="text"
-                                                            class="form-control"
-                                                            v-bind:value="currencySymbol + detail.price + currencySymbol2"
-                                                            disabled
-                                                            >
-                                                </td>
-                                                <td>
-                                                    <input
-                                                            type="text"
-                                                            class="form-control"
-                                                            v-bind:value="currencySymbol + (detail.price * detail.quantity) + currencySymbol2"
-                                                            disabled
-                                                            >
-
-                                                </td>
-                                                <td>
-                                                    <a @click="removeDetail(id)">X</a>
-                                                </td>
-                                            </tr>
-                                        </tbody>
-                                        <tfoot>
-                                            <tr>
-                                                <td colspan="5">
-                                                    <button
-                                                            class="btn btn-success"
-                                                            @click="addDetail()"
-                                                            v-bind:disabled="form.details.length >= productList.length"
-                                                            >
-                                                        <i class="glyphicon glyphicon-plus"></i>
-                                                        Agregar detalle
-                                                    </button>
-                                                    <p class="error" v-if="form.details.length >= productList.length">
-                                                        Ya agrego un detalle para cada producto registrado
-                                                    </p>
-                                                </td>
-                                            </tr>
-                                        </tfoot>
-                                    </table>
-                                </div>
-                            </div>
-                            <!-- /Table -->
-
-                            <!-- Footer -->
-                            <div class="row">
-                                <div class="col-xs-12 register-budget__footer">
-
-                                    <!-- Subtotal -->
-                                    <div class="row">
-                                        <div class="col-xs-5 col-xs-offset-7">
-
-                                            <div class="form-group">
-                                                <div class="row">
-                                                    <article class="col-xs-6">
-                                                        <input
-                                                                type="text"
-                                                                class="form-control input-hover"
-                                                                id="subtotal_footer_label"
-                                                                name="subtotal_footer_label"
-                                                                v-model="form.subtotal_footer_label"
-                                                                >
-                                                    </article>
-
-                                                    <article class="col-xs-6">
-                                                        <input
-                                                                type="text"
-                                                                class="form-control"
-                                                                id="subtotal_footer_value"
-                                                                name="subtotal_footer_value"
-                                                                v-bind:value="currencySymbol + getSubTotal() + currencySymbol2"
-                                                                disabled
-                                                                >
-                                                    </article>
-                                                </div>
-                                            </div>
-
-                                        </div>
-                                    </div>
-
-                                    <!-- Discount -->
-                                    <div class="row" v-if="showDiscount">
-                                        <div class="col-xs-5 col-xs-offset-7">
-                                            <div class="form-group">
-                                                <div class="row">
-                                                    <div class="col-xs-2">
-                                                        <div class="text-center">
-                                                            <button class="btn btn-danger" @click="showDiscount = false; form.discount_value = null">
-                                                                X
-                                                            </button>
-                                                        </div>
-                                                    </div>
-                                                    <article class="col-xs-4">
-                                                        <input
-                                                                type="text"
-                                                                class="form-control input-hover"
-                                                                id="discount_label"
-                                                                name="discount_label"
-                                                                v-model="form.discount_label"
-                                                                >
-                                                    </article>
-
-                                                    <article class="col-xs-3">
-                                                        <input
-                                                                type="number"
-                                                                class="form-control"
-                                                                id="discount_value"
-                                                                name="discount_value"
-                                                                v-model="form.discount_value"
-                                                                v-validate
-                                                                data-vv-rules="required"
-                                                                v-bind:class="{'input-error': errors.has('discount_value')}"
-                                                                >
-                                                        <p class="error" v-if="errors.firstByRule('discount_value', 'required')">
-                                                            Requerido
-                                                        </p>
-                                                    </article>
-
-                                                    <div class="col-xs-3">
-                                                        <select
-                                                                class="form-control"
-                                                                v-model="form.discount_type"
-                                                                >
-                                                            <option value="1">%</option>
-                                                            <option value="2">{{ currencySymbol !== '' ? currencySymbol : 'Monto' }}</option>
-                                                        </select>
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                        </div>
-                                    </div>
-
-                                    <!-- Shipping -->
-                                    <div class="row" v-if="showShipping">
-                                        <div class="col-xs-5 col-xs-offset-7">
-                                            <div class="form-group">
-                                                <div class="row">
-                                                    <div class="col-xs-2">
-                                                        <div class="text-center">
-                                                            <button class="btn btn-danger" @click="showShipping = false; form.shaping_value = null">
-                                                                X
-                                                            </button>
-                                                        </div>
-                                                    </div>
-                                                    <article class="col-xs-4">
-                                                        <input
-                                                                type="text"
-                                                                class="form-control input-hover"
-                                                                id="shaping_label"
-                                                                name="shaping_label"
-                                                                v-model="form.shaping_label"
-                                                                >
-                                                    </article>
-
-                                                    <article class="col-xs-3">
-                                                        <input
-                                                                type="number"
-                                                                class="form-control"
-                                                                id="shaping_value"
-                                                                name="shaping_value"
-                                                                v-model="form.shaping_value"
-                                                                v-validate
-                                                                data-vv-rules="required"
-                                                                v-bind:class="{'input-error': errors.has('shaping_value')}"
-                                                                >
-                                                        <p class="error" v-if="errors.firstByRule('shaping_value', 'required')">
-                                                            Requerido
-                                                        </p>
-                                                    </article>
-
-                                                    <div class="col-xs-3">
-                                                        <input
-                                                                type="text"
-                                                                class="form-control"
-                                                                v-bind:value="currencySymbol"
-                                                                disabled
-                                                            >
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                        </div>
-                                    </div>
-
-                                    <!-- Select Discount, Shipping -->
-                                    <div class="row">
-                                        <div class="col-xs-12">
-                                            <p class="text-right">
-                                                <a @click="showDiscount = true" v-if="!showDiscount">
-                                                    <i class="glyphicon glyphicon-plus"></i>
-                                                    Descuento
-                                                </a>
-                                                <a @click="showShipping = true" v-if="!showShipping">
-                                                    <i class="glyphicon glyphicon-plus"></i>
-                                                    Envio
-                                                </a>
+                                <!-- Discount -->
+                                <tr style="background-color: #66bcc8;color: #FFFFFF;height: 35px;font-weight: bold;" v-if="showDiscount">
+                                    <td></td>
+                                    <td></td>
+                                    <td style="text-align: right;">
+                                        <button class="btn btn-danger" @click="showDiscount = false; form.discount_value = null">
+                                            X
+                                        </button>
+                                    </td>
+                                    <td>
+                                        <input
+                                                type="text"
+                                                class="form-control input-hover"
+                                                id="discount_label"
+                                                name="discount_label"
+                                                v-model="form.discount_label"
+                                                >
+                                    </td>
+                                    <td>
+                                        <div style="width: 50%;float:left;">
+                                            <input
+                                                    type="number"
+                                                    class="form-control"
+                                                    id="discount_value"
+                                                    name="discount_value"
+                                                    v-model="form.discount_value"
+                                                    v-validate
+                                                    data-vv-rules="required"
+                                                    v-bind:class="{'input-error': errors.has('discount_value')}"
+                                                    >
+                                            <p class="error" v-if="errors.firstByRule('discount_value', 'required')">
+                                                Requerido
                                             </p>
                                         </div>
-                                    </div>
-
-                                    <!-- Total -->
-                                    <div class="row">
-                                        <div class="col-xs-5 col-xs-offset-7">
-
-                                            <div class="form-group">
-                                                <div class="row">
-                                                    <article class="col-xs-6">
-                                                        <input
-                                                                type="text"
-                                                                class="form-control input-hover"
-                                                                id="total_footer_label"
-                                                                name="total_footer_label"
-                                                                v-model="form.total_footer_label"
-                                                                >
-                                                    </article>
-
-                                                    <article class="col-xs-6">
-                                                        <input
-                                                                type="text"
-                                                                class="form-control"
-                                                                id="total_footer_value"
-                                                                name="total_footer_value"
-                                                                v-bind:value="currencySymbol + getTotal() + currencySymbol2"
-                                                                disabled
-                                                                >
-                                                    </article>
-                                                </div>
-                                            </div>
-
+                                        <div style="width: 50%;float:left;">
+                                            <select
+                                                    class="form-control"
+                                                    v-model="form.discount_type"
+                                                    >
+                                                <option value="1">%</option>
+                                                <option value="2">{{ currencySymbol !== '' ? currencySymbol : 'Monto' }}</option>
+                                            </select>
                                         </div>
-                                    </div>
 
-                                    <!-- Notes -->
-                                    <div class="row">
-                                        <div class="col-xs-12">
-                                            <div class="form-group">
-                                                <input
-                                                        type="text"
-                                                        class="form-control input-hover"
-                                                        id="notes_label"
-                                                        name="notes_label"
-                                                        v-model="form.notes_label"
-                                                        >
+                                    </td>
+                                </tr>
 
-                                                <textarea
-                                                        name="notes_value"
-                                                        id="notes_value"
-                                                        placeholder="Todo lo relevante a la cotización"
-                                                        class="form-control"
-                                                        rows="2"
-                                                        v-model="form.notes_value"
-                                                        ></textarea>
-                                            </div>
-                                        </div>
-                                    </div>
+                                <!-- Shipping -->
+                                <tr style="background-color: #66bcc8;color: #FFFFFF;height: 35px;font-weight: bold;" v-if="showShipping">
+                                    <td></td>
+                                    <td></td>
+                                    <td style="text-align: right;">
+                                        <button class="btn btn-danger" @click="showShipping = false; form.shaping_value = null">
+                                            X
+                                        </button>
+                                    </td>
+                                    <td>
+                                        <input
+                                                type="text"
+                                                class="form-control input-hover"
+                                                id="shaping_label"
+                                                name="shaping_label"
+                                                v-model="form.shaping_label"
+                                                >
+                                    </td>
+                                    <td>
+                                        <input
+                                                type="number"
+                                                class="form-control"
+                                                id="shaping_value"
+                                                name="shaping_value"
+                                                v-model="form.shaping_value"
+                                                v-validate
+                                                data-vv-rules="required"
+                                                v-bind:class="{'input-error': errors.has('shaping_value')}"
+                                                >
+                                        <p class="error" v-if="errors.firstByRule('shaping_value', 'required')">
+                                            Requerido
+                                        </p>
+                                    </td>
+                                </tr>
 
-                                    <!-- Terms and conditions -->
-                                    <div class="row">
-                                        <div class="col-xs-12">
-                                            <div class="form-group">
-                                                <input
-                                                        type="text"
-                                                        class="form-control input-hover"
-                                                        id="terms_label"
-                                                        name="terms_label"
-                                                        v-model="form.terms_label"
-                                                        >
+                                <!-- Select Discount, Shipping -->
+                                <tr style="height: 35px;" v-if="!showDiscount || !showShipping">
+                                    <td></td>
+                                    <td></td>
+                                    <td style="text-align: center">
 
-                                                <textarea
-                                                        name="terms_value"
-                                                        id="terms_value"
-                                                        placeholder="Intereses, metodos de pago, tiempos, etc"
-                                                        class="form-control"
-                                                        rows="2"
-                                                        v-model="form.terms_value"
-                                                        ></textarea>
-                                            </div>
-                                        </div>
-                                    </div>
+                                    </td>
+                                    <td style="text-align: center">
+                                        <a @click="showDiscount = true" v-if="!showDiscount">
+                                            <i class="glyphicon glyphicon-plus"></i>
+                                            Descuento
+                                        </a>
+                                    </td>
+                                    <td style="text-align: center">
+                                        <a @click="showShipping = true" v-if="!showShipping">
+                                            <i class="glyphicon glyphicon-plus"></i>
+                                            Envio
+                                        </a>
+                                    </td>
+                                </tr>
 
-                                </div>
-                            </div>
-                            <!-- /Footer -->
+                                <!-- Total -->
+                                <tr style="background-color: #66bcc8;color: #FFFFFF;height: 35px;font-weight: bold;">
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td>
+                                        <input
+                                                type="text"
+                                                class="form-control input-hover"
+                                                id="total_footer_label"
+                                                name="total_footer_label"
+                                                v-model="form.total_footer_label"
+                                                >
+                                    </td>
+                                    <td>
+                                        <input
+                                                type="text"
+                                                class="form-control"
+                                                id="total_footer_value"
+                                                name="total_footer_value"
+                                                v-bind:value="currencySymbol + getTotal() + currencySymbol2"
+                                                disabled
+                                                >
+                                    </td>
+                                </tr>
+                                </tfoot>
+                                <!-- /Footer -->
+                            </table>
+                            <!-- /TABLE -->
 
-                            <h4>This estimate is valid for 10 days</h4>
+                            <table style="width: 100%;margin-top: 20px;">
+                                <!-- Notes -->
+                                <tr>
+                                    <td colspan="5">
+                                        <input
+                                                type="text"
+                                                class="form-control input-hover"
+                                                id="notes_label"
+                                                name="notes_label"
+                                                v-model="form.notes_label"
+                                                >
+
+                                    <textarea
+                                            name="notes_value"
+                                            id="notes_value"
+                                            placeholder="Todo lo relevante a la cotización"
+                                            class="form-control"
+                                            rows="2"
+                                            v-model="form.notes_value"
+                                            ></textarea>
+                                    </td>
+                                </tr>
+
+                                <!-- Terms and conditions -->
+                                <tr>
+                                    <td colspan="5" style="padding-top: 20px;">
+                                        <input
+                                                type="text"
+                                                class="form-control input-hover"
+                                                id="terms_label"
+                                                name="terms_label"
+                                                v-model="form.terms_label"
+                                                >
+
+                                        <textarea
+                                                name="terms_value"
+                                                id="terms_value"
+                                                placeholder="Intereses, metodos de pago, tiempos, etc"
+                                                class="form-control"
+                                                rows="2"
+                                                v-model="form.terms_value"
+                                                ></textarea>
+                                    </td>
+                                </tr>
+                            </table>
+
+
+                            <h4 style="background-color: #66bcc8;color: #FFFFFF;padding: 10px;text-align: center;font-weight: bold;margin-top: 50px;">
+                                This estimate is valid for 10 days
+                            </h4>
 
                             <div class="form-group">
                                 <div class="text-center">
@@ -506,7 +494,7 @@
                                         Disculpe, hay algunos errores en la cotización
                                     </p>
                                     <button class="btn btn-warning btn-lg" @click="validateForm()" v-if="! loading">
-                                        <i class="glyphicon glyphicon-floppy-save"></i>
+                                        <i class="glyphicon glyphicon-save"></i>
                                         Actualizar cotización
                                     </button>
                                     <a v-bind:href="'/user/budget/' + form.public_id + '/generatePdf'" target="_blank" class="btn btn-info btn-lg" v-if="! loading">
@@ -516,10 +504,10 @@
                                     <img src="/img/loading.gif" v-if="loading">
                                 </div>
                             </div>
+
                         </div>
                     </div>
                 </div>
-
             </div>
         </div>
     </section>
@@ -529,7 +517,7 @@
     import Datepicker from 'vuejs-datepicker';
 
     export default {
-        props: ['products', 'formData', 'userLogo', 'userBusinessName'],
+        props: ['products', 'formData', 'user'],
         components: {
             Datepicker
         },
@@ -539,12 +527,13 @@
                 loading: false,
                 currencySymbol: '$',
                 currencySymbol2: ' USD',
-                logo: '/uploads/' + this.userLogo,
-                business_name: this.userBusinessName,
+                logo: '/uploads/' + JSON.parse(this.user).logo,
+                business_name: JSON.parse(this.user).business_name,
                 productList: JSON.parse(this.products),
                 initDate: '',
                 showDiscount: false,
                 showShipping: false,
+                userData: JSON.parse(this.user),
                 form: JSON.parse(this.formData)
             }
         },

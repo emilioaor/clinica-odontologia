@@ -93,7 +93,7 @@
 
                                         <div class="col-sm-6">
                                             <div class="form-group">
-                                                <label for="business_name">Dirección</label>
+                                                <label for="business_name">Dirección corta</label>
                                                 <input
                                                         type="text"
                                                         class="form-control"

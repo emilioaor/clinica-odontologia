@@ -4,8 +4,7 @@
     <edit-budget
         products = "{{ json_encode($products) }}"
         form-data = "{{ json_encode($budget) }}"
-        user-logo = "{{ Auth::user()->logo }}"
-        user-business-name = "{{ Auth::user()->business_name }}"
+        user = "{{ Auth::user() }}"
     ></edit-budget>
 @endsection
 

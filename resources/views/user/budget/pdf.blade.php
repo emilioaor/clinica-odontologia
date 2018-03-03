@@ -3,285 +3,247 @@
 <head>
     <meta charset="UTF-8">
     <title>Cotización {{ $budget->public_id }}</title>
+    <link rel="stylesheet" href="{{ asset('css/app.css') }}">
 </head>
-<body style="font-family: Raleway, sans-serif; color: #303030; font-size: 14px;">
+<body style="font-family: Calibri;background-color: #FFFFFF;">
 
     <table style="width: 100%">
-        <tr>
-            <td style="width: 50%">
-                @if(! empty($budget->business_logo))
-                    <img src="{{ public_path('uploads') . '/' . $budget->business_logo }}" style="width: 150px">
-                @endif
-                <p style="font-weight: bold; font-size: 25px;margin-top: 10px;">
-                    {{ $budget->business_name }}
-                </p>
-
-                <p style="margin-bottom: 0;margin-top: 50px; color: #777;">
-                    {{ $budget->client_label }}
-                </p>
-                <p style="margin-top: 10px; font-weight: bold;">
-                    {{ $budget->client_value }}
-                </p>
-            </td>
-            <td style="width: 50%; vertical-align: top;">
-                <h1 style="text-align: right; color: #303030; font-size: 30px;margin-bottom: 0;margin-top: 0;">
+        <!-- HEADER -->
+        <tr style="color: #FFFFFF;">
+            <td style="width: 30%; background-color: #34a7ac">
+                <!-- Title -->
+                <h1 style="text-align: center;">
                     {{ $budget->title }}
                 </h1>
-                <h3 style="text-align: right; color: #aaaaaa;margin-top: 0;font-size: 15px;">
-                    #{{ $budget->public_id }}
-                </h3>
+            </td>
+            <td style="width: 70%;">
 
-                <!-- Anidada -->
-                <table style="width: 100%;float: right;margin-top: 60px;">
-                    @if(!empty($budget->creation_date_value))
-                        <tr>
-                            <td style="width: 60%;padding-right: 20px; color: #777;">
-                                <p style="text-align: right;margin-bottom: 0;">
-                                    {{ $budget->creation_date_label }}
-                                </p>
-                            </td>
-
-                            <td style="width: 40%">
-                                <p style="margin-bottom: 0;">
-                                    {{ (new \DateTime($budget->creation_date_value))->format('d-m-Y') }}
-                                </p>
-                            </td>
-                        </tr>
-                    @endif
-                    @if(!empty($budget->expiration_date_value))
-                        <tr>
-                            <td style="width: 60%;padding-right: 20px; color: #777;">
-                                <p style="text-align: right;margin-bottom: 0;">
-                                    {{ $budget->expiration_date_label }}
-                                </p>
-                            </td>
-
-                            <td style="width: 40%">
-                                <p style="margin-bottom: 0;">
-                                    {{ (new \DateTime($budget->expiration_date_value))->format('d-m-Y') }}
-                                </p>
-                            </td>
-                        </tr>
-                    @endif
-                    <tr style="font-weight: bold;">
-                        <td style="width: 60%;padding-right: 20px; font-size: 20px;padding-bottom: 10px;background-color: #f4f4f4;">
-                            <p style="text-align: right;margin-bottom: 0;">
-                                {{ $budget->total_head_label }}
+                <table style="width: 100%;">
+                    <tr>
+                        <td style="width: 100%; text-align: right;padding-bottom: 20px;" colspan="3">
+                            <!-- Logo -->
+                            <img    style="width: 150px;"
+                                    src="{{ asset('uploads/' . Auth::user()->logo ) }}"
+                                    >
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="width: 33.3333333%">
+                            <!-- Phone -->
+                            <p style="width: 96%; background-color: #38a9a8;height: 80px;margin: 0 0 0 4%;padding-top: 35px;text-align: center;font-size: 13px;position: relative;">
+                                <i class="glyphicon glyphicon-phone" style="position:absolute;top: 20px;left: 65px;font-size: 30px;"></i>
+                                <br>
+                                {{ Auth::user()->phone }}
                             </p>
                         </td>
-
-                        <td style="width: 40%;background-color: #f4f4f4;">
-                            <p style="margin-bottom: 0;padding-bottom: 10px;">
-                                {{ $budget->currency_symbol . ' ' . $budget->total_head_value }}
+                        <td style="width: 33.3333333%">
+                            <!-- Address -->
+                            <p style="width: 96%; background-color: #408b88;height: 80px;margin: 0 0 0 4%;padding-top: 35px;text-align: center;font-size: 13px;position: relative;">
+                                <i class="glyphicon glyphicon-map-marker" style="position:absolute;top: 20px;left: 65px;font-size: 30px;"></i>
+                                <br>
+                                {{ Auth::user()->address }}
+                            </p>
+                        </td>
+                        <td style="width: 33.3333333%">
+                            <!-- Email -->
+                            <p style="width: 96%; background-color: #277f6a;height: 80px;margin: 0 0 0 4%;padding-top: 35px;text-align: center;font-size: 13px;position: relative;">
+                                <i class="glyphicon glyphicon-envelope" style="position:absolute;top: 20px;left: 65px;font-size: 30px;"></i>
+                                <br>
+                                {{ Auth::user()->email }}
                             </p>
                         </td>
                     </tr>
                 </table>
-                <!-- /Anidada -->
-
             </td>
         </tr>
-    </table>
+        <!-- /HEADER -->
 
-    <table style="width: 100%;margin-top: 30px;" border="0">
-        <thead style="background-color: #222; border: none;color: #FFFFFF">
+        <!-- INFO -->
         <tr>
-            <th width="51%">
-                <p style="margin: 0; padding: 3px;">
-                    {{ $budget->table_description_label }}
+            <td style="width: 30%;">
+                <!-- Client Info -->
+                <p style="margin: 25px 0 0 0;font-size: 16px;">
+                    <strong>
+                        {{ Auth::user()->business_name }}
+                    </strong>
                 </p>
-            </th>
-            <th width="15%">
-                <p style="margin: 0; padding: 3px;">
-                    {{ $budget->table_quantity_label }}
+                <p style="margin: 0;">
+                    <strong>
+                        {{ $budget->client_label }}
+                    </strong>
+                    {{ $budget->client_value }}
                 </p>
-            </th>
-            <th width="17%">
-                <p style="margin: 0; padding: 3px;">
-                    {{ $budget->table_price_label }}
-                </p>
-            </th>
-            <th width="17%">
-                <p style="margin: 0; padding: 3px;">
-                    {{ $budget->table_total_label }}
-                </p>
-            </th>
-        </tr>
-        </thead>
-        <tbody>
-            @foreach($budget->budgetDetails as $detail)
-                <tr style="font-size: 13px;">
-                    <td>
-                        <p style="margin: 0; padding: 3px;">
-                            {{ $detail->product->name }}
-                        </p>
-                    </td>
-                    <td>
-                        <p style="margin: 0; padding: 3px;">
-                            {{ $detail->quantity }}
-                        </p>
-                    </td>
-                    <td>
-                        <p style="margin: 0; padding: 3px;">
-                            {{ $budget->currency_symbol . ' ' . $detail->price }}
-                        </p>
-                    </td>
-                    <td>
-                        <p style="margin: 0; padding: 3px;">
-                            {{ $budget->currency_symbol . ' ' . ($detail->quantity * $detail->price) }}
-                        </p>
-                    </td>
-                </tr>
-            @endforeach
-        </tbody>
-    </table>
 
-    <table style="width: 100%">
-        <tr>
-            <td style="width: 50%"></td>
-            <td style="width: 50%">
+            </td>
+            <td style="width: 70%;">
 
-                <!-- Anidada -->
-                <table style="width: 100%;margin-top: 60px;">
+                <table style="width: 100%;">
                     <tr>
-                        <td style="width: 60%;padding-right: 20px; color: #777;">
-                            <p style="text-align: right;margin-bottom: 0; margin-top: 5px;">
-                                {{ $budget->subtotal_footer_label }}
+                        <td style="width: 80%;">
+                            <p style="text-align: right;color: #699797;font-weight: 600;margin-top: 25px;margin-bottom: 0;">
+                                N°:
                             </p>
                         </td>
-
-                        <td style="width: 40%">
-                            <p style="margin-bottom: 0; margin-top: 5px;">
-                                {{ $budget->currency_symbol . ' ' . $budget->subtotal_footer_value }}
-                            </p>
-                        </td>
-                    </tr>
-                    @if(($discount = 0) || (!empty($budget->discount_value)))
-                        <tr>
-                            <td style="width: 60%;padding-right: 20px; color: #777;">
-                                <p style="text-align: right;margin-bottom: 0; margin-top: 5px;">
-                                    {{ $budget->discount_label }}
-                                    @if($budget->discount_type === 1)
-                                        ({{ $budget->discount_value }}%)
-                                    @endif
-                                </p>
-                            </td>
-
-                            <td style="width: 40%">
-                                <p style="margin-bottom: 0; margin-top: 5px;">
-                                    {{ $budget->currency_symbol }}
-                                    @if($budget->discount_type === 1)
-                                        {{ $discount = $budget->subtotal_footer_value * ($budget->discount_value / 100) }}
-                                    @elseif($budget->discount_type === 2)
-                                        {{ $discount = $budget->discount_value }}
-                                    @endif
-                                </p>
-                            </td>
-                        </tr>
-                    @endif
-                    @if(($tax = 0) || (!empty($budget->tax_value)))
-                        <tr>
-                            <td style="width: 60%;padding-right: 20px; color: #777;">
-                                <p style="text-align: right;margin-bottom: 0; margin-top: 5px;">
-                                    {{ $budget->tax_label }}
-                                    @if($budget->tax_type === 1)
-                                        ({{ $budget->tax_value }}%)
-                                    @endif
-                                </p>
-                            </td>
-
-                            <td style="width: 40%">
-                                <p style="margin-bottom: 0; margin-top: 5px;">
-                                    {{ $budget->currency_symbol }}
-                                    @if($budget->tax_type === 1)
-                                        {{ ($budget->subtotal_footer_value - $discount) * ($tax = $budget->tax_value / 100) }}
-                                    @elseif($budget->tax_type === 2)
-                                        {{ $tax = $budget->tax_value }}
-                                    @endif
-                                </p>
-                            </td>
-                        </tr>
-                    @endif
-                    @if(!empty($budget->shaping_value))
-                        <tr>
-                            <td style="width: 60%;padding-right: 20px; color: #777;">
-                                <p style="text-align: right;margin-bottom: 0; margin-top: 5px;">
-                                    {{ $budget->shaping_label }}
-                                </p>
-                            </td>
-
-                            <td style="width: 40%">
-                                <p style="margin-bottom: 0; margin-top: 5px;">
-                                    {{ $budget->currency_symbol . ' ' . $budget->shaping_value }}
-                                </p>
-                            </td>
-                        </tr>
-                    @endif
-                    <tr>
-                        <td style="width: 60%;padding-right: 20px; color: #777;">
-                            <p style="text-align: right;margin-bottom: 0; margin-top: 5px;">
-                                {{ $budget->total_footer_label }}
-                            </p>
-                        </td>
-
-                        <td style="width: 40%">
-                            <p style="margin-bottom: 0; margin-top: 5px;">
-                                {{ $budget->currency_symbol . ' ' . $budget->total_footer_value }}
+                        <td style="width: 20%;">
+                            <p style="text-align: right;font-weight: 800;margin-top: 25px;margin-bottom: 0;">
+                                #{{ $budget->public_id }}
                             </p>
                         </td>
                     </tr>
 
-                    @if(!empty($budget->amount_paid_value))
-                        <tr>
-                            <td style="width: 60%;padding-right: 20px; color: #777;">
-                                <p style="text-align: right;margin-bottom: 0; margin-top: 5px;">
-                                    {{ $budget->amount_paid_label }}
-                                </p>
-                            </td>
-
-                            <td style="width: 40%">
-                                <p style="margin-bottom: 0; margin-top: 5px;">
-                                    {{ $budget->currency_symbol . ' ' . $budget->amount_paid_value }}
-                                </p>
-                            </td>
-                        </tr>
-                    @endif
+                    <tr>
+                        <td style="width: 80%;">
+                            <p style="text-align: right;color: #699797;font-weight: 600;margin-bottom: 0;">
+                                {{ $budget->creation_date_label }}
+                            </p>
+                        </td>
+                        <td style="width: 20%;">
+                            <p style="text-align: right;font-weight: 800;margin-bottom: 0;">
+                                {{ (new \DateTime($budget->creation_date_value))->format('m/d/Y') }}
+                            </p>
+                        </td>
+                    </tr>
                 </table>
-                <!-- /Anidada -->
 
             </td>
         </tr>
+        <!-- /INFO -->
     </table>
 
-    @if(!empty($budget->notes_value))
-        <table style="width: 100%;margin-top: 20px;">
+
+    <!-- TABLE -->
+    <table style="width: 100%;margin-top: 30px;">
+        <tr style="background-color: #3ebbb5; text-align: center;color: #FFFFFF;height: 40px;">
+            <td style="width: 7%;height: 40px;font-weight: bold;font-size: 16px;">
+                #
+            </td>
+            <td style="width: 38%;height: 40px;font-weight: bold;font-size: 16px;text-align: left;">
+                {{ $budget->table_description_label }}
+            </td>
+            <td style="width: 15%;height: 40px;font-weight: bold;font-size: 16px;">
+                {{ $budget->table_quantity_label }}
+            </td>
+            <td style="width: 20%;height: 40px;font-weight: bold;font-size: 16px;">
+                {{ $budget->table_price_label }}
+            </td>
+            <td style="width: 20%;height: 40px;font-weight: bold;font-size: 16px;">
+                {{ $budget->table_total_label }}
+            </td>
+        </tr>
+        <!-- Detail -->
+        @foreach($budget->budgetDetails as $i => $detail)
+            <tr style="height: 30px;color: #222;{{ ($i + 1)%2 == 0 ? 'background-color:#dcdcdc;' : '' }}">
+                <td style="text-align: center;height: 30px;vertical-align: middle;padding-bottom: 10px;">
+                    {{ $i + 1 }}
+                </td>
+                <td style="height: 30px;vertical-align: middle;padding-bottom: 10px;">
+                    {{ $detail->product->name }}
+                </td>
+                <td style="text-align: center;height: 30px;vertical-align: middle;padding-bottom: 10px;">
+                    {{ $detail->quantity }}
+                </td>
+                <td style="text-align: center;height: 30px;vertical-align: middle;padding-bottom: 10px;">
+                    ${{ number_format($detail->price, 2) }} USD
+                </td>
+                <td style="text-align: center;height: 30px;vertical-align: middle;padding-bottom: 10px;">
+                    ${{ number_format($detail->price * $detail->quantity, 2) }} USD
+                </td>
+            </tr>
+        @endforeach
+        <!-- /Detail -->
+
+        <!-- Footer -->
+        @if(!empty($budget->shaping_value) || !empty($budget->discount_value))
+            <tr style="background-color: #66bcc8;color: #FFFFFF;height: 35px;font-weight: bold;">
+                <td></td>
+                <td></td>
+                <td></td>
+                <td style="text-align: center;">
+                    {{ $budget->subtotal_footer_label }}
+                </td>
+                <td style="text-align: center;">
+                    ${{ number_format($budget->subtotal_footer_value, 2) }} USD
+                </td>
+            </tr>
+        @endif
+        @if(!empty($budget->discount_value))
+            <tr style="background-color: #66bcc8;color: #FFFFFF;height: 35px;font-weight: bold;">
+                <td></td>
+                <td></td>
+                <td></td>
+                <td style="text-align: center;height: 35px;">
+                    {{ $budget->discount_label }}
+                    @if($budget->discount_type === 1)
+                        ({{ $budget->discount_value }}%)
+                    @endif
+                </td>
+                <td style="text-align: center;height: 35px;">
+                    @if($budget->discount_type === 1)
+                        ${{ number_format($budget->subtotal_footer_value * ($budget->discount_value / 100), 2) }} USD
+                    @else
+                        ${{ number_format($budget->discount_value, 2) }} USD
+                    @endif
+                </td>
+            </tr>
+        @endif
+        @if(!empty($budget->shaping_value))
+            <tr style="background-color: #66bcc8;color: #FFFFFF;height: 35px;font-weight: bold;">
+                <td></td>
+                <td></td>
+                <td></td>
+                <td style="text-align: center;height: 35px;">
+                    {{ $budget->shaping_label }}
+                </td>
+                <td style="text-align: center;height: 35px;">
+                    ${{ number_format($budget->shaping_value, 2) }} USD
+                </td>
+            </tr>
+        @endif
+
+        <tr style="background-color: #66bcc8;color: #FFFFFF;height: 35px;font-weight: bold;">
+            <td></td>
+            <td></td>
+            <td></td>
+            <td style="text-align: center;height: 35px;">
+                {{ $budget->total_footer_label }}
+            </td>
+            <td style="text-align: center;height: 35px;">
+                ${{ number_format($budget->total_footer_value, 2) }} USD
+            </td>
+        </tr>
+        <!-- /Footer -->
+    </table>
+    <!-- /TABLE -->
+
+    <table style="width: 100%;margin-top: 30px;">
+        @if(!empty($budget->notes_value))
             <tr>
-                <td style="width: 100%">
-                    <p style="margin-top: 10px;margin-bottom: 0;color: #777";>
+                <td>
+                    <p style="margin: 0;font-weight: bold;font-size: 12px;">
                         {{ $budget->notes_label }}
                     </p>
-                    <p style="margin-top: 10px;margin-bottom: 0">
+                    <p style="margin: 0;">
                         {{ $budget->notes_value }}
                     </p>
                 </td>
             </tr>
-        </table>
-    @endif
-
-    @if(!empty($budget->terms_value))
-        <table style="width: 100%;margin-top: 20px;">
+        @endif
+        @if(!empty($budget->terms_value))
             <tr>
-                <td style="width: 100%">
-                    <p style="margin-top: 10px;margin-bottom: 0;color: #777";>
+                <td style="padding-top: 30px;">
+                    <p style="margin: 0;font-weight: bold;font-size: 12px;">
                         {{ $budget->terms_label }}
                     </p>
-                    <p style="margin-top: 10px;margin-bottom: 0">
+                    <p style="margin: 0;">
                         {{ $budget->terms_value }}
                     </p>
                 </td>
             </tr>
-        </table>
-    @endif
+        @endif
+    </table>
 
+    <h4 style="background-color: #66bcc8;color: #FFFFFF;padding: 10px;text-align: center;font-weight: bold;margin-top: 70px;position: absolute;bottom: 0;left: 0;width: 100%;">
+        This estimate is valid for 10 days
+    </h4>
 </body>
 </html>

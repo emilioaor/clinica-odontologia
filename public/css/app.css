@@ -1,5 +1,10 @@
 @charset "UTF-8";
 
+@font-face {
+  font-family: "Calibri";
+  src: url(/fonts/Calibri.ttf?5d7c31b284ddb01fc1cbae0edc9ec210);
+}
+
 /*!
  * Bootstrap v3.3.7 (http://getbootstrap.com)
  * Copyright 2011-2016 Twitter, Inc.
@@ -8350,6 +8355,10 @@ button.close {
   }
 }
 
+.register-budget .panel-body {
+  font-family: Calibri;
+}
+
 .register-budget__logo {
   max-width: 50%;
   text-align: center;
@@ -8457,13 +8466,18 @@ button.close {
 }
 
 .register-budget input {
+  font-family: Calibri;
   -webkit-transition: none;
   transition: none;
 }
 
 .register-budget input[name="title"] {
-  font-size: 2.75em;
+  font-size: 25px;
   height: 5rem;
+  text-align: center;
+  width: 95%;
+  margin-left: 2.5%;
+  color: #ffffff;
 }
 
 .register-budget input[name="public_id"] {
@@ -8494,6 +8508,87 @@ button.close {
 .register-budget .input-hover:hover,
 .register-budget .input-hover:focus {
   border: 1px #eeeeee solid;
+}
+
+.register-budget thead input,
+.register-budget tfoot input {
+  width: 95%;
+  margin-left: 2.5%;
+  color: #ffffff;
+  text-align: center !important;
+}
+
+.register-budget thead input[disabled="disabled"],
+.register-budget tfoot input[disabled="disabled"] {
+  color: #555;
+}
+
+.register-budget thead #table_description_label,
+.register-budget tfoot #table_description_label {
+  text-align: left !important;
+}
+
+.register-budget a {
+  cursor: pointer;
+}
+
+.register-budget #creation_date_value[readonly="readonly"] {
+  background-color: #ffffff;
+  cursor: pointer;
+}
+
+.register-budget #client_label {
+  font-weight: bold;
+}
+
+.register-budget #shaping_value,
+.register-budget #discount_value {
+  color: #555555;
+}
+
+h1 {
+  font-family: Calibri, Candara, Segoe, "Segoe UI", Optima, Arial, sans-serif;
+  font-size: 24px;
+  font-style: normal;
+  font-variant: normal;
+  font-weight: 500;
+  line-height: 26.4px;
+}
+
+h3 {
+  font-family: Calibri, Candara, Segoe, "Segoe UI", Optima, Arial, sans-serif;
+  font-size: 14px;
+  font-style: normal;
+  font-variant: normal;
+  font-weight: 500;
+  line-height: 15.4px;
+}
+
+p {
+  font-family: Calibri, Candara, Segoe, "Segoe UI", Optima, Arial, sans-serif;
+  font-size: 14px;
+  font-style: normal;
+  font-variant: normal;
+  font-weight: 400;
+  line-height: 20px;
+}
+
+blockquote {
+  font-family: Calibri, Candara, Segoe, "Segoe UI", Optima, Arial, sans-serif;
+  font-size: 21px;
+  font-style: normal;
+  font-variant: normal;
+  font-weight: 400;
+  line-height: 30px;
+}
+
+pre {
+  font-family: Calibri, Candara, Segoe, "Segoe UI", Optima, Arial, sans-serif;
+  font-size: 13px;
+  font-style: normal;
+  font-variant: normal;
+  font-weight: 400;
+  line-height: 18.5714px;
 }
 
 .input-error {

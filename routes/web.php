@@ -13,6 +13,10 @@ Route::group(['prefix' => 'user', 'middleware' => 'auth'], function() {
     // Productos
     Route::resource('product', 'User\ProductController');
 
+    // Pacientes
+    Route::resource('patient', 'User\PatientController');
+    Route::get('patient/phone/{phone}/{id?}', 'User\PatientController@verifyPhone');
+
     // Cotizacion
     Route::resource('budget', 'User\BudgetController');
     Route::get('budget/{budget}/generatePdf', 'User\BudgetController@generatePdf')->name('budget.pdf.generate');

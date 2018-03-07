@@ -56,4 +56,14 @@ class Budget extends Model
     {
         return 860 + (Budget::count() + 1);
     }
+
+    /**
+     * Paciente al cual se le genero esta cotizacion
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function patient()
+    {
+        return $this->belongsTo(Patient::class, 'patient_id');
+    }
 }

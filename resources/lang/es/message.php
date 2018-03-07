@@ -5,6 +5,9 @@ return [
     'product.create' => 'Producto registrado',
     'product.update' => 'Producto actualizado',
 
+    'patient.create' => 'Paciente registrado',
+    'patient.update' => 'Paciente actualizado',
+
     'budget.create' => 'Cotización generada',
     'budget.update' => 'Cotización actualizada',
 

@@ -1079,7 +1079,7 @@ module.exports=function(e){function t(a){if(n[a])return n[a].exports;var r=n[a]=
 /***/ (function(module, exports, __webpack_require__) {
 
 __webpack_require__(12);
-module.exports = __webpack_require__(59);
+module.exports = __webpack_require__(60);
 
 
 /***/ }),
@@ -1115,6 +1115,8 @@ Vue.component('register-budget', __webpack_require__(47));
 Vue.component('edit-budget', __webpack_require__(50));
 Vue.component('change-password', __webpack_require__(53));
 Vue.component('business-config', __webpack_require__(56));
+Vue.component('register-patient', __webpack_require__(59));
+Vue.component('edit-patient', __webpack_require__(73));
 
 var app = new Vue({
   el: '#app'
@@ -56000,9 +56002,983 @@ if (false) {
 
 /***/ }),
 /* 59 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+var normalizeComponent = __webpack_require__(1)
+/* script */
+var __vue_script__ = __webpack_require__(71)
+/* template */
+var __vue_template__ = __webpack_require__(72)
+/* template functional */
+  var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = null
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources/assets/js/components/RegisterPatient.vue"
+if (Component.esModule && Object.keys(Component.esModule).some(function (key) {  return key !== "default" && key.substr(0, 2) !== "__"})) {  console.error("named exports are not supported in *.vue files.")}
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-2d579e59", Component.options)
+  } else {
+    hotAPI.reload("data-v-2d579e59", Component.options)
+' + '  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 60 */
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
+
+/***/ }),
+/* 61 */,
+/* 62 */,
+/* 63 */,
+/* 64 */,
+/* 65 */,
+/* 66 */,
+/* 67 */,
+/* 68 */,
+/* 69 */,
+/* 70 */,
+/* 71 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+    data: function data() {
+        return {
+            loading: false,
+            phoneError: false,
+            form: {
+                name: '',
+                phone: '',
+                email: ''
+            }
+        };
+    },
+
+    methods: {
+        validateForm: function validateForm() {
+            var _this = this;
+
+            this.$validator.validateAll().then(function (res) {
+                if (res) {
+                    _this.verifyPhone();
+                }
+            });
+        },
+
+        verifyPhone: function verifyPhone() {
+            var _this2 = this;
+
+            this.loading = true;
+
+            axios.get('/user/patient/phone/' + this.form.phone).then(function (res) {
+                if (res.data.success) {
+
+                    if (res.data.valid) {
+                        _this2.sendForm();
+
+                        return res;
+                    }
+
+                    _this2.loading = false;
+                    _this2.phoneError = true;
+                }
+            }).catch(function (err) {
+                _this2.loading = false;
+            });
+        },
+
+        sendForm: function sendForm() {
+            var _this3 = this;
+
+            this.loading = true;
+
+            axios.post('/user/patient', this.form).then(function (res) {
+
+                if (res.data.success) {
+                    location.href = res.data.redirect;
+                }
+            }).catch(function (err) {
+
+                _this3.loading = false;
+            });
+        }
+    }
+});
+
+/***/ }),
+/* 72 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("section", [
+    _c("div", { staticClass: "container" }, [
+      _c("div", { staticClass: "row" }, [
+        _c("div", { staticClass: "col-xs-12" }, [
+          _c("h1", [
+            !_vm.loading
+              ? _c("i", { staticClass: "glyphicon glyphicon-th-list" })
+              : _vm._e(),
+            _vm._v(" "),
+            _vm.loading
+              ? _c("img", { attrs: { src: "/img/loading.gif" } })
+              : _vm._e(),
+            _vm._v("\n                    Registrar paciente\n                ")
+          ])
+        ])
+      ]),
+      _vm._v(" "),
+      _c("div", { staticClass: "row" }, [
+        _c("div", { staticClass: "col-sm-8" }, [
+          _c("div", { staticClass: "panel panel-default" }, [
+            _c("div", { staticClass: "panel-body" }, [
+              _c(
+                "form",
+                {
+                  attrs: { novalidate: "" },
+                  on: {
+                    submit: function($event) {
+                      $event.preventDefault()
+                      _vm.validateForm()
+                    }
+                  }
+                },
+                [
+                  _c("div", { staticClass: "row" }, [
+                    _c("div", { staticClass: "col-sm-4" }, [
+                      _c("div", { staticClass: "form-group" }, [
+                        _c("label", { attrs: { for: "name" } }, [
+                          _vm._v("Telefono")
+                        ]),
+                        _vm._v(" "),
+                        _c("input", {
+                          directives: [
+                            {
+                              name: "model",
+                              rawName: "v-model",
+                              value: _vm.form.phone,
+                              expression: "form.phone"
+                            },
+                            { name: "validate", rawName: "v-validate" }
+                          ],
+                          staticClass: "form-control",
+                          class: {
+                            "input-error":
+                              _vm.errors.has("phone") || _vm.phoneError
+                          },
+                          attrs: {
+                            type: "text",
+                            placeholder: "Telefono del paciente",
+                            id: "phone",
+                            name: "phone",
+                            "data-vv-rules": "required|regex:^[0-9]{10}$",
+                            maxlength: "10"
+                          },
+                          domProps: { value: _vm.form.phone },
+                          on: {
+                            keyup: function($event) {
+                              _vm.phoneError = false
+                            },
+                            input: function($event) {
+                              if ($event.target.composing) {
+                                return
+                              }
+                              _vm.$set(_vm.form, "phone", $event.target.value)
+                            }
+                          }
+                        }),
+                        _vm._v(" "),
+                        _vm.errors.firstByRule("phone", "required")
+                          ? _c("p", { staticClass: "error" }, [
+                              _vm._v(
+                                "\n                                            Campo requerido\n                                        "
+                              )
+                            ])
+                          : _vm._e(),
+                        _vm._v(" "),
+                        _vm.errors.firstByRule("phone", "regex")
+                          ? _c("p", { staticClass: "error" }, [
+                              _vm._v(
+                                "\n                                            Formato invalido\n                                        "
+                              )
+                            ])
+                          : _vm._e(),
+                        _vm._v(" "),
+                        !_vm.errors.has("phone") && _vm.phoneError
+                          ? _c("p", { staticClass: "error" }, [
+                              _vm._v(
+                                "\n                                            Este telefono ya esta registrado\n                                        "
+                              )
+                            ])
+                          : _vm._e()
+                      ])
+                    ]),
+                    _vm._v(" "),
+                    _c("div", { staticClass: "col-sm-4" }, [
+                      _c("div", { staticClass: "form-group" }, [
+                        _c("label", { attrs: { for: "name" } }, [
+                          _vm._v("Nombre")
+                        ]),
+                        _vm._v(" "),
+                        _c("input", {
+                          directives: [
+                            {
+                              name: "model",
+                              rawName: "v-model",
+                              value: _vm.form.name,
+                              expression: "form.name"
+                            },
+                            { name: "validate", rawName: "v-validate" }
+                          ],
+                          staticClass: "form-control",
+                          class: { "input-error": _vm.errors.has("name") },
+                          attrs: {
+                            type: "text",
+                            placeholder: "Nombre del paciente",
+                            id: "name",
+                            name: "name",
+                            "data-vv-rules": "required"
+                          },
+                          domProps: { value: _vm.form.name },
+                          on: {
+                            input: function($event) {
+                              if ($event.target.composing) {
+                                return
+                              }
+                              _vm.$set(_vm.form, "name", $event.target.value)
+                            }
+                          }
+                        }),
+                        _vm._v(" "),
+                        _vm.errors.firstByRule("name", "required")
+                          ? _c("p", { staticClass: "error" }, [
+                              _vm._v(
+                                "\n                                            Campo requerido\n                                        "
+                              )
+                            ])
+                          : _vm._e()
+                      ])
+                    ]),
+                    _vm._v(" "),
+                    _c("div", { staticClass: "col-sm-4" }, [
+                      _c("div", { staticClass: "form-group" }, [
+                        _vm._m(0),
+                        _vm._v(" "),
+                        _c("input", {
+                          directives: [
+                            {
+                              name: "model",
+                              rawName: "v-model",
+                              value: _vm.form.email,
+                              expression: "form.email"
+                            },
+                            { name: "validate", rawName: "v-validate" }
+                          ],
+                          staticClass: "form-control",
+                          class: { "input-error": _vm.errors.has("email") },
+                          attrs: {
+                            type: "email",
+                            placeholder: "Email del paciente",
+                            id: "email",
+                            name: "email",
+                            "data-vv-rules": "email"
+                          },
+                          domProps: { value: _vm.form.email },
+                          on: {
+                            input: function($event) {
+                              if ($event.target.composing) {
+                                return
+                              }
+                              _vm.$set(_vm.form, "email", $event.target.value)
+                            }
+                          }
+                        }),
+                        _vm._v(" "),
+                        _vm.errors.firstByRule("email", "email")
+                          ? _c("p", { staticClass: "error" }, [
+                              _vm._v(
+                                "\n                                            Formato invalido\n                                        "
+                              )
+                            ])
+                          : _vm._e()
+                      ])
+                    ])
+                  ]),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "row" }, [
+                    _c("div", { staticClass: "col-xs-12" }, [
+                      _c(
+                        "button",
+                        {
+                          staticClass: "btn btn-success",
+                          attrs: { disabled: _vm.loading }
+                        },
+                        [
+                          _c("i", { staticClass: "glyphicon glyphicon-saved" }),
+                          _vm._v(
+                            "\n                                        Registar paciente\n                                    "
+                          )
+                        ]
+                      )
+                    ])
+                  ])
+                ]
+              )
+            ])
+          ])
+        ])
+      ])
+    ])
+  ])
+}
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("label", { attrs: { for: "name" } }, [
+      _vm._v("Email "),
+      _c("small", [_vm._v("(opcional)")])
+    ])
+  }
+]
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-2d579e59", module.exports)
+  }
+}
+
+/***/ }),
+/* 73 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+var normalizeComponent = __webpack_require__(1)
+/* script */
+var __vue_script__ = __webpack_require__(74)
+/* template */
+var __vue_template__ = __webpack_require__(75)
+/* template functional */
+  var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = null
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources/assets/js/components/EditPatient.vue"
+if (Component.esModule && Object.keys(Component.esModule).some(function (key) {  return key !== "default" && key.substr(0, 2) !== "__"})) {  console.error("named exports are not supported in *.vue files.")}
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-07445012", Component.options)
+  } else {
+    hotAPI.reload("data-v-07445012", Component.options)
+' + '  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 74 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+    props: ['patient'],
+
+    data: function data() {
+        return {
+            loading: false,
+            phoneError: false,
+            form: {
+                name: '',
+                phone: '',
+                email: ''
+            }
+        };
+    },
+
+    mounted: function mounted() {
+        this.form = JSON.parse(this.patient);
+    },
+
+    methods: {
+        validateForm: function validateForm() {
+            var _this = this;
+
+            this.$validator.validateAll().then(function (res) {
+                if (res) {
+                    _this.verifyPhone();
+                }
+            });
+        },
+
+        verifyPhone: function verifyPhone() {
+            var _this2 = this;
+
+            this.loading = true;
+
+            axios.get('/user/patient/phone/' + this.form.phone + '/' + this.form.public_id).then(function (res) {
+                if (res.data.success) {
+
+                    if (res.data.valid) {
+                        _this2.sendForm();
+
+                        return res;
+                    }
+
+                    _this2.loading = false;
+                    _this2.phoneError = true;
+                }
+            }).catch(function (err) {
+                _this2.loading = false;
+            });
+        },
+
+        sendForm: function sendForm() {
+            var _this3 = this;
+
+            this.loading = true;
+
+            axios.put('/user/patient/' + this.form.public_id, this.form).then(function (res) {
+
+                if (res.data.success) {
+                    location.href = res.data.redirect;
+                }
+            }).catch(function (err) {
+
+                _this3.loading = false;
+            });
+        }
+    }
+});
+
+/***/ }),
+/* 75 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("section", [
+    _c("div", { staticClass: "container" }, [
+      _c("div", { staticClass: "row" }, [
+        _c("div", { staticClass: "col-xs-12" }, [
+          _c("h1", [
+            !_vm.loading
+              ? _c("i", { staticClass: "glyphicon glyphicon-th-list" })
+              : _vm._e(),
+            _vm._v(" "),
+            _vm.loading
+              ? _c("img", { attrs: { src: "/img/loading.gif" } })
+              : _vm._e(),
+            _vm._v(
+              "\n                    Actualizar paciente\n                "
+            )
+          ])
+        ])
+      ]),
+      _vm._v(" "),
+      _c("div", { staticClass: "row" }, [
+        _c("div", { staticClass: "col-sm-8" }, [
+          _c("div", { staticClass: "panel panel-default" }, [
+            _c("div", { staticClass: "panel-body" }, [
+              _c(
+                "form",
+                {
+                  attrs: { novalidate: "" },
+                  on: {
+                    submit: function($event) {
+                      $event.preventDefault()
+                      _vm.validateForm()
+                    }
+                  }
+                },
+                [
+                  _c("div", { staticClass: "row" }, [
+                    _c("div", { staticClass: "col-sm-4" }, [
+                      _c("div", { staticClass: "form-group" }, [
+                        _c("label", { attrs: { for: "name" } }, [
+                          _vm._v("Telefono")
+                        ]),
+                        _vm._v(" "),
+                        _c("input", {
+                          directives: [
+                            {
+                              name: "model",
+                              rawName: "v-model",
+                              value: _vm.form.phone,
+                              expression: "form.phone"
+                            },
+                            { name: "validate", rawName: "v-validate" }
+                          ],
+                          staticClass: "form-control",
+                          class: {
+                            "input-error":
+                              _vm.errors.has("phone") || _vm.phoneError
+                          },
+                          attrs: {
+                            type: "text",
+                            placeholder: "Telefono del paciente",
+                            id: "phone",
+                            name: "phone",
+                            "data-vv-rules": "required|regex:^[0-9]{10}$",
+                            maxlength: "10"
+                          },
+                          domProps: { value: _vm.form.phone },
+                          on: {
+                            keyup: function($event) {
+                              _vm.phoneError = false
+                            },
+                            input: function($event) {
+                              if ($event.target.composing) {
+                                return
+                              }
+                              _vm.$set(_vm.form, "phone", $event.target.value)
+                            }
+                          }
+                        }),
+                        _vm._v(" "),
+                        _vm.errors.firstByRule("phone", "required")
+                          ? _c("p", { staticClass: "error" }, [
+                              _vm._v(
+                                "\n                                            Campo requerido\n                                        "
+                              )
+                            ])
+                          : _vm._e(),
+                        _vm._v(" "),
+                        _vm.errors.firstByRule("phone", "regex")
+                          ? _c("p", { staticClass: "error" }, [
+                              _vm._v(
+                                "\n                                            Formato invalido\n                                        "
+                              )
+                            ])
+                          : _vm._e(),
+                        _vm._v(" "),
+                        !_vm.errors.has("phone") && _vm.phoneError
+                          ? _c("p", { staticClass: "error" }, [
+                              _vm._v(
+                                "\n                                            Este telefono ya esta registrado\n                                        "
+                              )
+                            ])
+                          : _vm._e()
+                      ])
+                    ]),
+                    _vm._v(" "),
+                    _c("div", { staticClass: "col-sm-4" }, [
+                      _c("div", { staticClass: "form-group" }, [
+                        _c("label", { attrs: { for: "name" } }, [
+                          _vm._v("Nombre")
+                        ]),
+                        _vm._v(" "),
+                        _c("input", {
+                          directives: [
+                            {
+                              name: "model",
+                              rawName: "v-model",
+                              value: _vm.form.name,
+                              expression: "form.name"
+                            },
+                            { name: "validate", rawName: "v-validate" }
+                          ],
+                          staticClass: "form-control",
+                          class: { "input-error": _vm.errors.has("name") },
+                          attrs: {
+                            type: "text",
+                            placeholder: "Nombre del paciente",
+                            id: "name",
+                            name: "name",
+                            "data-vv-rules": "required"
+                          },
+                          domProps: { value: _vm.form.name },
+                          on: {
+                            input: function($event) {
+                              if ($event.target.composing) {
+                                return
+                              }
+                              _vm.$set(_vm.form, "name", $event.target.value)
+                            }
+                          }
+                        }),
+                        _vm._v(" "),
+                        _vm.errors.firstByRule("name", "required")
+                          ? _c("p", { staticClass: "error" }, [
+                              _vm._v(
+                                "\n                                            Campo requerido\n                                        "
+                              )
+                            ])
+                          : _vm._e()
+                      ])
+                    ]),
+                    _vm._v(" "),
+                    _c("div", { staticClass: "col-sm-4" }, [
+                      _c("div", { staticClass: "form-group" }, [
+                        _vm._m(0),
+                        _vm._v(" "),
+                        _c("input", {
+                          directives: [
+                            {
+                              name: "model",
+                              rawName: "v-model",
+                              value: _vm.form.email,
+                              expression: "form.email"
+                            },
+                            { name: "validate", rawName: "v-validate" }
+                          ],
+                          staticClass: "form-control",
+                          class: { "input-error": _vm.errors.has("email") },
+                          attrs: {
+                            type: "email",
+                            placeholder: "Email del paciente",
+                            id: "email",
+                            name: "email",
+                            "data-vv-rules": "email"
+                          },
+                          domProps: { value: _vm.form.email },
+                          on: {
+                            input: function($event) {
+                              if ($event.target.composing) {
+                                return
+                              }
+                              _vm.$set(_vm.form, "email", $event.target.value)
+                            }
+                          }
+                        }),
+                        _vm._v(" "),
+                        _vm.errors.firstByRule("email", "email")
+                          ? _c("p", { staticClass: "error" }, [
+                              _vm._v(
+                                "\n                                            Formato invalido\n                                        "
+                              )
+                            ])
+                          : _vm._e()
+                      ])
+                    ])
+                  ]),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "row" }, [
+                    _c("div", { staticClass: "col-xs-12" }, [
+                      _c(
+                        "button",
+                        {
+                          staticClass: "btn btn-warning",
+                          attrs: { disabled: _vm.loading }
+                        },
+                        [
+                          _c("i", { staticClass: "glyphicon glyphicon-saved" }),
+                          _vm._v(
+                            "\n                                        Actualizar paciente\n                                    "
+                          )
+                        ]
+                      )
+                    ])
+                  ])
+                ]
+              )
+            ])
+          ])
+        ])
+      ])
+    ])
+  ])
+}
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("label", { attrs: { for: "name" } }, [
+      _vm._v("Email "),
+      _c("small", [_vm._v("(opcional)")])
+    ])
+  }
+]
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-07445012", module.exports)
+  }
+}
 
 /***/ })
 /******/ ]);

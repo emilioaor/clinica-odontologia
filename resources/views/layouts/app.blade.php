@@ -67,6 +67,26 @@
                             </li>
                             <li class="dropdown">
                                 <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+                                    Pacientes <span class="caret"></span>
+                                </a>
+
+                                <ul class="dropdown-menu" role="menu">
+                                    <li>
+                                        <a href="{{ route('patient.create') }}">
+                                            <i class="glyphicon glyphicon-plus"></i>
+                                            Agregar paciente
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="{{ route('patient.index') }}">
+                                            <i class="glyphicon glyphicon-list-alt"></i>
+                                            Lista de pacientes
+                                        </a>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li class="dropdown">
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
                                     Cotizaciones <span class="caret"></span>
                                 </a>
 

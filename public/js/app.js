@@ -57633,6 +57633,94 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     props: ['patient'],
@@ -57641,16 +57729,22 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         return {
             loading: false,
             phoneError: false,
-            form: {
-                name: '',
-                phone: '',
-                email: ''
+            form: {},
+            pagination: {
+                current: null,
+                from: null,
+                to: null,
+                path: null,
+                last_page: null,
+                total: null,
+                per_page: null
             }
         };
     },
 
-    mounted: function mounted() {
+    beforeMount: function beforeMount() {
         this.form = JSON.parse(this.patient);
+        this.generatePagination();
     },
 
     methods: {
@@ -57700,6 +57794,36 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
                 _this3.loading = false;
             });
+        },
+
+        generatePagination: function generatePagination() {
+            this.pagination.current = this.form.budgets.current_page;
+            this.pagination.from = this.form.budgets.from;
+            this.pagination.to = this.form.budgets.to;
+            this.pagination.path = this.form.budgets.path;
+            this.pagination.last_page = this.form.budgets.last_page;
+            this.pagination.total = this.form.budgets.total;
+            this.pagination.per_page = this.form.budgets.per_page;
+        },
+
+        range: function range(start, end) {
+            var array = [];
+
+            for (var x = start; x <= end; x++) {
+                array.push(x);
+            }
+
+            return array;
+        }
+    },
+    filters: {
+        date: function date(value) {
+            var date = value.split(' ');
+            date = date[0].split('-');
+
+            date = date[1] + '/' + date[0] + '/' + date[2];
+
+            return date;
         }
     }
 });
@@ -57930,6 +58054,172 @@ var render = function() {
             ])
           ])
         ])
+      ]),
+      _vm._v(" "),
+      _vm._m(1),
+      _vm._v(" "),
+      _c("div", { staticClass: "row edit-patient__budgets" }, [
+        _c("div", { staticClass: "col-xs-12" }, [
+          _c("div", { staticClass: "panel panel-default" }, [
+            _c("div", { staticClass: "panel-body" }, [
+              _c(
+                "div",
+                { staticClass: "row" },
+                [
+                  _vm._l(_vm.form.budgets.data, function(budget) {
+                    return _vm.form.budgets.data.length > 0
+                      ? _c("div", { staticClass: "col-sm-3" }, [
+                          _c("div", { staticClass: "panel panel-info" }, [
+                            _c("div", { staticClass: "panel-body" }, [
+                              _c("h4", [
+                                _vm._v(
+                                  "\n                                            #" +
+                                    _vm._s(budget.public_id) +
+                                    "\n                                        "
+                                )
+                              ])
+                            ]),
+                            _vm._v(" "),
+                            _c("div", { staticClass: "panel-footer" }, [
+                              _c("h5", [
+                                _c("strong", [_vm._v("Monto:")]),
+                                _vm._v(
+                                  "\n                                            $" +
+                                    _vm._s(budget.total_footer_value) +
+                                    " USD\n                                        "
+                                )
+                              ]),
+                              _vm._v(" "),
+                              _c("h5", [
+                                _c("strong", [_vm._v("Generada:")]),
+                                _vm._v(
+                                  "\n                                            " +
+                                    _vm._s(_vm._f("date")(budget.created_at)) +
+                                    "\n                                        "
+                                )
+                              ]),
+                              _vm._v(" "),
+                              _c("div", { staticClass: "text-center" }, [
+                                _c(
+                                  "a",
+                                  {
+                                    staticClass: "btn btn-info",
+                                    attrs: {
+                                      href:
+                                        "/user/budget/" +
+                                        budget.public_id +
+                                        "/edit"
+                                    }
+                                  },
+                                  [
+                                    _c("i", {
+                                      staticClass:
+                                        "glyphicon glyphicon-eye-open"
+                                    }),
+                                    _vm._v(
+                                      "\n                                                Ver detalle\n                                            "
+                                    )
+                                  ]
+                                )
+                              ])
+                            ])
+                          ])
+                        ])
+                      : _vm._e()
+                  }),
+                  _vm._v(" "),
+                  _vm.form.budgets.data.length === 0
+                    ? _c("div", { staticClass: "col-xs-12" }, [_vm._m(2)])
+                    : _vm._e()
+                ],
+                2
+              )
+            ])
+          ])
+        ]),
+        _vm._v(" "),
+        _vm.pagination.total > _vm.pagination.per_page
+          ? _c("div", { staticClass: "col-xs-12" }, [
+              _c(
+                "ul",
+                { staticClass: "pagination" },
+                [
+                  _c(
+                    "li",
+                    { class: { disabled: _vm.pagination.current === 1 } },
+                    [
+                      _c(
+                        "a",
+                        {
+                          attrs: {
+                            href: _vm.pagination.path + "?page=1",
+                            "aria-label": "Previous"
+                          }
+                        },
+                        [
+                          _c("span", { attrs: { "aria-hidden": "true" } }, [
+                            _vm._v("«")
+                          ])
+                        ]
+                      )
+                    ]
+                  ),
+                  _vm._v(" "),
+                  _vm._l(_vm.range(1, _vm.pagination.last_page), function(i) {
+                    return _c(
+                      "li",
+                      { class: { active: i === _vm.pagination.current } },
+                      [
+                        _c(
+                          "a",
+                          {
+                            attrs: { href: _vm.pagination.path + "?page=" + i }
+                          },
+                          [
+                            _vm._v(
+                              "\n                            " +
+                                _vm._s(i) +
+                                "\n                        "
+                            )
+                          ]
+                        )
+                      ]
+                    )
+                  }),
+                  _vm._v(" "),
+                  _c(
+                    "li",
+                    {
+                      class: {
+                        disabled:
+                          _vm.pagination.current === _vm.pagination.last_page
+                      }
+                    },
+                    [
+                      _c(
+                        "a",
+                        {
+                          attrs: {
+                            href:
+                              _vm.pagination.path +
+                              "?page=" +
+                              _vm.pagination.last_page,
+                            "aria-label": "Next"
+                          }
+                        },
+                        [
+                          _c("span", { attrs: { "aria-hidden": "true" } }, [
+                            _vm._v("»")
+                          ])
+                        ]
+                      )
+                    ]
+                  )
+                ],
+                2
+              )
+            ])
+          : _vm._e()
       ])
     ])
   ])
@@ -57942,6 +58232,36 @@ var staticRenderFns = [
     return _c("label", { attrs: { for: "name" } }, [
       _vm._v("Email "),
       _c("small", [_vm._v("(opcional)")])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "row" }, [
+      _c("div", { staticClass: "col-xs-12" }, [
+        _c("h1", [
+          _c("i", { staticClass: "glyphicon glyphicon-th-list" }),
+          _vm._v(
+            "\n                    Lista de cotizaciones\n                "
+          )
+        ])
+      ])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("p", [
+      _vm._v(
+        "\n                                    No se ha generado cotizaciones.\n                                    "
+      ),
+      _c("a", { attrs: { href: "/user/budget/create" } }, [
+        _vm._v(
+          "\n                                        Generar cotización\n                                    "
+        )
+      ])
     ])
   }
 ]

@@ -105,6 +105,94 @@
                     </div>
                 </div>
             </div>
+
+            <!-- Lista de cotizaciones -->
+            <div class="row">
+                <div class="col-xs-12">
+                    <h1>
+                        <i class="glyphicon glyphicon-th-list"></i>
+                        Lista de cotizaciones
+                    </h1>
+                </div>
+            </div>
+            <div class="row edit-patient__budgets">
+                <div class="col-xs-12">
+                    <div class="panel panel-default">
+                        <div class="panel-body">
+
+                            <div class="row">
+
+                                <div class="col-sm-3" v-for="budget in form.budgets.data" v-if="form.budgets.data.length > 0">
+
+                                    <div class="panel panel-info">
+                                        <div class="panel-body">
+                                            <h4>
+                                                #{{ budget.public_id }}
+                                            </h4>
+                                        </div>
+                                        <div class="panel-footer">
+                                            <h5>
+                                                <strong>Monto:</strong>
+                                                ${{ budget.total_footer_value }} USD
+                                            </h5>
+                                            <h5>
+                                                <strong>Generada:</strong>
+                                                {{ budget.created_at | date }}
+                                            </h5>
+                                            <div class="text-center">
+                                                <a
+                                                        :href="'/user/budget/' + budget.public_id + '/edit'"
+                                                        class="btn btn-info"
+                                                    >
+                                                    <i class="glyphicon glyphicon-eye-open"></i>
+                                                    Ver detalle
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-xs-12" v-if="form.budgets.data.length === 0">
+                                    <p>
+                                        No se ha generado cotizaciones.
+                                        <a href="/user/budget/create">
+                                            Generar cotización
+                                        </a>
+                                    </p>
+                                </div>
+
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-xs-12" v-if="pagination.total > pagination.per_page">
+                    <ul class="pagination">
+                        <li :class="{'disabled': pagination.current === 1}">
+                            <a :href="pagination.path + '?page=1'" aria-label="Previous">
+                                <span aria-hidden="true">&laquo;</span>
+                            </a>
+                        </li>
+
+                        <li
+                                v-for="i in range(1, pagination.last_page)"
+                                :class="{'active': i === pagination.current}"
+                            >
+                            <a :href="pagination.path + '?page=' + i">
+                                {{ i }}
+                            </a>
+                        </li>
+
+
+                        <li :class="{'disabled': pagination.current === pagination.last_page}">
+                            <a :href="pagination.path + '?page=' + pagination.last_page" aria-label="Next">
+                                <span aria-hidden="true">&raquo;</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
         </div>
     </section>
 </template>
@@ -117,16 +205,22 @@
             return {
                 loading: false,
                 phoneError: false,
-                form: {
-                    name: '',
-                    phone: '',
-                    email: ''
+                form: {},
+                pagination: {
+                    current: null,
+                    from: null,
+                    to: null,
+                    path: null,
+                    last_page: null,
+                    total: null,
+                    per_page: null
                 }
             }
         },
 
-        mounted: function () {
+        beforeMount: function () {
             this.form = JSON.parse(this.patient);
+            this.generatePagination();
         },
 
         methods: {
@@ -176,6 +270,36 @@
                         this.loading = false;
                     })
                 ;
+            },
+
+            generatePagination: function () {
+                this.pagination.current = this.form.budgets.current_page;
+                this.pagination.from = this.form.budgets.from;
+                this.pagination.to = this.form.budgets.to;
+                this.pagination.path = this.form.budgets.path;
+                this.pagination.last_page = this.form.budgets.last_page;
+                this.pagination.total = this.form.budgets.total;
+                this.pagination.per_page = this.form.budgets.per_page;
+            },
+
+            range: function (start, end) {
+                let array = [];
+
+                for (let x = start; x <= end; x++) {
+                    array.push(x);
+                }
+
+                return array;
+            }
+        },
+        filters: {
+            date: function (value) {
+                let date = value.split(' ');
+                date = date[0].split('-');
+
+                date = date[1] + '/' + date[0] + '/' +date[2];
+
+                return date;
             }
         }
     }

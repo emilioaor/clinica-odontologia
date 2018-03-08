@@ -49,7 +49,7 @@
                                 </div>
                             </div>
                         @endif
-                        <hr>
+
                         <table class="table table-responsive table-striped">
                             <thead>
                                 <tr>

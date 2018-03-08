@@ -8602,6 +8602,29 @@ pre {
   line-height: 18.5714px;
 }
 
+.edit-patient__budgets .panel-body .panel {
+  -webkit-box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.2);
+  margin-top: 20px;
+}
+
+.edit-patient__budgets .panel-body .panel-body {
+  background-color: #8eb4cb;
+  color: #ffffff;
+  padding: 0 15px;
+  font-weight: bold;
+}
+
+.edit-patient__budgets .panel-body .panel-footer {
+  background-color: #ffffff;
+  font-size: 12px;
+}
+
+.edit-patient__budgets .panel-body .panel-footer a {
+  display: inline-block;
+  margin-top: 10px;
+}
+
 .input-error {
   border: #a94442 solid 1px;
 }

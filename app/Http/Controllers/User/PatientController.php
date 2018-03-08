@@ -87,6 +87,11 @@ class PatientController extends Controller
             abort(404);
         }
 
+        $patient->budgets = $patient->budgets()
+            ->orderBy('id', 'DESC')
+            ->paginate(12)
+        ;
+
         return view('user.patient.edit', compact('patient'));
     }
 

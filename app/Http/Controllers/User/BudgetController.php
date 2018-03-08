@@ -4,6 +4,7 @@ namespace App\Http\Controllers\User;
 
 use App\Budget;
 use App\BudgetDetail;
+use App\Patient;
 use App\Product;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -18,11 +19,30 @@ class BudgetController extends Controller
     /**
      * Display a listing of the resource.
      *
+     * @param Request $request
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $budgets = Budget::orderByDesc('created_at')->paginate();
+        if (! empty($request->search)) {
+            $patients = Patient::select('id')
+                ->where('phone', 'LIKE', "%$request->search%")
+                ->orWhere('name', 'LIKE', "%$request->search%")
+                ->orderByDesc('id')
+                ->get()
+            ;
+
+            $budgets = Budget::orderByDesc('id')->limit(15);
+
+            foreach ($patients as $patient) {
+                $budgets->orWhere('patient_id', $patient['id']);
+            }
+
+            $budgets = $budgets->paginate();
+
+        } else {
+            $budgets = Budget::orderByDesc('id')->paginate();
+        }
 
         return view('user.budget.index', compact('budgets'));
     }

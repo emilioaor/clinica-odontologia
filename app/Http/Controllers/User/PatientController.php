@@ -12,11 +12,22 @@ class PatientController extends Controller
     /**
      * Display a listing of the resource.
      *
+     * @param Request $request
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $patients = Patient::orderBy('id', 'DESC')->paginate();
+        $patients = Patient::orderBy('id', 'DESC');
+
+        if (! empty($request->search)) {
+            $patients = $patients
+                ->where('phone', 'LIKE', "%$request->search%")
+                ->orWhere('name', 'LIKE', "%$request->search%")
+                ->limit(15)
+            ;
+        }
+
+        $patients = $patients->paginate();
 
         return view('user.patient.index', compact('patients'));
     }

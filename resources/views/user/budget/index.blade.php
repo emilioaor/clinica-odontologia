@@ -33,7 +33,7 @@
                                                     #{{ $budget->public_id }}
                                                 </a>
                                             </td>
-                                            <td>{{ $budget->client_value }}</td>
+                                            <td>{{ $budget->patient->name }}</td>
                                             <td>{{ $budget->created_at->format('m/d/Y') }}</td>
                                             <td>{{ '$' . number_format($budget->total_head_value, 2) . ' USD' }}</td>
                                         </tr>

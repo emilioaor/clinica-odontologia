@@ -16,6 +16,7 @@ Route::group(['prefix' => 'user', 'middleware' => 'auth'], function() {
     // Pacientes
     Route::resource('patient', 'User\PatientController');
     Route::get('patient/phone/{phone}/{id?}', 'User\PatientController@verifyPhone');
+    Route::get('patient/budget/search', 'User\PatientController@search');
 
     // Cotizacion
     Route::resource('budget', 'User\BudgetController');

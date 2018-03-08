@@ -122,6 +122,17 @@
     }
 
     &[name="client_label"] {
+      font-weight: bold;
+      text-align: left;
+    }
+
+    &[name="client_phone_label"] {
+      font-weight: bold;
+      text-align: left;
+    }
+
+    &[name="client_email_label"] {
+      font-weight: bold;
       text-align: left;
     }
 

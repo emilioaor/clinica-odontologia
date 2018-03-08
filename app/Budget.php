@@ -12,7 +12,8 @@ class Budget extends Model
         'public_id',
         'title',
         'client_label',
-        'client_value',
+        'client_phone_label',
+        'client_email_label',
         'creation_date_label',
         'creation_date_value',
         'total_head_label',
@@ -33,7 +34,8 @@ class Budget extends Model
         'table_description_label',
         'table_quantity_label',
         'table_price_label',
-        'table_total_label'
+        'table_total_label',
+        'patient_id'
 
     ];
 

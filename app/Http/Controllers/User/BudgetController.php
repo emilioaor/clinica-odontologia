@@ -112,6 +112,7 @@ class BudgetController extends Controller
         }
 
         $budget->details = $budget->budgetDetails;
+        $budget->client = $budget->patient;
         $products = Product::all();
 
         return view('user.budget.edit', compact('budget', 'products'));

@@ -18,7 +18,8 @@ class CreateTableBudgets extends Migration
             $table->string('public_id', 10)->unique();
             $table->string('title')->nullable();
             $table->string('client_label')->nullable();
-            $table->string('client_value');
+            $table->string('client_phone_label')->nullable();
+            $table->string('client_email_label')->nullable();
             $table->string('creation_date_label')->nullable();
             $table->date('creation_date_value')->nullable();
             $table->string('total_head_label')->nullable();
@@ -40,6 +41,8 @@ class CreateTableBudgets extends Migration
             $table->string('table_quantity_label')->nullable();
             $table->string('table_price_label')->nullable();
             $table->string('table_total_label')->nullable();
+            $table->integer('patient_id')->unsigned();
+            $table->foreign('patient_id')->references('id')->on('patients');
             $table->timestamps();
         });
     }

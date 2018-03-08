@@ -133,4 +133,32 @@ class PatientController extends Controller
             'valid' => $patient->first() ? false : true
         ]);
     }
+
+    /**
+     * Obtiene una lista de pacientes disponibles y aplicando
+     * filtros
+     *
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function search(Request $request)
+    {
+        $patients = Patient::orderBy('id', 'DESC')
+            ->orderBy('phone')
+            ->orderBy('name')
+            ->limit(10)
+        ;
+
+        if (! empty($request->search)) {
+            $patients
+                ->where('phone', 'LIKE', "%$request->search%")
+                ->orWhere('name', 'LIKE', "%$request->search%")
+            ;
+        }
+
+        return new JsonResponse([
+            'success' => true,
+            'patients' => $patients->get()
+        ]);
+    }
 }

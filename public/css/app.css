@@ -8485,6 +8485,17 @@ button.close {
 }
 
 .register-budget input[name="client_label"] {
+  font-weight: bold;
+  text-align: left;
+}
+
+.register-budget input[name="client_phone_label"] {
+  font-weight: bold;
+  text-align: left;
+}
+
+.register-budget input[name="client_email_label"] {
+  font-weight: bold;
   text-align: left;
 }
 

@@ -56,11 +56,15 @@
                                                         placeholder="Telefono de contacto"
                                                         v-model="form.phone"
                                                         v-validate
-                                                        data-vv-rules="required"
+                                                        data-vv-rules="required|regex:^[0-9]{10}$"
                                                         v-bind:class="{'input-error': errors.has('phone')}"
+                                                        maxlength="10"
                                                         >
                                                 <p class="error" v-if="errors.firstByRule('phone', 'required')">
                                                     Campo requerido
+                                                </p>
+                                                <p class="error" v-if="errors.firstByRule('phone', 'regex')">
+                                                    Formato invalido
                                                 </p>
                                             </div>
                                         </div>

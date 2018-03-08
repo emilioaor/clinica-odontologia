@@ -1079,7 +1079,7 @@ module.exports=function(e){function t(a){if(n[a])return n[a].exports;var r=n[a]=
 /***/ (function(module, exports, __webpack_require__) {
 
 __webpack_require__(12);
-module.exports = __webpack_require__(60);
+module.exports = __webpack_require__(65);
 
 
 /***/ }),
@@ -1116,7 +1116,7 @@ Vue.component('edit-budget', __webpack_require__(50));
 Vue.component('change-password', __webpack_require__(53));
 Vue.component('business-config', __webpack_require__(56));
 Vue.component('register-patient', __webpack_require__(59));
-Vue.component('edit-patient', __webpack_require__(73));
+Vue.component('edit-patient', __webpack_require__(62));
 
 var app = new Vue({
   el: '#app'
@@ -50902,6 +50902,124 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 
@@ -50927,7 +51045,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 public_id: this.next,
                 title: 'COTIZACIÓN',
                 client_label: 'Para:',
-                client_value: '',
+                client_phone_label: 'Telefono:',
+                client_email_label: 'Email:',
                 creation_date_label: 'Fecha de emisión',
                 creation_date_value: '',
                 total_head_label: 'Total:',
@@ -50949,11 +51068,22 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 table_quantity_label: 'Cant.',
                 table_price_label: 'Precio',
                 table_total_label: 'Total',
+                patient_id: null,
                 details: [{
                     price: 0,
                     quantity: 1,
                     product_id: null
                 }]
+            },
+            client: {
+                name: '',
+                phone: '',
+                email: ''
+            },
+            modal: {
+                data: [],
+                loading: false,
+                search: ''
             }
         };
     },
@@ -51088,6 +51218,26 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             var year = date.getFullYear();
 
             this.form.creation_date_value = year + '-' + month + '-' + day;
+        },
+
+        searchPatients: function searchPatients() {
+            var _this3 = this;
+
+            this.modal.data = [];
+            this.modal.loading = true;
+
+            axios.get('/user/patient/budget/search?search=' + this.modal.search).then(function (res) {
+                _this3.modal.loading = false;
+
+                _this3.modal.data = res.data.patients;
+            }).catch(function (err) {
+                _this3.modal.loading = false;
+            });
+        },
+
+        selectPatient: function selectPatient(patient) {
+            this.client = patient;
+            this.form.patient_id = patient.id;
         }
     }
 });
@@ -51322,96 +51472,405 @@ var render = function() {
                       ]
                     ),
                     _vm._v(" "),
-                    _c("p", { staticStyle: { margin: "0" } }),
-                    _c("div", { staticClass: "form-group" }, [
-                      _c(
-                        "div",
-                        { staticStyle: { width: "50%", float: "left" } },
-                        [
-                          _c("input", {
-                            directives: [
-                              {
-                                name: "model",
-                                rawName: "v-model",
-                                value: _vm.form.client_label,
-                                expression: "form.client_label"
-                              }
-                            ],
-                            staticClass: "form-control input-hover",
-                            attrs: {
-                              type: "text",
-                              id: "client_label",
-                              name: "client_label"
-                            },
-                            domProps: { value: _vm.form.client_label },
-                            on: {
-                              input: function($event) {
-                                if ($event.target.composing) {
-                                  return
+                    _c("div", [
+                      _c("div", { staticClass: "form-group" }, [
+                        _c(
+                          "div",
+                          { staticStyle: { width: "50%", float: "left" } },
+                          [
+                            _c("input", {
+                              directives: [
+                                {
+                                  name: "model",
+                                  rawName: "v-model",
+                                  value: _vm.form.client_label,
+                                  expression: "form.client_label"
                                 }
-                                _vm.$set(
-                                  _vm.form,
-                                  "client_label",
-                                  $event.target.value
-                                )
+                              ],
+                              staticClass: "form-control input-hover",
+                              attrs: {
+                                type: "text",
+                                id: "client_label",
+                                name: "client_label"
+                              },
+                              domProps: { value: _vm.form.client_label },
+                              on: {
+                                input: function($event) {
+                                  if ($event.target.composing) {
+                                    return
+                                  }
+                                  _vm.$set(
+                                    _vm.form,
+                                    "client_label",
+                                    $event.target.value
+                                  )
+                                }
                               }
+                            })
+                          ]
+                        ),
+                        _vm._v(" "),
+                        _c(
+                          "div",
+                          { staticStyle: { width: "50%", float: "left" } },
+                          [
+                            _c("input", {
+                              directives: [
+                                {
+                                  name: "model",
+                                  rawName: "v-model",
+                                  value: _vm.client.name,
+                                  expression: "client.name"
+                                },
+                                { name: "validate", rawName: "v-validate" }
+                              ],
+                              staticClass: "form-control",
+                              attrs: {
+                                type: "text",
+                                id: "client_name",
+                                name: "client_name",
+                                placeholder: "Cliente",
+                                "data-vv-rules": "required",
+                                readonly: ""
+                              },
+                              domProps: { value: _vm.client.name },
+                              on: {
+                                input: function($event) {
+                                  if ($event.target.composing) {
+                                    return
+                                  }
+                                  _vm.$set(
+                                    _vm.client,
+                                    "name",
+                                    $event.target.value
+                                  )
+                                }
+                              }
+                            })
+                          ]
+                        )
+                      ]),
+                      _vm._v(" "),
+                      _c(
+                        "button",
+                        {
+                          staticClass: "btn btn-primary",
+                          staticStyle: { position: "absolute" },
+                          attrs: {
+                            "data-toggle": "modal",
+                            "data-target": "#patientModal"
+                          },
+                          on: {
+                            click: function($event) {
+                              _vm.searchPatients()
                             }
-                          })
-                        ]
+                          }
+                        },
+                        [_c("i", { staticClass: "glyphicon glyphicon-search" })]
                       ),
                       _vm._v(" "),
                       _c(
                         "div",
-                        { staticStyle: { width: "50%", float: "left" } },
+                        {
+                          staticClass: "modal fade",
+                          attrs: {
+                            id: "patientModal",
+                            tabindex: "-1",
+                            role: "dialog",
+                            "aria-labelledby": "patientModal",
+                            "aria-hidden": "true"
+                          }
+                        },
                         [
-                          _c("input", {
-                            directives: [
-                              {
-                                name: "model",
-                                rawName: "v-model",
-                                value: _vm.form.client_value,
-                                expression: "form.client_value"
-                              },
-                              { name: "validate", rawName: "v-validate" }
-                            ],
-                            staticClass: "form-control",
-                            class: {
-                              "input-error": _vm.errors.has("client_value")
+                          _c(
+                            "div",
+                            {
+                              staticClass: "modal-dialog",
+                              attrs: { role: "document" }
                             },
-                            attrs: {
-                              type: "text",
-                              id: "client_value",
-                              name: "client_value",
-                              placeholder: "Cliente",
-                              "data-vv-rules": "required"
-                            },
-                            domProps: { value: _vm.form.client_value },
-                            on: {
-                              input: function($event) {
-                                if ($event.target.composing) {
-                                  return
-                                }
-                                _vm.$set(
-                                  _vm.form,
-                                  "client_value",
-                                  $event.target.value
-                                )
-                              }
-                            }
-                          }),
-                          _vm._v(" "),
-                          _vm.errors.firstByRule("client_value", "required")
-                            ? _c("p", { staticClass: "error" }, [
-                                _vm._v(
-                                  "\n                                                    Cliente es requerido\n                                                "
-                                )
+                            [
+                              _c("div", { staticClass: "modal-content" }, [
+                                _c("div", { staticClass: "modal-body" }, [
+                                  _c("h3", [
+                                    _vm._v(
+                                      "\n                                                            Selecciona al paciente\n                                                        "
+                                    )
+                                  ]),
+                                  _vm._v(" "),
+                                  _c("input", {
+                                    directives: [
+                                      {
+                                        name: "model",
+                                        rawName: "v-model",
+                                        value: _vm.modal.search,
+                                        expression: "modal.search"
+                                      }
+                                    ],
+                                    staticClass: "form-control",
+                                    attrs: {
+                                      type: "text",
+                                      placeholder: "Buscador"
+                                    },
+                                    domProps: { value: _vm.modal.search },
+                                    on: {
+                                      keyup: function($event) {
+                                        _vm.searchPatients()
+                                      },
+                                      input: function($event) {
+                                        if ($event.target.composing) {
+                                          return
+                                        }
+                                        _vm.$set(
+                                          _vm.modal,
+                                          "search",
+                                          $event.target.value
+                                        )
+                                      }
+                                    }
+                                  }),
+                                  _vm._v(" "),
+                                  _c("hr"),
+                                  _vm._v(" "),
+                                  _c("div", { staticClass: "row" }, [
+                                    _c("div", { staticClass: "col-xs-12" }, [
+                                      _c(
+                                        "table",
+                                        {
+                                          staticClass:
+                                            "table table-responsive table-striped"
+                                        },
+                                        [
+                                          _vm._m(0),
+                                          _vm._v(" "),
+                                          !_vm.modal.loading
+                                            ? _c(
+                                                "tbody",
+                                                _vm._l(_vm.modal.data, function(
+                                                  patient
+                                                ) {
+                                                  return _c("tr", [
+                                                    _c("td", [
+                                                      _vm._v(
+                                                        _vm._s(patient.phone)
+                                                      )
+                                                    ]),
+                                                    _vm._v(" "),
+                                                    _c("td", [
+                                                      _vm._v(
+                                                        _vm._s(patient.name)
+                                                      )
+                                                    ]),
+                                                    _vm._v(" "),
+                                                    _c("td", [
+                                                      _c(
+                                                        "button",
+                                                        {
+                                                          staticClass:
+                                                            "btn btn-primary",
+                                                          attrs: {
+                                                            "data-dismiss":
+                                                              "modal"
+                                                          },
+                                                          on: {
+                                                            click: function(
+                                                              $event
+                                                            ) {
+                                                              _vm.selectPatient(
+                                                                patient
+                                                              )
+                                                            }
+                                                          }
+                                                        },
+                                                        [
+                                                          _c("i", {
+                                                            staticClass:
+                                                              "glyphicon glyphicon-ok"
+                                                          })
+                                                        ]
+                                                      )
+                                                    ])
+                                                  ])
+                                                })
+                                              )
+                                            : _vm._e()
+                                        ]
+                                      )
+                                    ])
+                                  ])
+                                ]),
+                                _vm._v(" "),
+                                _vm._m(1)
                               ])
-                            : _vm._e()
+                            ]
+                          )
                         ]
                       )
                     ]),
                     _vm._v(" "),
-                    _c("p")
+                    _c("div", [
+                      _c("div", { staticClass: "form-group" }, [
+                        _c(
+                          "div",
+                          { staticStyle: { width: "50%", float: "left" } },
+                          [
+                            _c("input", {
+                              directives: [
+                                {
+                                  name: "model",
+                                  rawName: "v-model",
+                                  value: _vm.form.client_phone_label,
+                                  expression: "form.client_phone_label"
+                                }
+                              ],
+                              staticClass: "form-control input-hover",
+                              attrs: {
+                                type: "text",
+                                id: "client_phone_label",
+                                name: "client_phone_label"
+                              },
+                              domProps: { value: _vm.form.client_phone_label },
+                              on: {
+                                input: function($event) {
+                                  if ($event.target.composing) {
+                                    return
+                                  }
+                                  _vm.$set(
+                                    _vm.form,
+                                    "client_phone_label",
+                                    $event.target.value
+                                  )
+                                }
+                              }
+                            })
+                          ]
+                        ),
+                        _vm._v(" "),
+                        _c(
+                          "div",
+                          { staticStyle: { width: "50%", float: "left" } },
+                          [
+                            _c("input", {
+                              directives: [
+                                {
+                                  name: "model",
+                                  rawName: "v-model",
+                                  value: _vm.client.phone,
+                                  expression: "client.phone"
+                                },
+                                { name: "validate", rawName: "v-validate" }
+                              ],
+                              staticClass: "form-control",
+                              attrs: {
+                                type: "text",
+                                id: "client_phone",
+                                name: "client_phone",
+                                placeholder: "Telefono",
+                                "data-vv-rules": "required",
+                                readonly: ""
+                              },
+                              domProps: { value: _vm.client.phone },
+                              on: {
+                                input: function($event) {
+                                  if ($event.target.composing) {
+                                    return
+                                  }
+                                  _vm.$set(
+                                    _vm.client,
+                                    "phone",
+                                    $event.target.value
+                                  )
+                                }
+                              }
+                            })
+                          ]
+                        )
+                      ])
+                    ]),
+                    _vm._v(" "),
+                    _c("div", [
+                      _c("div", { staticClass: "form-group" }, [
+                        _c(
+                          "div",
+                          { staticStyle: { width: "50%", float: "left" } },
+                          [
+                            _c("input", {
+                              directives: [
+                                {
+                                  name: "model",
+                                  rawName: "v-model",
+                                  value: _vm.form.client_email_label,
+                                  expression: "form.client_email_label"
+                                }
+                              ],
+                              staticClass: "form-control input-hover",
+                              attrs: {
+                                type: "text",
+                                id: "client_email_label",
+                                name: "client_email_label"
+                              },
+                              domProps: { value: _vm.form.client_email_label },
+                              on: {
+                                input: function($event) {
+                                  if ($event.target.composing) {
+                                    return
+                                  }
+                                  _vm.$set(
+                                    _vm.form,
+                                    "client_email_label",
+                                    $event.target.value
+                                  )
+                                }
+                              }
+                            })
+                          ]
+                        ),
+                        _vm._v(" "),
+                        _c(
+                          "div",
+                          { staticStyle: { width: "50%", float: "left" } },
+                          [
+                            _c("input", {
+                              directives: [
+                                {
+                                  name: "model",
+                                  rawName: "v-model",
+                                  value: _vm.client.email,
+                                  expression: "client.email"
+                                }
+                              ],
+                              staticClass: "form-control",
+                              attrs: {
+                                type: "text",
+                                placeholder: "Email",
+                                disabled: ""
+                              },
+                              domProps: { value: _vm.client.email },
+                              on: {
+                                input: function($event) {
+                                  if ($event.target.composing) {
+                                    return
+                                  }
+                                  _vm.$set(
+                                    _vm.client,
+                                    "email",
+                                    $event.target.value
+                                  )
+                                }
+                              }
+                            })
+                          ]
+                        )
+                      ])
+                    ]),
+                    _vm._v(" "),
+                    _vm.errors.has("client_name") ||
+                    _vm.errors.has("client_phone")
+                      ? _c("p", { staticClass: "error" }, [
+                          _vm._v(
+                            "\n                                        No olvide seleccionar al cliente\n                                    "
+                          )
+                        ])
+                      : _vm._e()
                   ]),
                   _vm._v(" "),
                   _c("td", { staticStyle: { width: "70%" } }, [
@@ -52641,7 +53100,37 @@ var render = function() {
     ])
   ])
 }
-var staticRenderFns = []
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("thead", [
+      _c("tr", [
+        _c("th", { attrs: { width: "50%" } }, [_vm._v("Telefono")]),
+        _vm._v(" "),
+        _c("th", { attrs: { width: "50%" } }, [_vm._v("Nombre")]),
+        _vm._v(" "),
+        _c("th")
+      ])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "modal-footer" }, [
+      _c(
+        "button",
+        {
+          staticClass: "btn btn-secondary",
+          attrs: { type: "button", "data-dismiss": "modal" }
+        },
+        [_vm._v("Cerrar")]
+      )
+    ])
+  }
+]
 render._withStripped = true
 module.exports = { render: render, staticRenderFns: staticRenderFns }
 if (false) {
@@ -53222,6 +53711,123 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 
@@ -53243,7 +53849,17 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             showDiscount: false,
             showShipping: false,
             userData: JSON.parse(this.user),
-            form: JSON.parse(this.formData)
+            form: JSON.parse(this.formData),
+            client: {
+                name: '',
+                phone: '',
+                email: ''
+            },
+            modal: {
+                data: [],
+                loading: false,
+                search: ''
+            }
         };
     },
 
@@ -53256,6 +53872,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
             this.initDate = new Date(date[0], parseInt(date[1]) - 1, date[2]);
         }
+
+        this.client = this.form.client;
     },
 
     methods: {
@@ -53378,6 +53996,26 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             var year = date.getFullYear();
 
             this.form.creation_date_value = year + '-' + month + '-' + day;
+        },
+
+        searchPatients: function searchPatients() {
+            var _this3 = this;
+
+            this.modal.data = [];
+            this.modal.loading = true;
+
+            axios.get('/user/patient/budget/search?search=' + this.modal.search).then(function (res) {
+                _this3.modal.loading = false;
+
+                _this3.modal.data = res.data.patients;
+            }).catch(function (err) {
+                _this3.modal.loading = false;
+            });
+        },
+
+        selectPatient: function selectPatient(patient) {
+            this.client = patient;
+            this.form.patient_id = patient.id;
         }
     }
 });
@@ -53612,96 +54250,405 @@ var render = function() {
                       ]
                     ),
                     _vm._v(" "),
-                    _c("p", { staticStyle: { margin: "0" } }),
-                    _c("div", { staticClass: "form-group" }, [
-                      _c(
-                        "div",
-                        { staticStyle: { width: "50%", float: "left" } },
-                        [
-                          _c("input", {
-                            directives: [
-                              {
-                                name: "model",
-                                rawName: "v-model",
-                                value: _vm.form.client_label,
-                                expression: "form.client_label"
-                              }
-                            ],
-                            staticClass: "form-control input-hover",
-                            attrs: {
-                              type: "text",
-                              id: "client_label",
-                              name: "client_label"
-                            },
-                            domProps: { value: _vm.form.client_label },
-                            on: {
-                              input: function($event) {
-                                if ($event.target.composing) {
-                                  return
+                    _c("div", [
+                      _c("div", { staticClass: "form-group" }, [
+                        _c(
+                          "div",
+                          { staticStyle: { width: "50%", float: "left" } },
+                          [
+                            _c("input", {
+                              directives: [
+                                {
+                                  name: "model",
+                                  rawName: "v-model",
+                                  value: _vm.form.client_label,
+                                  expression: "form.client_label"
                                 }
-                                _vm.$set(
-                                  _vm.form,
-                                  "client_label",
-                                  $event.target.value
-                                )
+                              ],
+                              staticClass: "form-control input-hover",
+                              attrs: {
+                                type: "text",
+                                id: "client_label",
+                                name: "client_label"
+                              },
+                              domProps: { value: _vm.form.client_label },
+                              on: {
+                                input: function($event) {
+                                  if ($event.target.composing) {
+                                    return
+                                  }
+                                  _vm.$set(
+                                    _vm.form,
+                                    "client_label",
+                                    $event.target.value
+                                  )
+                                }
                               }
+                            })
+                          ]
+                        ),
+                        _vm._v(" "),
+                        _c(
+                          "div",
+                          { staticStyle: { width: "50%", float: "left" } },
+                          [
+                            _c("input", {
+                              directives: [
+                                {
+                                  name: "model",
+                                  rawName: "v-model",
+                                  value: _vm.client.name,
+                                  expression: "client.name"
+                                },
+                                { name: "validate", rawName: "v-validate" }
+                              ],
+                              staticClass: "form-control",
+                              attrs: {
+                                type: "text",
+                                id: "client_name",
+                                name: "client_name",
+                                placeholder: "Cliente",
+                                "data-vv-rules": "required",
+                                readonly: ""
+                              },
+                              domProps: { value: _vm.client.name },
+                              on: {
+                                input: function($event) {
+                                  if ($event.target.composing) {
+                                    return
+                                  }
+                                  _vm.$set(
+                                    _vm.client,
+                                    "name",
+                                    $event.target.value
+                                  )
+                                }
+                              }
+                            })
+                          ]
+                        )
+                      ]),
+                      _vm._v(" "),
+                      _c(
+                        "button",
+                        {
+                          staticClass: "btn btn-primary",
+                          staticStyle: { position: "absolute" },
+                          attrs: {
+                            "data-toggle": "modal",
+                            "data-target": "#patientModal"
+                          },
+                          on: {
+                            click: function($event) {
+                              _vm.searchPatients()
                             }
-                          })
-                        ]
+                          }
+                        },
+                        [_c("i", { staticClass: "glyphicon glyphicon-search" })]
                       ),
                       _vm._v(" "),
                       _c(
                         "div",
-                        { staticStyle: { width: "50%", float: "left" } },
+                        {
+                          staticClass: "modal fade",
+                          attrs: {
+                            id: "patientModal",
+                            tabindex: "-1",
+                            role: "dialog",
+                            "aria-labelledby": "patientModal",
+                            "aria-hidden": "true"
+                          }
+                        },
                         [
-                          _c("input", {
-                            directives: [
-                              {
-                                name: "model",
-                                rawName: "v-model",
-                                value: _vm.form.client_value,
-                                expression: "form.client_value"
-                              },
-                              { name: "validate", rawName: "v-validate" }
-                            ],
-                            staticClass: "form-control",
-                            class: {
-                              "input-error": _vm.errors.has("client_value")
+                          _c(
+                            "div",
+                            {
+                              staticClass: "modal-dialog",
+                              attrs: { role: "document" }
                             },
-                            attrs: {
-                              type: "text",
-                              id: "client_value",
-                              name: "client_value",
-                              placeholder: "Cliente",
-                              "data-vv-rules": "required"
-                            },
-                            domProps: { value: _vm.form.client_value },
-                            on: {
-                              input: function($event) {
-                                if ($event.target.composing) {
-                                  return
-                                }
-                                _vm.$set(
-                                  _vm.form,
-                                  "client_value",
-                                  $event.target.value
-                                )
-                              }
-                            }
-                          }),
-                          _vm._v(" "),
-                          _vm.errors.firstByRule("client_value", "required")
-                            ? _c("p", { staticClass: "error" }, [
-                                _vm._v(
-                                  "\n                                                Cliente es requerido\n                                            "
-                                )
+                            [
+                              _c("div", { staticClass: "modal-content" }, [
+                                _c("div", { staticClass: "modal-body" }, [
+                                  _c("h3", [
+                                    _vm._v(
+                                      "\n                                                            Selecciona al paciente\n                                                        "
+                                    )
+                                  ]),
+                                  _vm._v(" "),
+                                  _c("input", {
+                                    directives: [
+                                      {
+                                        name: "model",
+                                        rawName: "v-model",
+                                        value: _vm.modal.search,
+                                        expression: "modal.search"
+                                      }
+                                    ],
+                                    staticClass: "form-control",
+                                    attrs: {
+                                      type: "text",
+                                      placeholder: "Buscador"
+                                    },
+                                    domProps: { value: _vm.modal.search },
+                                    on: {
+                                      keyup: function($event) {
+                                        _vm.searchPatients()
+                                      },
+                                      input: function($event) {
+                                        if ($event.target.composing) {
+                                          return
+                                        }
+                                        _vm.$set(
+                                          _vm.modal,
+                                          "search",
+                                          $event.target.value
+                                        )
+                                      }
+                                    }
+                                  }),
+                                  _vm._v(" "),
+                                  _c("hr"),
+                                  _vm._v(" "),
+                                  _c("div", { staticClass: "row" }, [
+                                    _c("div", { staticClass: "col-xs-12" }, [
+                                      _c(
+                                        "table",
+                                        {
+                                          staticClass:
+                                            "table table-responsive table-striped"
+                                        },
+                                        [
+                                          _vm._m(0),
+                                          _vm._v(" "),
+                                          !_vm.modal.loading
+                                            ? _c(
+                                                "tbody",
+                                                _vm._l(_vm.modal.data, function(
+                                                  patient
+                                                ) {
+                                                  return _c("tr", [
+                                                    _c("td", [
+                                                      _vm._v(
+                                                        _vm._s(patient.phone)
+                                                      )
+                                                    ]),
+                                                    _vm._v(" "),
+                                                    _c("td", [
+                                                      _vm._v(
+                                                        _vm._s(patient.name)
+                                                      )
+                                                    ]),
+                                                    _vm._v(" "),
+                                                    _c("td", [
+                                                      _c(
+                                                        "button",
+                                                        {
+                                                          staticClass:
+                                                            "btn btn-primary",
+                                                          attrs: {
+                                                            "data-dismiss":
+                                                              "modal"
+                                                          },
+                                                          on: {
+                                                            click: function(
+                                                              $event
+                                                            ) {
+                                                              _vm.selectPatient(
+                                                                patient
+                                                              )
+                                                            }
+                                                          }
+                                                        },
+                                                        [
+                                                          _c("i", {
+                                                            staticClass:
+                                                              "glyphicon glyphicon-ok"
+                                                          })
+                                                        ]
+                                                      )
+                                                    ])
+                                                  ])
+                                                })
+                                              )
+                                            : _vm._e()
+                                        ]
+                                      )
+                                    ])
+                                  ])
+                                ]),
+                                _vm._v(" "),
+                                _vm._m(1)
                               ])
-                            : _vm._e()
+                            ]
+                          )
                         ]
                       )
                     ]),
                     _vm._v(" "),
-                    _c("p")
+                    _c("div", [
+                      _c("div", { staticClass: "form-group" }, [
+                        _c(
+                          "div",
+                          { staticStyle: { width: "50%", float: "left" } },
+                          [
+                            _c("input", {
+                              directives: [
+                                {
+                                  name: "model",
+                                  rawName: "v-model",
+                                  value: _vm.form.client_phone_label,
+                                  expression: "form.client_phone_label"
+                                }
+                              ],
+                              staticClass: "form-control input-hover",
+                              attrs: {
+                                type: "text",
+                                id: "client_phone_label",
+                                name: "client_phone_label"
+                              },
+                              domProps: { value: _vm.form.client_phone_label },
+                              on: {
+                                input: function($event) {
+                                  if ($event.target.composing) {
+                                    return
+                                  }
+                                  _vm.$set(
+                                    _vm.form,
+                                    "client_phone_label",
+                                    $event.target.value
+                                  )
+                                }
+                              }
+                            })
+                          ]
+                        ),
+                        _vm._v(" "),
+                        _c(
+                          "div",
+                          { staticStyle: { width: "50%", float: "left" } },
+                          [
+                            _c("input", {
+                              directives: [
+                                {
+                                  name: "model",
+                                  rawName: "v-model",
+                                  value: _vm.client.phone,
+                                  expression: "client.phone"
+                                },
+                                { name: "validate", rawName: "v-validate" }
+                              ],
+                              staticClass: "form-control",
+                              attrs: {
+                                type: "text",
+                                id: "client_phone",
+                                name: "client_phone",
+                                placeholder: "Telefono",
+                                "data-vv-rules": "required",
+                                readonly: ""
+                              },
+                              domProps: { value: _vm.client.phone },
+                              on: {
+                                input: function($event) {
+                                  if ($event.target.composing) {
+                                    return
+                                  }
+                                  _vm.$set(
+                                    _vm.client,
+                                    "phone",
+                                    $event.target.value
+                                  )
+                                }
+                              }
+                            })
+                          ]
+                        )
+                      ])
+                    ]),
+                    _vm._v(" "),
+                    _c("div", [
+                      _c("div", { staticClass: "form-group" }, [
+                        _c(
+                          "div",
+                          { staticStyle: { width: "50%", float: "left" } },
+                          [
+                            _c("input", {
+                              directives: [
+                                {
+                                  name: "model",
+                                  rawName: "v-model",
+                                  value: _vm.form.client_email_label,
+                                  expression: "form.client_email_label"
+                                }
+                              ],
+                              staticClass: "form-control input-hover",
+                              attrs: {
+                                type: "text",
+                                id: "client_email_label",
+                                name: "client_email_label"
+                              },
+                              domProps: { value: _vm.form.client_email_label },
+                              on: {
+                                input: function($event) {
+                                  if ($event.target.composing) {
+                                    return
+                                  }
+                                  _vm.$set(
+                                    _vm.form,
+                                    "client_email_label",
+                                    $event.target.value
+                                  )
+                                }
+                              }
+                            })
+                          ]
+                        ),
+                        _vm._v(" "),
+                        _c(
+                          "div",
+                          { staticStyle: { width: "50%", float: "left" } },
+                          [
+                            _c("input", {
+                              directives: [
+                                {
+                                  name: "model",
+                                  rawName: "v-model",
+                                  value: _vm.client.email,
+                                  expression: "client.email"
+                                }
+                              ],
+                              staticClass: "form-control",
+                              attrs: {
+                                type: "text",
+                                placeholder: "Email",
+                                disabled: ""
+                              },
+                              domProps: { value: _vm.client.email },
+                              on: {
+                                input: function($event) {
+                                  if ($event.target.composing) {
+                                    return
+                                  }
+                                  _vm.$set(
+                                    _vm.client,
+                                    "email",
+                                    $event.target.value
+                                  )
+                                }
+                              }
+                            })
+                          ]
+                        )
+                      ])
+                    ]),
+                    _vm._v(" "),
+                    _vm.errors.has("client_name") ||
+                    _vm.errors.has("client_phone")
+                      ? _c("p", { staticClass: "error" }, [
+                          _vm._v(
+                            "\n                                        No olvide seleccionar al cliente\n                                    "
+                          )
+                        ])
+                      : _vm._e()
                   ]),
                   _vm._v(" "),
                   _c("td", { staticStyle: { width: "70%" } }, [
@@ -54953,7 +55900,37 @@ var render = function() {
     ])
   ])
 }
-var staticRenderFns = []
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("thead", [
+      _c("tr", [
+        _c("th", { attrs: { width: "50%" } }, [_vm._v("Telefono")]),
+        _vm._v(" "),
+        _c("th", { attrs: { width: "50%" } }, [_vm._v("Nombre")]),
+        _vm._v(" "),
+        _c("th")
+      ])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "modal-footer" }, [
+      _c(
+        "button",
+        {
+          staticClass: "btn btn-secondary",
+          attrs: { type: "button", "data-dismiss": "modal" }
+        },
+        [_vm._v("Cerrar")]
+      )
+    ])
+  }
+]
 render._withStripped = true
 module.exports = { render: render, staticRenderFns: staticRenderFns }
 if (false) {
@@ -55608,6 +56585,10 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     props: ['user'],
@@ -55830,7 +56811,8 @@ var render = function() {
                               name: "phone",
                               id: "phone",
                               placeholder: "Telefono de contacto",
-                              "data-vv-rules": "required"
+                              "data-vv-rules": "required|regex:^[0-9]{10}$",
+                              maxlength: "10"
                             },
                             domProps: { value: _vm.form.phone },
                             on: {
@@ -55847,6 +56829,14 @@ var render = function() {
                             ? _c("p", { staticClass: "error" }, [
                                 _vm._v(
                                   "\n                                                Campo requerido\n                                            "
+                                )
+                              ])
+                            : _vm._e(),
+                          _vm._v(" "),
+                          _vm.errors.firstByRule("phone", "regex")
+                            ? _c("p", { staticClass: "error" }, [
+                                _vm._v(
+                                  "\n                                                Formato invalido\n                                            "
                                 )
                               ])
                             : _vm._e()
@@ -56007,9 +56997,9 @@ if (false) {
 var disposed = false
 var normalizeComponent = __webpack_require__(1)
 /* script */
-var __vue_script__ = __webpack_require__(71)
+var __vue_script__ = __webpack_require__(60)
 /* template */
-var __vue_template__ = __webpack_require__(72)
+var __vue_template__ = __webpack_require__(61)
 /* template functional */
   var __vue_template_functional__ = false
 /* styles */
@@ -56050,22 +57040,6 @@ module.exports = Component.exports
 
 /***/ }),
 /* 60 */
-/***/ (function(module, exports) {
-
-// removed by extract-text-webpack-plugin
-
-/***/ }),
-/* 61 */,
-/* 62 */,
-/* 63 */,
-/* 64 */,
-/* 65 */,
-/* 66 */,
-/* 67 */,
-/* 68 */,
-/* 69 */,
-/* 70 */,
-/* 71 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -56247,7 +57221,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 72 */
+/* 61 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
@@ -56495,15 +57469,15 @@ if (false) {
 }
 
 /***/ }),
-/* 73 */
+/* 62 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
 var normalizeComponent = __webpack_require__(1)
 /* script */
-var __vue_script__ = __webpack_require__(74)
+var __vue_script__ = __webpack_require__(63)
 /* template */
-var __vue_template__ = __webpack_require__(75)
+var __vue_template__ = __webpack_require__(64)
 /* template functional */
   var __vue_template_functional__ = false
 /* styles */
@@ -56543,7 +57517,7 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 74 */
+/* 63 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -56731,7 +57705,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 75 */
+/* 64 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
@@ -56979,6 +57953,12 @@ if (false) {
     require("vue-hot-reload-api")      .rerender("data-v-07445012", module.exports)
   }
 }
+
+/***/ }),
+/* 65 */
+/***/ (function(module, exports) {
+
+// removed by extract-text-webpack-plugin
 
 /***/ })
 /******/ ]);

@@ -84,7 +84,8 @@
                                                 {{ business_name }}
                                             </strong>
                                         </p>
-                                        <p style="margin: 0;">
+
+                                        <div>
                                             <div class="form-group">
                                                 <div style="width: 50%;float:left;">
                                                     <input
@@ -99,19 +100,136 @@
                                                     <input
                                                             type="text"
                                                             class="form-control"
-                                                            id="client_value"
-                                                            name="client_value"
+                                                            id="client_name"
+                                                            name="client_name"
                                                             placeholder="Cliente"
-                                                            v-model="form.client_value"
+                                                            v-model="client.name"
                                                             v-validate
                                                             data-vv-rules="required"
-                                                            v-bind:class="{'input-error': errors.has('client_value')}"
+                                                            readonly
                                                             >
-                                                    <p class="error" v-if="errors.firstByRule('client_value', 'required')">
-                                                        Cliente es requerido
-                                                    </p>
                                                 </div>
                                             </div>
+
+                                            <button
+                                                    class="btn btn-primary"
+                                                    style="position:absolute;"
+                                                    data-toggle="modal"
+                                                    data-target="#patientModal"
+                                                    @click="searchPatients()"
+                                                >
+                                                <i class="glyphicon glyphicon-search"></i>
+                                            </button>
+
+                                            <!-- Modal -->
+                                            <div class="modal fade" id="patientModal" tabindex="-1" role="dialog" aria-labelledby="patientModal" aria-hidden="true">
+                                                <div class="modal-dialog" role="document">
+                                                    <div class="modal-content">
+                                                        <div class="modal-body">
+                                                            <h3>
+                                                                Selecciona al paciente
+                                                            </h3>
+                                                            <input
+                                                                    type="text"
+                                                                    class="form-control"
+                                                                    placeholder="Buscador"
+                                                                    v-model="modal.search"
+                                                                    @keyup="searchPatients()"
+                                                            >
+                                                            <hr>
+
+                                                            <div class="row">
+
+                                                                <div class="col-xs-12">
+
+                                                                    <table class="table table-responsive table-striped">
+                                                                        <thead>
+                                                                            <tr>
+                                                                                <th width="50%">Telefono</th>
+                                                                                <th width="50%">Nombre</th>
+                                                                                <th></th>
+                                                                            </tr>
+                                                                        </thead>
+
+                                                                        <tbody v-if="! modal.loading">
+                                                                            <tr v-for="patient in modal.data">
+                                                                                <td>{{ patient.phone }}</td>
+                                                                                <td>{{ patient.name }}</td>
+                                                                                <td>
+                                                                                    <button
+                                                                                            class="btn btn-primary"
+                                                                                            @click="selectPatient(patient)"
+                                                                                            data-dismiss="modal"
+                                                                                        >
+                                                                                        <i class="glyphicon glyphicon-ok"></i>
+                                                                                    </button>
+                                                                                </td>
+                                                                            </tr>
+                                                                        </tbody>
+                                                                    </table>
+
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div>
+                                            <div class="form-group">
+                                                <div style="width: 50%;float:left;">
+                                                    <input
+                                                            type="text"
+                                                            class="form-control input-hover"
+                                                            id="client_phone_label"
+                                                            name="client_phone_label"
+                                                            v-model="form.client_phone_label"
+                                                            >
+                                                </div>
+                                                <div style="width: 50%;float:left;">
+                                                    <input
+                                                            type="text"
+                                                            class="form-control"
+                                                            id="client_phone"
+                                                            name="client_phone"
+                                                            placeholder="Telefono"
+                                                            v-model="client.phone"
+                                                            v-validate
+                                                            data-vv-rules="required"
+                                                            readonly
+                                                            >
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div>
+                                            <div class="form-group">
+                                                <div style="width: 50%;float:left;">
+                                                    <input
+                                                            type="text"
+                                                            class="form-control input-hover"
+                                                            id="client_email_label"
+                                                            name="client_email_label"
+                                                            v-model="form.client_email_label"
+                                                            >
+                                                </div>
+                                                <div style="width: 50%;float:left;">
+                                                    <input
+                                                            type="text"
+                                                            class="form-control"
+                                                            placeholder="Email"
+                                                            v-model="client.email"
+                                                            disabled
+                                                            >
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <p class="error" v-if="errors.has('client_name') || errors.has('client_phone')">
+                                            No olvide seleccionar al cliente
                                         </p>
 
                                     </td>
@@ -534,7 +652,8 @@
                     public_id: this.next,
                     title: 'COTIZACIÓN',
                     client_label: 'Para:',
-                    client_value: '',
+                    client_phone_label: 'Telefono:',
+                    client_email_label: 'Email:',
                     creation_date_label: 'Fecha de emisión',
                     creation_date_value: '',
                     total_head_label: 'Total:',
@@ -556,12 +675,23 @@
                     table_quantity_label: 'Cant.',
                     table_price_label: 'Precio',
                     table_total_label: 'Total',
+                    patient_id: null,
                     details: [{
                         price: 0,
                         quantity: 1,
                         product_id: null
                     }]
-                }
+                },
+                client: {
+                    name: '',
+                    phone: '',
+                    email: ''
+                },
+                modal: {
+                    data: [],
+                    loading: false,
+                    search: ''
+                },
             }
         },
 
@@ -696,6 +826,27 @@
 
                 this.form.creation_date_value = year + '-' + month + '-' + day;
             },
+
+            searchPatients: function () {
+                this.modal.data = [];
+                this.modal.loading = true;
+
+                axios.get('/user/patient/budget/search?search=' + this.modal.search)
+                    .then((res) => {
+                        this.modal.loading = false;
+
+                        this.modal.data = res.data.patients;
+                    })
+                    .catch((err) => {
+                        this.modal.loading = false;
+                    })
+                ;
+            },
+
+            selectPatient: function (patient) {
+                this.client = patient;
+                this.form.patient_id = patient.id;
+            }
         }
     }
 </script>

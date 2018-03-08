@@ -84,34 +84,151 @@
                                                 {{ business_name }}
                                             </strong>
                                         </p>
-                                        <p style="margin: 0;">
-                                        <div class="form-group">
-                                            <div style="width: 50%;float:left;">
-                                                <input
-                                                        type="text"
-                                                        class="form-control input-hover"
-                                                        id="client_label"
-                                                        name="client_label"
-                                                        v-model="form.client_label"
-                                                        >
+                                        <div>
+                                            <div class="form-group">
+                                                <div style="width: 50%;float:left;">
+                                                    <input
+                                                            type="text"
+                                                            class="form-control input-hover"
+                                                            id="client_label"
+                                                            name="client_label"
+                                                            v-model="form.client_label"
+                                                            >
+                                                </div>
+                                                <div style="width: 50%;float:left;">
+                                                    <input
+                                                            type="text"
+                                                            class="form-control"
+                                                            id="client_name"
+                                                            name="client_name"
+                                                            placeholder="Cliente"
+                                                            v-model="client.name"
+                                                            v-validate
+                                                            data-vv-rules="required"
+                                                            readonly
+                                                            >
+                                                </div>
                                             </div>
-                                            <div style="width: 50%;float:left;">
-                                                <input
-                                                        type="text"
-                                                        class="form-control"
-                                                        id="client_value"
-                                                        name="client_value"
-                                                        placeholder="Cliente"
-                                                        v-model="form.client_value"
-                                                        v-validate
-                                                        data-vv-rules="required"
-                                                        v-bind:class="{'input-error': errors.has('client_value')}"
-                                                        >
-                                                <p class="error" v-if="errors.firstByRule('client_value', 'required')">
-                                                    Cliente es requerido
-                                                </p>
+
+                                            <button
+                                                    class="btn btn-primary"
+                                                    style="position:absolute;"
+                                                    data-toggle="modal"
+                                                    data-target="#patientModal"
+                                                    @click="searchPatients()"
+                                                    >
+                                                <i class="glyphicon glyphicon-search"></i>
+                                            </button>
+
+                                            <!-- Modal -->
+                                            <div class="modal fade" id="patientModal" tabindex="-1" role="dialog" aria-labelledby="patientModal" aria-hidden="true">
+                                                <div class="modal-dialog" role="document">
+                                                    <div class="modal-content">
+                                                        <div class="modal-body">
+                                                            <h3>
+                                                                Selecciona al paciente
+                                                            </h3>
+                                                            <input
+                                                                    type="text"
+                                                                    class="form-control"
+                                                                    placeholder="Buscador"
+                                                                    v-model="modal.search"
+                                                                    @keyup="searchPatients()"
+                                                                    >
+                                                            <hr>
+
+                                                            <div class="row">
+
+                                                                <div class="col-xs-12">
+
+                                                                    <table class="table table-responsive table-striped">
+                                                                        <thead>
+                                                                        <tr>
+                                                                            <th width="50%">Telefono</th>
+                                                                            <th width="50%">Nombre</th>
+                                                                            <th></th>
+                                                                        </tr>
+                                                                        </thead>
+
+                                                                        <tbody v-if="! modal.loading">
+                                                                        <tr v-for="patient in modal.data">
+                                                                            <td>{{ patient.phone }}</td>
+                                                                            <td>{{ patient.name }}</td>
+                                                                            <td>
+                                                                                <button
+                                                                                        class="btn btn-primary"
+                                                                                        @click="selectPatient(patient)"
+                                                                                        data-dismiss="modal"
+                                                                                        >
+                                                                                    <i class="glyphicon glyphicon-ok"></i>
+                                                                                </button>
+                                                                            </td>
+                                                                        </tr>
+                                                                        </tbody>
+                                                                    </table>
+
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                                                        </div>
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
+
+                                        <div>
+                                            <div class="form-group">
+                                                <div style="width: 50%;float:left;">
+                                                    <input
+                                                            type="text"
+                                                            class="form-control input-hover"
+                                                            id="client_phone_label"
+                                                            name="client_phone_label"
+                                                            v-model="form.client_phone_label"
+                                                            >
+                                                </div>
+                                                <div style="width: 50%;float:left;">
+                                                    <input
+                                                            type="text"
+                                                            class="form-control"
+                                                            id="client_phone"
+                                                            name="client_phone"
+                                                            placeholder="Telefono"
+                                                            v-model="client.phone"
+                                                            v-validate
+                                                            data-vv-rules="required"
+                                                            readonly
+                                                            >
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div>
+                                            <div class="form-group">
+                                                <div style="width: 50%;float:left;">
+                                                    <input
+                                                            type="text"
+                                                            class="form-control input-hover"
+                                                            id="client_email_label"
+                                                            name="client_email_label"
+                                                            v-model="form.client_email_label"
+                                                            >
+                                                </div>
+                                                <div style="width: 50%;float:left;">
+                                                    <input
+                                                            type="text"
+                                                            class="form-control"
+                                                            placeholder="Email"
+                                                            v-model="client.email"
+                                                            disabled
+                                                            >
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <p class="error" v-if="errors.has('client_name') || errors.has('client_phone')">
+                                            No olvide seleccionar al cliente
                                         </p>
 
                                     </td>
@@ -534,7 +651,17 @@
                 showDiscount: false,
                 showShipping: false,
                 userData: JSON.parse(this.user),
-                form: JSON.parse(this.formData)
+                form: JSON.parse(this.formData),
+                client: {
+                    name: '',
+                    phone: '',
+                    email: ''
+                },
+                modal: {
+                    data: [],
+                    loading: false,
+                    search: ''
+                },
             }
         },
 
@@ -547,6 +674,8 @@
 
                 this.initDate = new Date(date[0], parseInt(date[1]) - 1, date[2]);
             }
+
+            this.client = this.form.client;
         },
 
         methods: {
@@ -670,6 +799,27 @@
 
                 this.form.creation_date_value = year + '-' + month + '-' + day;
             },
+
+            searchPatients: function () {
+                this.modal.data = [];
+                this.modal.loading = true;
+
+                axios.get('/user/patient/budget/search?search=' + this.modal.search)
+                        .then((res) => {
+                    this.modal.loading = false;
+
+                    this.modal.data = res.data.patients;
+                })
+                .catch((err) => {
+                    this.modal.loading = false;
+                })
+                ;
+            },
+
+            selectPatient: function (patient) {
+                this.client = patient;
+                this.form.patient_id = patient.id;
+            }
         }
     }
 </script>

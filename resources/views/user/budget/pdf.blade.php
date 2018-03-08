@@ -56,55 +56,83 @@
                 </table>
             </td>
         </tr>
+    </table>
         <!-- /HEADER -->
 
         <!-- INFO -->
+    <table style="width: 100%">
         <tr>
-            <td style="width: 30%;">
-                <!-- Client Info -->
-                <p style="margin: 25px 0 0 0;font-size: 16px;">
-                    <strong>
-                        {{ Auth::user()->business_name }}
-                    </strong>
-                </p>
-                <p style="margin: 0;">
-                    <strong>
-                        {{ $budget->client_label }}
-                    </strong>
-                    {{ $budget->client_value }}
-                </p>
+            <td style="width: 100%;">
 
-            </td>
-            <td style="width: 70%;">
-
+                <!-- Client Info  -->
                 <table style="width: 100%;">
                     <tr>
-                        <td style="width: 80%;">
-                            <p style="text-align: right;color: #699797;font-weight: 600;margin-top: 25px;margin-bottom: 0;">
-                                N°:
-                            </p>
-                        </td>
-                        <td style="width: 20%;">
-                            <p style="text-align: right;font-weight: 800;margin-top: 25px;margin-bottom: 0;">
-                                #{{ $budget->public_id }}
-                            </p>
-                        </td>
-                    </tr>
+                        <td style="width: 50%;">
 
-                    <tr>
-                        <td style="width: 80%;">
-                            <p style="text-align: right;color: #699797;font-weight: 600;margin-bottom: 0;">
-                                {{ $budget->creation_date_label }}
+                            <!-- (Nombre, Telefono, Email) -->
+                            <p style="margin: 25px 0 0 0;font-size: 16px;">
+                                <strong>
+                                    {{ Auth::user()->business_name }}
+                                </strong>
                             </p>
+                            <p style="margin: 0;">
+                                <strong>
+                                    {{ $budget->client_label }}
+                                </strong>
+                                {{ $budget->patient->name }}
+                            </p>
+                            <p style="margin: 0;">
+                                <strong>
+                                    {{ $budget->client_phone_label }}
+                                </strong>
+                                {{ $budget->patient->phone }}
+                            </p>
+                            <p style="margin: 0;">
+                                @if(! empty($budget->patient->email))
+                                    <strong>
+                                        {{ $budget->client_email_label }}
+                                    </strong>
+                                    {{ $budget->patient->email }}
+                                @endif
+                            </p>
+                            <!-- /(Nombre, Telefono, Email) -->
+
                         </td>
-                        <td style="width: 20%;">
-                            <p style="text-align: right;font-weight: 800;margin-bottom: 0;">
-                                {{ (new \DateTime($budget->creation_date_value))->format('m/d/Y') }}
-                            </p>
+                        <td style="width: 50%;">
+
+                            <!-- (Numero, Fecha de emision) -->
+                            <table style="width: 100%;">
+                                <tr>
+                                    <td style="width: 60%;">
+                                        <p style="text-align: right;color: #699797;font-weight: 600;margin-top: 25px;margin-bottom: 0;">
+                                            N°:
+                                        </p>
+                                    </td>
+                                    <td style="width: 40%;">
+                                        <p style="text-align: right;font-weight: 800;margin-top: 25px;margin-bottom: 0;">
+                                            #{{ $budget->public_id }}
+                                        </p>
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <td style="width: 80%;">
+                                        <p style="text-align: right;color: #699797;font-weight: 600;margin-bottom: 0;">
+                                            {{ $budget->creation_date_label }}
+                                        </p>
+                                    </td>
+                                    <td style="width: 20%;">
+                                        <p style="text-align: right;font-weight: 800;margin-bottom: 0;">
+                                            {{ (new \DateTime($budget->creation_date_value))->format('m/d/Y') }}
+                                        </p>
+                                    </td>
+                                </tr>
+                            </table>
+                            <!-- /(Numero, Fecha de emision) -->
+
                         </td>
                     </tr>
                 </table>
-
             </td>
         </tr>
         <!-- /INFO -->

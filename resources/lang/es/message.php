@@ -11,6 +11,8 @@ return [
     'budget.create' => 'Cotización generada',
     'budget.update' => 'Cotización actualizada',
 
+    'service.update' => 'Servicios actualizados',
+
     'config.changePassword.current' => 'Contraseña actual es incorrecta',
     'config.changePassword.confirmation' => 'Contraseña no coinciden',
     'config.changePassword.success' => 'Contraseña actualizada',

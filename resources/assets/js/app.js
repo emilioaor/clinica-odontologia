@@ -26,6 +26,7 @@ Vue.component('change-password', require('./components/ChangePassword.vue'));
 Vue.component('business-config', require('./components/BusinessConfig.vue'));
 Vue.component('register-patient', require('./components/RegisterPatient.vue'));
 Vue.component('edit-patient', require('./components/EditPatient.vue'));
+Vue.component('edit-service', require('./components/EditService.vue'));
 
 const app = new Vue({
     el: '#app'

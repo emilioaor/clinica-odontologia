@@ -116,7 +116,7 @@
                 </div>
             </div>
             <div class="row edit-patient__budgets">
-                <div class="col-xs-12">
+                <div class="col-sm-8">
                     <div class="panel panel-default">
                         <div class="panel-body">
 
@@ -132,11 +132,11 @@
                                         </div>
                                         <div class="panel-footer">
                                             <h5>
-                                                <strong>Monto:</strong>
+                                                <strong>Monto:</strong><br>
                                                 ${{ budget.total_footer_value }} USD
                                             </h5>
                                             <h5>
-                                                <strong>Generada:</strong>
+                                                <strong>Generada:</strong><br>
                                                 {{ budget.created_at | date }}
                                             </h5>
                                             <div class="text-center">
@@ -297,7 +297,7 @@
                 let date = value.split(' ');
                 date = date[0].split('-');
 
-                date = date[1] + '/' + date[0] + '/' +date[2];
+                date = date[1] + '/' + date[2] + '/' +date[0];
 
                 return date;
             }

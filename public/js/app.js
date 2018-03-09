@@ -1117,6 +1117,7 @@ Vue.component('change-password', __webpack_require__(53));
 Vue.component('business-config', __webpack_require__(56));
 Vue.component('register-patient', __webpack_require__(59));
 Vue.component('edit-patient', __webpack_require__(62));
+Vue.component('edit-service', __webpack_require__(76));
 
 var app = new Vue({
   el: '#app'
@@ -57821,7 +57822,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             var date = value.split(' ');
             date = date[0].split('-');
 
-            date = date[1] + '/' + date[0] + '/' + date[2];
+            date = date[1] + '/' + date[2] + '/' + date[0];
 
             return date;
         }
@@ -58059,7 +58060,7 @@ var render = function() {
       _vm._m(1),
       _vm._v(" "),
       _c("div", { staticClass: "row edit-patient__budgets" }, [
-        _c("div", { staticClass: "col-xs-12" }, [
+        _c("div", { staticClass: "col-sm-8" }, [
           _c("div", { staticClass: "panel panel-default" }, [
             _c("div", { staticClass: "panel-body" }, [
               _c(
@@ -58083,6 +58084,7 @@ var render = function() {
                             _c("div", { staticClass: "panel-footer" }, [
                               _c("h5", [
                                 _c("strong", [_vm._v("Monto:")]),
+                                _c("br"),
                                 _vm._v(
                                   "\n                                            $" +
                                     _vm._s(budget.total_footer_value) +
@@ -58092,6 +58094,7 @@ var render = function() {
                               _vm._v(" "),
                               _c("h5", [
                                 _c("strong", [_vm._v("Generada:")]),
+                                _c("br"),
                                 _vm._v(
                                   "\n                                            " +
                                     _vm._s(_vm._f("date")(budget.created_at)) +
@@ -58279,6 +58282,616 @@ if (false) {
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
+
+/***/ }),
+/* 66 */,
+/* 67 */,
+/* 68 */,
+/* 69 */,
+/* 70 */,
+/* 71 */,
+/* 72 */,
+/* 73 */,
+/* 74 */,
+/* 75 */,
+/* 76 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+var normalizeComponent = __webpack_require__(1)
+/* script */
+var __vue_script__ = __webpack_require__(77)
+/* template */
+var __vue_template__ = __webpack_require__(78)
+/* template functional */
+  var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = null
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources/assets/js/components/EditService.vue"
+if (Component.esModule && Object.keys(Component.esModule).some(function (key) {  return key !== "default" && key.substr(0, 2) !== "__"})) {  console.error("named exports are not supported in *.vue files.")}
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-74fed3c2", Component.options)
+  } else {
+    hotAPI.reload("data-v-74fed3c2", Component.options)
+' + '  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 77 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+    props: ['budget', 'products'],
+
+    data: function data() {
+        return {
+            loading: false,
+            data: {},
+            productList: [],
+            services: []
+        };
+    },
+    beforeMount: function beforeMount() {
+        this.data = JSON.parse(this.budget);
+        this.productList = JSON.parse(this.products);
+        this.services = this.data.services;
+    },
+
+    methods: {
+        addService: function addService() {
+            this.services.push({
+                description: '',
+                product_id: null
+            });
+        },
+
+        removeService: function removeService(index) {
+            this.services.splice(index, 1);
+        },
+
+        validateForm: function validateForm() {
+            var _this = this;
+
+            this.$validator.validateAll().then(function (res) {
+                if (res) {
+                    _this.sendForm();
+                }
+            });
+        },
+
+        sendForm: function sendForm() {
+            axios.put('/user/service/' + this.data.public_id, {
+                services: this.services
+            }).then(function (res) {
+                if (res.data.success) {
+                    location.href = res.data.redirect;
+                }
+            }).catch(function (err) {
+                console.log(err);
+            });
+        }
+    }
+});
+
+/***/ }),
+/* 78 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("div", { staticClass: "container" }, [
+    _c("div", { staticClass: "row" }, [
+      _c("div", { staticClass: "col-xs-12" }, [
+        _c("h1", [
+          !_vm.loading
+            ? _c("i", { staticClass: "glyphicon glyphicon-pencil" })
+            : _vm._e(),
+          _vm._v(" "),
+          _vm.loading
+            ? _c("img", { attrs: { src: "/img/loading.gif" } })
+            : _vm._e(),
+          _vm._v("\n                Servicios prestados\n            ")
+        ])
+      ])
+    ]),
+    _vm._v(" "),
+    _c("div", { staticClass: "row" }, [
+      _c("div", { staticClass: "col-sm-8" }, [
+        _c("div", { staticClass: "panel panel-default" }, [
+          _c("div", { staticClass: "panel-body" }, [
+            _c("div", { staticClass: "row" }, [
+              _c("div", { staticClass: "col-sm-4" }, [
+                _c("div", { staticClass: "form-group" }, [
+                  _c("label", { attrs: { for: "" } }, [_vm._v("Cotización")]),
+                  _vm._v(" "),
+                  _c("p", [
+                    _vm._v(
+                      "\n                                    #" +
+                        _vm._s(_vm.data.public_id) +
+                        "\n                                "
+                    )
+                  ])
+                ])
+              ]),
+              _vm._v(" "),
+              _c("div", { staticClass: "col-sm-4" }, [
+                _c("div", { staticClass: "form-group" }, [
+                  _c("label", { attrs: { for: "" } }, [_vm._v("Paciente")]),
+                  _vm._v(" "),
+                  _c("p", [
+                    _vm._v(
+                      "\n                                    " +
+                        _vm._s(_vm.data.patient.name) +
+                        "\n                                "
+                    )
+                  ])
+                ])
+              ]),
+              _vm._v(" "),
+              _c("div", { staticClass: "col-sm-4" }, [
+                _c("div", { staticClass: "form-group" }, [
+                  _c("label", { attrs: { for: "" } }, [_vm._v("Telefono")]),
+                  _vm._v(" "),
+                  _c("p", [
+                    _vm._v(
+                      "\n                                    " +
+                        _vm._s(_vm.data.patient.phone) +
+                        "\n                                "
+                    )
+                  ])
+                ])
+              ]),
+              _vm._v(" "),
+              _c("div", { staticClass: "col-sm-4" }, [
+                _c("div", { staticClass: "form-group" }, [
+                  _c("label", { attrs: { for: "" } }, [_vm._v("Email")]),
+                  _vm._v(" "),
+                  _c("p", [
+                    _vm._v(
+                      "\n                                    " +
+                        _vm._s(_vm.data.patient.email) +
+                        "\n                                "
+                    )
+                  ])
+                ])
+              ]),
+              _vm._v(" "),
+              _c("div", { staticClass: "col-sm-4" }, [
+                _c("div", { staticClass: "form-group" }, [
+                  _c("label", { attrs: { for: "" } }, [_vm._v("Monto")]),
+                  _vm._v(" "),
+                  _c("p", [
+                    _vm._v(
+                      "\n                                    $" +
+                        _vm._s(_vm.data.total_footer_value) +
+                        " USD\n                                "
+                    )
+                  ])
+                ])
+              ])
+            ]),
+            _vm._v(" "),
+            _c("div", { staticClass: "row" }, [
+              _c("div", { staticClass: "col-xs-12" }, [
+                _c(
+                  "table",
+                  { staticClass: "table table-responsive" },
+                  [
+                    _vm._m(0),
+                    _vm._v(" "),
+                    _vm._l(_vm.services, function(service, id) {
+                      return _c("tbody", [
+                        _c("tr", [
+                          _c("td", { staticClass: "text-center" }, [
+                            _vm._v(_vm._s(id + 1))
+                          ]),
+                          _vm._v(" "),
+                          _c("td", [
+                            _c(
+                              "select",
+                              {
+                                directives: [
+                                  {
+                                    name: "model",
+                                    rawName: "v-model",
+                                    value: service.product_id,
+                                    expression: "service.product_id"
+                                  },
+                                  { name: "validate", rawName: "v-validate" }
+                                ],
+                                staticClass: "form-control",
+                                class: {
+                                  "input-error": _vm.errors.has("product" + id)
+                                },
+                                attrs: {
+                                  name: "product" + id,
+                                  id: "product" + id,
+                                  "data-vv-rules": "required"
+                                },
+                                on: {
+                                  change: function($event) {
+                                    var $$selectedVal = Array.prototype.filter
+                                      .call($event.target.options, function(o) {
+                                        return o.selected
+                                      })
+                                      .map(function(o) {
+                                        var val =
+                                          "_value" in o ? o._value : o.value
+                                        return val
+                                      })
+                                    _vm.$set(
+                                      service,
+                                      "product_id",
+                                      $event.target.multiple
+                                        ? $$selectedVal
+                                        : $$selectedVal[0]
+                                    )
+                                  }
+                                }
+                              },
+                              _vm._l(_vm.productList, function(product) {
+                                return _c(
+                                  "option",
+                                  { domProps: { value: product.id } },
+                                  [
+                                    _vm._v(
+                                      "\n                                                    " +
+                                        _vm._s(product.name) +
+                                        "\n                                                "
+                                    )
+                                  ]
+                                )
+                              })
+                            ),
+                            _vm._v(" "),
+                            _vm.errors.firstByRule("product" + id, "required")
+                              ? _c("p", { staticClass: "error" }, [
+                                  _vm._v(
+                                    "\n                                                Campo requerido\n                                            "
+                                  )
+                                ])
+                              : _vm._e()
+                          ]),
+                          _vm._v(" "),
+                          _c("td", [
+                            _c("input", {
+                              directives: [
+                                {
+                                  name: "model",
+                                  rawName: "v-model",
+                                  value: service.description,
+                                  expression: "service.description"
+                                },
+                                { name: "validate", rawName: "v-validate" }
+                              ],
+                              staticClass: "form-control",
+                              class: {
+                                "input-error": _vm.errors.has(
+                                  "description" + id
+                                )
+                              },
+                              attrs: {
+                                type: "text",
+                                name: "description" + id,
+                                id: "description" + id,
+                                "data-vv-rules": "required"
+                              },
+                              domProps: { value: service.description },
+                              on: {
+                                input: function($event) {
+                                  if ($event.target.composing) {
+                                    return
+                                  }
+                                  _vm.$set(
+                                    service,
+                                    "description",
+                                    $event.target.value
+                                  )
+                                }
+                              }
+                            }),
+                            _vm._v(" "),
+                            _vm.errors.firstByRule(
+                              "description" + id,
+                              "required"
+                            )
+                              ? _c("p", { staticClass: "error" }, [
+                                  _vm._v(
+                                    "\n                                                Campo requerido\n                                            "
+                                  )
+                                ])
+                              : _vm._e()
+                          ]),
+                          _vm._v(" "),
+                          _c("td", [
+                            _c(
+                              "a",
+                              {
+                                on: {
+                                  click: function($event) {
+                                    _vm.removeService(id)
+                                  }
+                                }
+                              },
+                              [
+                                _vm._v(
+                                  "\n                                                X\n                                            "
+                                )
+                              ]
+                            )
+                          ])
+                        ])
+                      ])
+                    }),
+                    _vm._v(" "),
+                    _c("tfoot", [
+                      _c("tr", [
+                        _c("td", { attrs: { colspan: "4" } }, [
+                          _c(
+                            "button",
+                            {
+                              staticClass: "btn btn-success",
+                              on: {
+                                click: function($event) {
+                                  _vm.addService()
+                                }
+                              }
+                            },
+                            [
+                              _c("i", {
+                                staticClass: "glyphicon glyphicon-plus"
+                              }),
+                              _vm._v(
+                                "\n                                                Agregar servicio\n                                            "
+                              )
+                            ]
+                          )
+                        ])
+                      ])
+                    ])
+                  ],
+                  2
+                )
+              ])
+            ]),
+            _vm._v(" "),
+            _c("div", { staticClass: "row" }, [
+              _c("div", { staticClass: "col-xs-12 text-center" }, [
+                _c(
+                  "button",
+                  {
+                    staticClass: "btn btn-primary btn-lg",
+                    on: {
+                      click: function($event) {
+                        _vm.validateForm()
+                      }
+                    }
+                  },
+                  [
+                    _c("i", { staticClass: "glyphicon glyphicon-check" }),
+                    _vm._v(
+                      "\n                                Guardar\n                            "
+                    )
+                  ]
+                )
+              ])
+            ])
+          ])
+        ])
+      ])
+    ])
+  ])
+}
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("thead", [
+      _c("tr", [
+        _c("th", { staticClass: "text-center", attrs: { width: "5%" } }, [
+          _vm._v("#")
+        ]),
+        _vm._v(" "),
+        _c("th", { attrs: { width: "50%" } }, [_vm._v("Servicio")]),
+        _vm._v(" "),
+        _c("th", { attrs: { width: "40%" } }, [_vm._v("Diente")]),
+        _vm._v(" "),
+        _c("th", { attrs: { width: "5%" } })
+      ])
+    ])
+  }
+]
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-74fed3c2", module.exports)
+  }
+}
 
 /***/ })
 /******/ ]);

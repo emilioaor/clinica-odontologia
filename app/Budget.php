@@ -68,4 +68,14 @@ class Budget extends Model
     {
         return $this->belongsTo(Patient::class, 'patient_id');
     }
+
+    /**
+     * Todos los servicios brindados por esta cotizacion
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function services()
+    {
+        return $this->hasMany(Service::class, 'budget_id');
+    }
 }

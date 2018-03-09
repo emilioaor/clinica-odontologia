@@ -23,6 +23,9 @@ Route::group(['prefix' => 'user', 'middleware' => 'auth'], function() {
     Route::get('budget/{budget}/generatePdf', 'User\BudgetController@generatePdf')->name('budget.pdf.generate');
     Route::get('budget/{budget}/downloadPdf', 'User\BudgetController@downloadPdf')->name('budget.pdf.download');
 
+    // Servicios
+    Route::resource('service', 'User\ServiceController');
+
     // Configuracion
     Route::get('config', 'User\ConfigController@config')->name('config');
     Route::put('config/changePassword', 'User\ConfigController@changePassword')->name('config.changePassword');

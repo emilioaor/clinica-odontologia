@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers\User;
 
+use App\User;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Lang;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -76,8 +78,16 @@ class ConfigController extends Controller
 
         file_put_contents($path, $logo);
 
-        Auth::user()->logo = $filename;
-        Auth::user()->save();
+        DB::beginTransaction();
+
+        $users = User::all();
+
+        foreach ($users as $user) {
+            $user->logo = $filename;
+            $user->save();
+        }
+
+        DB::commit();
 
         return new JsonResponse(['success' => true, 'filename' => $filename]);
     }
@@ -90,13 +100,20 @@ class ConfigController extends Controller
      */
     public function updateBusiness(Request $request)
     {
-        $user = Auth::user();
+        DB::beginTransaction();
 
-        $user->business_name = $request->business_name;
-        $user->address = $request->address;
-        $user->email = $request->email;
-        $user->phone = $request->phone;
-        $user->save();
+        $users = User::all();
+
+        foreach ($users as $user) {
+
+            $user->business_name = $request->business_name;
+            $user->address = $request->address;
+            $user->email = $request->email;
+            $user->phone = $request->phone;
+            $user->save();
+        }
+
+        DB::commit();
 
         $this->sessionMessage('message.config.business.update');
 

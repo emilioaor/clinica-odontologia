@@ -9,6 +9,10 @@ class User extends Authenticatable
 {
     use Notifiable;
 
+    /** Niveles de los usuarios */
+    const LEVEL_ADMIN = 1;
+    const LEVEL_DOCTOR = 2;
+
     /**
      * The attributes that are mass assignable.
      *
@@ -33,4 +37,24 @@ class User extends Authenticatable
     protected $hidden = [
         'password', 'remember_token',
     ];
+
+    /**
+     * Indica si un usuario es administrador
+     *
+     * @return bool
+     */
+    public function isAdmin()
+    {
+        return $this->level === self::LEVEL_ADMIN;
+    }
+
+    /**
+     * Indica si el usuario es doctor
+     *
+     * @return bool
+     */
+    public function isDoctor()
+    {
+        return $this->level === self::LEVEL_DOCTOR;
+    }
 }

@@ -12,9 +12,17 @@ class UserSeeder extends Seeder
     public function run()
     {
         $user = new \App\User();
-        $user->username = 'user';
-        $user->name = 'User Test';
+        $user->username = 'admin';
+        $user->name = 'Admin';
         $user->password = bcrypt('123456');
+        $user->level = \App\User::LEVEL_ADMIN;
+        $user->save();
+
+        $user = new \App\User();
+        $user->username = 'doctor';
+        $user->name = 'Doctor';
+        $user->password = bcrypt('123456');
+        $user->level = \App\User::LEVEL_DOCTOR;
         $user->save();
     }
 }

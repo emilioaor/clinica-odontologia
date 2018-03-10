@@ -125,16 +125,32 @@
                                                 <div class="modal-dialog" role="document">
                                                     <div class="modal-content">
                                                         <div class="modal-body">
-                                                            <h3>
-                                                                Selecciona al paciente
-                                                            </h3>
-                                                            <input
-                                                                    type="text"
-                                                                    class="form-control"
-                                                                    placeholder="Buscador"
-                                                                    v-model="modal.search"
-                                                                    @keyup="searchPatients()"
-                                                                    >
+                                                            <div class="row">
+                                                                <div class="col-sm-6">
+                                                                    <h3>
+                                                                        <strong>
+                                                                            Selecciona al paciente
+                                                                        </strong>
+                                                                    </h3>
+                                                                </div>
+                                                                <div class="col-sm-6">
+                                                                    <h3 class="text-right">
+                                                                        <a href="/user/patient/create">
+                                                                            <i class="glyphicon glyphicon-plus"></i>
+                                                                            Registrar paciente
+                                                                        </a>
+                                                                    </h3>
+                                                                </div>
+                                                                <div class="col-xs-12">
+                                                                    <input
+                                                                            type="text"
+                                                                            class="form-control"
+                                                                            placeholder="Buscador"
+                                                                            v-model="modal.search"
+                                                                            @keyup="searchPatients()"
+                                                                            >
+                                                                </div>
+                                                            </div>
                                                             <hr>
 
                                                             <div class="row">
@@ -459,6 +475,7 @@
                                                     class="form-control"
                                                     id="discount_value"
                                                     name="discount_value"
+                                                    min="0"
                                                     v-model="form.discount_value"
                                                     v-validate
                                                     data-vv-rules="required"
@@ -506,6 +523,7 @@
                                                 class="form-control"
                                                 id="shaping_value"
                                                 name="shaping_value"
+                                                min="0"
                                                 v-model="form.shaping_value"
                                                 v-validate
                                                 data-vv-rules="required"

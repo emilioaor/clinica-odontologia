@@ -51037,6 +51037,49 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 
@@ -51616,43 +51659,45 @@ var render = function() {
                             [
                               _c("div", { staticClass: "modal-content" }, [
                                 _c("div", { staticClass: "modal-body" }, [
-                                  _c("h3", [
-                                    _vm._v(
-                                      "\n                                                            Selecciona al paciente\n                                                        "
-                                    )
-                                  ]),
-                                  _vm._v(" "),
-                                  _c("input", {
-                                    directives: [
-                                      {
-                                        name: "model",
-                                        rawName: "v-model",
-                                        value: _vm.modal.search,
-                                        expression: "modal.search"
-                                      }
-                                    ],
-                                    staticClass: "form-control",
-                                    attrs: {
-                                      type: "text",
-                                      placeholder: "Buscador"
-                                    },
-                                    domProps: { value: _vm.modal.search },
-                                    on: {
-                                      keyup: function($event) {
-                                        _vm.searchPatients()
-                                      },
-                                      input: function($event) {
-                                        if ($event.target.composing) {
-                                          return
+                                  _c("div", { staticClass: "row" }, [
+                                    _vm._m(0),
+                                    _vm._v(" "),
+                                    _vm._m(1),
+                                    _vm._v(" "),
+                                    _c("div", { staticClass: "col-xs-12" }, [
+                                      _c("input", {
+                                        directives: [
+                                          {
+                                            name: "model",
+                                            rawName: "v-model",
+                                            value: _vm.modal.search,
+                                            expression: "modal.search"
+                                          }
+                                        ],
+                                        staticClass: "form-control",
+                                        attrs: {
+                                          type: "text",
+                                          placeholder: "Buscador"
+                                        },
+                                        domProps: { value: _vm.modal.search },
+                                        on: {
+                                          keyup: function($event) {
+                                            _vm.searchPatients()
+                                          },
+                                          input: function($event) {
+                                            if ($event.target.composing) {
+                                              return
+                                            }
+                                            _vm.$set(
+                                              _vm.modal,
+                                              "search",
+                                              $event.target.value
+                                            )
+                                          }
                                         }
-                                        _vm.$set(
-                                          _vm.modal,
-                                          "search",
-                                          $event.target.value
-                                        )
-                                      }
-                                    }
-                                  }),
+                                      })
+                                    ])
+                                  ]),
                                   _vm._v(" "),
                                   _c("hr"),
                                   _vm._v(" "),
@@ -51665,7 +51710,7 @@ var render = function() {
                                             "table table-responsive table-striped"
                                         },
                                         [
-                                          _vm._m(0),
+                                          _vm._m(2),
                                           _vm._v(" "),
                                           !_vm.modal.loading
                                             ? _c(
@@ -51724,7 +51769,7 @@ var render = function() {
                                   ])
                                 ]),
                                 _vm._v(" "),
-                                _vm._m(1)
+                                _vm._m(3)
                               ])
                             ]
                           )
@@ -52606,6 +52651,7 @@ var render = function() {
                                       type: "number",
                                       id: "discount_value",
                                       name: "discount_value",
+                                      min: "0",
                                       "data-vv-rules": "required"
                                     },
                                     domProps: {
@@ -52798,6 +52844,7 @@ var render = function() {
                                   type: "number",
                                   id: "shaping_value",
                                   name: "shaping_value",
+                                  min: "0",
                                   "data-vv-rules": "required"
                                 },
                                 domProps: { value: _vm.form.shaping_value },
@@ -53168,7 +53215,43 @@ var render = function() {
                     ? _c("img", { attrs: { src: "/img/loading.gif" } })
                     : _vm._e()
                 ])
-              ])
+              ]),
+              _vm._v(" "),
+              !_vm.form.patient_id
+                ? _c("div", { staticClass: "fade-client" }, [
+                    _c("div", { staticClass: "row" }, [
+                      _c("div", { staticClass: "col-xs-8 col-xs-offset-2" }, [
+                        _c("div", { staticClass: "alert alert-info" }, [
+                          _vm._m(4),
+                          _vm._v(" "),
+                          _c(
+                            "button",
+                            {
+                              staticClass: "btn btn-primary btn-lg",
+                              attrs: {
+                                "data-toggle": "modal",
+                                "data-target": "#patientModal"
+                              },
+                              on: {
+                                click: function($event) {
+                                  _vm.searchPatients()
+                                }
+                              }
+                            },
+                            [
+                              _c("i", {
+                                staticClass: "glyphicon glyphicon-search"
+                              }),
+                              _vm._v(
+                                "\n                                            Buscar\n                                        "
+                              )
+                            ]
+                          )
+                        ])
+                      ])
+                    ])
+                  ])
+                : _vm._e()
             ])
           ])
         ])
@@ -53177,6 +53260,35 @@ var render = function() {
   ])
 }
 var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "col-sm-6" }, [
+      _c("h3", [
+        _c("strong", [
+          _vm._v(
+            "\n                                                                        Selecciona al paciente\n                                                                    "
+          )
+        ])
+      ])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "col-sm-6" }, [
+      _c("h3", { staticClass: "text-right" }, [
+        _c("a", { attrs: { href: "/user/patient/create" } }, [
+          _c("i", { staticClass: "glyphicon glyphicon-plus" }),
+          _vm._v(
+            "\n                                                                        Registrar paciente\n                                                                    "
+          )
+        ])
+      ])
+    ])
+  },
   function() {
     var _vm = this
     var _h = _vm.$createElement
@@ -53204,6 +53316,18 @@ var staticRenderFns = [
         },
         [_vm._v("Cerrar")]
       )
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("h4", [
+      _c("strong", [
+        _vm._v(
+          "\n                                                Seleccione el paciente para la cotización\n                                            "
+        )
+      ])
     ])
   }
 ]
@@ -53272,6 +53396,24 @@ module.exports = Component.exports
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vuejs_datepicker__ = __webpack_require__(10);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vuejs_datepicker___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_vuejs_datepicker__);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -54468,43 +54610,45 @@ var render = function() {
                             [
                               _c("div", { staticClass: "modal-content" }, [
                                 _c("div", { staticClass: "modal-body" }, [
-                                  _c("h3", [
-                                    _vm._v(
-                                      "\n                                                            Selecciona al paciente\n                                                        "
-                                    )
-                                  ]),
-                                  _vm._v(" "),
-                                  _c("input", {
-                                    directives: [
-                                      {
-                                        name: "model",
-                                        rawName: "v-model",
-                                        value: _vm.modal.search,
-                                        expression: "modal.search"
-                                      }
-                                    ],
-                                    staticClass: "form-control",
-                                    attrs: {
-                                      type: "text",
-                                      placeholder: "Buscador"
-                                    },
-                                    domProps: { value: _vm.modal.search },
-                                    on: {
-                                      keyup: function($event) {
-                                        _vm.searchPatients()
-                                      },
-                                      input: function($event) {
-                                        if ($event.target.composing) {
-                                          return
+                                  _c("div", { staticClass: "row" }, [
+                                    _vm._m(0),
+                                    _vm._v(" "),
+                                    _vm._m(1),
+                                    _vm._v(" "),
+                                    _c("div", { staticClass: "col-xs-12" }, [
+                                      _c("input", {
+                                        directives: [
+                                          {
+                                            name: "model",
+                                            rawName: "v-model",
+                                            value: _vm.modal.search,
+                                            expression: "modal.search"
+                                          }
+                                        ],
+                                        staticClass: "form-control",
+                                        attrs: {
+                                          type: "text",
+                                          placeholder: "Buscador"
+                                        },
+                                        domProps: { value: _vm.modal.search },
+                                        on: {
+                                          keyup: function($event) {
+                                            _vm.searchPatients()
+                                          },
+                                          input: function($event) {
+                                            if ($event.target.composing) {
+                                              return
+                                            }
+                                            _vm.$set(
+                                              _vm.modal,
+                                              "search",
+                                              $event.target.value
+                                            )
+                                          }
                                         }
-                                        _vm.$set(
-                                          _vm.modal,
-                                          "search",
-                                          $event.target.value
-                                        )
-                                      }
-                                    }
-                                  }),
+                                      })
+                                    ])
+                                  ]),
                                   _vm._v(" "),
                                   _c("hr"),
                                   _vm._v(" "),
@@ -54517,7 +54661,7 @@ var render = function() {
                                             "table table-responsive table-striped"
                                         },
                                         [
-                                          _vm._m(0),
+                                          _vm._m(2),
                                           _vm._v(" "),
                                           !_vm.modal.loading
                                             ? _c(
@@ -54576,7 +54720,7 @@ var render = function() {
                                   ])
                                 ]),
                                 _vm._v(" "),
-                                _vm._m(1)
+                                _vm._m(3)
                               ])
                             ]
                           )
@@ -55458,6 +55602,7 @@ var render = function() {
                                       type: "number",
                                       id: "discount_value",
                                       name: "discount_value",
+                                      min: "0",
                                       "data-vv-rules": "required"
                                     },
                                     domProps: {
@@ -55650,6 +55795,7 @@ var render = function() {
                                   type: "number",
                                   id: "shaping_value",
                                   name: "shaping_value",
+                                  min: "0",
                                   "data-vv-rules": "required"
                                 },
                                 domProps: { value: _vm.form.shaping_value },
@@ -56051,6 +56197,35 @@ var render = function() {
   ])
 }
 var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "col-sm-6" }, [
+      _c("h3", [
+        _c("strong", [
+          _vm._v(
+            "\n                                                                        Selecciona al paciente\n                                                                    "
+          )
+        ])
+      ])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "col-sm-6" }, [
+      _c("h3", { staticClass: "text-right" }, [
+        _c("a", { attrs: { href: "/user/patient/create" } }, [
+          _c("i", { staticClass: "glyphicon glyphicon-plus" }),
+          _vm._v(
+            "\n                                                                        Registrar paciente\n                                                                    "
+          )
+        ])
+      ])
+    ])
+  },
   function() {
     var _vm = this
     var _h = _vm.$createElement

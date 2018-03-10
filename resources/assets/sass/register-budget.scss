@@ -1,6 +1,7 @@
 .register-budget {
   .panel-body {
     font-family: Calibri;
+    position: relative;
   }
   &__logo {
     max-width: 50%;
@@ -183,6 +184,19 @@
   #discount_value,
   {
     color: #555555;
+  }
+
+  .fade-client {
+    background-color: rgba(0,0,0,.3);
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    color: #FFFFFF;
+    .alert {
+      margin-top: 5rem;
+    }
   }
 }
 

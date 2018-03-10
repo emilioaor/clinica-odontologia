@@ -94,6 +94,7 @@ class BudgetController extends Controller
             $budgetDetail->product_id = $detail['product_id'];
             $budgetDetail->quantity = $detail['quantity'];
             $budgetDetail->price = $detail['price'];
+            $budgetDetail->tooth = $detail['tooth'];
             $budgetDetail->save();
         }
 

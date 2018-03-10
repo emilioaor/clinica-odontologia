@@ -17,7 +17,7 @@ class CreateTableServices extends Migration
             $table->increments('id');
             $table->integer('budget_id')->unsigned();
             $table->integer('product_id')->unsigned();
-            $table->string('description');
+            $table->integer('tooth');
             $table->foreign('budget_id')->references('id')->on('budgets');
             $table->foreign('product_id')->references('id')->on('products');
             $table->timestamps();

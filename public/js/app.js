@@ -1079,7 +1079,7 @@ module.exports=function(e){function t(a){if(n[a])return n[a].exports;var r=n[a]=
 /***/ (function(module, exports, __webpack_require__) {
 
 __webpack_require__(12);
-module.exports = __webpack_require__(65);
+module.exports = __webpack_require__(68);
 
 
 /***/ }),
@@ -1117,7 +1117,7 @@ Vue.component('change-password', __webpack_require__(53));
 Vue.component('business-config', __webpack_require__(56));
 Vue.component('register-patient', __webpack_require__(59));
 Vue.component('edit-patient', __webpack_require__(62));
-Vue.component('edit-service', __webpack_require__(76));
+Vue.component('edit-service', __webpack_require__(65));
 
 var app = new Vue({
   el: '#app'
@@ -51021,6 +51021,22 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 
@@ -51073,7 +51089,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 details: [{
                     price: 0,
                     quantity: 1,
-                    product_id: null
+                    product_id: null,
+                    tooth: 1
                 }]
             },
             client: {
@@ -51131,6 +51148,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
         addDetail: function addDetail() {
             this.form.details.push({
+                tooth: 1,
                 product_id: null,
                 quantity: 1,
                 price: 0
@@ -51146,10 +51164,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         },
 
         changeProduct: function changeProduct(detail) {
-            if (this.hasProduct(detail.product_id, 2)) {
-                detail.product_id = null;
-            }
-
             for (var i in this.productList) {
                 if (this.productList[i].id === detail.product_id) {
                     return detail.price = this.productList[i].price;
@@ -51239,6 +51253,16 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         selectPatient: function selectPatient(patient) {
             this.client = patient;
             this.form.patient_id = patient.id;
+        },
+
+        range: function range(start, end) {
+            var array = [];
+
+            for (var x = start; x <= end; x++) {
+                array.push(x);
+            }
+
+            return array;
         }
     }
 });
@@ -52023,11 +52047,13 @@ var render = function() {
                         }
                       },
                       [
+                        _c("td", { staticStyle: { width: "10%" } }),
+                        _vm._v(" "),
                         _c("td", { staticStyle: { width: "10%" } }, [
-                          _vm._v("#")
+                          _vm._v("TH")
                         ]),
                         _vm._v(" "),
-                        _c("td", { staticStyle: { width: "50%" } }, [
+                        _c("td", { staticStyle: { width: "40%" } }, [
                           _c("input", {
                             directives: [
                               {
@@ -52187,6 +52213,57 @@ var render = function() {
                                 {
                                   name: "model",
                                   rawName: "v-model",
+                                  value: detail.tooth,
+                                  expression: "detail.tooth"
+                                }
+                              ],
+                              staticClass: "form-control",
+                              attrs: { name: "tooth" + id },
+                              on: {
+                                change: function($event) {
+                                  var $$selectedVal = Array.prototype.filter
+                                    .call($event.target.options, function(o) {
+                                      return o.selected
+                                    })
+                                    .map(function(o) {
+                                      var val =
+                                        "_value" in o ? o._value : o.value
+                                      return val
+                                    })
+                                  _vm.$set(
+                                    detail,
+                                    "tooth",
+                                    $event.target.multiple
+                                      ? $$selectedVal
+                                      : $$selectedVal[0]
+                                  )
+                                }
+                              }
+                            },
+                            _vm._l(_vm.range(1, 32), function(tooth) {
+                              return _c(
+                                "option",
+                                { domProps: { value: tooth } },
+                                [
+                                  _vm._v(
+                                    "\n                                            " +
+                                      _vm._s(tooth) +
+                                      "\n                                        "
+                                  )
+                                ]
+                              )
+                            })
+                          )
+                        ]),
+                        _vm._v(" "),
+                        _c("td", [
+                          _c(
+                            "select",
+                            {
+                              directives: [
+                                {
+                                  name: "model",
+                                  rawName: "v-model",
                                   value: detail.product_id,
                                   expression: "detail.product_id"
                                 },
@@ -52332,15 +52409,11 @@ var render = function() {
                   }),
                   _vm._v(" "),
                   _c("tr", [
-                    _c("td", { attrs: { colspan: "5" } }, [
+                    _c("td", { attrs: { colspan: "6" } }, [
                       _c(
                         "button",
                         {
                           staticClass: "btn btn-default",
-                          attrs: {
-                            disabled:
-                              _vm.form.details.length >= _vm.productList.length
-                          },
                           on: {
                             click: function($event) {
                               _vm.addDetail()
@@ -52353,15 +52426,7 @@ var render = function() {
                             "\n                                        Agregar detalle\n                                    "
                           )
                         ]
-                      ),
-                      _vm._v(" "),
-                      _vm.form.details.length >= _vm.productList.length
-                        ? _c("p", { staticClass: "error" }, [
-                            _vm._v(
-                              "\n                                        Ya agrego un detalle para cada producto registrado\n                                    "
-                            )
-                          ])
-                        : _vm._e()
+                      )
                     ])
                   ]),
                   _vm._v(" "),
@@ -52377,6 +52442,8 @@ var render = function() {
                         }
                       },
                       [
+                        _c("td"),
+                        _vm._v(" "),
                         _c("td"),
                         _vm._v(" "),
                         _c("td"),
@@ -52447,6 +52514,8 @@ var render = function() {
                             }
                           },
                           [
+                            _c("td"),
+                            _vm._v(" "),
                             _c("td"),
                             _vm._v(" "),
                             _c("td"),
@@ -52652,6 +52721,8 @@ var render = function() {
                             _vm._v(" "),
                             _c("td"),
                             _vm._v(" "),
+                            _c("td"),
+                            _vm._v(" "),
                             _c(
                               "td",
                               { staticStyle: { "text-align": "right" } },
@@ -52765,6 +52836,8 @@ var render = function() {
                           _vm._v(" "),
                           _c("td"),
                           _vm._v(" "),
+                          _c("td"),
+                          _vm._v(" "),
                           _c("td", { staticStyle: { "text-align": "center" } }),
                           _vm._v(" "),
                           _c(
@@ -52834,6 +52907,8 @@ var render = function() {
                         }
                       },
                       [
+                        _c("td"),
+                        _vm._v(" "),
                         _c("td"),
                         _vm._v(" "),
                         _c("td"),
@@ -53829,6 +53904,22 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 
@@ -53909,6 +54000,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
         addDetail: function addDetail() {
             this.form.details.push({
+                tooth: 1,
                 product_id: null,
                 quantity: 1,
                 price: 0
@@ -53924,10 +54016,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         },
 
         changeProduct: function changeProduct(detail) {
-            if (this.hasProduct(detail.product_id, 2)) {
-                detail.product_id = null;
-            }
-
             for (var i in this.productList) {
                 if (this.productList[i].id === detail.product_id) {
                     return detail.price = this.productList[i].price;
@@ -54017,6 +54105,16 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         selectPatient: function selectPatient(patient) {
             this.client = patient;
             this.form.patient_id = patient.id;
+        },
+
+        range: function range(start, end) {
+            var array = [];
+
+            for (var x = start; x <= end; x++) {
+                array.push(x);
+            }
+
+            return array;
         }
     }
 });
@@ -54801,11 +54899,13 @@ var render = function() {
                         }
                       },
                       [
+                        _c("td", { staticStyle: { width: "10%" } }),
+                        _vm._v(" "),
                         _c("td", { staticStyle: { width: "10%" } }, [
-                          _vm._v("#")
+                          _vm._v("TH")
                         ]),
                         _vm._v(" "),
-                        _c("td", { staticStyle: { width: "50%" } }, [
+                        _c("td", { staticStyle: { width: "40%" } }, [
                           _c("input", {
                             directives: [
                               {
@@ -54965,6 +55065,57 @@ var render = function() {
                                 {
                                   name: "model",
                                   rawName: "v-model",
+                                  value: detail.tooth,
+                                  expression: "detail.tooth"
+                                }
+                              ],
+                              staticClass: "form-control",
+                              attrs: { name: "tooth" + id },
+                              on: {
+                                change: function($event) {
+                                  var $$selectedVal = Array.prototype.filter
+                                    .call($event.target.options, function(o) {
+                                      return o.selected
+                                    })
+                                    .map(function(o) {
+                                      var val =
+                                        "_value" in o ? o._value : o.value
+                                      return val
+                                    })
+                                  _vm.$set(
+                                    detail,
+                                    "tooth",
+                                    $event.target.multiple
+                                      ? $$selectedVal
+                                      : $$selectedVal[0]
+                                  )
+                                }
+                              }
+                            },
+                            _vm._l(_vm.range(1, 32), function(tooth) {
+                              return _c(
+                                "option",
+                                { domProps: { value: tooth } },
+                                [
+                                  _vm._v(
+                                    "\n                                            " +
+                                      _vm._s(tooth) +
+                                      "\n                                        "
+                                  )
+                                ]
+                              )
+                            })
+                          )
+                        ]),
+                        _vm._v(" "),
+                        _c("td", [
+                          _c(
+                            "select",
+                            {
+                              directives: [
+                                {
+                                  name: "model",
+                                  rawName: "v-model",
                                   value: detail.product_id,
                                   expression: "detail.product_id"
                                 },
@@ -55110,15 +55261,11 @@ var render = function() {
                   }),
                   _vm._v(" "),
                   _c("tr", [
-                    _c("td", { attrs: { colspan: "5" } }, [
+                    _c("td", { attrs: { colspan: "6" } }, [
                       _c(
                         "button",
                         {
                           staticClass: "btn btn-default",
-                          attrs: {
-                            disabled:
-                              _vm.form.details.length >= _vm.productList.length
-                          },
                           on: {
                             click: function($event) {
                               _vm.addDetail()
@@ -55131,15 +55278,7 @@ var render = function() {
                             "\n                                        Agregar detalle\n                                    "
                           )
                         ]
-                      ),
-                      _vm._v(" "),
-                      _vm.form.details.length >= _vm.productList.length
-                        ? _c("p", { staticClass: "error" }, [
-                            _vm._v(
-                              "\n                                        Ya agrego un detalle para cada producto registrado\n                                    "
-                            )
-                          ])
-                        : _vm._e()
+                      )
                     ])
                   ]),
                   _vm._v(" "),
@@ -55155,6 +55294,8 @@ var render = function() {
                         }
                       },
                       [
+                        _c("td"),
+                        _vm._v(" "),
                         _c("td"),
                         _vm._v(" "),
                         _c("td"),
@@ -55225,6 +55366,8 @@ var render = function() {
                             }
                           },
                           [
+                            _c("td"),
+                            _vm._v(" "),
                             _c("td"),
                             _vm._v(" "),
                             _c("td"),
@@ -55430,6 +55573,8 @@ var render = function() {
                             _vm._v(" "),
                             _c("td"),
                             _vm._v(" "),
+                            _c("td"),
+                            _vm._v(" "),
                             _c(
                               "td",
                               { staticStyle: { "text-align": "right" } },
@@ -55543,6 +55688,8 @@ var render = function() {
                           _vm._v(" "),
                           _c("td"),
                           _vm._v(" "),
+                          _c("td"),
+                          _vm._v(" "),
                           _c("td", { staticStyle: { "text-align": "center" } }),
                           _vm._v(" "),
                           _c(
@@ -55612,6 +55759,8 @@ var render = function() {
                         }
                       },
                       [
+                        _c("td"),
+                        _vm._v(" "),
                         _c("td"),
                         _vm._v(" "),
                         _c("td"),
@@ -58279,30 +58428,14 @@ if (false) {
 
 /***/ }),
 /* 65 */
-/***/ (function(module, exports) {
-
-// removed by extract-text-webpack-plugin
-
-/***/ }),
-/* 66 */,
-/* 67 */,
-/* 68 */,
-/* 69 */,
-/* 70 */,
-/* 71 */,
-/* 72 */,
-/* 73 */,
-/* 74 */,
-/* 75 */,
-/* 76 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
 var normalizeComponent = __webpack_require__(1)
 /* script */
-var __vue_script__ = __webpack_require__(77)
+var __vue_script__ = __webpack_require__(66)
 /* template */
-var __vue_template__ = __webpack_require__(78)
+var __vue_template__ = __webpack_require__(67)
 /* template functional */
   var __vue_template_functional__ = false
 /* styles */
@@ -58342,11 +58475,15 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 77 */
+/* 66 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+//
+//
+//
+//
 //
 //
 //
@@ -58520,7 +58657,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     methods: {
         addService: function addService() {
             this.services.push({
-                description: '',
+                tooth: 1,
                 product_id: null
             });
         },
@@ -58540,6 +58677,10 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         },
 
         sendForm: function sendForm() {
+            var _this2 = this;
+
+            this.loading = true;
+
             axios.put('/user/service/' + this.data.public_id, {
                 services: this.services
             }).then(function (res) {
@@ -58548,13 +58689,24 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 }
             }).catch(function (err) {
                 console.log(err);
+                _this2.loading = false;
             });
+        },
+
+        range: function range(start, end) {
+            var array = [];
+
+            for (var x = start; x <= end; x++) {
+                array.push(x);
+            }
+
+            return array;
         }
     }
 });
 
 /***/ }),
-/* 78 */
+/* 67 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
@@ -58736,47 +58888,56 @@ var render = function() {
                           ]),
                           _vm._v(" "),
                           _c("td", [
-                            _c("input", {
-                              directives: [
-                                {
-                                  name: "model",
-                                  rawName: "v-model",
-                                  value: service.description,
-                                  expression: "service.description"
-                                },
-                                { name: "validate", rawName: "v-validate" }
-                              ],
-                              staticClass: "form-control",
-                              class: {
-                                "input-error": _vm.errors.has(
-                                  "description" + id
-                                )
-                              },
-                              attrs: {
-                                type: "text",
-                                name: "description" + id,
-                                id: "description" + id,
-                                "data-vv-rules": "required"
-                              },
-                              domProps: { value: service.description },
-                              on: {
-                                input: function($event) {
-                                  if ($event.target.composing) {
-                                    return
+                            _c(
+                              "select",
+                              {
+                                directives: [
+                                  {
+                                    name: "model",
+                                    rawName: "v-model",
+                                    value: service.tooth,
+                                    expression: "service.tooth"
                                   }
-                                  _vm.$set(
-                                    service,
-                                    "description",
-                                    $event.target.value
-                                  )
+                                ],
+                                staticClass: "form-control",
+                                attrs: { name: "tooth" + id, id: "tooth" + id },
+                                on: {
+                                  change: function($event) {
+                                    var $$selectedVal = Array.prototype.filter
+                                      .call($event.target.options, function(o) {
+                                        return o.selected
+                                      })
+                                      .map(function(o) {
+                                        var val =
+                                          "_value" in o ? o._value : o.value
+                                        return val
+                                      })
+                                    _vm.$set(
+                                      service,
+                                      "tooth",
+                                      $event.target.multiple
+                                        ? $$selectedVal
+                                        : $$selectedVal[0]
+                                    )
+                                  }
                                 }
-                              }
-                            }),
+                              },
+                              _vm._l(_vm.range(1, 32), function(tooth) {
+                                return _c(
+                                  "option",
+                                  { domProps: { value: tooth } },
+                                  [
+                                    _vm._v(
+                                      "\n                                                    " +
+                                        _vm._s(tooth) +
+                                        "\n                                                "
+                                    )
+                                  ]
+                                )
+                              })
+                            ),
                             _vm._v(" "),
-                            _vm.errors.firstByRule(
-                              "description" + id,
-                              "required"
-                            )
+                            _vm.errors.firstByRule("tooth" + id, "required")
                               ? _c("p", { staticClass: "error" }, [
                                   _vm._v(
                                     "\n                                                Campo requerido\n                                            "
@@ -58839,23 +59000,29 @@ var render = function() {
             _vm._v(" "),
             _c("div", { staticClass: "row" }, [
               _c("div", { staticClass: "col-xs-12 text-center" }, [
-                _c(
-                  "button",
-                  {
-                    staticClass: "btn btn-primary btn-lg",
-                    on: {
-                      click: function($event) {
-                        _vm.validateForm()
-                      }
-                    }
-                  },
-                  [
-                    _c("i", { staticClass: "glyphicon glyphicon-check" }),
-                    _vm._v(
-                      "\n                                Guardar\n                            "
+                _vm.loading
+                  ? _c("img", { attrs: { src: "/img/loading.gif" } })
+                  : _vm._e(),
+                _vm._v(" "),
+                !_vm.loading
+                  ? _c(
+                      "button",
+                      {
+                        staticClass: "btn btn-primary btn-lg",
+                        on: {
+                          click: function($event) {
+                            _vm.validateForm()
+                          }
+                        }
+                      },
+                      [
+                        _c("i", { staticClass: "glyphicon glyphicon-check" }),
+                        _vm._v(
+                          "\n                                Guardar\n                            "
+                        )
+                      ]
                     )
-                  ]
-                )
+                  : _vm._e()
               ])
             ])
           ])
@@ -58875,9 +59042,9 @@ var staticRenderFns = [
           _vm._v("#")
         ]),
         _vm._v(" "),
-        _c("th", { attrs: { width: "50%" } }, [_vm._v("Servicio")]),
+        _c("th", { attrs: { width: "70%" } }, [_vm._v("Servicio")]),
         _vm._v(" "),
-        _c("th", { attrs: { width: "40%" } }, [_vm._v("Diente")]),
+        _c("th", { attrs: { width: "20%" } }, [_vm._v("Diente")]),
         _vm._v(" "),
         _c("th", { attrs: { width: "5%" } })
       ])
@@ -58892,6 +59059,12 @@ if (false) {
     require("vue-hot-reload-api")      .rerender("data-v-74fed3c2", module.exports)
   }
 }
+
+/***/ }),
+/* 68 */
+/***/ (function(module, exports) {
+
+// removed by extract-text-webpack-plugin
 
 /***/ })
 /******/ ]);

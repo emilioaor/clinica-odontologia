@@ -11,7 +11,7 @@ class Service extends Model
     protected $fillable = [
         'budget_id',
         'product_id',
-        'description'
+        'tooth'
 
     ];
 

@@ -274,8 +274,9 @@
                             <table style="width: 100%;margin-top: 30px;">
                                 <thead>
                                 <tr style="background-color: #3ebbb5; text-align: center;color: #FFFFFF;height: 50px;font-weight: bold;font-size: 16px;">
-                                    <td style="width: 10%">#</td>
-                                    <td style="width: 50%">
+                                    <td style="width: 10%"></td>
+                                    <td style="width: 10%">TH</td>
+                                    <td style="width: 40%">
                                         <input
                                                 type="text"
                                                 class="form-control input-hover"
@@ -318,6 +319,20 @@
                                 <tr style="height: 40px;color: #222" v-for="detail,id in form.details">
                                     <td style="text-align: center;">
                                         <a @click="removeDetail(id)">X</a>
+                                    </td>
+                                    <td>
+                                        <select
+                                                v-bind:name="'tooth' + id"
+                                                class="form-control"
+                                                v-model="detail.tooth"
+                                                >
+                                            <option
+                                                    v-for="tooth in range(1,32)"
+                                                    :value="tooth"
+                                                    >
+                                                {{ tooth }}
+                                            </option>
+                                        </select>
                                     </td>
                                     <td>
                                         <select
@@ -376,18 +391,14 @@
                                 </tr>
 
                                 <tr>
-                                    <td colspan="5">
+                                    <td colspan="6">
                                         <button
                                                 class="btn btn-default"
                                                 @click="addDetail()"
-                                                v-bind:disabled="form.details.length >= productList.length"
                                                 >
                                             <i class="glyphicon glyphicon-plus"></i>
                                             Agregar detalle
                                         </button>
-                                        <p class="error" v-if="form.details.length >= productList.length">
-                                            Ya agrego un detalle para cada producto registrado
-                                        </p>
                                     </td>
                                 </tr>
 
@@ -396,6 +407,7 @@
                                 <!-- Footer -->
                                 <tfoot>
                                 <tr style="background-color: #66bcc8;color: #FFFFFF;height: 35px;font-weight: bold;">
+                                    <td></td>
                                     <td></td>
                                     <td></td>
                                     <td></td>
@@ -423,6 +435,7 @@
 
                                 <!-- Discount -->
                                 <tr style="background-color: #66bcc8;color: #FFFFFF;height: 35px;font-weight: bold;" v-if="showDiscount">
+                                    <td></td>
                                     <td></td>
                                     <td></td>
                                     <td style="text-align: right;">
@@ -472,6 +485,7 @@
                                 <tr style="background-color: #66bcc8;color: #FFFFFF;height: 35px;font-weight: bold;" v-if="showShipping">
                                     <td></td>
                                     <td></td>
+                                    <td></td>
                                     <td style="text-align: right;">
                                         <button class="btn btn-danger" @click="showShipping = false; form.shaping_value = null">
                                             X
@@ -507,6 +521,7 @@
                                 <tr style="height: 35px;" v-if="!showDiscount || !showShipping">
                                     <td></td>
                                     <td></td>
+                                    <td></td>
                                     <td style="text-align: center">
 
                                     </td>
@@ -526,6 +541,7 @@
 
                                 <!-- Total -->
                                 <tr style="background-color: #66bcc8;color: #FFFFFF;height: 35px;font-weight: bold;">
+                                    <td></td>
                                     <td></td>
                                     <td></td>
                                     <td></td>
@@ -710,6 +726,7 @@
 
             addDetail: function() {
                 this.form.details.push({
+                    tooth: 1,
                     product_id: null,
                     quantity: 1,
                     price: 0,
@@ -725,10 +742,6 @@
             },
 
             changeProduct: function (detail) {
-                if (this.hasProduct(detail.product_id, 2)) {
-                    detail.product_id = null;
-                }
-
                 for (let i in this.productList) {
                     if (this.productList[i].id === detail.product_id) {
                         return detail.price = this.productList[i].price;
@@ -819,6 +832,16 @@
             selectPatient: function (patient) {
                 this.client = patient;
                 this.form.patient_id = patient.id;
+            },
+
+            range: function (start, end) {
+                let array = [];
+
+                for (let x = start; x <= end; x++) {
+                    array.push(x);
+                }
+
+                return array;
             }
         }
     }

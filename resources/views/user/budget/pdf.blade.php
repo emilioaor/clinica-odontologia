@@ -142,10 +142,10 @@
     <!-- TABLE -->
     <table style="width: 100%;margin-top: 30px;">
         <tr style="background-color: #3ebbb5; text-align: center;color: #FFFFFF;height: 40px;">
-            <td style="width: 7%;height: 40px;font-weight: bold;font-size: 16px;">
-                #
+            <td style="width: 10%;height: 40px;font-weight: bold;font-size: 16px;">
+                TH
             </td>
-            <td style="width: 38%;height: 40px;font-weight: bold;font-size: 16px;text-align: left;">
+            <td style="width: 36%;height: 40px;font-weight: bold;font-size: 16px;text-align: left;">
                 {{ $budget->table_description_label }}
             </td>
             <td style="width: 15%;height: 40px;font-weight: bold;font-size: 16px;">
@@ -162,7 +162,7 @@
         @foreach($budget->budgetDetails as $i => $detail)
             <tr style="height: 30px;color: #222;{{ ($i + 1)%2 == 0 ? 'background-color:#dcdcdc;' : '' }}">
                 <td style="text-align: center;height: 30px;vertical-align: middle;padding-bottom: 10px;">
-                    {{ $i + 1 }}
+                    {{ $detail->tooth }}
                 </td>
                 <td style="height: 30px;vertical-align: middle;padding-bottom: 10px;">
                     {{ $detail->product->name }}

@@ -69,8 +69,8 @@
                                     <thead>
                                         <tr>
                                             <th width="5%" class="text-center">#</th>
-                                            <th width="50%">Servicio</th>
-                                            <th width="40%">Diente</th>
+                                            <th width="70%">Servicio</th>
+                                            <th width="20%">Diente</th>
                                             <th width="5%"></th>
                                         </tr>
                                     </thead>
@@ -99,17 +99,20 @@
                                                 </p>
                                             </td>
                                             <td>
-                                                <input
-                                                        type="text"
+                                                <select
+                                                        :name="'tooth' + id"
+                                                        :id="'tooth' + id"
                                                         class="form-control"
-                                                        :name="'description' + id"
-                                                        :id="'description' + id"
-                                                        v-model="service.description"
-                                                        v-validate
-                                                        data-vv-rules="required"
-                                                        :class="{'input-error': errors.has('description' + id)}"
+                                                        v-model="service.tooth"
                                                     >
-                                                <p class="error" v-if="errors.firstByRule('description' + id, 'required')">
+                                                    <option
+                                                            v-for="tooth in range(1, 32)"
+                                                            :value="tooth"
+                                                            >
+                                                        {{ tooth }}
+                                                    </option>
+                                                </select>
+                                                <p class="error" v-if="errors.firstByRule('tooth' + id, 'required')">
                                                     Campo requerido
                                                 </p>
                                             </td>
@@ -137,7 +140,8 @@
 
                         <div class="row">
                             <div class="col-xs-12 text-center">
-                                <button class="btn btn-primary btn-lg" @click="validateForm()">
+                                <img src="/img/loading.gif" v-if="loading">
+                                <button class="btn btn-primary btn-lg" @click="validateForm()" v-if="!loading">
                                     <i class="glyphicon glyphicon-check"></i>
                                     Guardar
                                 </button>
@@ -171,7 +175,7 @@
         methods: {
             addService: function () {
                 this.services.push({
-                    description: '',
+                    tooth: 1,
                     product_id: null
                 });
             },
@@ -189,6 +193,8 @@
             },
 
             sendForm: function () {
+                this.loading = true;
+
                 axios.put('/user/service/' + this.data.public_id, {
                     services: this.services
                 })
@@ -199,7 +205,18 @@
                     })
                     .catch((err) => {
                         console.log(err);
+                        this.loading = false;
                     })
+            },
+
+            range: function (start, end) {
+                let array = [];
+
+                for (let x = start; x <= end; x++) {
+                    array.push(x);
+                }
+
+                return array;
             }
         }
     }

@@ -27,6 +27,8 @@ Vue.component('business-config', require('./components/BusinessConfig.vue'));
 Vue.component('register-patient', require('./components/RegisterPatient.vue'));
 Vue.component('edit-patient', require('./components/EditPatient.vue'));
 Vue.component('edit-patient-history', require('./components/EditPatientHistory.vue'));
+Vue.component('register-user', require('./components/RegisterUser.vue'));
+Vue.component('edit-user', require('./components/EditUser.vue'));
 
 const app = new Vue({
     el: '#app'

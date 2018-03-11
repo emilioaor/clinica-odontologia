@@ -6,7 +6,7 @@
             <div class="col-xs-12">
                 <h1>
                     <i class="glyphicon glyphicon-list-alt"></i>
-                    Lista de cotizaciones
+                    Lista de usuarios
                 </h1>
             </div>
         </div>
@@ -15,7 +15,7 @@
                 <div class="panel panel-default">
                     <div class="panel-body">
 
-                        <form action="{{ route('budget.index') }}">
+                        <form action="{{ route('user.index') }}">
                             <div class="row">
                                 <div class="col-sm-5 col-xs-10">
                                     <div class="form-group">
@@ -25,7 +25,7 @@
                                                 class="form-control"
                                                 value="{{ Request::has('search') ? Request::get('search') : '' }}"
                                                 maxlength="30"
-                                                placeholder="Busqueda por paciente..">
+                                                placeholder="Busqueda por usuario..">
                                     </div>
                                 </div>
                                 <div class="col-sm-1 col-xs-2">
@@ -40,7 +40,7 @@
                             <div class="row">
                                 <div class="col-xs-12">
                                     <p>
-                                        <a href="{{ route('budget.index') }}" class="text-danger">
+                                        <a href="{{ route('user.index') }}" class="text-danger">
                                             <i class="glyphicon glyphicon-remove"></i>
                                         </a>
                                         <strong>Filtrado por:</strong>
@@ -54,31 +54,29 @@
                             <thead>
                                 <tr>
                                     <th width="10%">Código</th>
-                                    <th width="20%">Telefono</th>
+                                    <th width="20%">Usuario</th>
                                     <th width="25%">Nombre</th>
                                     <th width="20%">Creación</th>
-                                    <th width="25%">Total</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                @if(count($budgets))
-                                    @foreach($budgets as $budget)
+                                @if(count($users))
+                                    @foreach($users as $user)
                                         <tr>
                                             <td>
-                                                <a href="{{ route('budget.edit', ['budget' => $budget->public_id]) }}">
-                                                    #{{ $budget->public_id }}
+                                                <a href="{{ route('user.edit', ['user' => $user->public_id]) }}">
+                                                    {{ $user->public_id }}
                                                 </a>
                                             </td>
-                                            <td>{{ $budget->patient->phone }}</td>
-                                            <td>{{ $budget->patient->name }}</td>
-                                            <td>{{ $budget->created_at->format('m/d/Y') }}</td>
-                                            <td>{{ '$' . number_format($budget->total_head_value, 2) . ' USD' }}</td>
+                                            <td>{{ $user->username }}</td>
+                                            <td>{{ $user->name }}</td>
+                                            <td>{{ $user->created_at->format('m/d/Y') }}</td>
                                         </tr>
                                     @endforeach
                                 @else
                                     <tr>
-                                        <td colspan="5">
-                                            No hay cotizaciones registradas. <a href="{{ route('budget.create') }}">Registrar cotización</a>
+                                        <td colspan="4">
+                                            No hay usuarios registrados. <a href="{{ route('user.create') }}">Registrar usuario</a>
                                         </td>
                                     </tr>
                                 @endif
@@ -92,7 +90,7 @@
         <div class="row">
             <div class="col-xs-12">
                 <div class="text-center">
-                    {{ $budgets->links() }}
+                    {{ $users->links() }}
                 </div>
             </div>
         </div>

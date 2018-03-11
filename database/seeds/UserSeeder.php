@@ -12,6 +12,7 @@ class UserSeeder extends Seeder
     public function run()
     {
         $user = new \App\User();
+        $user->public_id = 'ADM' . time();
         $user->username = 'admin';
         $user->name = 'Admin';
         $user->password = bcrypt('123456');
@@ -19,6 +20,7 @@ class UserSeeder extends Seeder
         $user->save();
 
         $user = new \App\User();
+        $user->public_id = 'DOC' . time();
         $user->username = 'doctor';
         $user->name = 'Doctor';
         $user->password = bcrypt('123456');

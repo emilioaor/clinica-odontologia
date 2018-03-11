@@ -20,13 +20,15 @@ class User extends Authenticatable
      */
     protected $fillable = [
         'name',
+        'username',
         'email',
         'password',
         'logo',
         'business_name',
         'email',
         'address',
-        'phone'
+        'phone',
+        'level'
     ];
 
     /**
@@ -66,5 +68,15 @@ class User extends Authenticatable
     public function patientHistory()
     {
         return $this->hasMany(PatientHistory::class, 'doctor_id');
+    }
+
+    /**
+     * Genera el id publico en base al nivel
+     */
+    public function generatePublicId()
+    {
+        if ($this->isDoctor()) {
+            $this->public_id = 'DOC' . time();
+        }
     }
 }

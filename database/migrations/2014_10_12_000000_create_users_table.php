@@ -17,6 +17,7 @@ class CreateUsersTable extends Migration
             $table->increments('id');
             $table->string('name');
             $table->string('username', 20)->unique();
+            $table->string('public_id', 30)->unique();
             $table->string('password');
             $table->string('logo')->nullable();
             $table->string('business_name')->nullable();

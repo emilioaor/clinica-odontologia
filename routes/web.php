@@ -32,3 +32,12 @@ Route::group(['prefix' => 'user', 'middleware' => 'auth'], function() {
     Route::post('config/uploadLogo', 'User\ConfigController@uploadLogo')->name('config.logo');
     Route::put('config/business', 'User\ConfigController@updateBusiness')->name('config.business');
 });
+
+// Administrador
+Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function () {
+
+    // Usuarios
+    Route::resource('user', 'Admin\UserController');
+    Route::put('user/{user}/password', 'Admin\UserController@changePassword');
+    Route::get('user/{username}/verify', 'Admin\UserController@verifyUsername');
+});

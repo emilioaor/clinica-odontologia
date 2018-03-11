@@ -1118,6 +1118,8 @@ Vue.component('business-config', __webpack_require__(56));
 Vue.component('register-patient', __webpack_require__(59));
 Vue.component('edit-patient', __webpack_require__(62));
 Vue.component('edit-patient-history', __webpack_require__(79));
+Vue.component('register-user', __webpack_require__(82));
+Vue.component('edit-user', __webpack_require__(85));
 
 var app = new Vue({
   el: '#app'
@@ -59367,6 +59369,1370 @@ if (false) {
   module.hot.accept()
   if (module.hot.data) {
     require("vue-hot-reload-api")      .rerender("data-v-0e5afa52", module.exports)
+  }
+}
+
+/***/ }),
+/* 82 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+var normalizeComponent = __webpack_require__(1)
+/* script */
+var __vue_script__ = __webpack_require__(83)
+/* template */
+var __vue_template__ = __webpack_require__(84)
+/* template functional */
+  var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = null
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources/assets/js/components/RegisterUser.vue"
+if (Component.esModule && Object.keys(Component.esModule).some(function (key) {  return key !== "default" && key.substr(0, 2) !== "__"})) {  console.error("named exports are not supported in *.vue files.")}
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-20fadf27", Component.options)
+  } else {
+    hotAPI.reload("data-v-20fadf27", Component.options)
+' + '  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 83 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+
+    data: function data() {
+        return {
+            loading: false,
+            usernameError: false,
+            form: {
+                username: '',
+                name: '',
+                level: 2,
+                password: '',
+                password_confirmation: ''
+            }
+        };
+    },
+
+    methods: {
+        validateForm: function validateForm() {
+            var _this = this;
+
+            this.$validator.validateAll().then(function (res) {
+                if (res) {
+                    _this.verifyUsername();
+                }
+            });
+        },
+
+        sendForm: function sendForm() {
+            var _this2 = this;
+
+            axios.post('/admin/user', this.form).then(function (res) {
+                if (res.data.success) {
+                    location.href = res.data.redirect;
+                }
+            }).catch(function (err) {
+                _this2.loading = false;
+                console.log(err);
+            });
+        },
+
+        verifyUsername: function verifyUsername() {
+            var _this3 = this;
+
+            this.loading = true;
+
+            axios.get('/admin/user/' + this.form.username + '/verify').then(function (res) {
+                if (res.data.valid) {
+                    _this3.sendForm();
+                } else {
+                    _this3.loading = false;
+                    _this3.usernameError = true;
+                }
+            }).catch(function (err) {
+                _this3.loading = false;
+                console.log(err);
+            });
+        }
+    }
+});
+
+/***/ }),
+/* 84 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("section", [
+    _c("div", { staticClass: "container" }, [
+      _c("div", { staticClass: "row" }, [
+        _c("div", { staticClass: "col-xs-12" }, [
+          _c("h1", [
+            !_vm.loading
+              ? _c("i", { staticClass: "glyphicon glyphicon-th-list" })
+              : _vm._e(),
+            _vm._v(" "),
+            _vm.loading
+              ? _c("img", { attrs: { src: "/img/loading.gif" } })
+              : _vm._e(),
+            _vm._v("\n                    Registrar usuario\n                ")
+          ])
+        ])
+      ]),
+      _vm._v(" "),
+      _c("div", { staticClass: "row" }, [
+        _c("div", { staticClass: "col-md-10" }, [
+          _c("div", { staticClass: "panel panel-default" }, [
+            _c("div", { staticClass: "panel-body" }, [
+              _c(
+                "form",
+                {
+                  on: {
+                    submit: function($event) {
+                      $event.preventDefault()
+                      _vm.validateForm()
+                    }
+                  }
+                },
+                [
+                  _c("div", { staticClass: "row" }, [
+                    _c("div", { staticClass: "col-sm-4" }, [
+                      _c("div", { staticClass: "form-group" }, [
+                        _c("label", { attrs: { for: "username" } }, [
+                          _vm._v("Usuario")
+                        ]),
+                        _vm._v(" "),
+                        _c("input", {
+                          directives: [
+                            {
+                              name: "model",
+                              rawName: "v-model",
+                              value: _vm.form.username,
+                              expression: "form.username"
+                            },
+                            { name: "validate", rawName: "v-validate" }
+                          ],
+                          staticClass: "form-control",
+                          class: {
+                            "input-error":
+                              _vm.errors.has("username") || _vm.usernameError
+                          },
+                          attrs: {
+                            type: "text",
+                            name: "username",
+                            id: "username",
+                            placeholder: "Nombre de usuario",
+                            maxlength: "20",
+                            "data-vv-rules":
+                              "required|min:5|regex:^[a-z]{1}[a-z0-9]+$"
+                          },
+                          domProps: { value: _vm.form.username },
+                          on: {
+                            keyup: function($event) {
+                              _vm.usernameError = false
+                            },
+                            input: function($event) {
+                              if ($event.target.composing) {
+                                return
+                              }
+                              _vm.$set(
+                                _vm.form,
+                                "username",
+                                $event.target.value
+                              )
+                            }
+                          }
+                        }),
+                        _vm._v(" "),
+                        _vm.errors.firstByRule("username", "required")
+                          ? _c("p", { staticClass: "error" }, [
+                              _vm._v(
+                                "\n                                            Este campo es requerido\n                                        "
+                              )
+                            ])
+                          : _vm._e(),
+                        _vm._v(" "),
+                        _vm.errors.firstByRule("username", "min")
+                          ? _c("p", { staticClass: "error" }, [
+                              _vm._v(
+                                "\n                                            Minimo 5 caracteres\n                                        "
+                              )
+                            ])
+                          : _vm._e(),
+                        _vm._v(" "),
+                        _vm.errors.firstByRule("username", "regex")
+                          ? _c("p", { staticClass: "error" }, [
+                              _vm._v(
+                                "\n                                            Formato invalido\n                                        "
+                              )
+                            ])
+                          : _vm._e(),
+                        _vm._v(" "),
+                        !_vm.errors.has("username") && _vm.usernameError
+                          ? _c("p", { staticClass: "error" }, [
+                              _vm._v(
+                                "\n                                            Usuario ya esta siendo usado\n                                        "
+                              )
+                            ])
+                          : _vm._e()
+                      ])
+                    ]),
+                    _vm._v(" "),
+                    _c("div", { staticClass: "col-sm-4" }, [
+                      _c("div", { staticClass: "form-group" }, [
+                        _c("label", { attrs: { for: "username" } }, [
+                          _vm._v("Nombre")
+                        ]),
+                        _vm._v(" "),
+                        _c("input", {
+                          directives: [
+                            {
+                              name: "model",
+                              rawName: "v-model",
+                              value: _vm.form.name,
+                              expression: "form.name"
+                            },
+                            { name: "validate", rawName: "v-validate" }
+                          ],
+                          staticClass: "form-control",
+                          class: { "input-error": _vm.errors.has("name") },
+                          attrs: {
+                            type: "text",
+                            name: "name",
+                            id: "name",
+                            placeholder: "Nombre",
+                            maxlength: "60",
+                            "data-vv-rules": "required"
+                          },
+                          domProps: { value: _vm.form.name },
+                          on: {
+                            input: function($event) {
+                              if ($event.target.composing) {
+                                return
+                              }
+                              _vm.$set(_vm.form, "name", $event.target.value)
+                            }
+                          }
+                        }),
+                        _vm._v(" "),
+                        _vm.errors.firstByRule("name", "required")
+                          ? _c("p", { staticClass: "error" }, [
+                              _vm._v(
+                                "\n                                            Este campo es requerido\n                                        "
+                              )
+                            ])
+                          : _vm._e()
+                      ])
+                    ]),
+                    _vm._v(" "),
+                    _c("div", { staticClass: "col-sm-4" }, [
+                      _c("div", { staticClass: "form-group" }, [
+                        _c("label", { attrs: { for: "username" } }, [
+                          _vm._v("Nivel de usuario")
+                        ]),
+                        _vm._v(" "),
+                        _c(
+                          "select",
+                          {
+                            directives: [
+                              {
+                                name: "model",
+                                rawName: "v-model",
+                                value: _vm.form.level,
+                                expression: "form.level"
+                              }
+                            ],
+                            staticClass: "form-control",
+                            attrs: { name: "level", id: "level" },
+                            on: {
+                              change: function($event) {
+                                var $$selectedVal = Array.prototype.filter
+                                  .call($event.target.options, function(o) {
+                                    return o.selected
+                                  })
+                                  .map(function(o) {
+                                    var val = "_value" in o ? o._value : o.value
+                                    return val
+                                  })
+                                _vm.$set(
+                                  _vm.form,
+                                  "level",
+                                  $event.target.multiple
+                                    ? $$selectedVal
+                                    : $$selectedVal[0]
+                                )
+                              }
+                            }
+                          },
+                          [
+                            _c("option", { attrs: { value: "2" } }, [
+                              _vm._v("Doctor")
+                            ])
+                          ]
+                        )
+                      ])
+                    ])
+                  ]),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "row" }, [
+                    _c("div", { staticClass: "col-sm-4" }, [
+                      _c("div", { staticClass: "form-group" }, [
+                        _c("label", { attrs: { for: "password" } }, [
+                          _vm._v("Contraseña")
+                        ]),
+                        _vm._v(" "),
+                        _c("input", {
+                          directives: [
+                            {
+                              name: "model",
+                              rawName: "v-model",
+                              value: _vm.form.password,
+                              expression: "form.password"
+                            },
+                            { name: "validate", rawName: "v-validate" }
+                          ],
+                          staticClass: "form-control",
+                          class: { "input-error": _vm.errors.has("password") },
+                          attrs: {
+                            type: "password",
+                            name: "password",
+                            id: "password",
+                            placeholder: "Contraseña",
+                            maxlength: "20",
+                            "data-vv-rules":
+                              "required|confirmed:password_confirmation"
+                          },
+                          domProps: { value: _vm.form.password },
+                          on: {
+                            input: function($event) {
+                              if ($event.target.composing) {
+                                return
+                              }
+                              _vm.$set(
+                                _vm.form,
+                                "password",
+                                $event.target.value
+                              )
+                            }
+                          }
+                        }),
+                        _vm._v(" "),
+                        _vm.errors.firstByRule("password", "required")
+                          ? _c("p", { staticClass: "error" }, [
+                              _vm._v(
+                                "\n                                            Este campo es requerido\n                                        "
+                              )
+                            ])
+                          : _vm._e(),
+                        _vm._v(" "),
+                        _vm.errors.firstByRule("password", "confirmed")
+                          ? _c("p", { staticClass: "error" }, [
+                              _vm._v(
+                                "\n                                            Contraseñas no coinciden\n                                        "
+                              )
+                            ])
+                          : _vm._e()
+                      ])
+                    ]),
+                    _vm._v(" "),
+                    _c("div", { staticClass: "col-sm-4" }, [
+                      _c("div", { staticClass: "form-group" }, [
+                        _c("label", { attrs: { for: "password" } }, [
+                          _vm._v("Confirmar contraseña")
+                        ]),
+                        _vm._v(" "),
+                        _c("input", {
+                          directives: [
+                            {
+                              name: "model",
+                              rawName: "v-model",
+                              value: _vm.form.password_confirmation,
+                              expression: "form.password_confirmation"
+                            },
+                            { name: "validate", rawName: "v-validate" }
+                          ],
+                          staticClass: "form-control",
+                          class: {
+                            "input-error": _vm.errors.has(
+                              "password_confirmation"
+                            )
+                          },
+                          attrs: {
+                            type: "password",
+                            name: "password_confirmation",
+                            id: "password_confirmation",
+                            placeholder: "Confirmar contraseña",
+                            maxlength: "20",
+                            "data-vv-rules": "required"
+                          },
+                          domProps: { value: _vm.form.password_confirmation },
+                          on: {
+                            input: function($event) {
+                              if ($event.target.composing) {
+                                return
+                              }
+                              _vm.$set(
+                                _vm.form,
+                                "password_confirmation",
+                                $event.target.value
+                              )
+                            }
+                          }
+                        }),
+                        _vm._v(" "),
+                        _vm.errors.firstByRule(
+                          "password_confirmation",
+                          "required"
+                        )
+                          ? _c("p", { staticClass: "error" }, [
+                              _vm._v(
+                                "\n                                            Este campo es requerido\n                                        "
+                              )
+                            ])
+                          : _vm._e()
+                      ])
+                    ])
+                  ]),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "row" }, [
+                    _c("div", { staticClass: "col-xs-12" }, [
+                      _vm.loading
+                        ? _c("img", { attrs: { src: "/img/loading.gif" } })
+                        : _vm._e(),
+                      _vm._v(" "),
+                      !_vm.loading
+                        ? _c("button", { staticClass: "btn btn-success" }, [
+                            _c("i", {
+                              staticClass: "glyphicon glyphicon-saved"
+                            }),
+                            _vm._v(
+                              "\n                                        Registrar usuario\n                                    "
+                            )
+                          ])
+                        : _vm._e()
+                    ])
+                  ])
+                ]
+              )
+            ])
+          ])
+        ])
+      ])
+    ])
+  ])
+}
+var staticRenderFns = []
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-20fadf27", module.exports)
+  }
+}
+
+/***/ }),
+/* 85 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+var normalizeComponent = __webpack_require__(1)
+/* script */
+var __vue_script__ = __webpack_require__(86)
+/* template */
+var __vue_template__ = __webpack_require__(87)
+/* template functional */
+  var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = null
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources/assets/js/components/EditUser.vue"
+if (Component.esModule && Object.keys(Component.esModule).some(function (key) {  return key !== "default" && key.substr(0, 2) !== "__"})) {  console.error("named exports are not supported in *.vue files.")}
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-24d59fe4", Component.options)
+  } else {
+    hotAPI.reload("data-v-24d59fe4", Component.options)
+' + '  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 86 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+    props: ['user'],
+
+    data: function data() {
+        return {
+            loading: false,
+            form: {}
+        };
+    },
+
+    beforeMount: function beforeMount() {
+        this.form = JSON.parse(this.user);
+    },
+
+    methods: {
+        validateForm: function validateForm() {
+            var _this = this;
+
+            this.$validator.validateAll('data').then(function (res) {
+                if (res) {
+                    _this.sendForm();
+                }
+            });
+        },
+
+        validatePassForm: function validatePassForm() {
+            var _this2 = this;
+
+            this.$validator.validateAll('pass').then(function (res) {
+                if (res) {
+                    _this2.sendPassForm();
+                }
+            });
+        },
+
+        sendForm: function sendForm() {
+            var _this3 = this;
+
+            this.loading = true;
+
+            axios.put('/admin/user/' + this.form.public_id, this.form).then(function (res) {
+                if (res.data.success) {
+                    location.href = res.data.redirect;
+                }
+            }).catch(function (err) {
+                _this3.loading = false;
+                console.log(err);
+            });
+        },
+
+        sendPassForm: function sendPassForm() {
+            var _this4 = this;
+
+            this.loading = true;
+
+            axios.put('/admin/user/' + this.form.public_id + '/password', this.form).then(function (res) {
+                if (res.data.success) {
+                    location.href = res.data.redirect;
+                }
+            }).catch(function (err) {
+                _this4.loading = false;
+                console.log(err);
+            });
+        }
+    }
+});
+
+/***/ }),
+/* 87 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("section", [
+    _c("div", { staticClass: "container" }, [
+      _c("div", { staticClass: "row" }, [
+        _c("div", { staticClass: "col-xs-12" }, [
+          _c("h1", [
+            !_vm.loading
+              ? _c("i", { staticClass: "glyphicon glyphicon-th-list" })
+              : _vm._e(),
+            _vm._v(" "),
+            _vm.loading
+              ? _c("img", { attrs: { src: "/img/loading.gif" } })
+              : _vm._e(),
+            _vm._v("\n                    Actualizar usuario\n                ")
+          ])
+        ])
+      ]),
+      _vm._v(" "),
+      _c("div", { staticClass: "row" }, [
+        _c("div", { staticClass: "col-md-10" }, [
+          _c("div", { staticClass: "panel panel-default" }, [
+            _c("div", { staticClass: "panel-body" }, [
+              _c(
+                "form",
+                {
+                  on: {
+                    submit: function($event) {
+                      $event.preventDefault()
+                      _vm.validateForm()
+                    }
+                  }
+                },
+                [
+                  _c("div", { staticClass: "row" }, [
+                    _c("div", { staticClass: "col-sm-4" }, [
+                      _c("div", { staticClass: "form-group" }, [
+                        _c("label", { attrs: { for: "username" } }, [
+                          _vm._v("Usuario")
+                        ]),
+                        _vm._v(" "),
+                        _c("input", {
+                          directives: [
+                            {
+                              name: "model",
+                              rawName: "v-model",
+                              value: _vm.form.username,
+                              expression: "form.username"
+                            },
+                            { name: "validate", rawName: "v-validate" }
+                          ],
+                          staticClass: "form-control",
+                          class: {
+                            "input-error": _vm.errors.has("data.username")
+                          },
+                          attrs: {
+                            type: "text",
+                            name: "username",
+                            id: "username",
+                            placeholder: "Nombre de usuario",
+                            maxlength: "20",
+                            "data-vv-rules":
+                              "required|min:5|regex:^[a-z]{1}[a-z0-9]+$",
+                            "data-vv-scope": "data",
+                            disabled: ""
+                          },
+                          domProps: { value: _vm.form.username },
+                          on: {
+                            input: function($event) {
+                              if ($event.target.composing) {
+                                return
+                              }
+                              _vm.$set(
+                                _vm.form,
+                                "username",
+                                $event.target.value
+                              )
+                            }
+                          }
+                        }),
+                        _vm._v(" "),
+                        _vm.errors.firstByRule("username", "required", "data")
+                          ? _c("p", { staticClass: "error" }, [
+                              _vm._v(
+                                "\n                                            Este campo es requerido\n                                        "
+                              )
+                            ])
+                          : _vm._e(),
+                        _vm._v(" "),
+                        _vm.errors.firstByRule("username", "min", "data")
+                          ? _c("p", { staticClass: "error" }, [
+                              _vm._v(
+                                "\n                                            Minimo 5 caracteres\n                                        "
+                              )
+                            ])
+                          : _vm._e(),
+                        _vm._v(" "),
+                        _vm.errors.firstByRule("username", "regex", "data")
+                          ? _c("p", { staticClass: "error" }, [
+                              _vm._v(
+                                "\n                                            Formato invalido\n                                        "
+                              )
+                            ])
+                          : _vm._e()
+                      ])
+                    ]),
+                    _vm._v(" "),
+                    _c("div", { staticClass: "col-sm-4" }, [
+                      _c("div", { staticClass: "form-group" }, [
+                        _c("label", { attrs: { for: "username" } }, [
+                          _vm._v("Nombre")
+                        ]),
+                        _vm._v(" "),
+                        _c("input", {
+                          directives: [
+                            {
+                              name: "model",
+                              rawName: "v-model",
+                              value: _vm.form.name,
+                              expression: "form.name"
+                            },
+                            { name: "validate", rawName: "v-validate" }
+                          ],
+                          staticClass: "form-control",
+                          class: { "input-error": _vm.errors.has("name") },
+                          attrs: {
+                            type: "text",
+                            name: "name",
+                            id: "name",
+                            placeholder: "Nombre",
+                            maxlength: "60",
+                            "data-vv-rules": "required",
+                            "data-vv-scope": "data"
+                          },
+                          domProps: { value: _vm.form.name },
+                          on: {
+                            input: function($event) {
+                              if ($event.target.composing) {
+                                return
+                              }
+                              _vm.$set(_vm.form, "name", $event.target.value)
+                            }
+                          }
+                        }),
+                        _vm._v(" "),
+                        _vm.errors.firstByRule("name", "required", "data")
+                          ? _c("p", { staticClass: "error" }, [
+                              _vm._v(
+                                "\n                                            Este campo es requerido\n                                        "
+                              )
+                            ])
+                          : _vm._e()
+                      ])
+                    ]),
+                    _vm._v(" "),
+                    _c("div", { staticClass: "col-sm-4" }, [
+                      _c("div", { staticClass: "form-group" }, [
+                        _c("label", { attrs: { for: "username" } }, [
+                          _vm._v("Nivel de usuario")
+                        ]),
+                        _vm._v(" "),
+                        _c(
+                          "select",
+                          {
+                            directives: [
+                              {
+                                name: "model",
+                                rawName: "v-model",
+                                value: _vm.form.level,
+                                expression: "form.level"
+                              }
+                            ],
+                            staticClass: "form-control",
+                            attrs: { name: "level", id: "level" },
+                            on: {
+                              change: function($event) {
+                                var $$selectedVal = Array.prototype.filter
+                                  .call($event.target.options, function(o) {
+                                    return o.selected
+                                  })
+                                  .map(function(o) {
+                                    var val = "_value" in o ? o._value : o.value
+                                    return val
+                                  })
+                                _vm.$set(
+                                  _vm.form,
+                                  "level",
+                                  $event.target.multiple
+                                    ? $$selectedVal
+                                    : $$selectedVal[0]
+                                )
+                              }
+                            }
+                          },
+                          [
+                            _c("option", { attrs: { value: "2" } }, [
+                              _vm._v("Doctor")
+                            ])
+                          ]
+                        )
+                      ])
+                    ])
+                  ]),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "row" }, [
+                    _c("div", { staticClass: "col-xs-12" }, [
+                      _vm.loading
+                        ? _c("img", { attrs: { src: "/img/loading.gif" } })
+                        : _vm._e(),
+                      _vm._v(" "),
+                      !_vm.loading
+                        ? _c("button", { staticClass: "btn btn-warning" }, [
+                            _c("i", {
+                              staticClass: "glyphicon glyphicon-saved"
+                            }),
+                            _vm._v(
+                              "\n                                        Actualizar usuario\n                                    "
+                            )
+                          ])
+                        : _vm._e()
+                    ])
+                  ])
+                ]
+              )
+            ])
+          ])
+        ])
+      ]),
+      _vm._v(" "),
+      _c("div", { staticClass: "row" }, [
+        _c("div", { staticClass: "col-md-10" }, [
+          _c("div", { staticClass: "panel panel-default" }, [
+            _c("div", { staticClass: "panel-body" }, [
+              _c(
+                "form",
+                {
+                  on: {
+                    submit: function($event) {
+                      $event.preventDefault()
+                      _vm.validatePassForm()
+                    }
+                  }
+                },
+                [
+                  _c("div", { staticClass: "row" }, [
+                    _c("div", { staticClass: "col-sm-4" }, [
+                      _c("div", { staticClass: "form-group" }, [
+                        _c("label", { attrs: { for: "password" } }, [
+                          _vm._v("Contraseña")
+                        ]),
+                        _vm._v(" "),
+                        _c("input", {
+                          directives: [
+                            {
+                              name: "model",
+                              rawName: "v-model",
+                              value: _vm.form.password,
+                              expression: "form.password"
+                            },
+                            { name: "validate", rawName: "v-validate" }
+                          ],
+                          staticClass: "form-control",
+                          class: {
+                            "input-error": _vm.errors.has("pass.password")
+                          },
+                          attrs: {
+                            type: "password",
+                            name: "password",
+                            id: "password",
+                            placeholder: "Contraseña",
+                            maxlength: "20",
+                            "data-vv-rules":
+                              "required|confirmed:password_confirmation",
+                            "data-vv-scope": "pass"
+                          },
+                          domProps: { value: _vm.form.password },
+                          on: {
+                            input: function($event) {
+                              if ($event.target.composing) {
+                                return
+                              }
+                              _vm.$set(
+                                _vm.form,
+                                "password",
+                                $event.target.value
+                              )
+                            }
+                          }
+                        }),
+                        _vm._v(" "),
+                        _vm.errors.firstByRule("password", "required", "pass")
+                          ? _c("p", { staticClass: "error" }, [
+                              _vm._v(
+                                "\n                                            Este campo es requerido\n                                        "
+                              )
+                            ])
+                          : _vm._e(),
+                        _vm._v(" "),
+                        _vm.errors.firstByRule("password", "confirmed", "pass")
+                          ? _c("p", { staticClass: "error" }, [
+                              _vm._v(
+                                "\n                                            Contraseñas no coinciden\n                                        "
+                              )
+                            ])
+                          : _vm._e()
+                      ])
+                    ]),
+                    _vm._v(" "),
+                    _c("div", { staticClass: "col-sm-4" }, [
+                      _c("div", { staticClass: "form-group" }, [
+                        _c("label", { attrs: { for: "password" } }, [
+                          _vm._v("Confirmar contraseña")
+                        ]),
+                        _vm._v(" "),
+                        _c("input", {
+                          directives: [
+                            {
+                              name: "model",
+                              rawName: "v-model",
+                              value: _vm.form.password_confirmation,
+                              expression: "form.password_confirmation"
+                            },
+                            { name: "validate", rawName: "v-validate" }
+                          ],
+                          staticClass: "form-control",
+                          class: {
+                            "input-error": _vm.errors.has(
+                              "pass.password_confirmation"
+                            )
+                          },
+                          attrs: {
+                            type: "password",
+                            name: "password_confirmation",
+                            id: "password_confirmation",
+                            placeholder: "Confirmar contraseña",
+                            maxlength: "20",
+                            "data-vv-rules": "required",
+                            "data-vv-scope": "pass"
+                          },
+                          domProps: { value: _vm.form.password_confirmation },
+                          on: {
+                            input: function($event) {
+                              if ($event.target.composing) {
+                                return
+                              }
+                              _vm.$set(
+                                _vm.form,
+                                "password_confirmation",
+                                $event.target.value
+                              )
+                            }
+                          }
+                        }),
+                        _vm._v(" "),
+                        _vm.errors.firstByRule(
+                          "password_confirmation",
+                          "required",
+                          "pass"
+                        )
+                          ? _c("p", { staticClass: "error" }, [
+                              _vm._v(
+                                "\n                                            Este campo es requerido\n                                        "
+                              )
+                            ])
+                          : _vm._e()
+                      ])
+                    ])
+                  ]),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "row" }, [
+                    _c("div", { staticClass: "col-xs-12" }, [
+                      _vm.loading
+                        ? _c("img", { attrs: { src: "/img/loading.gif" } })
+                        : _vm._e(),
+                      _vm._v(" "),
+                      !_vm.loading
+                        ? _c("button", { staticClass: "btn btn-success" }, [
+                            _c("i", {
+                              staticClass: "glyphicon glyphicon-saved"
+                            }),
+                            _vm._v(
+                              "\n                                        Cambiar contraseña\n                                    "
+                            )
+                          ])
+                        : _vm._e()
+                    ])
+                  ])
+                ]
+              )
+            ])
+          ])
+        ])
+      ])
+    ])
+  ])
+}
+var staticRenderFns = []
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-24d59fe4", module.exports)
   }
 }
 

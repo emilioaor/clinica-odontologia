@@ -19,4 +19,11 @@ return [
     'config.business.update' => 'Datos actualizados',
     'config.business.remember' => 'Antes de generar una cotización recuerde configurar todos los datos',
 
+    'access.admin' => 'No tiene permisos suficientes para acceder a esta area',
+    'access.level' => 'No se permite establecer un nivel administrador',
+
+    'user.create' => 'Usuario registrado',
+    'user.update' => 'Usuario actualizado',
+    'user.password' => 'Contraseña actualizada',
+
 ];

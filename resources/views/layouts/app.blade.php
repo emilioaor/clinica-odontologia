@@ -105,6 +105,28 @@
                                     </li>
                                 </ul>
                             </li>
+                            @if(Auth::user()->isAdmin())
+                                <li class="dropdown">
+                                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+                                        Usuarios <span class="caret"></span>
+                                    </a>
+
+                                    <ul class="dropdown-menu" role="menu">
+                                        <li>
+                                            <a href="{{ route('user.create') }}">
+                                                <i class="glyphicon glyphicon-plus"></i>
+                                                Agregar usuario
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="{{ route('user.index') }}">
+                                                <i class="glyphicon glyphicon-list-alt"></i>
+                                                Lista de usuarios
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </li>
+                            @endif
                         </ul>
                     @endif
 

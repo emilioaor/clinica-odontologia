@@ -1117,7 +1117,7 @@ Vue.component('change-password', __webpack_require__(53));
 Vue.component('business-config', __webpack_require__(56));
 Vue.component('register-patient', __webpack_require__(59));
 Vue.component('edit-patient', __webpack_require__(62));
-Vue.component('edit-service', __webpack_require__(65));
+Vue.component('edit-patient-history', __webpack_require__(79));
 
 var app = new Vue({
   el: '#app'
@@ -58602,15 +58602,34 @@ if (false) {
 }
 
 /***/ }),
-/* 65 */
+/* 65 */,
+/* 66 */,
+/* 67 */,
+/* 68 */
+/***/ (function(module, exports) {
+
+// removed by extract-text-webpack-plugin
+
+/***/ }),
+/* 69 */,
+/* 70 */,
+/* 71 */,
+/* 72 */,
+/* 73 */,
+/* 74 */,
+/* 75 */,
+/* 76 */,
+/* 77 */,
+/* 78 */,
+/* 79 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
 var normalizeComponent = __webpack_require__(1)
 /* script */
-var __vue_script__ = __webpack_require__(66)
+var __vue_script__ = __webpack_require__(80)
 /* template */
-var __vue_template__ = __webpack_require__(67)
+var __vue_template__ = __webpack_require__(81)
 /* template functional */
   var __vue_template_functional__ = false
 /* styles */
@@ -58627,7 +58646,7 @@ var Component = normalizeComponent(
   __vue_scopeId__,
   __vue_module_identifier__
 )
-Component.options.__file = "resources/assets/js/components/EditService.vue"
+Component.options.__file = "resources/assets/js/components/EditPatientHistory.vue"
 if (Component.esModule && Object.keys(Component.esModule).some(function (key) {  return key !== "default" && key.substr(0, 2) !== "__"})) {  console.error("named exports are not supported in *.vue files.")}
 
 /* hot reload */
@@ -58637,9 +58656,9 @@ if (false) {(function () {
   if (!hotAPI.compatible) return
   module.hot.accept()
   if (!module.hot.data) {
-    hotAPI.createRecord("data-v-74fed3c2", Component.options)
+    hotAPI.createRecord("data-v-0e5afa52", Component.options)
   } else {
-    hotAPI.reload("data-v-74fed3c2", Component.options)
+    hotAPI.reload("data-v-0e5afa52", Component.options)
 ' + '  }
   module.hot.dispose(function (data) {
     disposed = true
@@ -58650,11 +58669,19 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 66 */
+/* 80 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vuejs_datepicker__ = __webpack_require__(10);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vuejs_datepicker___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_vuejs_datepicker__);
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -58812,21 +58839,31 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 
+
+
 /* harmony default export */ __webpack_exports__["default"] = ({
-    props: ['budget', 'products'],
+    props: ['patient', 'products', 'historyDate'],
+    components: {
+        Datepicker: __WEBPACK_IMPORTED_MODULE_0_vuejs_datepicker___default.a
+    },
 
     data: function data() {
         return {
             loading: false,
             data: {},
             productList: [],
-            services: []
+            services: [],
+            date: ''
         };
     },
     beforeMount: function beforeMount() {
-        this.data = JSON.parse(this.budget);
+        this.data = JSON.parse(this.patient);
         this.productList = JSON.parse(this.products);
-        this.services = this.data.services;
+        this.services = this.data.patient_history;
+
+        var date = this.historyDate.split('-');
+
+        this.setDate(new Date(date[0], parseInt(date[1]) - 1, date[2]));
     },
 
     methods: {
@@ -58857,7 +58894,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             this.loading = true;
 
             axios.put('/user/service/' + this.data.public_id, {
-                services: this.services
+                services: this.services,
+                date: this.date
             }).then(function (res) {
                 if (res.data.success) {
                     location.href = res.data.redirect;
@@ -58876,12 +58914,27 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             }
 
             return array;
+        },
+
+        setDate: function setDate(date) {
+            var day = date.getDate() < 10 ? '0' + date.getDate() : date.getDate();
+            var month = date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1;
+            var year = date.getFullYear();
+
+            this.date = year + '-' + month + '-' + day;
+        },
+
+        changeDate: function changeDate(date) {
+            this.loading = true;
+
+            this.setDate(date);
+            location.href = location.pathname + '?date=' + this.date;
         }
     }
 });
 
 /***/ }),
-/* 67 */
+/* 81 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
@@ -58911,11 +58964,11 @@ var render = function() {
             _c("div", { staticClass: "row" }, [
               _c("div", { staticClass: "col-sm-4" }, [
                 _c("div", { staticClass: "form-group" }, [
-                  _c("label", { attrs: { for: "" } }, [_vm._v("Cotización")]),
+                  _c("label", { attrs: { for: "" } }, [_vm._v("ID")]),
                   _vm._v(" "),
                   _c("p", [
                     _vm._v(
-                      "\n                                    #" +
+                      "\n                                    " +
                         _vm._s(_vm.data.public_id) +
                         "\n                                "
                     )
@@ -58930,7 +58983,7 @@ var render = function() {
                   _c("p", [
                     _vm._v(
                       "\n                                    " +
-                        _vm._s(_vm.data.patient.name) +
+                        _vm._s(_vm.data.name) +
                         "\n                                "
                     )
                   ])
@@ -58944,7 +58997,7 @@ var render = function() {
                   _c("p", [
                     _vm._v(
                       "\n                                    " +
-                        _vm._s(_vm.data.patient.phone) +
+                        _vm._s(_vm.data.phone) +
                         "\n                                "
                     )
                   ])
@@ -58958,7 +59011,7 @@ var render = function() {
                   _c("p", [
                     _vm._v(
                       "\n                                    " +
-                        _vm._s(_vm.data.patient.email) +
+                        _vm._s(_vm.data.email) +
                         "\n                                "
                     )
                   ])
@@ -58966,17 +59019,36 @@ var render = function() {
               ]),
               _vm._v(" "),
               _c("div", { staticClass: "col-sm-4" }, [
-                _c("div", { staticClass: "form-group" }, [
-                  _c("label", { attrs: { for: "" } }, [_vm._v("Monto")]),
-                  _vm._v(" "),
-                  _c("p", [
-                    _vm._v(
-                      "\n                                    $" +
-                        _vm._s(_vm.data.total_footer_value) +
-                        " USD\n                                "
-                    )
-                  ])
-                ])
+                _c(
+                  "div",
+                  { staticClass: "form-group" },
+                  [
+                    _c("label", { attrs: { for: "" } }, [_vm._v("Fecha")]),
+                    _vm._v(" "),
+                    _c("datepicker", {
+                      attrs: {
+                        name: "date",
+                        id: "date",
+                        language: "es",
+                        "input-class": "form-control",
+                        format: "MM/dd/yyyy"
+                      },
+                      on: {
+                        input: function($event) {
+                          _vm.changeDate($event)
+                        }
+                      },
+                      model: {
+                        value: _vm.date,
+                        callback: function($$v) {
+                          _vm.date = $$v
+                        },
+                        expression: "date"
+                      }
+                    })
+                  ],
+                  1
+                )
               ])
             ]),
             _vm._v(" "),
@@ -59160,7 +59232,7 @@ var render = function() {
                                 staticClass: "glyphicon glyphicon-plus"
                               }),
                               _vm._v(
-                                "\n                                                Agregar servicio\n                                            "
+                                "\n                                                Agregar\n                                            "
                               )
                             ]
                           )
@@ -59231,15 +59303,9 @@ module.exports = { render: render, staticRenderFns: staticRenderFns }
 if (false) {
   module.hot.accept()
   if (module.hot.data) {
-    require("vue-hot-reload-api")      .rerender("data-v-74fed3c2", module.exports)
+    require("vue-hot-reload-api")      .rerender("data-v-0e5afa52", module.exports)
   }
 }
-
-/***/ }),
-/* 68 */
-/***/ (function(module, exports) {
-
-// removed by extract-text-webpack-plugin
 
 /***/ })
 /******/ ]);

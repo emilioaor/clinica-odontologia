@@ -4,24 +4,25 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Service extends Model
+class PatientHistory extends Model
 {
-    protected $table = 'services';
+    protected $table = 'patient_history';
 
     protected $fillable = [
-        'budget_id',
+        'patient_id',
         'product_id',
         'tooth'
 
     ];
 
     /**
-     * Cotizacion por la que se brindo este servicio
+     * Paciente
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function budget()
+    public function patient()
     {
-        return $this->belongsTo(Budget::class, 'budget_id');
+        return $this->belongsTo(Patient::class, 'patient_id');
     }
+
 }

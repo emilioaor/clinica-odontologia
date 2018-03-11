@@ -57,6 +57,7 @@
                                     <th>Telefono</th>
                                     <th>Nombre</th>
                                     <th>Creación</th>
+                                    <th></th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -71,6 +72,12 @@
                                             <td>{{ $patient->phone }}</td>
                                             <td>{{ $patient->name }}</td>
                                             <td>{{ $patient->created_at->format('m/d/Y') }}</td>
+                                            <td class="text-right">
+                                                <a href="{{ route('service.edit', ['service' => $patient->public_id]) }}" class="btn btn-warning">
+                                                    <i class="glyphicon glyphicon-pencil"></i>
+                                                    Servicios
+                                                </a>
+                                            </td>
                                         </tr>
                                     @endforeach
                                 @else

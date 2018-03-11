@@ -2,15 +2,15 @@
 
 namespace App\Http\Controllers\User;
 
-use App\Budget;
+use App\Patient;
+use App\PatientHistory;
 use App\Product;
-use App\Service;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
 
-class ServiceController extends Controller
+class PatientHistoryController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -58,23 +58,29 @@ class ServiceController extends Controller
      * Show the form for editing the specified resource.
      *
      * @param  int  $id
+     * @param Request $request
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit($id, Request $request)
     {
-        $budget = Budget::where('public_id', $id)
-            ->with('services')
-            ->with('patient')
+        $patient = Patient::where('public_id', $id)
             ->first()
         ;
 
-        if (! $budget) {
+        if (! $patient) {
             abort(404);
         }
 
+        $date = new \DateTime(empty($request->date) ? 'now' : $request->date);
+
+        $patient->patient_history = $patient->patientHistory()->where('created_at', '>=', $date->setTime(00, 00, 00))
+            ->where('created_at', '<=', $date->setTime(23, 59, 59))
+            ->get()
+        ;
+
         $products = Product::all();
 
-        return view('user.service.edit', compact('budget', 'products'));
+        return view('user.patientHistory.edit', compact('patient', 'products', 'date'));
     }
 
     /**
@@ -86,15 +92,21 @@ class ServiceController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $budget = Budget::where('public_id', $id)->firstOrFail();
+        $patient = Patient::where('public_id', $id)->firstOrFail();
 
         DB::beginTransaction();
 
-        $budget->services()->delete();
+        $date = new \DateTime(empty($request->date) ? 'now' : $request->date);
+
+        $patient->patientHistory()
+            ->where('created_at', '>=', $date->setTime(00, 00, 00))
+            ->where('created_at', '<=', $date->setTime(23, 59, 59))
+            ->delete();
 
         foreach ($request->services as $service) {
-            $service = new Service($service);
-            $service->budget_id = $budget->id;
+            $service = new PatientHistory($service);
+            $service->patient_id = $patient->id;
+            $service->created_at = $date;
             $service->save();
         }
 
@@ -104,7 +116,10 @@ class ServiceController extends Controller
 
         return new JsonResponse([
             'success' => true,
-            'redirect' => route('service.edit', ['service' => $id])
+            'redirect' => route('service.edit', [
+                'service' => $id,
+                'date' => $date->format('Y-m-d')
+            ])
         ]);
     }
 

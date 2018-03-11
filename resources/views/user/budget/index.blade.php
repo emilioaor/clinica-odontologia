@@ -58,7 +58,6 @@
                                     <th width="25%">Nombre</th>
                                     <th width="20%">Creación</th>
                                     <th width="25%">Total</th>
-                                    <th></th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -74,12 +73,6 @@
                                             <td>{{ $budget->patient->name }}</td>
                                             <td>{{ $budget->created_at->format('m/d/Y') }}</td>
                                             <td>{{ '$' . number_format($budget->total_head_value, 2) . ' USD' }}</td>
-                                            <td class="text-right">
-                                                <a href="{{ route('service.edit', ['service' => $budget->public_id]) }}" class="btn btn-warning">
-                                                    <i class="glyphicon glyphicon-pencil"></i>
-                                                    Servicios
-                                                </a>
-                                            </td>
                                         </tr>
                                     @endforeach
                                 @else

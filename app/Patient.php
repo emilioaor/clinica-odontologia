@@ -33,4 +33,14 @@ class Patient extends Model
     {
         $this->public_id = 'PAT' . time();
     }
+
+    /**
+     * Historial del paciente
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function patientHistory()
+    {
+        return $this->hasMany(PatientHistory::class, 'patient_id');
+    }
 }

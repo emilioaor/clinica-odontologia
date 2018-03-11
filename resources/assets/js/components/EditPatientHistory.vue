@@ -18,9 +18,9 @@
 
                             <div class="col-sm-4">
                                 <div class="form-group">
-                                    <label for="">Cotización</label>
+                                    <label for="">ID</label>
                                     <p>
-                                        #{{ data.public_id }}
+                                        {{ data.public_id }}
                                     </p>
                                 </div>
                             </div>
@@ -29,7 +29,7 @@
                                 <div class="form-group">
                                     <label for="">Paciente</label>
                                     <p>
-                                        {{ data.patient.name }}
+                                        {{ data.name }}
                                     </p>
                                 </div>
                             </div>
@@ -38,7 +38,7 @@
                                 <div class="form-group">
                                     <label for="">Telefono</label>
                                     <p>
-                                        {{ data.patient.phone }}
+                                        {{ data.phone }}
                                     </p>
                                 </div>
                             </div>
@@ -47,17 +47,23 @@
                                 <div class="form-group">
                                     <label for="">Email</label>
                                     <p>
-                                        {{ data.patient.email }}
+                                        {{ data.email }}
                                     </p>
                                 </div>
                             </div>
 
                             <div class="col-sm-4">
                                 <div class="form-group">
-                                    <label for="">Monto</label>
-                                    <p>
-                                        ${{ data.total_footer_value }} USD
-                                    </p>
+                                    <label for="">Fecha</label>
+                                    <datepicker
+                                            name = "date"
+                                            id = "date"
+                                            language="es"
+                                            input-class = "form-control"
+                                            format = "MM/dd/yyyy"
+                                            v-model="date"
+                                            @input="changeDate($event)"
+                                            ></datepicker>
                                 </div>
                             </div>
                         </div>
@@ -128,7 +134,7 @@
                                             <td colspan="4">
                                                 <button class="btn btn-success" @click="addService()">
                                                     <i class="glyphicon glyphicon-plus"></i>
-                                                    Agregar servicio
+                                                    Agregar
                                                 </button>
                                             </td>
                                         </tr>
@@ -155,21 +161,31 @@
 </template>
 
 <script>
+    import Datepicker from 'vuejs-datepicker';
+
     export default {
-        props: ['budget', 'products'],
+        props: ['patient', 'products', 'historyDate'],
+        components: {
+            Datepicker
+        },
 
         data: function () {
             return {
                 loading: false,
                 data: {},
                 productList: [],
-                services: []
+                services: [],
+                date: ''
             }
         },
         beforeMount: function () {
-            this.data = JSON.parse(this.budget);
+            this.data = JSON.parse(this.patient);
             this.productList = JSON.parse(this.products);
-            this.services = this.data.services;
+            this.services = this.data.patient_history;
+
+            const date = this.historyDate.split('-');
+
+            this.setDate(new Date(date[0], parseInt(date[1]) - 1, date[2]))
         },
 
         methods: {
@@ -196,7 +212,8 @@
                 this.loading = true;
 
                 axios.put('/user/service/' + this.data.public_id, {
-                    services: this.services
+                    services: this.services,
+                    date: this.date
                 })
                     .then((res) => {
                         if (res.data.success) {
@@ -217,6 +234,21 @@
                 }
 
                 return array;
+            },
+
+            setDate: function (date) {
+                let day = (date.getDate() < 10) ? '0' + date.getDate() : date.getDate();
+                let month = ((date.getMonth() + 1) < 10) ? '0' + (date.getMonth() + 1) : (date.getMonth() + 1);
+                let year = date.getFullYear();
+
+                this.date = year + '-' + month + '-' + day;
+            },
+
+            changeDate: function (date) {
+                this.loading = true;
+
+                this.setDate(date);
+                location.href = location.pathname + '?date=' + this.date;
             }
         }
     }

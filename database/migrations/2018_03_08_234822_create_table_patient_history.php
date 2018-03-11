@@ -17,9 +17,12 @@ class CreateTablePatientHistory extends Migration
             $table->increments('id');
             $table->integer('patient_id')->unsigned();
             $table->integer('product_id')->unsigned();
+            $table->integer('doctor_id')->unsigned();
             $table->integer('tooth');
+            $table->float('price');
             $table->foreign('patient_id')->references('id')->on('patients');
             $table->foreign('product_id')->references('id')->on('products');
+            $table->foreign('doctor_id')->references('id')->on('users');
             $table->timestamps();
         });
     }

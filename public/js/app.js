@@ -58838,6 +58838,19 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 
@@ -58853,7 +58866,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             data: {},
             productList: [],
             services: [],
-            date: ''
+            date: '',
+            datePicker: ''
         };
     },
     beforeMount: function beforeMount() {
@@ -58863,14 +58877,15 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
         var date = this.historyDate.split('-');
 
-        this.setDate(new Date(date[0], parseInt(date[1]) - 1, date[2]));
+        this.setDate(new Date(parseInt(date[0]), parseInt(date[1]) - 1, parseInt(date[2])));
     },
 
     methods: {
         addService: function addService() {
             this.services.push({
                 tooth: 1,
-                product_id: null
+                product_id: null,
+                price: null
             });
         },
 
@@ -58922,6 +58937,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             var year = date.getFullYear();
 
             this.date = year + '-' + month + '-' + day;
+            this.datePicker = month + '-' + day + '-' + year;
         },
 
         changeDate: function changeDate(date) {
@@ -58929,6 +58945,14 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
             this.setDate(date);
             location.href = location.pathname + '?date=' + this.date;
+        },
+
+        changeProduct: function changeProduct(service, index) {
+            for (var i in this.productList) {
+                if (this.productList[i].id == service.product_id) {
+                    this.services[index].price = this.productList[i].price;
+                }
+            }
         }
     }
 });
@@ -59039,11 +59063,11 @@ var render = function() {
                         }
                       },
                       model: {
-                        value: _vm.date,
+                        value: _vm.datePicker,
                         callback: function($$v) {
-                          _vm.date = $$v
+                          _vm.datePicker = $$v
                         },
-                        expression: "date"
+                        expression: "datePicker"
                       }
                     })
                   ],
@@ -59063,10 +59087,6 @@ var render = function() {
                     _vm._l(_vm.services, function(service, id) {
                       return _c("tbody", [
                         _c("tr", [
-                          _c("td", { staticClass: "text-center" }, [
-                            _vm._v(_vm._s(id + 1))
-                          ]),
-                          _vm._v(" "),
                           _c("td", [
                             _c(
                               "select",
@@ -59090,24 +59110,31 @@ var render = function() {
                                   "data-vv-rules": "required"
                                 },
                                 on: {
-                                  change: function($event) {
-                                    var $$selectedVal = Array.prototype.filter
-                                      .call($event.target.options, function(o) {
-                                        return o.selected
-                                      })
-                                      .map(function(o) {
-                                        var val =
-                                          "_value" in o ? o._value : o.value
-                                        return val
-                                      })
-                                    _vm.$set(
-                                      service,
-                                      "product_id",
-                                      $event.target.multiple
-                                        ? $$selectedVal
-                                        : $$selectedVal[0]
-                                    )
-                                  }
+                                  change: [
+                                    function($event) {
+                                      var $$selectedVal = Array.prototype.filter
+                                        .call($event.target.options, function(
+                                          o
+                                        ) {
+                                          return o.selected
+                                        })
+                                        .map(function(o) {
+                                          var val =
+                                            "_value" in o ? o._value : o.value
+                                          return val
+                                        })
+                                      _vm.$set(
+                                        service,
+                                        "product_id",
+                                        $event.target.multiple
+                                          ? $$selectedVal
+                                          : $$selectedVal[0]
+                                      )
+                                    },
+                                    function($event) {
+                                      _vm.changeProduct(service, id)
+                                    }
+                                  ]
                                 }
                               },
                               _vm._l(_vm.productList, function(product) {
@@ -59182,9 +59209,47 @@ var render = function() {
                                   ]
                                 )
                               })
-                            ),
+                            )
+                          ]),
+                          _vm._v(" "),
+                          _c("td", [
+                            _c("input", {
+                              directives: [
+                                {
+                                  name: "model",
+                                  rawName: "v-model",
+                                  value: service.price,
+                                  expression: "service.price"
+                                },
+                                { name: "validate", rawName: "v-validate" }
+                              ],
+                              staticClass: "form-control",
+                              class: {
+                                "input-error": _vm.errors.has("price" + id)
+                              },
+                              attrs: {
+                                type: "number",
+                                name: "price" + id,
+                                id: "price" + id,
+                                "data-vv-rules": "required",
+                                disabled: !service.product_id
+                              },
+                              domProps: { value: service.price },
+                              on: {
+                                input: function($event) {
+                                  if ($event.target.composing) {
+                                    return
+                                  }
+                                  _vm.$set(
+                                    service,
+                                    "price",
+                                    $event.target.value
+                                  )
+                                }
+                              }
+                            }),
                             _vm._v(" "),
-                            _vm.errors.firstByRule("tooth" + id, "required")
+                            _vm.errors.firstByRule("price" + id, "required")
                               ? _c("p", { staticClass: "error" }, [
                                   _vm._v(
                                     "\n                                                Campo requerido\n                                            "
@@ -59285,15 +59350,13 @@ var staticRenderFns = [
     var _c = _vm._self._c || _h
     return _c("thead", [
       _c("tr", [
-        _c("th", { staticClass: "text-center", attrs: { width: "5%" } }, [
-          _vm._v("#")
-        ]),
-        _vm._v(" "),
-        _c("th", { attrs: { width: "70%" } }, [_vm._v("Servicio")]),
+        _c("th", { attrs: { width: "50%" } }, [_vm._v("Servicio")]),
         _vm._v(" "),
         _c("th", { attrs: { width: "20%" } }, [_vm._v("Diente")]),
         _vm._v(" "),
-        _c("th", { attrs: { width: "5%" } })
+        _c("th", { attrs: { width: "20%" } }, [_vm._v("Precio")]),
+        _vm._v(" "),
+        _c("th", { attrs: { width: "10%" } })
       ])
     ])
   }

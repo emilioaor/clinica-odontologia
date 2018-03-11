@@ -11,7 +11,9 @@ class PatientHistory extends Model
     protected $fillable = [
         'patient_id',
         'product_id',
-        'tooth'
+        'tooth',
+        'doctor_id',
+        'price'
 
     ];
 
@@ -23,6 +25,16 @@ class PatientHistory extends Model
     public function patient()
     {
         return $this->belongsTo(Patient::class, 'patient_id');
+    }
+
+    /**
+     * Doctor que brindo el servicio
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function doctor()
+    {
+        return $this->belongsTo(User::class, 'doctor_id');
     }
 
 }

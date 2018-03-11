@@ -8,6 +8,7 @@ use App\Product;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class PatientHistoryController extends Controller
@@ -72,9 +73,14 @@ class PatientHistoryController extends Controller
         }
 
         $date = new \DateTime(empty($request->date) ? 'now' : $request->date);
+        $start = clone $date;
+        $start->setTime(00, 00, 00);
+        $end = clone $date;
+        $end->setTime(23, 59, 59);
 
-        $patient->patient_history = $patient->patientHistory()->where('created_at', '>=', $date->setTime(00, 00, 00))
-            ->where('created_at', '<=', $date->setTime(23, 59, 59))
+        $patient->patient_history = $patient->patientHistory()->where('created_at', '>=', $start)
+            ->where('created_at', '<=', $end)
+            ->where('doctor_id', Auth::user()->id)
             ->get()
         ;
 
@@ -97,16 +103,22 @@ class PatientHistoryController extends Controller
         DB::beginTransaction();
 
         $date = new \DateTime(empty($request->date) ? 'now' : $request->date);
+        $start = clone $date;
+        $start->setTime(00, 00, 00);
+        $end = clone $date;
+        $end->setTime(23, 59, 59);
 
         $patient->patientHistory()
-            ->where('created_at', '>=', $date->setTime(00, 00, 00))
-            ->where('created_at', '<=', $date->setTime(23, 59, 59))
+            ->where('created_at', '>=', $start)
+            ->where('created_at', '<=', $end)
+            ->where('doctor_id', Auth::user()->id)
             ->delete();
 
         foreach ($request->services as $service) {
             $service = new PatientHistory($service);
             $service->patient_id = $patient->id;
             $service->created_at = $date;
+            $service->doctor_id = Auth::user()->id;
             $service->save();
         }
 

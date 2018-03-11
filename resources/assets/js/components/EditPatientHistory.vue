@@ -61,7 +61,7 @@
                                             language="es"
                                             input-class = "form-control"
                                             format = "MM/dd/yyyy"
-                                            v-model="date"
+                                            v-model="datePicker"
                                             @input="changeDate($event)"
                                             ></datepicker>
                                 </div>
@@ -74,15 +74,14 @@
                                 <table class="table table-responsive">
                                     <thead>
                                         <tr>
-                                            <th width="5%" class="text-center">#</th>
-                                            <th width="70%">Servicio</th>
+                                            <th width="50%">Servicio</th>
                                             <th width="20%">Diente</th>
-                                            <th width="5%"></th>
+                                            <th width="20%">Precio</th>
+                                            <th width="10%"></th>
                                         </tr>
                                     </thead>
                                     <tbody v-for="(service, id) in services">
                                         <tr>
-                                            <td class="text-center">{{ id + 1 }}</td>
                                             <td>
                                                 <select
                                                         :name="'product' + id"
@@ -92,6 +91,7 @@
                                                         v-validate
                                                         data-vv-rules="required"
                                                         :class="{'input-error': errors.has('product' + id)}"
+                                                        @change="changeProduct(service, id)"
                                                     >
                                                     <option
                                                             v-for="product in productList"
@@ -118,7 +118,20 @@
                                                         {{ tooth }}
                                                     </option>
                                                 </select>
-                                                <p class="error" v-if="errors.firstByRule('tooth' + id, 'required')">
+                                            </td>
+                                            <td>
+                                                <input
+                                                        type="number"
+                                                        class="form-control"
+                                                        :name="'price' + id"
+                                                        :id="'price' + id"
+                                                        v-model="service.price"
+                                                        v-validate
+                                                        data-vv-rules="required"
+                                                        :class="{'input-error': errors.has('price' + id)}"
+                                                        :disabled="!service.product_id"
+                                                >
+                                                <p class="error" v-if="errors.firstByRule('price' + id, 'required')">
                                                     Campo requerido
                                                 </p>
                                             </td>
@@ -175,7 +188,8 @@
                 data: {},
                 productList: [],
                 services: [],
-                date: ''
+                date: '',
+                datePicker: ''
             }
         },
         beforeMount: function () {
@@ -185,14 +199,15 @@
 
             const date = this.historyDate.split('-');
 
-            this.setDate(new Date(date[0], parseInt(date[1]) - 1, date[2]))
+            this.setDate( new Date(parseInt(date[0]), parseInt(date[1]) - 1, parseInt(date[2])) )
         },
 
         methods: {
             addService: function () {
                 this.services.push({
                     tooth: 1,
-                    product_id: null
+                    product_id: null,
+                    price: null
                 });
             },
 
@@ -242,6 +257,7 @@
                 let year = date.getFullYear();
 
                 this.date = year + '-' + month + '-' + day;
+                this.datePicker = month + '-' + day + '-' + year;
             },
 
             changeDate: function (date) {
@@ -249,6 +265,14 @@
 
                 this.setDate(date);
                 location.href = location.pathname + '?date=' + this.date;
+            },
+
+            changeProduct: function (service, index) {
+                for (let i in this.productList) {
+                    if (this.productList[i].id == service.product_id) {
+                        this.services[index].price = this.productList[i].price;
+                    }
+                }
             }
         }
     }

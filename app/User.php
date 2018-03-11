@@ -57,4 +57,14 @@ class User extends Authenticatable
     {
         return $this->level === self::LEVEL_DOCTOR;
     }
+
+    /**
+     * Todos los servicios brindados por un Doctor
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function patientHistory()
+    {
+        return $this->hasMany(PatientHistory::class, 'doctor_id');
+    }
 }

@@ -1118,6 +1118,7 @@ Vue.component('business-config', __webpack_require__(56));
 Vue.component('register-patient', __webpack_require__(59));
 Vue.component('edit-patient', __webpack_require__(62));
 Vue.component('edit-patient-history', __webpack_require__(65));
+Vue.component('create-patient-history', __webpack_require__(88));
 Vue.component('register-user', __webpack_require__(68));
 Vue.component('edit-user', __webpack_require__(71));
 
@@ -58847,6 +58848,94 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 
@@ -58863,7 +58952,12 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             productList: [],
             services: [],
             date: '',
-            datePicker: ''
+            datePicker: '',
+            modal: {
+                data: [],
+                loading: false,
+                search: ''
+            }
         };
     },
     beforeMount: function beforeMount() {
@@ -58949,6 +59043,25 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                     this.services[index].price = this.productList[i].price;
                 }
             }
+        },
+
+        searchPatients: function searchPatients() {
+            var _this3 = this;
+
+            this.modal.data = [];
+            this.modal.loading = true;
+
+            axios.get('/user/patient/budget/search?search=' + this.modal.search).then(function (res) {
+                _this3.modal.loading = false;
+
+                _this3.modal.data = res.data.patients;
+            }).catch(function (err) {
+                _this3.modal.loading = false;
+            });
+        },
+
+        selectPatient: function selectPatient(patient) {
+            location.href = '/user/service/' + patient.public_id + '/edit?date=' + this.date;
         }
     }
 });
@@ -58981,6 +59094,33 @@ var render = function() {
       _c("div", { staticClass: "col-sm-8" }, [
         _c("div", { staticClass: "panel panel-default" }, [
           _c("div", { staticClass: "panel-body" }, [
+            _c("div", { staticClass: "row" }, [
+              _c("div", { staticClass: "col-xs-12" }, [
+                _c(
+                  "a",
+                  {
+                    attrs: {
+                      "data-toggle": "modal",
+                      "data-target": "#patientModal"
+                    },
+                    on: {
+                      click: function($event) {
+                        _vm.searchPatients()
+                      }
+                    }
+                  },
+                  [
+                    _c("i", { staticClass: "glyphicon glyphicon-search" }),
+                    _vm._v(
+                      "\n\n                                Cambiar paciente\n                            "
+                    )
+                  ]
+                ),
+                _vm._v(" "),
+                _c("hr")
+              ])
+            ]),
+            _vm._v(" "),
             _c("div", { staticClass: "row" }, [
               _c("div", { staticClass: "col-sm-4" }, [
                 _c("div", { staticClass: "form-group" }, [
@@ -59341,7 +59481,117 @@ var render = function() {
           ])
         ])
       ])
-    ])
+    ]),
+    _vm._v(" "),
+    _c(
+      "div",
+      {
+        staticClass: "modal fade",
+        attrs: {
+          id: "patientModal",
+          tabindex: "-1",
+          role: "dialog",
+          "aria-labelledby": "patientModal",
+          "aria-hidden": "true"
+        }
+      },
+      [
+        _c(
+          "div",
+          { staticClass: "modal-dialog", attrs: { role: "document" } },
+          [
+            _c("div", { staticClass: "modal-content" }, [
+              _c("div", { staticClass: "modal-body" }, [
+                _c("div", { staticClass: "row" }, [
+                  _vm._m(1),
+                  _vm._v(" "),
+                  _vm._m(2),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "col-xs-12" }, [
+                    _c("input", {
+                      directives: [
+                        {
+                          name: "model",
+                          rawName: "v-model",
+                          value: _vm.modal.search,
+                          expression: "modal.search"
+                        }
+                      ],
+                      staticClass: "form-control",
+                      attrs: { type: "text", placeholder: "Buscador" },
+                      domProps: { value: _vm.modal.search },
+                      on: {
+                        keyup: function($event) {
+                          _vm.searchPatients()
+                        },
+                        input: function($event) {
+                          if ($event.target.composing) {
+                            return
+                          }
+                          _vm.$set(_vm.modal, "search", $event.target.value)
+                        }
+                      }
+                    })
+                  ])
+                ]),
+                _vm._v(" "),
+                _c("hr"),
+                _vm._v(" "),
+                _c("div", { staticClass: "row" }, [
+                  _c("div", { staticClass: "col-xs-12" }, [
+                    _c(
+                      "table",
+                      { staticClass: "table table-responsive table-striped" },
+                      [
+                        _vm._m(3),
+                        _vm._v(" "),
+                        !_vm.modal.loading
+                          ? _c(
+                              "tbody",
+                              _vm._l(_vm.modal.data, function(patient) {
+                                return patient.public_id !== _vm.data.public_id
+                                  ? _c("tr", [
+                                      _c("td", [_vm._v(_vm._s(patient.phone))]),
+                                      _vm._v(" "),
+                                      _c("td", [_vm._v(_vm._s(patient.name))]),
+                                      _vm._v(" "),
+                                      _c("td", [
+                                        _c(
+                                          "button",
+                                          {
+                                            staticClass: "btn btn-primary",
+                                            attrs: { "data-dismiss": "modal" },
+                                            on: {
+                                              click: function($event) {
+                                                _vm.selectPatient(patient)
+                                              }
+                                            }
+                                          },
+                                          [
+                                            _c("i", {
+                                              staticClass:
+                                                "glyphicon glyphicon-ok"
+                                            })
+                                          ]
+                                        )
+                                      ])
+                                    ])
+                                  : _vm._e()
+                              })
+                            )
+                          : _vm._e()
+                      ]
+                    )
+                  ])
+                ])
+              ]),
+              _vm._v(" "),
+              _vm._m(4)
+            ])
+          ]
+        )
+      ]
+    )
   ])
 }
 var staticRenderFns = [
@@ -59359,6 +59609,64 @@ var staticRenderFns = [
         _vm._v(" "),
         _c("th", { attrs: { width: "10%" } })
       ])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "col-sm-6" }, [
+      _c("h3", [
+        _c("strong", [
+          _vm._v(
+            "\n                                    Selecciona al paciente\n                                "
+          )
+        ])
+      ])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "col-sm-6" }, [
+      _c("h3", { staticClass: "text-right" }, [
+        _c("a", { attrs: { href: "/user/patient/create" } }, [
+          _c("i", { staticClass: "glyphicon glyphicon-plus" }),
+          _vm._v(
+            "\n                                    Registrar paciente\n                                "
+          )
+        ])
+      ])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("thead", [
+      _c("tr", [
+        _c("th", { attrs: { width: "50%" } }, [_vm._v("Telefono")]),
+        _vm._v(" "),
+        _c("th", { attrs: { width: "50%" } }, [_vm._v("Nombre")]),
+        _vm._v(" "),
+        _c("th")
+      ])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "modal-footer" }, [
+      _c(
+        "button",
+        {
+          staticClass: "btn btn-secondary",
+          attrs: { type: "button", "data-dismiss": "modal" }
+        },
+        [_vm._v("Cerrar")]
+      )
     ])
   }
 ]
@@ -60740,6 +61048,465 @@ if (false) {
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
+
+/***/ }),
+/* 75 */,
+/* 76 */,
+/* 77 */,
+/* 78 */,
+/* 79 */,
+/* 80 */,
+/* 81 */,
+/* 82 */,
+/* 83 */,
+/* 84 */,
+/* 85 */,
+/* 86 */,
+/* 87 */,
+/* 88 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+var normalizeComponent = __webpack_require__(1)
+/* script */
+var __vue_script__ = __webpack_require__(89)
+/* template */
+var __vue_template__ = __webpack_require__(90)
+/* template functional */
+  var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = null
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources/assets/js/components/CreatePatientHistory.vue"
+if (Component.esModule && Object.keys(Component.esModule).some(function (key) {  return key !== "default" && key.substr(0, 2) !== "__"})) {  console.error("named exports are not supported in *.vue files.")}
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-eddcaef8", Component.options)
+  } else {
+    hotAPI.reload("data-v-eddcaef8", Component.options)
+' + '  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 89 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vuejs_datepicker__ = __webpack_require__(4);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vuejs_datepicker___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_vuejs_datepicker__);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+    data: function data() {
+        return {
+            modal: {
+                data: [],
+                loading: false,
+                search: ''
+            }
+        };
+    },
+    methods: {
+        searchPatients: function searchPatients() {
+            var _this = this;
+
+            this.modal.data = [];
+            this.modal.loading = true;
+
+            axios.get('/user/patient/budget/search?search=' + this.modal.search).then(function (res) {
+                _this.modal.loading = false;
+
+                _this.modal.data = res.data.patients;
+            }).catch(function (err) {
+                _this.modal.loading = false;
+            });
+        },
+
+        selectPatient: function selectPatient(patient) {
+            location.href = '/user/service/' + patient.public_id + '/edit';
+        }
+    }
+});
+
+/***/ }),
+/* 90 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("div", { staticClass: "container edit-service" }, [
+    _c("div", { staticClass: "row" }, [
+      _c("div", { staticClass: "col-xs-12" }, [
+        _c("h1", [
+          !_vm.modal.loading
+            ? _c("i", { staticClass: "glyphicon glyphicon-pencil" })
+            : _vm._e(),
+          _vm._v(" "),
+          _vm.modal.loading
+            ? _c("img", { attrs: { src: "/img/loading.gif" } })
+            : _vm._e(),
+          _vm._v("\n                Servicios prestados\n            ")
+        ])
+      ])
+    ]),
+    _vm._v(" "),
+    _c("div", { staticClass: "row" }, [
+      _c("div", { staticClass: "col-sm-8" }, [
+        _c("div", { staticClass: "panel panel-default" }, [
+          _c("div", { staticClass: "panel-body" }, [
+            _c("div", { staticClass: "row" }, [
+              _c("div", { staticClass: "col-xs-12" }, [
+                _c(
+                  "a",
+                  {
+                    attrs: {
+                      "data-toggle": "modal",
+                      "data-target": "#patientModal"
+                    },
+                    on: {
+                      click: function($event) {
+                        _vm.searchPatients()
+                      }
+                    }
+                  },
+                  [
+                    _c("i", { staticClass: "glyphicon glyphicon-search" }),
+                    _vm._v(
+                      "\n\n                                Seleccionar paciente\n                            "
+                    )
+                  ]
+                ),
+                _vm._v(" "),
+                _c("hr"),
+                _vm._v(" "),
+                _c("h3", [
+                  _vm._v(
+                    "\n                                Por favor seleccione al paciente\n                            "
+                  )
+                ])
+              ])
+            ])
+          ])
+        ])
+      ])
+    ]),
+    _vm._v(" "),
+    _c(
+      "div",
+      {
+        staticClass: "modal fade",
+        attrs: {
+          id: "patientModal",
+          tabindex: "-1",
+          role: "dialog",
+          "aria-labelledby": "patientModal",
+          "aria-hidden": "true"
+        }
+      },
+      [
+        _c(
+          "div",
+          { staticClass: "modal-dialog", attrs: { role: "document" } },
+          [
+            _c("div", { staticClass: "modal-content" }, [
+              _c("div", { staticClass: "modal-body" }, [
+                _c("div", { staticClass: "row" }, [
+                  _vm._m(0),
+                  _vm._v(" "),
+                  _vm._m(1),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "col-xs-12" }, [
+                    _c("input", {
+                      directives: [
+                        {
+                          name: "model",
+                          rawName: "v-model",
+                          value: _vm.modal.search,
+                          expression: "modal.search"
+                        }
+                      ],
+                      staticClass: "form-control",
+                      attrs: { type: "text", placeholder: "Buscador" },
+                      domProps: { value: _vm.modal.search },
+                      on: {
+                        keyup: function($event) {
+                          _vm.searchPatients()
+                        },
+                        input: function($event) {
+                          if ($event.target.composing) {
+                            return
+                          }
+                          _vm.$set(_vm.modal, "search", $event.target.value)
+                        }
+                      }
+                    })
+                  ])
+                ]),
+                _vm._v(" "),
+                _c("hr"),
+                _vm._v(" "),
+                _c("div", { staticClass: "row" }, [
+                  _c("div", { staticClass: "col-xs-12" }, [
+                    _c(
+                      "table",
+                      { staticClass: "table table-responsive table-striped" },
+                      [
+                        _vm._m(2),
+                        _vm._v(" "),
+                        !_vm.modal.loading
+                          ? _c(
+                              "tbody",
+                              _vm._l(_vm.modal.data, function(patient) {
+                                return _c("tr", [
+                                  _c("td", [_vm._v(_vm._s(patient.phone))]),
+                                  _vm._v(" "),
+                                  _c("td", [_vm._v(_vm._s(patient.name))]),
+                                  _vm._v(" "),
+                                  _c("td", [
+                                    _c(
+                                      "button",
+                                      {
+                                        staticClass: "btn btn-primary",
+                                        attrs: { "data-dismiss": "modal" },
+                                        on: {
+                                          click: function($event) {
+                                            _vm.selectPatient(patient)
+                                          }
+                                        }
+                                      },
+                                      [
+                                        _c("i", {
+                                          staticClass: "glyphicon glyphicon-ok"
+                                        })
+                                      ]
+                                    )
+                                  ])
+                                ])
+                              })
+                            )
+                          : _vm._e()
+                      ]
+                    )
+                  ])
+                ])
+              ]),
+              _vm._v(" "),
+              _vm._m(3)
+            ])
+          ]
+        )
+      ]
+    )
+  ])
+}
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "col-sm-6" }, [
+      _c("h3", [
+        _c("strong", [
+          _vm._v(
+            "\n                                    Selecciona al paciente\n                                "
+          )
+        ])
+      ])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "col-sm-6" }, [
+      _c("h3", { staticClass: "text-right" }, [
+        _c("a", { attrs: { href: "/user/patient/create" } }, [
+          _c("i", { staticClass: "glyphicon glyphicon-plus" }),
+          _vm._v(
+            "\n                                    Registrar paciente\n                                "
+          )
+        ])
+      ])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("thead", [
+      _c("tr", [
+        _c("th", { attrs: { width: "50%" } }, [_vm._v("Telefono")]),
+        _vm._v(" "),
+        _c("th", { attrs: { width: "50%" } }, [_vm._v("Nombre")]),
+        _vm._v(" "),
+        _c("th")
+      ])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "modal-footer" }, [
+      _c(
+        "button",
+        {
+          staticClass: "btn btn-secondary",
+          attrs: { type: "button", "data-dismiss": "modal" }
+        },
+        [_vm._v("Cerrar")]
+      )
+    ])
+  }
+]
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-eddcaef8", module.exports)
+  }
+}
 
 /***/ })
 /******/ ]);

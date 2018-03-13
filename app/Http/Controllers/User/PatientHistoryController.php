@@ -30,7 +30,7 @@ class PatientHistoryController extends Controller
      */
     public function create()
     {
-        abort(404);
+        return view('user.patientHistory.create');
     }
 
     /**

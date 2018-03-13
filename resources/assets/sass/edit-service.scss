@@ -1,7 +1,16 @@
 .edit-service {
+
   #date[readonly="readonly"] {
     background-color: #ffffff;
     cursor: pointer;
     color: #636b6f;
+  }
+
+  a {
+    cursor: pointer;
+  }
+
+  hr {
+    margin: 10px 0;
   }
 }

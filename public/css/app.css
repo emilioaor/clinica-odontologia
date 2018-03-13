@@ -8646,6 +8646,14 @@ pre {
   color: #636b6f;
 }
 
+.edit-service a {
+  cursor: pointer;
+}
+
+.edit-service hr {
+  margin: 10px 0;
+}
+
 .input-error {
   border: #a94442 solid 1px;
 }

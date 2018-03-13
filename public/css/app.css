@@ -8640,6 +8640,12 @@ pre {
   margin-top: 10px;
 }
 
+.edit-service #date[readonly="readonly"] {
+  background-color: #ffffff;
+  cursor: pointer;
+  color: #636b6f;
+}
+
 .input-error {
   border: #a94442 solid 1px;
 }

@@ -1,5 +1,5 @@
 <template>
-    <div class="container">
+    <div class="container edit-service">
         <div class="row">
             <div class="col-xs-12">
                 <h1>

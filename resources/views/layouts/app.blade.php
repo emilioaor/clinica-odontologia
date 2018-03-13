@@ -127,20 +127,22 @@
                                     </ul>
                                 </li>
                             @endif
-                            <li class="dropdown">
-                                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-                                    Servicios <span class="caret"></span>
-                                </a>
+                            @if(Auth::user()->isAdmin() || Auth::user()->isDoctor())
+                                <li class="dropdown">
+                                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+                                        Servicios <span class="caret"></span>
+                                    </a>
 
-                                <ul class="dropdown-menu" role="menu">
-                                    <li>
-                                        <a href="{{ route('service.create') }}">
-                                            <i class="glyphicon glyphicon-plus"></i>
-                                            Registrar servicio
-                                        </a>
-                                    </li>
-                                </ul>
-                            </li>
+                                    <ul class="dropdown-menu" role="menu">
+                                        <li>
+                                            <a href="{{ route('service.create') }}">
+                                                <i class="glyphicon glyphicon-plus"></i>
+                                                Registrar servicio
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </li>
+                            @endif
                         </ul>
                     @endif
 

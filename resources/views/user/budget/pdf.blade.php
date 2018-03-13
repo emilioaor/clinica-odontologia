@@ -162,7 +162,7 @@
         @foreach($budget->budgetDetails as $i => $detail)
             <tr style="height: 30px;color: #222;{{ ($i + 1)%2 == 0 ? 'background-color:#dcdcdc;' : '' }}">
                 <td style="text-align: center;height: 30px;vertical-align: middle;padding-bottom: 10px;">
-                    {{ $detail->tooth }}
+                    {{ $detail->tooth > 0 ? $detail->tooth : '' }}
                 </td>
                 <td style="height: 30px;vertical-align: middle;padding-bottom: 10px;">
                     {{ $detail->product->name }}

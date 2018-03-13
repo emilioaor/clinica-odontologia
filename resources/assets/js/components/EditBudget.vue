@@ -342,6 +342,7 @@
                                                 class="form-control"
                                                 v-model="detail.tooth"
                                                 >
+                                            <option value="0"></option>
                                             <option
                                                     v-for="tooth in range(1,32)"
                                                     :value="tooth"
@@ -744,7 +745,7 @@
 
             addDetail: function() {
                 this.form.details.push({
-                    tooth: 1,
+                    tooth: 0,
                     product_id: null,
                     quantity: 1,
                     price: 0,

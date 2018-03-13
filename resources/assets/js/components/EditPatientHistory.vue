@@ -111,6 +111,7 @@
                                                         class="form-control"
                                                         v-model="service.tooth"
                                                     >
+                                                    <option value="0"></option>
                                                     <option
                                                             v-for="tooth in range(1, 32)"
                                                             :value="tooth"
@@ -205,7 +206,7 @@
         methods: {
             addService: function () {
                 this.services.push({
-                    tooth: 1,
+                    tooth: 0,
                     product_id: null,
                     price: null
                 });

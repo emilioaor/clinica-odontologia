@@ -8544,7 +8544,7 @@ button.close {
   cursor: pointer;
 }
 
-.register-budget [readonly="readonly"] {
+.register-budget #creation_date_value[readonly="readonly"] {
   background-color: #ffffff;
   cursor: pointer;
 }

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\User;
 
+use App\Note;
 use App\Patient;
 use App\PatientHistory;
 use App\Product;
@@ -83,6 +84,7 @@ class PatientHistoryController extends Controller
             ->where('doctor_id', Auth::user()->id)
             ->get()
         ;
+        $patient->note = $patient->notes()->where('date', $date->format('Y-m-d'))->first();
 
         $products = Product::all();
 
@@ -121,6 +123,15 @@ class PatientHistoryController extends Controller
             $service->doctor_id = Auth::user()->id;
             $service->save();
         }
+
+        $note = $patient->notes()->where('date', $date->format('Y-m-d'))->first();
+        if (! $note) {
+            $note = new Note();
+            $note->patient_id = $patient->id;
+        }
+        $note->content = $request->note;
+        $note->date = $date;
+        $note->save();
 
         DB::commit();
 

@@ -86,6 +86,24 @@
                         <div class="row">
 
                             <div class="col-xs-12">
+                                <div class="form-group">
+                                    <label for="">Notas</label>
+                                    <textarea
+                                            name="notes"
+                                            id="notes"
+                                            cols="30"
+                                            rows="4"
+                                            class="form-control"
+                                            placeholder="Notas del paciente"
+                                            v-model="note"
+                                            >{{ data.note ? data.note.content : '' }}</textarea>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+
+                            <div class="col-xs-12">
                                 <table class="table table-responsive">
                                     <thead>
                                         <tr>
@@ -279,6 +297,7 @@
                 services: [],
                 date: '',
                 initDate: '',
+                note: '',
                 modal: {
                     data: [],
                     loading: false,
@@ -296,6 +315,8 @@
 
             this.initDate = date;
             this.setDate(date)
+
+            this.note = this.data.note ? this.data.note.content : '';
         },
 
         methods: {
@@ -324,7 +345,8 @@
 
                 axios.put('/user/service/' + this.data.public_id, {
                     services: this.services,
-                    date: this.date
+                    date: this.date,
+                    note: this.note
                 })
                     .then((res) => {
                         if (res.data.success) {

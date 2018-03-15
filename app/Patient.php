@@ -43,4 +43,14 @@ class Patient extends Model
     {
         return $this->hasMany(PatientHistory::class, 'patient_id');
     }
+
+    /**
+     * Notas del paciente
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function notes()
+    {
+        return $this->hasMany(Note::class, 'patient_id');
+    }
 }

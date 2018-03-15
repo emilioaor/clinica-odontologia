@@ -59324,11 +59324,13 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
 
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
-    props: ['patient', 'products', 'historyDate'],
+    props: ['patient', 'products', 'historyDate', 'currentUser'],
     components: {
         Datepicker: __WEBPACK_IMPORTED_MODULE_0_vuejs_datepicker___default.a
     },
@@ -59342,6 +59344,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             date: '',
             initDate: '',
             note: '',
+            user: '',
             modal: {
                 data: [],
                 loading: false,
@@ -59353,6 +59356,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         this.data = JSON.parse(this.patient);
         this.productList = JSON.parse(this.products);
         this.services = this.data.patient_history;
+        this.user = JSON.parse(this.currentUser);
 
         var date = this.historyDate.split('-');
         date = new Date(parseInt(date[0]), parseInt(date[1]) - 1, parseInt(date[2]));
@@ -59368,7 +59372,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             this.services.push({
                 tooth: 0,
                 product_id: null,
-                price: null
+                price: null,
+                doctor_id: this.user.id
             });
         },
 
@@ -59651,7 +59656,35 @@ var render = function() {
                   "table",
                   { staticClass: "table table-responsive" },
                   [
-                    _vm._m(0),
+                    _c("thead", [
+                      _c("tr", [
+                        _c("th", { attrs: { width: "50%" } }, [
+                          _vm._v("Servicio")
+                        ]),
+                        _vm._v(" "),
+                        _c("th", { attrs: { width: "20%" } }, [
+                          _vm._v("Diente")
+                        ]),
+                        _vm._v(" "),
+                        _c(
+                          "th",
+                          {
+                            directives: [
+                              {
+                                name: "show",
+                                rawName: "v-show",
+                                value: _vm.user.level === 1,
+                                expression: "user.level === 1"
+                              }
+                            ],
+                            attrs: { width: "20%" }
+                          },
+                          [_vm._v("Precio")]
+                        ),
+                        _vm._v(" "),
+                        _c("th", { attrs: { width: "10%" } })
+                      ])
+                    ]),
                     _vm._v(" "),
                     _vm._l(_vm.services, function(service, id) {
                       return _c("tbody", [
@@ -59676,7 +59709,10 @@ var render = function() {
                                 attrs: {
                                   name: "product" + id,
                                   id: "product" + id,
-                                  "data-vv-rules": "required"
+                                  "data-vv-rules": "required",
+                                  disabled:
+                                    _vm.user.level !== 1 &&
+                                    service.doctor_id !== _vm.user.id
                                 },
                                 on: {
                                   change: [
@@ -59743,7 +59779,13 @@ var render = function() {
                                   }
                                 ],
                                 staticClass: "form-control",
-                                attrs: { name: "tooth" + id, id: "tooth" + id },
+                                attrs: {
+                                  name: "tooth" + id,
+                                  id: "tooth" + id,
+                                  disabled:
+                                    _vm.user.level !== 1 &&
+                                    service.doctor_id !== _vm.user.id
+                                },
                                 on: {
                                   change: function($event) {
                                     var $$selectedVal = Array.prototype.filter
@@ -59786,68 +59828,87 @@ var render = function() {
                             )
                           ]),
                           _vm._v(" "),
-                          _c("td", [
-                            _c("input", {
+                          _c(
+                            "td",
+                            {
                               directives: [
                                 {
-                                  name: "model",
-                                  rawName: "v-model",
-                                  value: service.price,
-                                  expression: "service.price"
-                                },
-                                { name: "validate", rawName: "v-validate" }
-                              ],
-                              staticClass: "form-control",
-                              class: {
-                                "input-error": _vm.errors.has("price" + id)
-                              },
-                              attrs: {
-                                type: "number",
-                                name: "price" + id,
-                                id: "price" + id,
-                                "data-vv-rules": "required",
-                                disabled: !service.product_id
-                              },
-                              domProps: { value: service.price },
-                              on: {
-                                input: function($event) {
-                                  if ($event.target.composing) {
-                                    return
-                                  }
-                                  _vm.$set(
-                                    service,
-                                    "price",
-                                    $event.target.value
-                                  )
+                                  name: "show",
+                                  rawName: "v-show",
+                                  value: _vm.user.level === 1,
+                                  expression: "user.level === 1"
                                 }
-                              }
-                            }),
-                            _vm._v(" "),
-                            _vm.errors.firstByRule("price" + id, "required")
-                              ? _c("p", { staticClass: "error" }, [
-                                  _vm._v(
-                                    "\n                                                Campo requerido\n                                            "
-                                  )
-                                ])
-                              : _vm._e()
-                          ]),
+                              ]
+                            },
+                            [
+                              _c("input", {
+                                directives: [
+                                  {
+                                    name: "model",
+                                    rawName: "v-model",
+                                    value: service.price,
+                                    expression: "service.price"
+                                  },
+                                  { name: "validate", rawName: "v-validate" }
+                                ],
+                                staticClass: "form-control",
+                                class: {
+                                  "input-error": _vm.errors.has("price" + id)
+                                },
+                                attrs: {
+                                  type: "number",
+                                  name: "price" + id,
+                                  id: "price" + id,
+                                  "data-vv-rules": "required",
+                                  disabled:
+                                    !service.product_id ||
+                                    (_vm.user.level !== 1 &&
+                                      service.doctor_id !== _vm.user.id)
+                                },
+                                domProps: { value: service.price },
+                                on: {
+                                  input: function($event) {
+                                    if ($event.target.composing) {
+                                      return
+                                    }
+                                    _vm.$set(
+                                      service,
+                                      "price",
+                                      $event.target.value
+                                    )
+                                  }
+                                }
+                              }),
+                              _vm._v(" "),
+                              _vm.errors.firstByRule("price" + id, "required")
+                                ? _c("p", { staticClass: "error" }, [
+                                    _vm._v(
+                                      "\n                                                Campo requerido\n                                            "
+                                    )
+                                  ])
+                                : _vm._e()
+                            ]
+                          ),
                           _vm._v(" "),
                           _c("td", [
-                            _c(
-                              "a",
-                              {
-                                on: {
-                                  click: function($event) {
-                                    _vm.removeService(id)
-                                  }
-                                }
-                              },
-                              [
-                                _vm._v(
-                                  "\n                                                X\n                                            "
+                            _vm.user.level === 1 ||
+                            service.doctor_id === _vm.user.id
+                              ? _c(
+                                  "a",
+                                  {
+                                    on: {
+                                      click: function($event) {
+                                        _vm.removeService(id)
+                                      }
+                                    }
+                                  },
+                                  [
+                                    _vm._v(
+                                      "\n                                                X\n                                            "
+                                    )
+                                  ]
                                 )
-                              ]
-                            )
+                              : _vm._e()
                           ])
                         ])
                       ])
@@ -59936,9 +59997,9 @@ var render = function() {
             _c("div", { staticClass: "modal-content" }, [
               _c("div", { staticClass: "modal-body" }, [
                 _c("div", { staticClass: "row" }, [
-                  _vm._m(1),
+                  _vm._m(0),
                   _vm._v(" "),
-                  _vm._m(2),
+                  _vm._m(1),
                   _vm._v(" "),
                   _c("div", { staticClass: "col-xs-12" }, [
                     _c("input", {
@@ -59976,7 +60037,7 @@ var render = function() {
                       "table",
                       { staticClass: "table table-responsive table-striped" },
                       [
-                        _vm._m(3),
+                        _vm._m(2),
                         _vm._v(" "),
                         !_vm.modal.loading
                           ? _c(
@@ -60019,7 +60080,7 @@ var render = function() {
                 ])
               ]),
               _vm._v(" "),
-              _vm._m(4)
+              _vm._m(3)
             ])
           ]
         )
@@ -60028,22 +60089,6 @@ var render = function() {
   ])
 }
 var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("thead", [
-      _c("tr", [
-        _c("th", { attrs: { width: "50%" } }, [_vm._v("Servicio")]),
-        _vm._v(" "),
-        _c("th", { attrs: { width: "20%" } }, [_vm._v("Diente")]),
-        _vm._v(" "),
-        _c("th", { attrs: { width: "20%" } }, [_vm._v("Precio")]),
-        _vm._v(" "),
-        _c("th", { attrs: { width: "10%" } })
-      ])
-    ])
-  },
   function() {
     var _vm = this
     var _h = _vm.$createElement

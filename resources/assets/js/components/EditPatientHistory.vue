@@ -109,7 +109,7 @@
                                         <tr>
                                             <th width="50%">Servicio</th>
                                             <th width="20%">Diente</th>
-                                            <th width="20%">Precio</th>
+                                            <th width="20%" v-show="user.level === 1">Precio</th>
                                             <th width="10%"></th>
                                         </tr>
                                     </thead>
@@ -125,6 +125,7 @@
                                                         data-vv-rules="required"
                                                         :class="{'input-error': errors.has('product' + id)}"
                                                         @change="changeProduct(service, id)"
+                                                        :disabled="user.level !== 1 && service.doctor_id !== user.id"
                                                     >
                                                     <option
                                                             v-for="product in productList"
@@ -143,6 +144,7 @@
                                                         :id="'tooth' + id"
                                                         class="form-control"
                                                         v-model="service.tooth"
+                                                        :disabled="user.level !== 1 && service.doctor_id !== user.id"
                                                     >
                                                     <option value="0"></option>
                                                     <option
@@ -153,7 +155,7 @@
                                                     </option>
                                                 </select>
                                             </td>
-                                            <td>
+                                            <td v-show="user.level === 1">
                                                 <input
                                                         type="number"
                                                         class="form-control"
@@ -163,14 +165,14 @@
                                                         v-validate
                                                         data-vv-rules="required"
                                                         :class="{'input-error': errors.has('price' + id)}"
-                                                        :disabled="!service.product_id"
+                                                        :disabled="!service.product_id || (user.level !== 1 && service.doctor_id !== user.id)"
                                                 >
                                                 <p class="error" v-if="errors.firstByRule('price' + id, 'required')">
                                                     Campo requerido
                                                 </p>
                                             </td>
                                             <td>
-                                                <a @click="removeService(id)">
+                                                <a @click="removeService(id)" v-if="user.level === 1 || service.doctor_id === user.id">
                                                     X
                                                 </a>
                                             </td>
@@ -284,7 +286,7 @@
     import Datepicker from 'vuejs-datepicker';
 
     export default {
-        props: ['patient', 'products', 'historyDate'],
+        props: ['patient', 'products', 'historyDate', 'currentUser'],
         components: {
             Datepicker
         },
@@ -298,6 +300,7 @@
                 date: '',
                 initDate: '',
                 note: '',
+                user: '',
                 modal: {
                     data: [],
                     loading: false,
@@ -309,6 +312,7 @@
             this.data = JSON.parse(this.patient);
             this.productList = JSON.parse(this.products);
             this.services = this.data.patient_history;
+            this.user = JSON.parse(this.currentUser);
 
             let date = this.historyDate.split('-');
             date = new Date(parseInt(date[0]), parseInt(date[1]) - 1, parseInt(date[2]));
@@ -324,7 +328,8 @@
                 this.services.push({
                     tooth: 0,
                     product_id: null,
-                    price: null
+                    price: null,
+                    doctor_id: this.user.id
                 });
             },
 

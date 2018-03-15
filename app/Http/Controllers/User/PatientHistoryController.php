@@ -81,7 +81,6 @@ class PatientHistoryController extends Controller
 
         $patient->patient_history = $patient->patientHistory()->where('created_at', '>=', $start)
             ->where('created_at', '<=', $end)
-            ->where('doctor_id', Auth::user()->id)
             ->get()
         ;
         $patient->note = $patient->notes()->where('date', $date->format('Y-m-d'))->first();
@@ -113,14 +112,12 @@ class PatientHistoryController extends Controller
         $patient->patientHistory()
             ->where('created_at', '>=', $start)
             ->where('created_at', '<=', $end)
-            ->where('doctor_id', Auth::user()->id)
             ->delete();
 
         foreach ($request->services as $service) {
             $service = new PatientHistory($service);
             $service->patient_id = $patient->id;
             $service->created_at = $date;
-            $service->doctor_id = Auth::user()->id;
             $service->save();
         }
 

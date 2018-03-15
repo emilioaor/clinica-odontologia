@@ -76,7 +76,7 @@
                                             language="es"
                                             input-class = "form-control"
                                             format = "MM/dd/yyyy"
-                                            v-model="datePicker"
+                                            v-model="initDate"
                                             @input="changeDate($event)"
                                             ></datepicker>
                                 </div>
@@ -278,7 +278,7 @@
                 productList: [],
                 services: [],
                 date: '',
-                datePicker: '',
+                initDate: '',
                 modal: {
                     data: [],
                     loading: false,
@@ -286,14 +286,16 @@
                 }
             }
         },
-        beforeMount: function () {
+        mounted: function () {
             this.data = JSON.parse(this.patient);
             this.productList = JSON.parse(this.products);
             this.services = this.data.patient_history;
 
-            const date = this.historyDate.split('-');
+            let date = this.historyDate.split('-');
+            date = new Date(parseInt(date[0]), parseInt(date[1]) - 1, parseInt(date[2]));
 
-            this.setDate( new Date(parseInt(date[0]), parseInt(date[1]) - 1, parseInt(date[2])) )
+            this.initDate = date;
+            this.setDate(date)
         },
 
         methods: {
@@ -351,7 +353,6 @@
                 let year = date.getFullYear();
 
                 this.date = year + '-' + month + '-' + day;
-                this.datePicker = month + '-' + day + '-' + year;
             },
 
             changeDate: function (date) {

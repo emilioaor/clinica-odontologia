@@ -86,24 +86,6 @@
                         <div class="row">
 
                             <div class="col-xs-12">
-                                <div class="form-group">
-                                    <label for="">Notas</label>
-                                    <textarea
-                                            name="notes"
-                                            id="notes"
-                                            cols="30"
-                                            rows="4"
-                                            class="form-control"
-                                            placeholder="Notas del paciente"
-                                            v-model="note"
-                                            >{{ data.note ? data.note.content : '' }}</textarea>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="row">
-
-                            <div class="col-xs-12">
                                 <table class="table table-responsive">
                                     <thead>
                                         <tr>
@@ -191,6 +173,24 @@
                                 </table>
                             </div>
 
+                        </div>
+
+                        <div class="row">
+
+                            <div class="col-xs-12">
+                                <div class="form-group">
+                                    <label for="">Notas</label>
+                                    <textarea
+                                            name="notes"
+                                            id="notes"
+                                            cols="30"
+                                            rows="4"
+                                            class="form-control"
+                                            placeholder="Notas del paciente"
+                                            v-model="note"
+                                            >{{ data.note ? data.note.content : '' }}</textarea>
+                                </div>
+                            </div>
                         </div>
 
                         <div class="row">

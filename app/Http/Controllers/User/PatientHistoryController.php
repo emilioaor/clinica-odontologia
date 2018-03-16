@@ -153,4 +153,9 @@ class PatientHistoryController extends Controller
     {
         abort(404);
     }
+
+    public function search()
+    {
+        return view('user.patientHistory.search');
+    }
 }

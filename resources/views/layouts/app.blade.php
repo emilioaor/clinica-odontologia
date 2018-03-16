@@ -140,6 +140,12 @@
                                                 Registrar servicio
                                             </a>
                                         </li>
+                                        <li>
+                                            <a href="{{ route('service.search') }}">
+                                                <i class="glyphicon glyphicon-search"></i>
+                                                Buscar servicios
+                                            </a>
+                                        </li>
                                     </ul>
                                 </li>
                             @endif

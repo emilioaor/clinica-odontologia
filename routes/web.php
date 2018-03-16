@@ -19,6 +19,7 @@ Route::group(['prefix' => 'user', 'middleware' => 'auth'], function() {
     Route::get('patient/budget/search', 'User\PatientController@search');
 
     // Historial de paciente
+    Route::get('service/search', 'User\PatientHistoryController@search')->name('service.search');
     Route::resource('service', 'User\PatientHistoryController');
 
     // Cotizacion

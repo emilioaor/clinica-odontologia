@@ -30,6 +30,7 @@ Vue.component('edit-patient-history', require('./components/EditPatientHistory.v
 Vue.component('create-patient-history', require('./components/CreatePatientHistory.vue'));
 Vue.component('register-user', require('./components/RegisterUser.vue'));
 Vue.component('edit-user', require('./components/EditUser.vue'));
+Vue.component('search-patient-history', require('./components/SearchPatientHistory.vue'));
 
 const app = new Vue({
     el: '#app'

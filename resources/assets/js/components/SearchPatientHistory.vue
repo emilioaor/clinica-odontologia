@@ -1,5 +1,5 @@
 <template>
-    <section class="container">
+    <section class="container edit-service">
         <div class="row">
             <div class="col-xs-12">
                 <h1>
@@ -10,7 +10,7 @@
             </div>
         </div>
         <div class="row">
-            <div class="col-sm-8">
+            <div class="col-sm-10">
                 <div class="panel panel-default">
                     <div class="panel-body">
 
@@ -75,7 +75,7 @@
                                                 language="es"
                                                 input-class = "form-control"
                                                 format = "MM/dd/yyyy"
-                                                @input="changeDate($event)"
+                                                @input="changeStart($event)"
                                                 v-model="initStart"
                                                 ></datepicker>
                                     </div>
@@ -90,7 +90,7 @@
                                                 language="es"
                                                 input-class = "form-control"
                                                 format = "MM/dd/yyyy"
-                                                @input="changeDate($event)"
+                                                @input="changeEnd($event)"
                                                 v-model="initEnd"
                                                 ></datepicker>
                                     </div>
@@ -100,11 +100,50 @@
                             <div class="row">
                                 <div class="col-xs-12">
                                     <div class="form-group">
-                                        <button class="btn btn-primary">
+                                        <button
+                                                class="btn btn-primary"
+                                                @click="searchPatientHistory()"
+                                                v-if="!loading"
+                                                >
                                             <i class="glyphicon glyphicon-search"></i>
                                             Buscar
                                         </button>
+                                        <img src="/img/loading.gif" v-if="loading">
                                     </div>
+                                </div>
+                            </div>
+
+                            <div class="row" v-if="data.services.length">
+                                <div class="col-xs-12">
+                                    <table class="table table-responsive">
+                                        <thead>
+                                            <tr>
+                                                <th>Fecha</th>
+                                                <th>Servicio</th>
+                                                <th>Diente</th>
+                                                <th>Doctor(ID)</th>
+                                                <th>Doctor(Nombre)</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr v-for="service in data.services">
+                                                <td>{{ dateFormat(service.created_at) }}</td>
+                                                <td>{{ service.product.name }}</td>
+                                                <td>{{ service.tooth > 0 ? service.tooth : '' }}</td>
+                                                <td>{{ service.doctor.public_id }}</td>
+                                                <td>{{ service.doctor.name }}</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+
+                            <div class="row" v-if="data.notes.length">
+                                <div class="col-xs-12">
+                                    <p v-for="note in data.notes" v-if="note.content !== null">
+                                        <strong>Notas {{ dateFormat(note.date) }}:</strong> <br>
+                                        {{ note.content }}
+                                    </p>
                                 </div>
                             </div>
 
@@ -162,13 +201,13 @@
                                     </thead>
 
                                     <tbody v-if="! modal.loading">
-                                    <tr v-for="patient in modal.data">
-                                        <td>{{ patient.phone }}</td>
-                                        <td>{{ patient.name }}</td>
+                                    <tr v-for="p in modal.data" v-if="!patient || patient.id !== p.id">
+                                        <td>{{ p.phone }}</td>
+                                        <td>{{ p.name }}</td>
                                         <td>
                                             <button
                                                     class="btn btn-primary"
-                                                    @click="selectPatient(patient)"
+                                                    @click="selectPatient(p)"
                                                     data-dismiss="modal"
                                                     >
                                                 <i class="glyphicon glyphicon-ok"></i>
@@ -205,7 +244,9 @@
               initEnd: new Date(),
               data: {
                   start: '',
-                  end: ''
+                  end: '',
+                  services: [],
+                  notes: []
               },
               modal: {
                   data: [],
@@ -214,7 +255,7 @@
               }
           }
         },
-        mount: function () {
+        mounted: function () {
             const date = new Date();
             const day = date.getDate() >= 10 ? date.getDate() : '0' + date.getDate();
             const month = (date.getMonth() + 1) >= 10 ? (date.getMonth() + 1) : '0' + (date.getMonth() + 1);
@@ -242,6 +283,51 @@
 
             selectPatient: function (patient) {
                 this.patient = patient;
+                this.data.services = [];
+                this.data.notes = [];
+            },
+
+            changeStart: function (date) {
+                let day = (date.getDate() < 10) ? '0' + date.getDate() : date.getDate();
+                let month = ((date.getMonth() + 1) < 10) ? '0' + (date.getMonth() + 1) : (date.getMonth() + 1);
+                let year = date.getFullYear();
+
+                this.data.start = year + '-' + month + '-' + day;
+            },
+
+            changeEnd: function (date) {
+                let day = (date.getDate() < 10) ? '0' + date.getDate() : date.getDate();
+                let month = ((date.getMonth() + 1) < 10) ? '0' + (date.getMonth() + 1) : (date.getMonth() + 1);
+                let year = date.getFullYear();
+
+                this.data.end = year + '-' + month + '-' + day;
+            },
+
+            searchPatientHistory: function () {
+                this.loading = true;
+
+                axios.get('/user/service/' + this.patient.public_id + '/search?start=' + this.data.start + '&end=' + this.data.end)
+                    .then((res) => {
+                        this.loading = false;
+
+                        if (res.data.success) {
+                            this.data.services = res.data.services;
+                            this.data.notes = res.data.notes;
+                        }
+                    })
+                    .catch((err) => {
+                        console.log(err);
+                        this.loading = false;
+                        this.data.services = [];
+                        this.data.notes = [];
+                    })
+            },
+
+            dateFormat: function (date) {
+                let format = date.split(' ');
+                format = format[0].split('-');
+
+                return format[1] + '/' + format[2] + '/' + format[0];
             }
         }
     }

@@ -37,4 +37,13 @@ class PatientHistory extends Model
         return $this->belongsTo(User::class, 'doctor_id');
     }
 
+    /**
+     * Producto ofrecido
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function product()
+    {
+        return $this->belongsTo(Product::class, 'product_id');
+    }
 }

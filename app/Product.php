@@ -63,4 +63,14 @@ class Product extends Model
     {
         return $this->hasMany(BudgetDetail::class, 'product_id');
     }
+
+    /**
+     * Elementos de historial de pacientes asociados a este producto
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function patientHistory()
+    {
+        return $this->hasMany(PatientHistory::class, 'product_id');
+    }
 }

@@ -154,8 +154,61 @@ class PatientHistoryController extends Controller
         abort(404);
     }
 
+    /**
+     * Carga la vista de busqueda de servicios
+     *
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function search()
     {
         return view('user.patientHistory.search');
+    }
+
+    /**
+     * Busca el historial de un paciente para el rango de
+     * fechas especificadas
+     *
+     * @param Request $request
+     * @param $id
+     * @return JsonResponse
+     */
+    public function searchService(Request $request, $id)
+    {
+        $patient = Patient::where('public_id', $id)->firstOrFail();
+
+        $start = new \DateTime($request->start);
+        $start->setTime(00, 00, 00);
+        $end = new \DateTime($request->end);
+        $end->setTime(23, 59, 59);
+
+        if ($start > $end) {
+            return new JsonResponse([
+                'success' => true,
+                'services' => [],
+                'notes' => []
+            ]);
+        }
+
+        $services = $patient->patientHistory()
+            ->where('created_at', '>=', $start)
+            ->where('created_at', '<=', $end)
+            ->orderBy('created_at')
+            ->with('doctor')
+            ->with('product')
+            ->get()
+        ;
+
+        $notes = $patient->notes()->orderBy('date')
+            ->where('content', '<>', '')
+            ->whereBetween('date', [$start, $end])
+        ;
+
+        $notes = $notes->get();
+
+        return new JsonResponse([
+            'success' => true,
+            'services' => $services,
+            'notes' => $notes
+        ]);
     }
 }

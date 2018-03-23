@@ -337,19 +337,12 @@
                                         <a @click="removeDetail(id)">X</a>
                                     </td>
                                     <td>
-                                        <select
+                                        <input
+                                                type="text"
                                                 v-bind:name="'tooth' + id"
                                                 class="form-control"
                                                 v-model="detail.tooth"
                                                 >
-                                            <option value="0"></option>
-                                            <option
-                                                    v-for="tooth in range(1,32)"
-                                                    :value="tooth"
-                                                    >
-                                                {{ tooth }}
-                                            </option>
-                                        </select>
                                     </td>
                                     <td>
                                         <select
@@ -545,15 +538,12 @@
 
                                     </td>
                                     <td style="text-align: center">
+
+                                    </td>
+                                    <td style="text-align: center">
                                         <a @click="showDiscount = true" v-if="!showDiscount">
                                             <i class="glyphicon glyphicon-plus"></i>
                                             Descuento
-                                        </a>
-                                    </td>
-                                    <td style="text-align: center">
-                                        <a @click="showShipping = true" v-if="!showShipping">
-                                            <i class="glyphicon glyphicon-plus"></i>
-                                            Envio
                                         </a>
                                     </td>
                                 </tr>
@@ -745,7 +735,7 @@
 
             addDetail: function() {
                 this.form.details.push({
-                    tooth: 0,
+                    tooth: null,
                     product_id: null,
                     quantity: 1,
                     price: 0,

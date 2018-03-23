@@ -121,16 +121,14 @@
                                                 <th>Fecha</th>
                                                 <th>Servicio</th>
                                                 <th>Diente</th>
-                                                <th>Doctor(ID)</th>
-                                                <th>Doctor(Nombre)</th>
+                                                <th>Doctor</th>
                                             </tr>
                                         </thead>
                                         <tbody>
                                             <tr v-for="service in data.services">
                                                 <td>{{ dateFormat(service.created_at) }}</td>
                                                 <td>{{ service.product.name }}</td>
-                                                <td>{{ service.tooth > 0 ? service.tooth : '' }}</td>
-                                                <td>{{ service.doctor.public_id }}</td>
+                                                <td>{{ service.tooth }}</td>
                                                 <td>{{ service.doctor.name }}</td>
                                             </tr>
                                         </tbody>

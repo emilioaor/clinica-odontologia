@@ -121,21 +121,14 @@
                                                 </p>
                                             </td>
                                             <td>
-                                                <select
+                                                <input
+                                                        type="text"
                                                         :name="'tooth' + id"
                                                         :id="'tooth' + id"
                                                         class="form-control"
                                                         v-model="service.tooth"
                                                         :disabled="user.level !== 1 && service.doctor_id !== user.id"
-                                                    >
-                                                    <option value="0"></option>
-                                                    <option
-                                                            v-for="tooth in range(1, 32)"
-                                                            :value="tooth"
-                                                            >
-                                                        {{ tooth }}
-                                                    </option>
-                                                </select>
+                                                >
                                             </td>
                                             <td v-show="user.level === 1">
                                                 <input
@@ -326,7 +319,7 @@
         methods: {
             addService: function () {
                 this.services.push({
-                    tooth: 0,
+                    tooth: null,
                     product_id: null,
                     price: null,
                     doctor_id: this.user.id

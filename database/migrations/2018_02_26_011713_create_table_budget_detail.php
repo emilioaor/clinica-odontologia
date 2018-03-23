@@ -16,7 +16,7 @@ class CreateTableBudgetDetail extends Migration
         Schema::create('budget_details', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('budget_id')->unsigned();
-            $table->integer('tooth');
+            $table->string('tooth')->nullable();
             $table->integer('product_id')->unsigned();
             $table->integer('quantity');
             $table->float('price', 10, 2);

@@ -136,12 +136,20 @@
                                 </div>
                             </div>
 
-                            <div class="row" v-if="data.notes.length">
+                            <div class="row">
                                 <div class="col-xs-12">
-                                    <p v-for="note in data.notes" v-if="note.content !== null">
-                                        <strong>Notas {{ dateFormat(note.date) }}:</strong> <br>
-                                        {{ note.content }}
-                                    </p>
+                                    <hr>
+                                    <div class="alert alert-info" v-for="notes in data.notes">
+                                        <p>
+                                            <strong>
+                                                Notas {{ dateFormat(notes[0].date) }}
+                                            </strong>
+                                        </p>
+
+                                        <p v-for="(note,id) in notes">
+                                            {{ (id + 1) + '. ' + note.content }}
+                                        </p>
+                                    </div>
                                 </div>
                             </div>
 

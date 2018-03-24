@@ -83,8 +83,7 @@ class PatientHistoryController extends Controller
             ->where('created_at', '<=', $end)
             ->get()
         ;
-        $patient->note = $patient->notes()->where('date', $date->format('Y-m-d'))->first();
-
+        $patient->notes = $patient->notes()->where('date', $date->format('Y-m-d'))->get();
         $products = Product::all();
 
         return view('user.patientHistory.edit', compact('patient', 'products', 'date'));
@@ -121,14 +120,18 @@ class PatientHistoryController extends Controller
             $service->save();
         }
 
-        $note = $patient->notes()->where('date', $date->format('Y-m-d'))->first();
-        if (! $note) {
-            $note = new Note();
-            $note->patient_id = $patient->id;
+        $patient->notes()->where('date', $date->format('Y-m-d'))->delete();
+
+        foreach ($request->notes as $newNote) {
+
+            if (! empty($newNote['content'])) {
+                $note = new Note();
+                $note->patient_id = $patient->id;
+                $note->content = $newNote['content'];
+                $note->date = $date;
+                $note->save();
+            }
         }
-        $note->content = $request->note;
-        $note->date = $date;
-        $note->save();
 
         DB::commit();
 
@@ -201,14 +204,27 @@ class PatientHistoryController extends Controller
         $notes = $patient->notes()->orderBy('date')
             ->where('content', '<>', '')
             ->whereBetween('date', [$start, $end])
+            ->get()
         ;
 
-        $notes = $notes->get();
+        $notesResponse = [];
+        $d = 0;
+        $lastDate = '';
+        foreach ($notes as $note) {
+
+            if ($note->date !== $lastDate) {
+                $d++;
+                $lastDate = $note->date;
+                $notesResponse[$d] = [];
+            }
+
+            $notesResponse[$d][] = $note;
+        }
 
         return new JsonResponse([
             'success' => true,
             'services' => $services,
-            'notes' => $notes
+            'notes' => $notesResponse
         ]);
     }
 }

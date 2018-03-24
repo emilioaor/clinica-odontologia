@@ -171,18 +171,44 @@
                         <div class="row">
 
                             <div class="col-xs-12">
-                                <div class="form-group">
-                                    <label for="">Notas</label>
-                                    <textarea
-                                            name="notes"
-                                            id="notes"
-                                            cols="30"
-                                            rows="4"
-                                            class="form-control"
-                                            placeholder="Notas del paciente"
-                                            v-model="note"
-                                            >{{ data.note ? data.note.content : '' }}</textarea>
-                                </div>
+
+                                <table class="table table-responsive">
+                                    <thead>
+                                        <tr>
+                                            <th>Notas</th>
+                                            <th></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr v-for="(note,id) in notes">
+                                            <td>
+                                                <textarea
+                                                        cols="30"
+                                                        rows="3"
+                                                        class="form-control"
+                                                        placeholder="Notas del paciente"
+                                                        v-model="note.content"
+                                                        ></textarea>
+                                            </td>
+                                            <td>
+                                                <a @click="removeNote(id)">
+                                                    X
+                                                </a>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                    <tfoot>
+                                        <tr>
+                                            <td>
+                                                <button class="btn btn-success" @click="addNote()">
+                                                    <i class="glyphicon glyphicon-plus"></i>
+                                                    Nota
+                                                </button>
+                                            </td>
+                                            <td></td>
+                                        </tr>
+                                    </tfoot>
+                                </table>
                             </div>
                         </div>
 
@@ -292,7 +318,7 @@
                 services: [],
                 date: '',
                 initDate: '',
-                note: '',
+                notes: [],
                 user: '',
                 modal: {
                     data: [],
@@ -313,7 +339,7 @@
             this.initDate = date;
             this.setDate(date)
 
-            this.note = this.data.note ? this.data.note.content : '';
+            this.notes = this.data.notes;
         },
 
         methods: {
@@ -326,8 +352,18 @@
                 });
             },
 
+            addNote: function () {
+                this.notes.push({
+                    content: ''
+                });
+            },
+
             removeService: function (index) {
                 this.services.splice(index, 1);
+            },
+
+            removeNote: function (index) {
+                this.notes.splice(index, 1);
             },
 
             validateForm: function () {
@@ -344,7 +380,7 @@
                 axios.put('/user/service/' + this.data.public_id, {
                     services: this.services,
                     date: this.date,
-                    note: this.note
+                    notes: this.notes
                 })
                     .then((res) => {
                         if (res.data.success) {

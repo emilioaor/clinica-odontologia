@@ -114,8 +114,10 @@
                                 </div>
                             </div>
 
-                            <div class="row" v-if="data.services.length">
-                                <div class="col-xs-12">
+                            <div class="row" v-if="data.services">
+                                <div class="col-xs-12" v-for="services in data.services">
+
+                                    <!-- Services -->
                                     <table class="table table-responsive">
                                         <thead>
                                             <tr>
@@ -126,7 +128,7 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <tr v-for="service in data.services">
+                                            <tr v-for="service in services">
                                                 <td>{{ dateFormat(service.created_at) }}</td>
                                                 <td>{{ service.product.name }}</td>
                                                 <td>{{ service.tooth }}</td>
@@ -134,26 +136,31 @@
                                             </tr>
                                         </tbody>
                                     </table>
-                                </div>
-                            </div>
 
-                            <div class="row">
-                                <div class="col-xs-12">
-                                    <hr>
-                                    <div class="alert alert-info" v-for="notes in data.notes">
-                                        <p>
-                                            <strong>
-                                                Notas {{ dateFormat(notes[0].date) }}
-                                            </strong>
-                                        </p>
+                                    <!-- Notes -->
+                                    <div class="row">
+                                        <div class="col-xs-12">
+                                            <hr>
+                                            <div
+                                                    class="alert alert-info"
+                                                    v-for="notes in data.notes"
+                                                    v-if="notes[0].date === services[0].formatDate"
+                                                >
+                                                <p>
+                                                    <strong>
+                                                        Notas {{ dateFormat(notes[0].date) }}
+                                                    </strong>
+                                                </p>
 
-                                        <p v-for="(note,id) in notes">
-                                            {{ (id + 1) + '. ' + note.content }}
-                                        </p>
+                                                <p v-for="(note,id) in notes">
+                                                    {{ (id + 1) + '. ' + note.content }}
+                                                </p>
+                                            </div>
+                                            <hr>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-
                         </section>
 
                     </div>

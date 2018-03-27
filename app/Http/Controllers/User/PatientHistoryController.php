@@ -204,6 +204,23 @@ class PatientHistoryController extends Controller
             ->get()
         ;
 
+        $servicesResponse = [];
+        $d = 0;
+        $lastDate = '';
+        foreach ($services as $service) {
+
+            if ($service->created_at->format('Y-m-d') !== $lastDate) {
+                $d++;
+
+                $service->formatDate = $service->created_at->format('Y-m-d');
+                $lastDate = $service->created_at->format('Y-m-d');
+                $servicesResponse[$d] = [];
+            }
+
+            $servicesResponse[$d][] = $service;
+        }
+
+
         $notesResponse = [];
         $d = 0;
         $lastDate = '';
@@ -220,7 +237,7 @@ class PatientHistoryController extends Controller
 
         return new JsonResponse([
             'success' => true,
-            'services' => $services,
+            'services' => $servicesResponse,
             'notes' => $notesResponse
         ]);
     }

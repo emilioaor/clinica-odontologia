@@ -79,11 +79,8 @@ class PatientHistoryController extends Controller
         $end = clone $date;
         $end->setTime(23, 59, 59);
 
-        $patient->patient_history = $patient->patientHistory()->where('created_at', '>=', $start)
-            ->where('created_at', '<=', $end)
-            ->get()
-        ;
-        $patient->notes = $patient->notes()->where('date', $date->format('Y-m-d'))->get();
+        $patient->patient_history = [];
+        $patient->notes = [];
         $products = Product::all();
 
         return view('user.patientHistory.edit', compact('patient', 'products', 'date'));
@@ -108,10 +105,10 @@ class PatientHistoryController extends Controller
         $end = clone $date;
         $end->setTime(23, 59, 59);
 
-        $patient->patientHistory()
+        /*$patient->patientHistory()
             ->where('created_at', '>=', $start)
             ->where('created_at', '<=', $end)
-            ->delete();
+            ->delete();*/
 
         foreach ($request->services as $service) {
             $service = new PatientHistory($service);
@@ -120,7 +117,7 @@ class PatientHistoryController extends Controller
             $service->save();
         }
 
-        $patient->notes()->where('date', $date->format('Y-m-d'))->delete();
+        //$patient->notes()->where('date', $date->format('Y-m-d'))->delete();
 
         foreach ($request->notes as $newNote) {
 

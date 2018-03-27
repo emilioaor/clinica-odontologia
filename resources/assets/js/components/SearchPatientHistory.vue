@@ -39,9 +39,9 @@
                             <div class="row">
                                 <div class="col-sm-4">
                                     <div class="form-group">
-                                        <label for="">ID</label>
+                                        <label for="">Nombre</label>
                                         <p>
-                                            {{ patient.public_id }}
+                                            {{ patient.name }}
                                         </p>
                                     </div>
                                 </div>
@@ -57,12 +57,13 @@
 
                                 <div class="col-sm-4">
                                     <div class="form-group">
-                                        <label for="">Nombre</label>
+                                        <label for="">Email</label>
                                         <p>
-                                            {{ patient.name }}
+                                            {{ patient.email }}
                                         </p>
                                     </div>
                                 </div>
+
                             </div>
 
                             <div class="row">

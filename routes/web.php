@@ -29,10 +29,16 @@ Route::group(['prefix' => 'user', 'middleware' => 'auth'], function() {
     Route::get('budget/{budget}/downloadPdf', 'User\BudgetController@downloadPdf')->name('budget.pdf.download');
 
     // Configuracion
-    Route::get('config', 'User\ConfigController@config')->name('config');
-    Route::put('config/changePassword', 'User\ConfigController@changePassword')->name('config.changePassword');
     Route::post('config/uploadLogo', 'User\ConfigController@uploadLogo')->name('config.logo');
     Route::put('config/business', 'User\ConfigController@updateBusiness')->name('config.business');
+    Route::get('config', 'User\ConfigController@config')->name('config');
+    Route::put('config/changePassword', 'User\ConfigController@changePassword')->name('config.changePassword');
+
+    // Solo administradores o secretarias
+    Route::group(['middleware' => 'secretary'], function () {
+        Route::get('call', 'Secretary\CallLogController@index')->name('callLog.index');
+        Route::put('call/{call}', 'Secretary\CallLogController@update')->name('callLog.update');
+    });
 });
 
 // Administrador

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\User;
 
 use App\Budget;
 use App\BudgetDetail;
+use App\CallLog;
 use App\Patient;
 use App\Product;
 use Illuminate\Http\Request;
@@ -97,6 +98,13 @@ class BudgetController extends Controller
             $budgetDetail->tooth = $detail['tooth'];
             $budgetDetail->save();
         }
+
+        // Registra una llamada pendiente para este paciente
+        $callLog = new CallLog();
+        $callLog->public_id = 'CALL' . time();
+        $callLog->patient_id = $budget->patient_id;
+        $callLog->status = CallLog::STATUS_PENDING;
+        $callLog->save();
 
         $this->sessionMessage('message.budget.create');
         Session::flash('pdf', $budget->public_id);

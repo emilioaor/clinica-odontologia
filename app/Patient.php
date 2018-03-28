@@ -53,4 +53,14 @@ class Patient extends Model
     {
         return $this->hasMany(Note::class, 'patient_id');
     }
+
+    /**
+     * Todos los reigstros en la lista de llamadas para este paciente
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function callLogs()
+    {
+        return $this->hasMany(CallLog::class, 'patient_id');
+    }
 }

@@ -11,9 +11,11 @@
             </div>
         </div>
 
-        <business-config
+        @if(Auth::user()->isAdmin() || Auth::user()->isDoctor())
+            <business-config
                 user = "{{ json_encode(Auth::user()) }}"
-        ></business-config>
+            ></business-config>
+        @endif
 
         <change-password></change-password>
     </div>

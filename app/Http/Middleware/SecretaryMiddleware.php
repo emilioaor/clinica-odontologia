@@ -3,12 +3,10 @@
 namespace App\Http\Middleware;
 
 use Closure;
-use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Lang;
-use Illuminate\Support\Facades\Session;
+use Symfony\Component\HttpFoundation\JsonResponse;
 
-class AdminMiddleware
+class SecretaryMiddleware
 {
     /**
      * Handle an incoming request.
@@ -19,14 +17,11 @@ class AdminMiddleware
      */
     public function handle($request, Closure $next)
     {
-        if (Auth::guest() || ! Auth::user()->isAdmin()) {
+        if (! Auth::user()->isAdmin() && ! Auth::user()->isSecretary()) {
 
             if ($request->ajax()) {
                 return new JsonResponse(null, 403);
             }
-
-            Session::flash('alert-type', 'alert-danger');
-            Session::flash('alert-message', Lang::trans('message.access.admin'));
 
             return redirect()->route('home');
         }

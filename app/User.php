@@ -12,6 +12,7 @@ class User extends Authenticatable
     /** Niveles de los usuarios */
     const LEVEL_ADMIN = 1;
     const LEVEL_DOCTOR = 2;
+    const LEVEL_SECRETARY = 3;
 
     /**
      * The attributes that are mass assignable.
@@ -61,6 +62,16 @@ class User extends Authenticatable
     }
 
     /**
+     * Indica si el usuario es secretaria
+     *
+     * @return bool
+     */
+    public function isSecretary()
+    {
+        return $this->level === self::LEVEL_SECRETARY;
+    }
+
+    /**
      * Todos los servicios brindados por un Doctor
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
@@ -77,6 +88,8 @@ class User extends Authenticatable
     {
         if ($this->isDoctor()) {
             $this->public_id = 'DOC' . time();
+        } elseif ($this->isSecretary()) {
+            $this->public_id = 'SEC' . time();
         }
     }
 }

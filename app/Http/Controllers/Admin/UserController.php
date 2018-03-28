@@ -64,6 +64,7 @@ class UserController extends Controller
         $user->email = Auth::user()->email;
         $user->address = Auth::user()->address;
         $user->phone = Auth::user()->phone;
+        $user->level = intval($request->level);
         $user->generatePublicId();
         $user->save();
 
@@ -155,6 +156,12 @@ class UserController extends Controller
         ]);
     }
 
+    /**
+     * Verifica si un username esta disponible
+     *
+     * @param $username
+     * @return JsonResponse
+     */
     public function verifyUsername($username)
     {
         $user = User::where('username', $username)->first();

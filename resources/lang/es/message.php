@@ -26,4 +26,6 @@ return [
     'user.update' => 'Usuario actualizado',
     'user.password' => 'Contraseña actualizada',
 
+    'callLog.update' => 'Registro de llamada actualizado',
+
 ];

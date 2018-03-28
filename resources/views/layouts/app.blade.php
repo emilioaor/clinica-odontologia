@@ -127,23 +127,43 @@
                                     </ul>
                                 </li>
                             @endif
-                            @if(Auth::user()->isAdmin() || Auth::user()->isDoctor())
+                            <li class="dropdown">
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+                                    Servicios <span class="caret"></span>
+                                </a>
+
+                                <ul class="dropdown-menu" role="menu">
+                                    <li>
+                                        <a href="{{ route('service.create') }}">
+                                            <i class="glyphicon glyphicon-plus"></i>
+                                            Registrar servicio
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="{{ route('service.search') }}">
+                                            <i class="glyphicon glyphicon-search"></i>
+                                            Buscar servicios
+                                        </a>
+                                    </li>
+                                </ul>
+                            </li>
+                            @if(Auth::user()->isAdmin() || Auth::user()->isSecretary())
                                 <li class="dropdown">
                                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-                                        Servicios <span class="caret"></span>
+                                        Llamadas <span class="caret"></span>
                                     </a>
 
                                     <ul class="dropdown-menu" role="menu">
                                         <li>
                                             <a href="{{ route('service.create') }}">
                                                 <i class="glyphicon glyphicon-plus"></i>
-                                                Registrar servicio
+                                                Registrar llamada
                                             </a>
                                         </li>
                                         <li>
-                                            <a href="{{ route('service.search') }}">
-                                                <i class="glyphicon glyphicon-search"></i>
-                                                Buscar servicios
+                                            <a href="{{ route('callLog.index') }}">
+                                                <i class="glyphicon glyphicon-list-alt"></i>
+                                                Lista de llamadas
                                             </a>
                                         </li>
                                     </ul>

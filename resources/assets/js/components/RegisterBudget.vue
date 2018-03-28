@@ -603,24 +603,20 @@
                                     </td>
                                 </tr>
 
-                                <!-- Terms and conditions -->
+                                <!-- Secretary notes -->
                                 <tr>
                                     <td colspan="5" style="padding-top: 20px;">
-                                        <input
-                                                type="text"
-                                                class="form-control input-hover"
-                                                id="terms_label"
-                                                name="terms_label"
-                                                v-model="form.terms_label"
-                                                >
+                                        <p>
+                                            Notas para la secretaria
+                                        </p>
 
                                         <textarea
-                                                name="terms_value"
-                                                id="terms_value"
-                                                placeholder="Intereses, metodos de pago, tiempos, etc"
+                                                name="secretary_notes"
+                                                id="secretary_notes"
+                                                placeholder="Notas para la secretaria"
                                                 class="form-control"
                                                 rows="2"
-                                                v-model="form.terms_value"
+                                                v-model="form.secretary_notes"
                                                 ></textarea>
                                     </td>
                                 </tr>
@@ -726,6 +722,7 @@
                     table_price_label: 'Precio',
                     table_total_label: 'Total',
                     patient_id: null,
+                    secretary_notes: '',
                     details: [{
                         price: 0,
                         quantity: 1,

@@ -33,7 +33,7 @@
                                         <td>{{ $call->created_at->format('m/d/Y') }}</td>
                                         <td>{{ $call->patient->name }}</td>
                                         <td>{{ $call->patient->phone }}</td>
-                                        <td></td>
+                                        <td>{!! str_replace("\n", '<br>', $call->description) !!}</td>
                                         <td>
                                             <form
                                                     action="{{ route('callLog.update', ['call' => $call->public_id]) }}"

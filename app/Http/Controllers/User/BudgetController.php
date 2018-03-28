@@ -102,6 +102,7 @@ class BudgetController extends Controller
         // Registra una llamada pendiente para este paciente
         $callLog = new CallLog();
         $callLog->public_id = 'CALL' . time();
+        $callLog->description = $request->secretary_notes;
         $callLog->patient_id = $budget->patient_id;
         $callLog->status = CallLog::STATUS_PENDING;
         $callLog->save();

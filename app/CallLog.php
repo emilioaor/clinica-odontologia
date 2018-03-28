@@ -16,6 +16,7 @@ class CallLog extends Model
 
     protected $fillable = [
         'public_id',
+        'description',
         'patient_id',
         'status'
 

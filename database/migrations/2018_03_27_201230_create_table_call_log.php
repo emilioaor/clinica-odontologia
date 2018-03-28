@@ -16,6 +16,7 @@ class CreateTableCallLog extends Migration
         Schema::create('call_logs', function (Blueprint $table) {
             $table->increments('id');
             $table->string('public_id', 15)->unique();
+            $table->text('description');
             $table->integer('patient_id')->unsigned();
             $table->integer('status');
             $table->foreign('patient_id')->references('id')->on('patients');

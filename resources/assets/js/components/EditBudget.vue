@@ -601,28 +601,6 @@
                                             ></textarea>
                                     </td>
                                 </tr>
-
-                                <!-- Terms and conditions -->
-                                <tr>
-                                    <td colspan="5" style="padding-top: 20px;">
-                                        <input
-                                                type="text"
-                                                class="form-control input-hover"
-                                                id="terms_label"
-                                                name="terms_label"
-                                                v-model="form.terms_label"
-                                                >
-
-                                        <textarea
-                                                name="terms_value"
-                                                id="terms_value"
-                                                placeholder="Intereses, metodos de pago, tiempos, etc"
-                                                class="form-control"
-                                                rows="2"
-                                                v-model="form.terms_value"
-                                                ></textarea>
-                                    </td>
-                                </tr>
                             </table>
 
 

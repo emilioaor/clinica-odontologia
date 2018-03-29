@@ -9,6 +9,18 @@ use App\Http\Controllers\Controller;
 
 class PatientController extends Controller
 {
+
+    /**
+     * Construct
+     */
+    public function __construct()
+    {
+        $this->middleware('doctor')->except([
+            'index',
+            'search'
+        ]);
+    }
+
     /**
      * Display a listing of the resource.
      *

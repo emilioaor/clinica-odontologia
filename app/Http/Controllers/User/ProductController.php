@@ -10,6 +10,14 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 class ProductController extends Controller
 {
     /**
+     * Construct
+     */
+    public function __construct()
+    {
+        $this->middleware('doctor')->except('index');
+    }
+
+    /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
@@ -56,7 +64,7 @@ class ProductController extends Controller
      */
     public function show($id)
     {
-        //
+        abort(404);
     }
 
     /**
@@ -103,6 +111,6 @@ class ProductController extends Controller
      */
     public function destroy($id)
     {
-        //
+        abort(404);
     }
 }

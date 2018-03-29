@@ -65,9 +65,15 @@
                                     @foreach($budgets as $budget)
                                         <tr>
                                             <td>
-                                                <a href="{{ route('budget.edit', ['budget' => $budget->public_id]) }}">
-                                                    #{{ $budget->public_id }}
-                                                </a>
+                                                @if(Auth::user()->isAdmin() || Auth::user()->isDoctor())
+                                                    <a href="{{ route('budget.edit', ['budget' => $budget->public_id]) }}">
+                                                        #{{ $budget->public_id }}
+                                                    </a>
+                                                @else
+                                                    <a href="{{ route('budget.pdf.generate', ['budget' => $budget->public_id]) }}" target="_blank">
+                                                        #{{ $budget->public_id }}
+                                                    </a>
+                                                @endif
                                             </td>
                                             <td>{{ $budget->patient->phone }}</td>
                                             <td>{{ $budget->patient->name }}</td>
@@ -78,7 +84,10 @@
                                 @else
                                     <tr>
                                         <td colspan="5">
-                                            No hay cotizaciones registradas. <a href="{{ route('budget.create') }}">Registrar cotización</a>
+                                            No hay cotizaciones registradas.
+                                            @if(Auth::user()->isAdmin() || Auth::user()->isDoctor())
+                                                <a href="{{ route('budget.create') }}">Registrar cotización</a>
+                                            @endif
                                         </td>
                                     </tr>
                                 @endif

@@ -14,6 +14,18 @@ use Illuminate\Support\Facades\DB;
 
 class PatientHistoryController extends Controller
 {
+
+    /**
+     * Construct
+     */
+    public function __construct()
+    {
+        $this->middleware('doctor')->except([
+            'searchService',
+            'search'
+        ]);
+    }
+
     /**
      * Display a listing of the resource.
      *

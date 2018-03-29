@@ -28,9 +28,13 @@
                                     @foreach($products as $product)
                                         <tr>
                                             <td>
-                                                <a href="{{ route('product.edit', ['product' => $product->public_id]) }}">
+                                                @if(Auth::user()->isAdmin() || Auth::user()->isDoctor())
+                                                    <a href="{{ route('product.edit', ['product' => $product->public_id]) }}">
+                                                        {{ $product->public_id }}
+                                                    </a>
+                                                @else
                                                     {{ $product->public_id }}
-                                                </a>
+                                                @endif
                                             </td>
                                             <td>{{ $product->name }}</td>
                                             <td>{{ $product->priceFormatWithSymbol() }}</td>
@@ -39,7 +43,10 @@
                                 @else
                                     <tr>
                                         <td colspan="3">
-                                            No hay productos registrados. <a href="{{ route('product.create') }}">Registrar producto</a>
+                                            No hay productos registrados.
+                                            @if(Auth::user()->isAdmin() || Auth::user()->isDoctor())
+                                                <a href="{{ route('product.create') }}">Registrar producto</a>
+                                            @endif
                                         </td>
                                     </tr>
                                 @endif

@@ -51,12 +51,14 @@
                                 </a>
 
                                 <ul class="dropdown-menu" role="menu">
-                                    <li>
-                                        <a href="{{ route('product.create') }}">
-                                            <i class="glyphicon glyphicon-plus"></i>
-                                            Agregar producto
-                                        </a>
-                                    </li>
+                                    @if(Auth::user()->isAdmin() || Auth::user()->isDoctor())
+                                        <li>
+                                            <a href="{{ route('product.create') }}">
+                                                <i class="glyphicon glyphicon-plus"></i>
+                                                Agregar producto
+                                            </a>
+                                        </li>
+                                    @endif
                                     <li>
                                         <a href="{{ route('product.index') }}">
                                             <i class="glyphicon glyphicon-list-alt"></i>
@@ -71,12 +73,14 @@
                                 </a>
 
                                 <ul class="dropdown-menu" role="menu">
-                                    <li>
-                                        <a href="{{ route('patient.create') }}">
-                                            <i class="glyphicon glyphicon-plus"></i>
-                                            Agregar paciente
-                                        </a>
-                                    </li>
+                                    @if(Auth::user()->isAdmin() || Auth::user()->isDoctor())
+                                        <li>
+                                            <a href="{{ route('patient.create') }}">
+                                                <i class="glyphicon glyphicon-plus"></i>
+                                                Agregar paciente
+                                            </a>
+                                        </li>
+                                    @endif
                                     <li>
                                         <a href="{{ route('patient.index') }}">
                                             <i class="glyphicon glyphicon-list-alt"></i>
@@ -91,12 +95,14 @@
                                 </a>
 
                                 <ul class="dropdown-menu" role="menu">
-                                    <li>
-                                        <a href="{{ route('budget.create') }}">
-                                            <i class="glyphicon glyphicon-plus"></i>
-                                            Generar cotización
-                                        </a>
-                                    </li>
+                                    @if(Auth::user()->isAdmin() || Auth::user()->isDoctor())
+                                        <li>
+                                            <a href="{{ route('budget.create') }}">
+                                                <i class="glyphicon glyphicon-plus"></i>
+                                                Generar cotización
+                                            </a>
+                                        </li>
+                                    @endif
                                     <li>
                                         <a href="{{ route('budget.index') }}">
                                             <i class="glyphicon glyphicon-list-alt"></i>
@@ -133,12 +139,14 @@
                                 </a>
 
                                 <ul class="dropdown-menu" role="menu">
-                                    <li>
-                                        <a href="{{ route('service.create') }}">
-                                            <i class="glyphicon glyphicon-plus"></i>
-                                            Registrar servicio
-                                        </a>
-                                    </li>
+                                    @if(Auth::user()->isAdmin() || Auth::user()->isDoctor())
+                                        <li>
+                                            <a href="{{ route('service.create') }}">
+                                                <i class="glyphicon glyphicon-plus"></i>
+                                                Registrar servicio
+                                            </a>
+                                        </li>
+                                    @endif
                                     <li>
                                         <a href="{{ route('service.search') }}">
                                             <i class="glyphicon glyphicon-search"></i>
@@ -154,12 +162,14 @@
                                     </a>
 
                                     <ul class="dropdown-menu" role="menu">
-                                        <li>
-                                            <a href="{{ route('callLog.create') }}">
-                                                <i class="glyphicon glyphicon-plus"></i>
-                                                Registrar llamada
-                                            </a>
-                                        </li>
+                                        @if(Auth::user()->isAdmin() || Auth::user()->isDoctor())
+                                            <li>
+                                                <a href="{{ route('callLog.create') }}">
+                                                    <i class="glyphicon glyphicon-plus"></i>
+                                                    Registrar llamada
+                                                </a>
+                                            </li>
+                                        @endif
                                         <li>
                                             <a href="{{ route('callLog.index') }}">
                                                 <i class="glyphicon glyphicon-list-alt"></i>

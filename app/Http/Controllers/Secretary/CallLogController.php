@@ -9,6 +9,18 @@ use App\Http\Controllers\Controller;
 
 class CallLogController extends Controller
 {
+
+    /**
+     * Construct
+     */
+    public function __construct()
+    {
+        $this->middleware('doctor')->except([
+            'index',
+            'update'
+        ]);
+    }
+
     /**
      * Display a listing of the resource.
      *

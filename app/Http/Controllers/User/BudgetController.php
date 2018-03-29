@@ -17,6 +17,18 @@ use PDF;
 
 class BudgetController extends Controller
 {
+
+    /**
+     * Construct
+     */
+    public function __construct()
+    {
+        $this->middleware('doctor')->except([
+            'index',
+            'generatePdf'
+        ]);
+    }
+
     /**
      * Display a listing of the resource.
      *

@@ -57,7 +57,9 @@
                                     <th>Telefono</th>
                                     <th>Nombre</th>
                                     <th>Creación</th>
-                                    <th></th>
+                                    @if(Auth::user()->isAdmin() || Auth::user()->isDoctor())
+                                        <th></th>
+                                    @endif
                                 </tr>
                             </thead>
                             <tbody>
@@ -65,25 +67,34 @@
                                     @foreach($patients as $patient)
                                         <tr>
                                             <td>
-                                                <a href="{{ route('patient.edit', ['patient' => $patient->public_id]) }}">
-                                                    #{{ $patient->public_id }}
-                                                </a>
+                                                @if(Auth::user()->isAdmin() || Auth::user()->isDoctor())
+                                                    <a href="{{ route('patient.edit', ['patient' => $patient->public_id]) }}">
+                                                        {{ $patient->public_id }}
+                                                    </a>
+                                                @else
+                                                    {{ $patient->public_id }}
+                                                @endif
                                             </td>
                                             <td>{{ $patient->phone }}</td>
                                             <td>{{ $patient->name }}</td>
                                             <td>{{ $patient->created_at->format('m/d/Y') }}</td>
-                                            <td class="text-right">
-                                                <a href="{{ route('service.edit', ['service' => $patient->public_id]) }}" class="btn btn-warning">
-                                                    <i class="glyphicon glyphicon-pencil"></i>
-                                                    Servicios
-                                                </a>
-                                            </td>
+                                            @if(Auth::user()->isAdmin() || Auth::user()->isDoctor())
+                                                <td class="text-right">
+                                                    <a href="{{ route('service.edit', ['service' => $patient->public_id]) }}" class="btn btn-warning">
+                                                        <i class="glyphicon glyphicon-pencil"></i>
+                                                        Servicios
+                                                    </a>
+                                                </td>
+                                            @endif
                                         </tr>
                                     @endforeach
                                 @else
                                     <tr>
                                         <td colspan="4">
-                                            No hay pacientes registrados. <a href="{{ route('patient.create') }}">Registrar paciente</a>
+                                            No hay pacientes registrados.
+                                            @if(Auth::user()->isAdmin() || Auth::user()->isDoctor())
+                                                <a href="{{ route('patient.create') }}">Registrar paciente</a>
+                                            @endif
                                         </td>
                                     </tr>
                                 @endif

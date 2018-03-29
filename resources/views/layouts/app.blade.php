@@ -155,7 +155,7 @@
 
                                     <ul class="dropdown-menu" role="menu">
                                         <li>
-                                            <a href="{{ route('service.create') }}">
+                                            <a href="{{ route('callLog.create') }}">
                                                 <i class="glyphicon glyphicon-plus"></i>
                                                 Registrar llamada
                                             </a>

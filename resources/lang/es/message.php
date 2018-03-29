@@ -26,6 +26,7 @@ return [
     'user.update' => 'Usuario actualizado',
     'user.password' => 'Contraseña actualizada',
 
+    'callLog.create' => 'Registro de llamada registrado',
     'callLog.update' => 'Registro de llamada actualizado',
 
 ];

@@ -3,16 +3,16 @@
 namespace App\Http\Controllers\Secretary;
 
 use App\CallLog;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
 class CallLogController extends Controller
 {
-
     /**
-     * Carga la lista de llamadas pendientes
+     * Display a listing of the resource.
      *
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @return \Illuminate\Http\Response
      */
     public function index()
     {
@@ -25,11 +25,63 @@ class CallLogController extends Controller
     }
 
     /**
-     * Actualiza el registro de llamada pendiente
+     * Show the form for creating a new resource.
      *
-     * @param Request $request
-     * @param $id
-     * @return \Illuminate\Http\RedirectResponse
+     * @return \Illuminate\Http\Response
+     */
+    public function create()
+    {
+        return view('secretary.callLog.create');
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function store(Request $request)
+    {
+        $callLog = new CallLog();
+        $callLog->public_id = 'CALL' . time();
+        $callLog->description = $request->description;
+        $callLog->patient_id = $request->patient_id;
+        $callLog->status = CallLog::STATUS_PENDING;
+        $callLog->save();
+
+        $this->sessionMessage('message.callLog.create');
+
+        return new JsonResponse(['success' => true, 'redirect' => route('callLog.index')]);
+    }
+
+    /**
+     * Display the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function show($id)
+    {
+        abort(404);
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function edit($id)
+    {
+        abort(404);
+    }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
     {
@@ -40,5 +92,16 @@ class CallLogController extends Controller
         $this->sessionMessage('message.callLog.update');
 
         return redirect()->route('callLog.index');
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function destroy($id)
+    {
+        abort(404);
     }
 }

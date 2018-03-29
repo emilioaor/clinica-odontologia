@@ -36,8 +36,7 @@ Route::group(['prefix' => 'user', 'middleware' => 'auth'], function() {
 
     // Solo administradores o secretarias
     Route::group(['middleware' => 'secretary'], function () {
-        Route::get('call', 'Secretary\CallLogController@index')->name('callLog.index');
-        Route::put('call/{call}', 'Secretary\CallLogController@update')->name('callLog.update');
+        Route::resource('callLog', 'Secretary\CallLogController');
     });
 });
 

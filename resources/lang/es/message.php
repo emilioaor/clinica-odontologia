@@ -28,5 +28,8 @@ return [
 
     'callLog.create' => 'Registro de llamada registrado',
     'callLog.update' => 'Registro de llamada actualizado',
+    'callLog.status.pending' => 'Pendiente',
+    'callLog.status.scheduled' => 'Citado',
+    'callLog.status.no' => 'No interesado',
 
 ];

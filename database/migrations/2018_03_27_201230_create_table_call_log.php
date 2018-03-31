@@ -17,6 +17,7 @@ class CreateTableCallLog extends Migration
             $table->increments('id');
             $table->string('public_id', 15)->unique();
             $table->text('description');
+            $table->text('note')->nullable();
             $table->integer('patient_id')->unsigned();
             $table->integer('status');
             $table->foreign('patient_id')->references('id')->on('patients');

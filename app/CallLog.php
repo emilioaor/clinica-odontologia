@@ -17,6 +17,7 @@ class CallLog extends Model
     protected $fillable = [
         'public_id',
         'description',
+        'note',
         'patient_id',
         'status'
 
@@ -30,5 +31,51 @@ class CallLog extends Model
     public function patient()
     {
         return $this->belongsTo(Patient::class, 'patient_id');
+    }
+
+    /**
+     * Indica si esta pendiente
+     *
+     * @return bool
+     */
+    public function isPending()
+    {
+        return $this->status === self::STATUS_PENDING;
+    }
+
+    /**
+     * Indica si esta citado
+     *
+     * @return bool
+     */
+    public function isScheduled()
+    {
+        return $this->status === self::STATUS_SCHEDULED;
+    }
+
+    /**
+     * Indica si no esta interesado
+     *
+     * @return bool
+     */
+    public function isStatusNO()
+    {
+        return $this->status === self::STATUS_NO;
+    }
+
+    /**
+     * @return string
+     */
+    public function statusText()
+    {
+        if ($this->isPending()) {
+            return trans('message.callLog.status.pending');
+        } elseif ($this->isScheduled()) {
+            return trans('message.callLog.status.scheduled');
+        } elseif ($this->isStatusNO()) {
+            return trans('message.callLog.status.no');
+        }
+
+        return '-';
     }
 }

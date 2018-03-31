@@ -99,6 +99,7 @@ class CallLogController extends Controller
     {
         $callLog = CallLog::where('public_id', $id)->firstOrFail();
         $callLog->status = $request->status;
+        $callLog->note = $request->note;
         $callLog->save();
 
         $this->sessionMessage('message.callLog.update');

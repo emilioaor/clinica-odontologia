@@ -31,5 +31,9 @@ return [
     'callLog.status.pending' => 'Pendiente',
     'callLog.status.scheduled' => 'Citado',
     'callLog.status.no' => 'No interesado',
+    'callLog.status.notAnswerCall' => 'No contesto',
+    'callLog.status.callAgain' => 'Volver a llamar',
+
+    'callLog.note.budget' => 'Cotización #:public_id'
 
 ];

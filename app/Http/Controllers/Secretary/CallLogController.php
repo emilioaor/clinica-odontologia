@@ -3,9 +3,11 @@
 namespace App\Http\Controllers\Secretary;
 
 use App\CallLog;
+use App\CallStatusHistory;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\DB;
 
 class CallLogController extends Controller
 {
@@ -28,8 +30,10 @@ class CallLogController extends Controller
      */
     public function index()
     {
-        $callLogs = CallLog::orderByDesc('created_at')
-            ->where('status', CallLog::STATUS_PENDING)
+        $callLogs = CallLog::orderByDesc('call_date')
+            ->whereDate('call_date', '<=', new \DateTime())
+            ->where('status', '<>', CallLog::STATUS_NOT_INTERESTED)
+            ->where('status', '<>', CallLog::STATUS_SCHEDULED)
             ->paginate()
         ;
 
@@ -54,12 +58,23 @@ class CallLogController extends Controller
      */
     public function store(Request $request)
     {
+        DB::beginTransaction();
+
         $callLog = new CallLog();
         $callLog->public_id = 'CALL' . time();
         $callLog->description = $request->description;
         $callLog->patient_id = $request->patient_id;
         $callLog->status = CallLog::STATUS_PENDING;
+        $callLog->call_date = new \DateTime();
         $callLog->save();
+
+        $callStatusHistory = new CallStatusHistory();
+        $callStatusHistory->call_log_id = $callLog->id;
+        $callStatusHistory->status = CallLog::STATUS_PENDING;
+        $callStatusHistory->note = $request->description;
+        $callStatusHistory->save();
+
+        DB::commit();
 
         $this->sessionMessage('message.callLog.create');
 
@@ -97,14 +112,35 @@ class CallLogController extends Controller
      */
     public function update(Request $request, $id)
     {
+        DB::beginTransaction();
+
         $callLog = CallLog::where('public_id', $id)->firstOrFail();
         $callLog->status = $request->status;
-        $callLog->note = $request->note;
+
+        if ($request->status == CallLog::STATUS_NOT_ANSWER_CALL) {
+            // Si no contesto la llamada, debe aparecer de nuevo al dia siguiente
+            $callLog->call_date = $callLog->callDateTime()->modify('+1 day');
+        } elseif ($request->status == CallLog::STATUS_CALL_AGAIN) {
+            // Si es volver a llamar se cambia la fecha por la indicada por el paciente
+            $callLog->call_date = $request->date_again;
+        } elseif ($callLog->status == CallLog::STATUS_SCHEDULED) {
+            // Si tiene cita guardo la fecha
+            $callLog->appointment_date = $request->date_again;
+        }
+
         $callLog->save();
+
+        $callStatusHistory = new CallStatusHistory();
+        $callStatusHistory->call_log_id = $callLog->id;
+        $callStatusHistory->status = $request->status;
+        $callStatusHistory->note = $request->note;
+        $callStatusHistory->save();
+
+        DB::commit();
 
         $this->sessionMessage('message.callLog.update');
 
-        return redirect()->route('callLog.index');
+        return new JsonResponse(['success' => true, 'redirect' => route('callLog.index')]);
     }
 
     /**

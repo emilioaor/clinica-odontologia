@@ -10,16 +10,19 @@ class CallLog extends Model
     /** Estatus de la lista de llamada */
     const STATUS_PENDING = 1;
     const STATUS_SCHEDULED = 2;
-    const STATUS_NO = 3;
+    const STATUS_NOT_INTERESTED= 3;
+    const STATUS_NOT_ANSWER_CALL = 4;
+    const STATUS_CALL_AGAIN = 5;
 
     protected $table = 'call_logs';
 
     protected $fillable = [
         'public_id',
         'description',
-        'note',
         'patient_id',
-        'status'
+        'call_date',
+        'status',
+        'appointment_date'
 
     ];
 
@@ -31,6 +34,16 @@ class CallLog extends Model
     public function patient()
     {
         return $this->belongsTo(Patient::class, 'patient_id');
+    }
+
+    /**
+     * Historial de estatus para esta llamada
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function statusHistory()
+    {
+        return $this->hasMany(CallStatusHistory::class, 'call_log_id');
     }
 
     /**
@@ -58,9 +71,29 @@ class CallLog extends Model
      *
      * @return bool
      */
-    public function isStatusNO()
+    public function isNotInterested()
     {
-        return $this->status === self::STATUS_NO;
+        return $this->status === self::STATUS_NOT_INTERESTED;
+    }
+
+    /**
+     * Indica si no contesto la llamada
+     *
+     * @return bool
+     */
+    public function isNotAnswerCall()
+    {
+        return $this->status === self::STATUS_NOT_ANSWER_CALL;
+    }
+
+    /**
+     * Indica si se debe volver a llamar
+     *
+     * @return bool
+     */
+    public function isCallAgain()
+    {
+        return $this->status === self::STATUS_CALL_AGAIN;
     }
 
     /**
@@ -72,10 +105,24 @@ class CallLog extends Model
             return trans('message.callLog.status.pending');
         } elseif ($this->isScheduled()) {
             return trans('message.callLog.status.scheduled');
-        } elseif ($this->isStatusNO()) {
+        } elseif ($this->isNotInterested()) {
             return trans('message.callLog.status.no');
+        } elseif ($this->isNotAnswerCall()) {
+            return trans('message.callLog.status.notAnswerCall');
+        } elseif ($this->isCallAgain()) {
+            return trans('message.callLog.status.callAgain');
         }
 
         return '-';
+    }
+
+    /**
+     * Retorna la fecha de llamada en \Datetime
+     *
+     * @return \DateTime
+     */
+    public function callDateTime()
+    {
+        return new \DateTime($this->call_date);
     }
 }

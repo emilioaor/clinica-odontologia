@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateTableCallLog extends Migration
+class CreateTableCallStatusHistory extends Migration
 {
     /**
      * Run the migrations.
@@ -13,15 +13,12 @@ class CreateTableCallLog extends Migration
      */
     public function up()
     {
-        Schema::create('call_logs', function (Blueprint $table) {
+        Schema::create('call_status_history', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('public_id', 15)->unique();
-            $table->text('description');
+            $table->integer('call_log_id')->unsigned();
+            $table->foreign('call_log_id')->references('id')->on('call_logs');
+            $table->text('note');
             $table->integer('status');
-            $table->integer('patient_id')->unsigned();
-            $table->foreign('patient_id')->references('id')->on('patients');
-            $table->date('call_date');
-            $table->date('appointment_date')->nullable();
             $table->timestamps();
         });
     }
@@ -33,6 +30,6 @@ class CreateTableCallLog extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('call_logs');
+        Schema::dropIfExists('call_status_history');
     }
 }

@@ -79,6 +79,7 @@
                     <form
                         action="{{ route('callLog.update', ['call' => $call->public_id]) }}"
                         method="post"
+                        id="form{{ $call->public_id }}"
                     >
                         <div class="modal-content">
                             <div class="modal-body">
@@ -102,17 +103,21 @@
                                     <label for="note">Nota</label>
                                     <textarea
                                             name="note"
-                                            id="note"
+                                            id="note{{ $call->public_id }}"
                                             class="form-control"
                                             placeholder="Notas de la llamada"
                                             cols="30"
+                                            onkeyup="resetValidation('{{ $call->public_id }}');"
                                             rows="4"></textarea>
+                                    <p class="error hide" id="error{{ $call->public_id }}">
+                                        Campo requerido
+                                    </p>
                                 </div>
 
                             </div>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
-                                <button type="submit" class="btn btn-primary">Guardar</button>
+                                <button type="button" class="btn btn-primary" onclick="validateForm('{{ $call->public_id }}')">Guardar</button>
                             </div>
                         </div>
                     </form>
@@ -120,4 +125,26 @@
             </div>
         @endforeach
     </div>
+@endsection
+
+@section('js')
+    <script>
+        function validateForm(id)
+        {
+            if ($('#note' + id).val() === '') {
+                $('#error' + id).removeClass('hide');
+                $('#note' + id).addClass('input-error');
+            } else {
+
+                // Envia form
+                $('#form' + id).submit();
+            }
+        }
+
+        function resetValidation(id)
+        {
+            $('#error' + id).addClass('hide');
+            $('#note' + id).removeClass('input-error');
+        }
+    </script>
 @endsection

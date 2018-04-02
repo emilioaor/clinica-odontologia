@@ -176,6 +176,14 @@
                                                 Lista de llamadas
                                             </a>
                                         </li>
+                                        @if(Auth::user()->isAdmin())
+                                            <li>
+                                                <a href="{{ route('callLog.search') }}">
+                                                    <i class="glyphicon glyphicon-search"></i>
+                                                    Buscar llamadas
+                                                </a>
+                                            </li>
+                                        @endif
                                     </ul>
                                 </li>
                             @endif

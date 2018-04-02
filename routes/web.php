@@ -36,6 +36,8 @@ Route::group(['prefix' => 'user', 'middleware' => 'auth'], function() {
 
     // Solo administradores o secretarias
     Route::group(['middleware' => 'secretary'], function () {
+        Route::get('callLog/search', 'Secretary\CallLogController@search')->name('callLog.search');
+        Route::get('callLog/search/call', 'Secretary\CallLogController@searchCall');
         Route::resource('callLog', 'Secretary\CallLogController');
     });
 });

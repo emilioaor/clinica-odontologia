@@ -73,7 +73,7 @@
                                             <th>Fecha</th>
                                             <th>Razón</th>
                                             <th>Paciente</th>
-                                            <th>Doctor</th>
+                                            <th>Estatus</th>
                                         </tr>
                                         </thead>
                                         <tbody>

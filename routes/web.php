@@ -35,6 +35,8 @@ Route::group(['prefix' => 'user', 'middleware' => 'auth'], function() {
     Route::put('config/changePassword', 'User\ConfigController@changePassword')->name('config.changePassword');
 
     // Llamadas
+    Route::get('callLog/search', 'Secretary\CallLogController@search')->name('callLog.search');
+    Route::get('callLog/search/call', 'Secretary\CallLogController@searchCall');
     Route::resource('callLog', 'Secretary\CallLogController');
 
     // Insumos
@@ -42,12 +44,6 @@ Route::group(['prefix' => 'user', 'middleware' => 'auth'], function() {
 
     // Solicitud de insumos
     Route::resource('supplyRequest', 'Assistant\SupplyRequestController');
-    // Solo administradores o secretarias
-    Route::group(['middleware' => 'secretary'], function () {
-        Route::get('callLog/search', 'Secretary\CallLogController@search')->name('callLog.search');
-        Route::get('callLog/search/call', 'Secretary\CallLogController@searchCall');
-        Route::resource('callLog', 'Secretary\CallLogController');
-    });
 });
 
 // Administrador

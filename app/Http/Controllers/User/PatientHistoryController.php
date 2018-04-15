@@ -24,6 +24,8 @@ class PatientHistoryController extends Controller
             'searchService',
             'search'
         ]);
+
+        $this->middleware('noAssistant');
     }
 
     /**

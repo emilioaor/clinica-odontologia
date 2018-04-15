@@ -13,6 +13,7 @@ class User extends Authenticatable
     const LEVEL_ADMIN = 1;
     const LEVEL_DOCTOR = 2;
     const LEVEL_SECRETARY = 3;
+    const LEVEL_ASSISTANT = 4;
 
     /**
      * The attributes that are mass assignable.
@@ -72,6 +73,16 @@ class User extends Authenticatable
     }
 
     /**
+     * Indica si el usuario es asistente
+     *
+     * @return bool
+     */
+    public function isAssistant()
+    {
+        return $this->level === self::LEVEL_ASSISTANT;
+    }
+
+    /**
      * Todos los servicios brindados por un Doctor
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
@@ -79,6 +90,16 @@ class User extends Authenticatable
     public function patientHistory()
     {
         return $this->hasMany(PatientHistory::class, 'doctor_id');
+    }
+
+    /**
+     * Todas las solicitudes de insumos generadas por el usuario
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function supplyRequests()
+    {
+        return $this->hasMany(SupplyRequest::class, 'user_id');
     }
 
     /**

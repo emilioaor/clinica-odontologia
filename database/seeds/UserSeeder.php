@@ -34,5 +34,13 @@ class UserSeeder extends Seeder
         $user->password = bcrypt('123456');
         $user->level = \App\User::LEVEL_SECRETARY;
         $user->save();
+
+        $user = new \App\User();
+        $user->public_id = 'ASS' . time();
+        $user->username = 'assistant';
+        $user->name = 'Assistant';
+        $user->password = bcrypt('123456');
+        $user->level = \App\User::LEVEL_ASSISTANT;
+        $user->save();
     }
 }

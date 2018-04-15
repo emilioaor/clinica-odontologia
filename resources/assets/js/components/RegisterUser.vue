@@ -82,6 +82,7 @@
                                                 >
                                                 <option value="2">Doctor</option>
                                                 <option value="3">Secretaria</option>
+                                                <option value="4">Asistente</option>
                                             </select>
                                         </div>
                                     </div>

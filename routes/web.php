@@ -34,10 +34,14 @@ Route::group(['prefix' => 'user', 'middleware' => 'auth'], function() {
     Route::get('config', 'User\ConfigController@config')->name('config');
     Route::put('config/changePassword', 'User\ConfigController@changePassword')->name('config.changePassword');
 
-    // Solo administradores o secretarias
-    Route::group(['middleware' => 'secretary'], function () {
-        Route::resource('callLog', 'Secretary\CallLogController');
-    });
+    // Llamadas
+    Route::resource('callLog', 'Secretary\CallLogController');
+
+    // Insumos
+    Route::resource('supply', 'Assistant\SupplyController');
+
+    // Solicitud de insumos
+    Route::resource('supplyRequest', 'Assistant\SupplyRequestController');
 });
 
 // Administrador

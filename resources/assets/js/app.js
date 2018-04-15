@@ -33,6 +33,10 @@ Vue.component('edit-user', require('./components/EditUser.vue'));
 Vue.component('search-patient-history', require('./components/SearchPatientHistory.vue'));
 Vue.component('register-call', require('./components/RegisterCall.vue'));
 Vue.component('change-status-call', require('./components/CallChangeStatus.vue'));
+Vue.component('register-supply', require('./components/RegisterSupply'));
+Vue.component('edit-supply', require('./components/EditSupply'));
+Vue.component('register-supply-request', require('./components/RegisterSupplyRequest'));
+Vue.component('change-status-supply-request', require('./components/ChangeStatusSupplyRequest.vue'));
 
 
 const app = new Vue({

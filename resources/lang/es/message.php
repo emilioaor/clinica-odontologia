@@ -34,6 +34,17 @@ return [
     'callLog.status.notAnswerCall' => 'No contesto',
     'callLog.status.callAgain' => 'Volver a llamar',
 
-    'callLog.note.budget' => 'Cotización #:public_id'
+    'callLog.note.budget' => 'Cotización #:public_id',
+
+    'supply.create' => 'Insumo registrado',
+    'supply.update' => 'Insumo actualizado',
+
+    'supplyRequest.create' => 'Solicitud de insumo generada',
+    'supplyRequest.approved' => 'Solicitud de insumo aprobada',
+    'supplyRequest.cancel' => 'Solicitud de insumo cancelada',
+
+    'supplyRequest.status.pending' => 'Pendiente',
+    'supplyRequest.status.approved' => 'Aprobado',
+    'supplyRequest.status.cancel' => 'Cancelado',
 
 ];

@@ -1,21 +1,18 @@
 <?php
 
-namespace App\Http\Controllers\User;
+namespace App\Http\Controllers\Assistant;
 
-use App\Product;
+use App\Supply;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
-class ProductController extends Controller
+class SupplyController extends Controller
 {
-    /**
-     * Construct
-     */
+
     public function __construct()
     {
-        $this->middleware('doctor')->except('index');
-        $this->middleware('noAssistant');
+        $this->middleware('admin');
     }
 
     /**
@@ -25,9 +22,9 @@ class ProductController extends Controller
      */
     public function index()
     {
-        $products = Product::orderByDesc('created_at')->paginate();
+        $supplies = Supply::orderBy('id', 'DESC')->paginate();
 
-        return view('user.product.index', compact('products'));
+        return view('assistant.supply.index', compact('supplies'));
     }
 
     /**
@@ -37,7 +34,7 @@ class ProductController extends Controller
      */
     public function create()
     {
-        return view('user.product.create');
+        return view('assistant.supply.create');
     }
 
     /**
@@ -48,13 +45,14 @@ class ProductController extends Controller
      */
     public function store(Request $request)
     {
-        $product = new Product($request->all());
-        $product->public_id = 'PROD' . time();
-        $product->save();
+        $supply = new Supply();
+        $supply->name = $request->name;
+        $supply->public_id = 'SUP' . time();
+        $supply->save();
 
-        $this->sessionMessage('message.product.create');
+        $this->sessionMessage('message.supply.create');
 
-        return new JsonResponse(['success' => true, 'redirect' => route('product.index')]);
+        return new JsonResponse(['success' => true, 'redirect' => route('supply.index')]);
     }
 
     /**
@@ -76,13 +74,13 @@ class ProductController extends Controller
      */
     public function edit($id)
     {
-        $product = Product::where('public_id', $id)->first();
+        $supply = Supply::where('public_id', $id)->first();
 
-        if (! $product || ($product && ! $product->canEdit())) {
+        if (! $supply) {
             abort(404);
         }
 
-        return view('user.product.edit', compact('product'));
+        return view('assistant.supply.edit', compact('supply'));
     }
 
     /**
@@ -94,14 +92,16 @@ class ProductController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $product = Product::where('public_id', $id)->firstOrFail();
-        $product->name = $request->name;
-        $product->price = $request->price;
-        $product->save();
+        $supply = Supply::where('public_id', $id)->firstOrFail();
+        $supply->name = $request->name;
+        $supply->save();
 
-        $this->sessionMessage('message.product.update');
+        $this->sessionMessage('message.supply.update');
 
-        return new JsonResponse(['success' => true, 'redirect' => route('product.edit', ['product' => $id])]);
+        return new JsonResponse([
+            'success' => true,
+            'redirect' => route('supply.edit', ['supply' => $id])
+        ]);
     }
 
     /**

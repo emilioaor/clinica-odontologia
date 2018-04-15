@@ -28,6 +28,8 @@ class BudgetController extends Controller
             'index',
             'generatePdf'
         ]);
+
+        $this->middleware('noAssistant');
     }
 
     /**

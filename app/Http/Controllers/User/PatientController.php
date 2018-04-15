@@ -19,6 +19,8 @@ class PatientController extends Controller
             'index',
             'search'
         ]);
+
+        $this->middleware('noAssistant');
     }
 
     /**

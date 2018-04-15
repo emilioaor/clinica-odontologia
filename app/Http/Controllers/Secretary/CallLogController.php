@@ -17,6 +17,8 @@ class CallLogController extends Controller
      */
     public function __construct()
     {
+        $this->middleware('secretary');
+
         $this->middleware('doctor')->except([
             'index',
             'update'

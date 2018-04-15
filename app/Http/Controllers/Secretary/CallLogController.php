@@ -23,6 +23,11 @@ class CallLogController extends Controller
             'index',
             'update'
         ]);
+
+        $this->middleware('admin')->only([
+            'search',
+            'searchCall'
+        ]);
     }
 
     /**
@@ -154,5 +159,45 @@ class CallLogController extends Controller
     public function destroy($id)
     {
         abort(404);
+    }
+
+    /**
+     * Carla la vista para busqueda de llamadas
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function search()
+    {
+        return view('secretary.callLog.search');
+    }
+
+    /**
+     * Busca las llamadas hechas en un rango de fechas
+     *
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function searchCall(Request $request)
+    {
+        $calls = CallLog::orderBY('call_date')
+            ->whereBetween('call_date', [
+                $request->start,
+                $request->end
+            ])
+            ->with('patient')
+            ->get()
+        ;
+
+        $status[CallLog::STATUS_PENDING] = ['statusText' => trans('message.callLog.status.pending')];
+        $status[CallLog::STATUS_SCHEDULED] = ['statusText' => trans('message.callLog.status.scheduled')];
+        $status[CallLog::STATUS_NOT_INTERESTED] = ['statusText' => trans('message.callLog.status.no')];
+        $status[CallLog::STATUS_NOT_ANSWER_CALL] = ['statusText' => trans('message.callLog.status.notAnswerCall')];
+        $status[CallLog::STATUS_CALL_AGAIN] = ['statusText' => trans('message.callLog.status.callAgain')];
+
+        return new JsonResponse([
+            'success' => true,
+            'calls' => $calls,
+            'status' => $status
+        ]);
     }
 }

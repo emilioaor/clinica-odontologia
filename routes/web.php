@@ -43,6 +43,8 @@ Route::group(['prefix' => 'user', 'middleware' => 'auth'], function() {
     Route::resource('supply', 'Assistant\SupplyController');
 
     // Solicitud de insumos
+    Route::get('supplyRequest/search', 'Assistant\SupplyRequestController@search')->name('supplyRequest.search');
+    Route::get('supplyRequest/search/report', 'Assistant\SupplyRequestController@searchSupplyRequest');
     Route::resource('supplyRequest', 'Assistant\SupplyRequestController');
 });
 

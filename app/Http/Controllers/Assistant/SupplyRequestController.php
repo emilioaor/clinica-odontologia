@@ -20,7 +20,9 @@ class SupplyRequestController extends Controller
     {
         $this->middleware('admin')->only([
             'index',
-            'update'
+            'update',
+            'search',
+            'searchSupplyRequest'
         ]);
     }
 
@@ -152,5 +154,40 @@ class SupplyRequestController extends Controller
     public function destroy($id)
     {
         abort(404);
+    }
+
+    /**
+     * Carga el formulario de busqueda
+     *
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function search()
+    {
+        return view('assistant.supplyRequest.search');
+    }
+
+    /**
+     * Busca las solicitudes de insumo en un rango de fechas
+     *
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function searchSupplyRequest(Request $request)
+    {
+        $start = (new \DateTime($request->start))->setTime(00, 00, 00);
+        $end = (new \DateTime($request->end))->setTime(23, 59, 59);
+
+        $supplyRequests = SupplyRequest::orderBY('created_at')
+            ->where('created_at', '>=', $start)
+            ->where('created_at', '<=', $end)
+            ->with('user')
+            ->with('supplyRequestDetails')
+            ->get()
+        ;
+
+        return new JsonResponse([
+            'success' => true,
+            'data' => $supplyRequests
+        ]);
     }
 }

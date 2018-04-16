@@ -222,6 +222,12 @@
                                                 Solicitudes de insumos
                                             </a>
                                         </li>
+                                            <li>
+                                                <a href="{{ route('supplyRequest.search') }}">
+                                                    <i class="glyphicon glyphicon-search"></i>
+                                                    Reporte de insumos
+                                                </a>
+                                            </li>
                                     @endif
                                 </ul>
                             </li>

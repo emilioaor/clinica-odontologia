@@ -93,6 +93,16 @@ class User extends Authenticatable
     }
 
     /**
+     * Todos los servicios asistidos por este usuario
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function patientHistoryAssistant()
+    {
+        return $this->hasMany(PatientHistory::class, 'assistant_id');
+    }
+
+    /**
      * Todas las solicitudes de insumos generadas por el usuario
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
@@ -111,6 +121,8 @@ class User extends Authenticatable
             $this->public_id = 'DOC' . time();
         } elseif ($this->isSecretary()) {
             $this->public_id = 'SEC' . time();
+        } elseif ($this->isAssistant()) {
+            $this->public_id = 'ASS' . time();
         }
     }
 }

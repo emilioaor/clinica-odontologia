@@ -13,6 +13,7 @@ class PatientHistory extends Model
         'product_id',
         'tooth',
         'doctor_id',
+        'assistant_id',
         'price'
 
     ];
@@ -35,6 +36,16 @@ class PatientHistory extends Model
     public function doctor()
     {
         return $this->belongsTo(User::class, 'doctor_id');
+    }
+
+    /**
+     * Asistente del doctor
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function assistant()
+    {
+        return $this->belongsTo(User::class, 'assistant_id');
     }
 
     /**

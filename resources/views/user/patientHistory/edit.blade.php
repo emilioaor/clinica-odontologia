@@ -6,5 +6,6 @@
         products = "{{ json_encode($products) }}"
         history-date = "{{ $date->format('Y-m-d') }}"
         current-user = "{{ Auth::user() }}"
+        assistants = "{{ json_encode($assistants) }}"
     ></edit-patient-history>
 @endsection

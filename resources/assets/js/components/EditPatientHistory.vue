@@ -89,8 +89,9 @@
                                 <table class="table table-responsive">
                                     <thead>
                                         <tr>
-                                            <th width="50%">Servicio</th>
-                                            <th width="20%">Diente</th>
+                                            <th width="30%">Servicio</th>
+                                            <th width="25%">Asistente</th>
+                                            <th width="15%">Diente</th>
                                             <th width="20%" v-show="user.level === 1">Precio</th>
                                             <th width="10%"></th>
                                         </tr>
@@ -117,6 +118,27 @@
                                                     </option>
                                                 </select>
                                                 <p class="error" v-if="errors.firstByRule('product' + id, 'required')">
+                                                    Campo requerido
+                                                </p>
+                                            </td>
+                                            <td>
+                                                <select
+                                                        :name="'assistant' + id"
+                                                        :id="'assistant' + id"
+                                                        class="form-control"
+                                                        :class="{'input-error': errors.has('assistant' + id)}"
+                                                        v-model="service.assistant_id"
+                                                        v-validate
+                                                        data-vv-rules="required"
+                                                    >
+                                                    <option
+                                                            v-for="assistant in assistantUsers"
+                                                            :value="assistant.id"
+                                                        >
+                                                        {{ assistant.name }}
+                                                    </option>
+                                                </select>
+                                                <p class="error" v-if="errors.firstByRule('assistant' + id, 'required')">
                                                     Campo requerido
                                                 </p>
                                             </td>
@@ -155,7 +177,7 @@
                                     </tbody>
                                     <tfoot>
                                         <tr>
-                                            <td colspan="4">
+                                            <td colspan="5">
                                                 <button class="btn btn-success" @click="addService()">
                                                     <i class="glyphicon glyphicon-plus"></i>
                                                     Agregar
@@ -305,7 +327,7 @@
     import Datepicker from 'vuejs-datepicker';
 
     export default {
-        props: ['patient', 'products', 'historyDate', 'currentUser'],
+        props: ['patient', 'products', 'historyDate', 'currentUser', 'assistants'],
         components: {
             Datepicker
         },
@@ -316,6 +338,7 @@
                 data: {},
                 productList: [],
                 services: [],
+                assistantUsers: [],
                 date: '',
                 initDate: '',
                 notes: [],
@@ -332,6 +355,7 @@
             this.productList = JSON.parse(this.products);
             this.services = this.data.patient_history;
             this.user = JSON.parse(this.currentUser);
+            this.assistantUsers = JSON.parse(this.assistants);
 
             let date = this.historyDate.split('-');
             date = new Date(parseInt(date[0]), parseInt(date[1]) - 1, parseInt(date[2]));
@@ -348,7 +372,8 @@
                     tooth: null,
                     product_id: null,
                     price: null,
-                    doctor_id: this.user.id
+                    doctor_id: this.user.id,
+                    assistant_id: null
                 });
             },
 

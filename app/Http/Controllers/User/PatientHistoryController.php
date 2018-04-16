@@ -6,6 +6,7 @@ use App\Note;
 use App\Patient;
 use App\PatientHistory;
 use App\Product;
+use App\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -79,9 +80,7 @@ class PatientHistoryController extends Controller
      */
     public function edit($id, Request $request)
     {
-        $patient = Patient::where('public_id', $id)
-            ->first()
-        ;
+        $patient = Patient::where('public_id', $id)->first();
 
         if (! $patient) {
             abort(404);
@@ -96,8 +95,9 @@ class PatientHistoryController extends Controller
         $patient->patient_history = [];
         $patient->notes = [];
         $products = Product::all();
+        $assistants = User::where('level', User::LEVEL_ASSISTANT)->orderBy('name')->get();
 
-        return view('user.patientHistory.edit', compact('patient', 'products', 'date'));
+        return view('user.patientHistory.edit', compact('patient', 'products', 'date', 'assistants'));
     }
 
     /**
@@ -119,19 +119,12 @@ class PatientHistoryController extends Controller
         $end = clone $date;
         $end->setTime(23, 59, 59);
 
-        /*$patient->patientHistory()
-            ->where('created_at', '>=', $start)
-            ->where('created_at', '<=', $end)
-            ->delete();*/
-
         foreach ($request->services as $service) {
             $service = new PatientHistory($service);
             $service->patient_id = $patient->id;
             $service->created_at = $date;
             $service->save();
         }
-
-        //$patient->notes()->where('date', $date->format('Y-m-d'))->delete();
 
         foreach ($request->notes as $newNote) {
 
@@ -209,6 +202,7 @@ class PatientHistoryController extends Controller
             ->orderBy('created_at')
             ->with('doctor')
             ->with('product')
+            ->with('assistant')
             ->get()
         ;
 

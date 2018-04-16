@@ -125,6 +125,7 @@
                                                 <th>Servicio</th>
                                                 <th>Diente</th>
                                                 <th>Doctor</th>
+                                                <th>Asistente</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -133,6 +134,7 @@
                                                 <td>{{ service.product.name }}</td>
                                                 <td>{{ service.tooth }}</td>
                                                 <td>{{ service.doctor.name }}</td>
+                                                <td>{{ service.assistant.name }}</td>
                                             </tr>
                                         </tbody>
                                     </table>

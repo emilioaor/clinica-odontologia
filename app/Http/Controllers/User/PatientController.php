@@ -20,7 +20,9 @@ class PatientController extends Controller
             'search'
         ]);
 
-        $this->middleware('noAssistant');
+        $this->middleware('noAssistant')->except([
+            'search'
+        ]);
     }
 
     /**

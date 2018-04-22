@@ -10,6 +10,7 @@ class Note extends Model
 
     protected $fillable = [
         'patient_id',
+        'user_id',
         'date',
         'content'
     ];
@@ -20,5 +21,15 @@ class Note extends Model
     public function patient()
     {
         return $this->belongsTo(Patient::class, 'patient_id');
+    }
+
+    /**
+     * Usuario que registro la nota
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'user_id');
     }
 }

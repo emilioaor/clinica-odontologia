@@ -25,8 +25,6 @@ class PatientHistoryController extends Controller
             'searchService',
             'search'
         ]);
-
-        $this->middleware('noAssistant');
     }
 
     /**
@@ -131,6 +129,7 @@ class PatientHistoryController extends Controller
             if (! empty($newNote['content'])) {
                 $note = new Note();
                 $note->patient_id = $patient->id;
+                $note->user_id = Auth::user()->id;
                 $note->content = $newNote['content'];
                 $note->date = $date;
                 $note->save();
@@ -209,6 +208,7 @@ class PatientHistoryController extends Controller
         $notes = $patient->notes()->orderBy('date')
             ->where('content', '<>', '')
             ->whereBetween('date', [$start, $end])
+            ->with('user')
             ->get()
         ;
 

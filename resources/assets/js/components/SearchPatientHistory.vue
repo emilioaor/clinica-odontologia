@@ -155,7 +155,7 @@
                                                 </p>
 
                                                 <p v-for="(note,id) in notes">
-                                                    {{ (id + 1) + '. ' + note.content }}
+                                                    {{ (id + 1) + '. ' + note.user.username + ' - ' + note.content }}
                                                 </p>
                                             </div>
                                             <hr>

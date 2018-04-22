@@ -5,14 +5,14 @@
     <title>Cotización {{ $budget->public_id }}</title>
     <link rel="stylesheet" href="{{ asset('css/app.css') }}">
 </head>
-<body style="font-family: Calibri;background-color: #FFFFFF;">
+<body style="background-color: #FFFFFF;">
 
-    <table style="width: 100%">
+    <table style="width: 100%;">
         <!-- HEADER -->
         <tr style="color: #FFFFFF;">
             <td style="width: 30%; background-color: #34a7ac">
                 <!-- Title -->
-                <h1 style="text-align: center;">
+                <h1 style="text-align: center;font-family: 'Calibri';">
                     {{ $budget->title }}
                 </h1>
             </td>
@@ -30,7 +30,7 @@
                     <tr>
                         <td style="width: 33.3333333%">
                             <!-- Phone -->
-                            <p style="width: 96%; background-color: #38a9a8;height: 80px;margin: 0 0 0 4%;padding-top: 35px;text-align: center;font-size: 13px;position: relative;">
+                            <p style="font-family: 'Calibri';width: 96%; background-color: #38a9a8;height: 80px;margin: 0 0 0 4%;padding-top: 35px;text-align: center;font-size: 13px;position: relative;">
                                 <i class="glyphicon glyphicon-phone" style="position:absolute;top: 20px;left: 65px;font-size: 30px;"></i>
                                 <br>
                                 {{ Auth::user()->phone }}
@@ -38,7 +38,7 @@
                         </td>
                         <td style="width: 33.3333333%">
                             <!-- Address -->
-                            <p style="width: 96%; background-color: #408b88;height: 80px;margin: 0 0 0 4%;padding-top: 35px;text-align: center;font-size: 13px;position: relative;">
+                            <p style="font-family: 'Calibri';width: 96%; background-color: #408b88;height: 80px;margin: 0 0 0 4%;padding-top: 35px;text-align: center;font-size: 13px;position: relative;">
                                 <i class="glyphicon glyphicon-map-marker" style="position:absolute;top: 20px;left: 65px;font-size: 30px;"></i>
                                 <br>
                                 {{ Auth::user()->address }}
@@ -46,7 +46,7 @@
                         </td>
                         <td style="width: 33.3333333%">
                             <!-- Email -->
-                            <p style="width: 96%; background-color: #277f6a;height: 80px;margin: 0 0 0 4%;padding-top: 35px;text-align: center;font-size: 13px;position: relative;">
+                            <p style="font-family: 'Calibri';width: 96%; background-color: #277f6a;height: 80px;margin: 0 0 0 4%;padding-top: 35px;text-align: center;font-size: 13px;position: relative;">
                                 <i class="glyphicon glyphicon-envelope" style="position:absolute;top: 20px;left: 65px;font-size: 30px;"></i>
                                 <br>
                                 {{ Auth::user()->email }}
@@ -70,24 +70,24 @@
                         <td style="width: 50%;">
 
                             <!-- (Nombre, Telefono, Email) -->
-                            <p style="margin: 25px 0 0 0;font-size: 16px;">
+                            <p style="margin: 25px 0 0 0;font-size: 16px;font-family: 'Calibri';">
                                 <strong>
                                     {{ Auth::user()->business_name }}
                                 </strong>
                             </p>
-                            <p style="margin: 0;">
+                            <p style="margin: 0;font-family: 'Calibri';">
                                 <strong>
                                     {{ $budget->client_label }}
                                 </strong>
                                 {{ $budget->patient->name }}
                             </p>
-                            <p style="margin: 0;">
+                            <p style="margin: 0;font-family: 'Calibri';">
                                 <strong>
                                     {{ $budget->client_phone_label }}
                                 </strong>
                                 {{ $budget->patient->phone }}
                             </p>
-                            <p style="margin: 0;">
+                            <p style="margin: 0;font-family: 'Calibri';">
                                 @if(! empty($budget->patient->email))
                                     <strong>
                                         {{ $budget->client_email_label }}
@@ -104,12 +104,12 @@
                             <table style="width: 100%;">
                                 <tr>
                                     <td style="width: 60%;">
-                                        <p style="text-align: right;color: #699797;font-weight: 600;margin-top: 25px;margin-bottom: 0;">
+                                        <p style="text-align: right;color: #699797;font-weight: 600;margin-top: 25px;margin-bottom: 0;font-family: 'Calibri';">
                                             N°:
                                         </p>
                                     </td>
                                     <td style="width: 40%;">
-                                        <p style="text-align: right;font-weight: 800;margin-top: 25px;margin-bottom: 0;">
+                                        <p style="text-align: right;font-weight: 800;margin-top: 25px;margin-bottom: 0;font-family: 'Calibri';">
                                             #{{ $budget->public_id }}
                                         </p>
                                     </td>
@@ -117,12 +117,12 @@
 
                                 <tr>
                                     <td style="width: 80%;">
-                                        <p style="text-align: right;color: #699797;font-weight: 600;margin-bottom: 0;">
+                                        <p style="text-align: right;color: #699797;font-weight: 600;margin-bottom: 0;font-family: 'Calibri';">
                                             {{ $budget->creation_date_label }}
                                         </p>
                                     </td>
                                     <td style="width: 20%;">
-                                        <p style="text-align: right;font-weight: 800;margin-bottom: 0;">
+                                        <p style="text-align: right;font-weight: 800;margin-bottom: 0;font-family: 'Calibri';">
                                             {{ (new \DateTime($budget->creation_date_value))->format('m/d/Y') }}
                                         </p>
                                     </td>
@@ -142,38 +142,38 @@
     <!-- TABLE -->
     <table style="width: 100%;margin-top: 30px;">
         <tr style="background-color: #3ebbb5; text-align: center;color: #FFFFFF;height: 40px;">
-            <td style="width: 10%;height: 40px;font-weight: bold;font-size: 16px;">
+            <td style="width: 10%;height: 40px;font-weight: bold;font-size: 16px;font-family: 'Calibri';">
                 TH
             </td>
-            <td style="width: 36%;height: 40px;font-weight: bold;font-size: 16px;text-align: left;">
+            <td style="width: 36%;height: 40px;font-weight: bold;font-size: 16px;text-align: left;font-family: 'Calibri';">
                 {{ $budget->table_description_label }}
             </td>
-            <td style="width: 15%;height: 40px;font-weight: bold;font-size: 16px;">
+            <td style="width: 15%;height: 40px;font-weight: bold;font-size: 16px;font-family: 'Calibri';">
                 {{ $budget->table_quantity_label }}
             </td>
-            <td style="width: 20%;height: 40px;font-weight: bold;font-size: 16px;">
+            <td style="width: 20%;height: 40px;font-weight: bold;font-size: 16px;font-family: 'Calibri';">
                 {{ $budget->table_price_label }}
             </td>
-            <td style="width: 20%;height: 40px;font-weight: bold;font-size: 16px;">
+            <td style="width: 20%;height: 40px;font-weight: bold;font-size: 16px;font-family: 'Calibri';">
                 {{ $budget->table_total_label }}
             </td>
         </tr>
         <!-- Detail -->
         @foreach($budget->budgetDetails as $i => $detail)
             <tr style="height: 30px;color: #222;{{ ($i + 1)%2 == 0 ? 'background-color:#dcdcdc;' : '' }}">
-                <td style="text-align: center;height: 30px;vertical-align: middle;padding-bottom: 10px;">
+                <td style="text-align: center;height: 30px;vertical-align: middle;padding-bottom: 10px;font-family: 'Calibri';">
                     {{ $detail->tooth > 0 ? $detail->tooth : '' }}
                 </td>
-                <td style="height: 30px;vertical-align: middle;padding-bottom: 10px;">
+                <td style="height: 30px;vertical-align: middle;padding-bottom: 10px;font-family: 'Calibri';">
                     {{ $detail->product->name }}
                 </td>
-                <td style="text-align: center;height: 30px;vertical-align: middle;padding-bottom: 10px;">
+                <td style="text-align: center;height: 30px;vertical-align: middle;padding-bottom: 10px;font-family: 'Calibri';">
                     {{ $detail->quantity }}
                 </td>
-                <td style="text-align: center;height: 30px;vertical-align: middle;padding-bottom: 10px;">
+                <td style="text-align: center;height: 30px;vertical-align: middle;padding-bottom: 10px;font-family: 'Calibri';">
                     ${{ number_format($detail->price, 2) }} USD
                 </td>
-                <td style="text-align: center;height: 30px;vertical-align: middle;padding-bottom: 10px;">
+                <td style="text-align: center;height: 30px;vertical-align: middle;padding-bottom: 10px;font-family: 'Calibri';">
                     ${{ number_format($detail->price * $detail->quantity, 2) }} USD
                 </td>
             </tr>
@@ -186,10 +186,10 @@
                 <td></td>
                 <td></td>
                 <td></td>
-                <td style="text-align: center;">
+                <td style="text-align: center;font-family: 'Calibri';">
                     {{ $budget->subtotal_footer_label }}
                 </td>
-                <td style="text-align: center;">
+                <td style="text-align: center;font-family: 'Calibri';">
                     ${{ number_format($budget->subtotal_footer_value, 2) }} USD
                 </td>
             </tr>
@@ -199,13 +199,13 @@
                 <td></td>
                 <td></td>
                 <td></td>
-                <td style="text-align: center;height: 35px;">
+                <td style="text-align: center;height: 35px;font-family: 'Calibri';">
                     {{ $budget->discount_label }}
                     @if($budget->discount_type === 1)
                         ({{ $budget->discount_value }}%)
                     @endif
                 </td>
-                <td style="text-align: center;height: 35px;">
+                <td style="text-align: center;height: 35px;font-family: 'Calibri';">
                     @if($budget->discount_type === 1)
                         ${{ number_format($budget->subtotal_footer_value * ($budget->discount_value / 100), 2) }} USD
                     @else
@@ -219,10 +219,10 @@
                 <td></td>
                 <td></td>
                 <td></td>
-                <td style="text-align: center;height: 35px;">
+                <td style="text-align: center;height: 35px;font-family: 'Calibri';">
                     {{ $budget->shaping_label }}
                 </td>
-                <td style="text-align: center;height: 35px;">
+                <td style="text-align: center;height: 35px;font-family: 'Calibri';">
                     ${{ number_format($budget->shaping_value, 2) }} USD
                 </td>
             </tr>
@@ -232,10 +232,10 @@
             <td></td>
             <td></td>
             <td></td>
-            <td style="text-align: center;height: 35px;">
+            <td style="text-align: center;height: 35px;font-family: 'Calibri';">
                 {{ $budget->total_footer_label }}
             </td>
-            <td style="text-align: center;height: 35px;">
+            <td style="text-align: center;height: 35px;font-family: 'Calibri';">
                 ${{ number_format($budget->total_footer_value, 2) }} USD
             </td>
         </tr>
@@ -247,10 +247,10 @@
         @if(!empty($budget->notes_value))
             <tr>
                 <td>
-                    <p style="margin: 0;font-weight: bold;font-size: 12px;">
+                    <p style="margin: 0;font-weight: bold;font-size: 12px;font-family: 'Calibri';">
                         {{ $budget->notes_label }}
                     </p>
-                    <p style="margin: 0;">
+                    <p style="margin: 0;font-family: 'Calibri';">
                         {{ $budget->notes_value }}
                     </p>
                 </td>
@@ -259,10 +259,10 @@
         @if(!empty($budget->terms_value))
             <tr>
                 <td style="padding-top: 30px;">
-                    <p style="margin: 0;font-weight: bold;font-size: 12px;">
+                    <p style="margin: 0;font-weight: bold;font-size: 12px;font-family: 'Calibri';">
                         {{ $budget->terms_label }}
                     </p>
-                    <p style="margin: 0;">
+                    <p style="margin: 0;font-family: 'Calibri';">
                         {{ $budget->terms_value }}
                     </p>
                 </td>
@@ -270,7 +270,7 @@
         @endif
     </table>
 
-    <h4 style="background-color: #66bcc8;color: #FFFFFF;padding: 10px;text-align: center;font-weight: bold;margin-top: 70px;position: absolute;bottom: 0;left: 0;width: 100%;">
+    <h4 style="background-color: #66bcc8;color: #FFFFFF;padding: 10px;text-align: center;font-weight: bold;margin-top: 70px;position: absolute;bottom: 0;left: 0;width: 100%;font-family: 'Calibri';">
         This estimate is valid for 10 days
     </h4>
 </body>

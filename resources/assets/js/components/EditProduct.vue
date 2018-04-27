@@ -5,7 +5,7 @@
                 <h1>
                     <i class="glyphicon glyphicon-th-list" v-if="! loading"></i>
                     <img src="/img/loading.gif" v-if="loading">
-                    {{ form.public_id }}
+                    {{ public_id }}
                 </h1>
             </div>
         </div>
@@ -17,7 +17,33 @@
                         <form v-on:submit.prevent="validateForm()">
 
                             <div class="row">
-                                <div class="col-sm-8">
+                                <div class="col-sm-4">
+                                    <div class="form-group" v-bind:class="{'has-error': errors.has('public_id') || unique}">
+                                        <label for="name">Código</label>
+                                        <input
+                                                type="text"
+                                                class="form-control"
+                                                id="public_id"
+                                                name="public_id"
+                                                placeholder="Codigo del producto"
+                                                maxlength="30"
+                                                v-model="form.public_id"
+                                                v-validate
+                                                data-vv-rules="required"
+                                                v-bind:disabled="loading"
+                                                v-bind:class="{'input-error': errors.has('public_id') || unique}"
+                                                @keyup="unique = false"
+                                                >
+                                        <p class="error" v-if="errors.firstByRule('public_id', 'required')">
+                                            Este campo es requerido
+                                        </p>
+                                        <p class="error" v-if="! errors.has('public_id') && unique">
+                                            Este código ya esta siendo usado
+                                        </p>
+                                    </div>
+                                </div>
+
+                                <div class="col-sm-4">
                                     <div class="form-group" v-bind:class="{'has-error': errors.has('name')}">
                                         <label for="name">Nombre del producto</label>
                                         <input
@@ -38,6 +64,7 @@
                                         </p>
                                     </div>
                                 </div>
+
                                 <div class="col-sm-4">
                                     <div class="form-group" v-bind:class="{'has-error': errors.has('price')}">
                                         <label for="name">Precio</label>
@@ -84,7 +111,9 @@
         data: function () {
             return {
                 loading: false,
-                form: JSON.parse(this.viewData)
+                form: JSON.parse(this.viewData),
+                public_id: JSON.parse(this.viewData).public_id,
+                unique: false
             }
         },
 
@@ -92,16 +121,14 @@
             validateForm: function () {
                 this.$validator.validateAll().then((res) => {
                     if (res) {
-                        this.sendForm();
+                        this.validate();
                     }
                 })
             },
 
             sendForm: function () {
 
-                this.loading = true;
-
-                axios.put('/user/product/' + this.form.public_id, this.form)
+                axios.put('/user/product/' + this.public_id, this.form)
                         .then((res) => {
                             if (res.data.success) {
                                 location.href = res.data.redirect;
@@ -113,6 +140,27 @@
                             console.log('Error', err);
                         })
                 ;
+            },
+
+            validate: function () {
+
+                this.loading = true;
+
+                axios.get('/user/product/validate/' + this.form.public_id + '/' + this.form.id)
+                    .then((res) => {
+
+                        if (res.data.success && res.data.valid) {
+                            this.sendForm();
+                        } else {
+                            this.unique = true;
+                            this.loading = false;
+                        }
+                    })
+                    .catch((err) => {
+                        this.loading = false;
+
+                        console.log('Error', err);
+                    })
             }
         }
     }

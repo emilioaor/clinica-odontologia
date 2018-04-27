@@ -92,7 +92,7 @@
                                             <th width="30%">Servicio</th>
                                             <th width="25%">Asistente</th>
                                             <th width="15%">Diente</th>
-                                            <th width="20%" v-show="user.level === 1">Precio</th>
+                                            <th width="20%" v-show="user.level === 1 || user.level === 2">Precio</th>
                                             <th width="10%"></th>
                                         </tr>
                                     </thead>
@@ -152,7 +152,7 @@
                                                         :disabled="user.level !== 1 && service.doctor_id !== user.id"
                                                 >
                                             </td>
-                                            <td v-show="user.level === 1">
+                                            <td v-show="user.level === 1 || user.level === 2">
                                                 <input
                                                         type="number"
                                                         class="form-control"

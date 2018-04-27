@@ -11,6 +11,7 @@ Route::group(['prefix' => 'user', 'middleware' => 'auth'], function() {
     Route::get('/home', 'HomeController@index')->name('home');
 
     // Productos
+    Route::get('product/validate/{product}/{id}', 'User\ProductController@validatePublicId');
     Route::resource('product', 'User\ProductController');
 
     // Pacientes

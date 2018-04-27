@@ -95,13 +95,17 @@ class ProductController extends Controller
     public function update(Request $request, $id)
     {
         $product = Product::where('public_id', $id)->firstOrFail();
+        $product->public_id = $request->public_id;
         $product->name = $request->name;
         $product->price = $request->price;
         $product->save();
 
         $this->sessionMessage('message.product.update');
 
-        return new JsonResponse(['success' => true, 'redirect' => route('product.edit', ['product' => $id])]);
+        return new JsonResponse([
+            'success' => true,
+            'redirect' => route('product.edit', ['product' => $product->public_id])
+        ]);
     }
 
     /**
@@ -113,5 +117,21 @@ class ProductController extends Controller
     public function destroy($id)
     {
         abort(404);
+    }
+
+    /**
+     * Valida si el id esta disponible
+     *
+     * @param $publicId
+     * @param Request $id
+     * @return JsonResponse
+     */
+    public function validatePublicId($publicId, $id)
+    {
+        if (Product::where('public_id', $publicId)->where('id', '<>', $id)->count()) {
+            return new JsonResponse(['success' => true, 'valid' => false]);
+        }
+
+        return new JsonResponse(['success' => true, 'valid' => true]);
     }
 }

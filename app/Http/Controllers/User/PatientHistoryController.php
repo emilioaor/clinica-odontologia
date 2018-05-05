@@ -23,7 +23,12 @@ class PatientHistoryController extends Controller
     {
         $this->middleware('doctor')->except([
             'searchService',
-            'search'
+            'search',
+            'updateAmount'
+        ]);
+
+        $this->middleware('secretary')->only([
+            'updateAmount'
         ]);
     }
 
@@ -248,5 +253,20 @@ class PatientHistoryController extends Controller
             'services' => $servicesResponse,
             'notes' => $notesResponse
         ]);
+    }
+
+    /**
+     * Actualiza el monto recibido en un servicio
+     *
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function updateAmount(Request $request)
+    {
+        $service = PatientHistory::findOrFail($request->id);
+        $service->amount = $request->amount;
+        $service->save();
+
+        return new JsonResponse(['success' => true]);
     }
 }

@@ -14,7 +14,8 @@ class PatientHistory extends Model
         'tooth',
         'doctor_id',
         'assistant_id',
-        'price'
+        'price',
+        'amount'
 
     ];
 

@@ -10,7 +10,7 @@
             </div>
         </div>
         <div class="row">
-            <div class="col-sm-8">
+            <div class="col-sm-9">
                 <div class="panel panel-default">
                     <div class="panel-body">
 
@@ -89,11 +89,11 @@
                                 <table class="table table-responsive">
                                     <thead>
                                         <tr>
-                                            <th width="30%">Servicio</th>
+                                            <th width="35%">Servicio</th>
                                             <th width="25%">Asistente</th>
                                             <th width="15%">Diente</th>
                                             <th width="20%" v-show="user.level === 1 || user.level === 2">Precio</th>
-                                            <th width="10%"></th>
+                                            <th width="5%"></th>
                                         </tr>
                                     </thead>
                                     <tbody v-for="(service, id) in services">
@@ -168,7 +168,7 @@
                                                     Campo requerido
                                                 </p>
                                             </td>
-                                            <td>
+                                            <td class="text-center">
                                                 <a @click="removeService(id)" v-if="user.level === 1 || service.doctor_id === user.id">
                                                     X
                                                 </a>
@@ -198,7 +198,7 @@
                                     <thead>
                                         <tr>
                                             <th>Notas</th>
-                                            <th></th>
+                                            <th width="5%"></th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -212,7 +212,7 @@
                                                         v-model="note.content"
                                                         ></textarea>
                                             </td>
-                                            <td>
+                                            <td class="text-center">
                                                 <a @click="removeNote(id)">
                                                     X
                                                 </a>

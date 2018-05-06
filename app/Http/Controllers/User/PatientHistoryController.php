@@ -196,8 +196,8 @@ class PatientHistoryController extends Controller
         }
 
         $services = $patient->patientHistory()
-            ->where('created_at', '>=', $start)
-            ->where('created_at', '<=', $end)
+            ->where('patient_history.created_at', '>=', $start)
+            ->where('patient_history.created_at', '<=', $end)
             ->orderBy('created_at')
             ->with('doctor')
             ->with('product')

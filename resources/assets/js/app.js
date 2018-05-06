@@ -39,6 +39,7 @@ Vue.component('edit-supply', require('./components/EditSupply'));
 Vue.component('register-supply-request', require('./components/RegisterSupplyRequest'));
 Vue.component('change-status-supply-request', require('./components/ChangeStatusSupplyRequest.vue'));
 Vue.component('search-supply', require('./components/SearchSupply'));
+Vue.component('register-payment', require('./components/RegisterPayment.vue'));
 
 const app = new Vue({
     el: '#app'

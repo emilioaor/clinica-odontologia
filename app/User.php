@@ -123,6 +123,16 @@ class User extends Authenticatable
     }
 
     /**
+     * Todos los pagos registrados por este usuario
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function payments()
+    {
+        return $this->hasMany(Payment::class, 'user_created');
+    }
+
+    /**
      * Genera el id publico en base al nivel
      */
     public function generatePublicId()

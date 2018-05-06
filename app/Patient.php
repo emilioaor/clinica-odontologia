@@ -63,4 +63,14 @@ class Patient extends Model
     {
         return $this->hasMany(CallLog::class, 'patient_id');
     }
+
+    /**
+     * Pagos del paciente
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function payments()
+    {
+        return $this->hasMany(Payment::class, 'patient_id');
+    }
 }

@@ -232,6 +232,23 @@
                                     @endif
                                 </ul>
                             </li>
+
+                            @if(Auth::user()->isAdmin() || Auth::user()->isSecretary())
+                                <li class="dropdown">
+                                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+                                        Pagos <span class="caret"></span>
+                                    </a>
+
+                                    <ul class="dropdown-menu" role="menu">
+                                        <li>
+                                            <a href="{{ route('payment.create') }}">
+                                                <i class="glyphicon glyphicon-search"></i>
+                                                Buscar pagos
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </li>
+                            @endif
                         </ul>
                     @endif
 

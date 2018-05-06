@@ -47,6 +47,10 @@ Route::group(['prefix' => 'user', 'middleware' => 'auth'], function() {
     Route::get('supplyRequest/search', 'Assistant\SupplyRequestController@search')->name('supplyRequest.search');
     Route::get('supplyRequest/search/report', 'Assistant\SupplyRequestController@searchSupplyRequest');
     Route::resource('supplyRequest', 'Assistant\SupplyRequestController');
+
+    // Pagos
+    Route::get('payment/{patient}/search', 'Secretary\PaymentController@search');
+    Route::resource('payment', 'Secretary\PaymentController');
 });
 
 // Administrador

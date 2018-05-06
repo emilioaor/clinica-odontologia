@@ -253,7 +253,7 @@
 
 
                                         <p style="width: 80%;text-align: right;float: left;color: #699797;font-weight: 600;margin-top: 25px;margin-bottom: 0;">
-                                            Estimate N°:
+                                            N°:
                                         </p>
                                         <p style="width: 20%;text-align: right;float: left;font-weight: 800;margin-top: 25px;margin-bottom: 0;">
                                             #{{ next }}
@@ -696,11 +696,11 @@
                 userData: JSON.parse(this.user),
                 form: {
                     public_id: this.next,
-                    title: 'ESTIMATE',
-                    client_label: 'Patient Name:',
-                    client_phone_label: 'Phone:',
+                    title: 'COTIZACIÓN',
+                    client_label: 'Para:',
+                    client_phone_label: 'Telefono:',
                     client_email_label: 'Email:',
-                    creation_date_label: 'Date',
+                    creation_date_label: 'Fecha de emisión',
                     creation_date_value: '',
                     total_head_label: 'Total:',
                     total_head_value: null,
@@ -713,14 +713,14 @@
                     subtotal_footer_value: '',
                     total_footer_label: 'Total',
                     total_footer_value: '',
-                    notes_label: 'Notes:',
+                    notes_label: 'Notas:',
                     notes_value: '',
                     terms_label: 'Terminos y condiciones:',
                     term_value: '',
-                    table_description_label: 'DESCRIPTION',
-                    table_quantity_label: 'QTY.',
-                    table_price_label: 'PRICE',
-                    table_total_label: 'AMOUNT',
+                    table_description_label: 'Item',
+                    table_quantity_label: 'Cant.',
+                    table_price_label: 'Precio',
+                    table_total_label: 'Total',
                     patient_id: null,
                     secretary_notes: '',
                     details: [{

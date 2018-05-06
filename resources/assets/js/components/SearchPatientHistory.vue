@@ -10,7 +10,7 @@
             </div>
         </div>
         <div class="row">
-            <div class="col-xs-12">
+            <div class="col-sm-10">
                 <div class="panel panel-default">
                     <div class="panel-body">
 
@@ -37,7 +37,7 @@
                         <section v-if="patient">
 
                             <div class="row">
-                                <div class="col-sm-3">
+                                <div class="col-sm-4">
                                     <div class="form-group">
                                         <label for="">Nombre</label>
                                         <p>
@@ -46,7 +46,7 @@
                                     </div>
                                 </div>
 
-                                <div class="col-sm-3">
+                                <div class="col-sm-4">
                                     <div class="form-group">
                                         <label for="">Telefono</label>
                                         <p>
@@ -55,7 +55,7 @@
                                     </div>
                                 </div>
 
-                                <div class="col-sm-3">
+                                <div class="col-sm-4">
                                     <div class="form-group">
                                         <label for="">Email</label>
                                         <p>
@@ -67,7 +67,7 @@
                             </div>
 
                             <div class="row">
-                                <div class="col-sm-3">
+                                <div class="col-sm-4">
                                     <div class="form-group">
                                         <label for="">Desde</label>
                                         <datepicker
@@ -82,7 +82,7 @@
                                     </div>
                                 </div>
 
-                                <div class="col-sm-3">
+                                <div class="col-sm-4">
                                     <div class="form-group">
                                         <label for="">Hasta</label>
                                         <datepicker
@@ -126,10 +126,6 @@
                                                 <th>Diente</th>
                                                 <th>Doctor</th>
                                                 <th>Asistente</th>
-                                                <th width="10%">Precio</th>
-                                                <th width="10%">Recibido</th>
-                                                <th width="10%">Balance</th>
-                                                <th width="5%" v-if="authUser.level === 1 || authUser.level === 3"></th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -139,48 +135,6 @@
                                                 <td>{{ service.tooth }}</td>
                                                 <td>{{ service.doctor.name }}</td>
                                                 <td>{{ service.assistant.name }}</td>
-                                                <td>{{ service.price }}</td>
-                                                <td>
-                                                    <input
-                                                            type="number"
-                                                            placeholder="Recibido"
-                                                            class="form-control"
-                                                            min="0"
-                                                            v-model="service.amount"
-                                                            v-if="service.edit"
-                                                            :class="{'input-error': service.amount === '' || service.amount === null}"
-                                                        >
-                                                    <span v-if="!service.edit">
-                                                        {{ service.amount }}
-                                                    </span>
-                                                    <p
-                                                            class="error"
-                                                            v-if="service.edit && (service.amount === '' || service.amount === null)"
-                                                        >
-                                                        Requerido
-                                                    </p>
-                                                </td>
-                                                <td>{{ service.price - service.amount }}</td>
-                                                <td v-if="authUser.level === 1 || authUser.level === 3">
-                                                    <button
-                                                            class="btn btn-warning"
-                                                            v-if="!service.edit && ! service.loading"
-                                                            @click="service.edit = true"
-                                                        >
-                                                        <i class="glyphicon glyphicon-pencil"></i>
-                                                    </button>
-
-
-                                                    <button
-                                                            class="btn btn-success"
-                                                            v-if="service.edit && ! service.loading"
-                                                            @click="updateAmount(service)"
-                                                        >
-                                                        <i class="glyphicon glyphicon-ok"></i>
-                                                    </button>
-
-                                                    <img src="/img/loading.gif" v-if="service.loading">
-                                                </td>
                                             </tr>
                                         </tbody>
                                     </table>
@@ -298,14 +252,12 @@
         components: {
             Datepicker
         },
-        props: ['user'],
         data: function () {
           return {
               loading: false,
               patient: null,
               initStart: new Date(),
               initEnd: new Date(),
-              authUser: JSON.parse(this.user),
               data: {
                   start: '',
                   end: '',
@@ -375,15 +327,6 @@
                         this.loading = false;
 
                         if (res.data.success) {
-
-                            for (let x in res.data.services) {
-                                for (let y in res.data.services[x]) {
-
-                                    res.data.services[x][y].edit = false;
-                                    res.data.services[x][y].loading = false;
-                                }
-                            }
-
                             this.data.services = res.data.services;
                             this.data.notes = res.data.notes;
                         }
@@ -401,28 +344,6 @@
                 format = format[0].split('-');
 
                 return format[1] + '/' + format[2] + '/' + format[0];
-            },
-
-            updateAmount: function (service) {
-
-                if (service.amount === null || service.amount === '') {
-                    return false;
-                }
-
-                service.loading = true;
-
-                axios.put('/user/service/amount', service)
-                    .then((res) => {
-
-                        if (res.data.success) {
-                            service.edit = false;
-                            service.loading = false;
-                        }
-                    })
-                    .catch((err) => {
-                        console.log(err);
-                        service.loading = false;
-                    });
             }
         }
     }

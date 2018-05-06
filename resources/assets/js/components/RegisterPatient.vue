@@ -71,7 +71,7 @@
 
                                     <div class="col-sm-4">
                                         <div class="form-group">
-                                            <label for="name">Email <small>(opcional)</small></label>
+                                            <label for="name">Email</label>
                                             <input
                                                     type="email"
                                                     class="form-control"
@@ -80,9 +80,12 @@
                                                     name="email"
                                                     v-model="form.email"
                                                     v-validate
-                                                    data-vv-rules="email"
+                                                    data-vv-rules="required|email"
                                                     :class="{'input-error': errors.has('email')}"
                                                     >
+                                            <p class="error" v-if="errors.firstByRule('email', 'required')">
+                                                Campo requerido
+                                            </p>
                                             <p class="error" v-if="errors.firstByRule('email', 'email')">
                                                 Formato invalido
                                             </p>

@@ -137,7 +137,9 @@ class User extends Authenticatable
      */
     public function generatePublicId()
     {
-        if ($this->isDoctor()) {
+        if ($this->isAdmin()) {
+            $this->public_id = 'ADM' . time();
+        } elseif ($this->isDoctor()) {
             $this->public_id = 'DOC' . time();
         } elseif ($this->isSecretary()) {
             $this->public_id = 'SEC' . time();

@@ -20,7 +20,7 @@ class UserController extends Controller
     {
         if (! empty($request->search)) {
 
-            $users = User::where('level', '<>', User::LEVEL_ADMIN)
+            $users = User::where('id', '<>', Auth::user()->id)
                 ->orderByDesc('id')
                 ->where('username', 'like', "%$request->search%")
                 ->orWhere('name', 'like', "%$request->search%")
@@ -28,7 +28,7 @@ class UserController extends Controller
                 ->paginate();
 
         } else {
-            $users = User::where('level', '<>', User::LEVEL_ADMIN)->orderByDesc('id')->paginate();
+            $users = User::where('id', '<>', Auth::user()->id)->orderByDesc('id')->paginate();
         }
 
         return view('admin.user.index', compact('users'));
@@ -53,10 +53,6 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-        if ($request->level == User::LEVEL_ADMIN) {
-            throw new \Exception('message.access.level');
-        }
-
         $user = new User($request->all());
         $user->password = bcrypt($request->password);
         $user->logo = Auth::user()->logo;

@@ -80,6 +80,7 @@
                                                     class="form-control"
                                                     v-model="form.level"
                                                 >
+                                                <option value="1">Administrador</option>
                                                 <option value="2">Doctor</option>
                                                 <option value="3">Secretaria</option>
                                                 <option value="4">Asistente</option>
@@ -95,6 +96,42 @@
                                             <i class="glyphicon glyphicon-saved"></i>
                                             Actualizar usuario
                                         </button>
+
+                                        <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#deleteUserModal" v-if="!loading">
+                                            <i class="glyphicon glyphicon-remove"></i>
+                                            Eliminar usuario
+                                        </button>
+
+
+                                        <!-- Modal -->
+                                        <div class="modal fade" id="deleteUserModal" tabindex="-1" role="dialog" aria-labelledby="deleteUserModalLabel" aria-hidden="true">
+                                            <div class="modal-dialog" role="document">
+                                                <div class="modal-content">
+                                                    <div class="modal-body">
+                                                        <h4>¿Esta seguro de eliminar a este usuario?</h4>
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button
+                                                                type="button"
+                                                                class="btn btn-secondary"
+                                                                data-dismiss="modal"
+                                                                v-if="! loading">
+                                                            NO
+                                                        </button>
+                                                        <button
+                                                                type="button"
+                                                                class="btn btn-danger"
+                                                                @click="deleteUser()"
+                                                                v-if="! loading">
+                                                            SI
+                                                        </button>
+
+                                                        <img src="/img/loading.gif" v-if="loading">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
                                     </div>
                                 </div>
 
@@ -245,6 +282,22 @@
                     console.log(err);
                 })
                 ;
+            },
+
+            deleteUser: function () {
+                this.loading = true;
+
+                axios.delete('/admin/user/' + this.form.public_id)
+                    .then((res) => {
+
+                        if (res.data.success) {
+                            location.href = res.data.redirect;
+                        }
+                    })
+                    .catch((err) => {
+                        this.loading = false;
+                        console.log(err);
+                    })
             }
         }
     }

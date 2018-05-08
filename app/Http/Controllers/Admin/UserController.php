@@ -128,7 +128,15 @@ class UserController extends Controller
      */
     public function destroy($id)
     {
-        abort(404);
+        $user = User::where('public_id', $id)->firstOrFail();
+        $user->delete();
+
+        $this->sessionMessage('message.user.delete');
+
+        return new JsonResponse([
+            'success' => true,
+            'redirect' => route('user.index')
+        ]);
     }
 
     /**

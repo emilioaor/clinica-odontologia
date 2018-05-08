@@ -24,6 +24,7 @@ return [
 
     'user.create' => 'Usuario registrado',
     'user.update' => 'Usuario actualizado',
+    'user.delete' => 'Usuario eliminado',
     'user.password' => 'Contraseña actualizada',
 
     'callLog.create' => 'Registro de llamada registrado',

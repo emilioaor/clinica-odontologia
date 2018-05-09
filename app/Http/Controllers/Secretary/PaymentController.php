@@ -17,6 +17,8 @@ class PaymentController extends Controller
     public function __construct()
     {
         $this->middleware('secretary');
+
+        $this->middleware('admin')->only(['destroy']);
     }
 
     /**
@@ -99,7 +101,10 @@ class PaymentController extends Controller
      */
     public function destroy($id)
     {
-        abort(404);
+        $payment = Payment::findOrFail($id);
+        $payment->delete();
+
+        return new JsonResponse(['success' => true]);
     }
 
     /**

@@ -24,6 +24,9 @@
                                     <th>Razón</th>
                                     <th>Estatus</th>
                                     <th width="5%"></th>
+                                    @if(Auth::user()->isAdmin())
+                                        <th width="5%"></th>
+                                    @endif
                                 </tr>
                             </thead>
                             <tbody>
@@ -49,6 +52,48 @@
                                                 <i class="glyphicon glyphicon-phone-alt"></i>
                                             </button>
                                         </td>
+                                        @if(Auth::user()->isAdmin())
+                                            <td>
+                                                <!-- Button trigger modal -->
+                                                <button
+                                                        type="button"
+                                                        class="btn btn-danger"
+                                                        data-toggle="modal"
+                                                        data-target="#deleteModal"
+                                                        onclick="window.callLogPublicId = '{{ $call->public_id }}'"
+                                                        >
+                                                    <i class="glyphicon glyphicon-remove"></i>
+                                                </button>
+
+                                                <!-- Modal -->
+                                                <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
+                                                    <div class="modal-dialog" role="document">
+                                                        <div class="modal-content">
+                                                            <div class="modal-body">
+                                                                <h4>¿Esta seguro de eliminar este insumo?</h4>
+                                                            </div>
+                                                            <div class="modal-footer">
+                                                                <form method="post" action="{{ route('callLog.destroy', ['callLog' => $call->public_id]) }}">
+                                                                    {{ csrf_field() }}
+                                                                    {{ method_field('DELETE') }}
+
+                                                                    <button
+                                                                            type="button"
+                                                                            class="btn btn-secondary"
+                                                                            data-dismiss="modal">
+                                                                        NO
+                                                                    </button>
+                                                                    <button
+                                                                            class="btn btn-danger">
+                                                                        SI
+                                                                    </button>
+                                                                </form>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                        @endif
                                     </tr>
                                 @endforeach
                             @else

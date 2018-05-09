@@ -214,6 +214,7 @@
                                             <th>Registrado por</th>
                                             <th>Tipo</th>
                                             <th>Monto</th>
+                                            <th width="5%"></th>
                                         </tr>
                                         </thead>
                                         <tbody>
@@ -226,6 +227,18 @@
                                                 <span v-if="payment.type === 3">Cheque</span>
                                             </td>
                                             <td>{{ '$' + payment.amount }}</td>
+                                            <td>
+                                                <button
+                                                        type="button"
+                                                        class="btn btn-danger"
+                                                        data-toggle="modal"
+                                                        data-target="#deleteModal"
+                                                        v-if="authUser.level === 1"
+                                                        @click="deleteId = payment.id"
+                                                        >
+                                                    <i class="glyphicon glyphicon-remove"></i>
+                                                </button>
+                                            </td>
                                         </tr>
                                         </tbody>
                                     </table>
@@ -375,6 +388,37 @@
                 </div>
             </div>
         </div>
+
+        <!-- Modal -->
+        <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-body">
+                        <h4>¿Esta seguro de eliminar este pago?</h4>
+                    </div>
+                    <div class="modal-footer">
+                        <button
+                                type="button"
+                                class="btn btn-secondary"
+                                data-dismiss="modal"
+                                v-show="! loading"
+                                @click="deleteId = null"
+                                id="closeDeleteModal">
+                            NO
+                        </button>
+                        <button
+                                type="button"
+                                class="btn btn-danger"
+                                @click="sendDelete()"
+                                v-show="! loading">
+                            SI
+                        </button>
+
+                        <img src="/img/loading.gif" v-if="loading">
+                    </div>
+                </div>
+            </div>
+        </div>
     </section>
 </template>
 
@@ -385,6 +429,7 @@
         components: {
             Datepicker
         },
+        props: ['user'],
         data: function () {
           return {
               loading: false,
@@ -410,7 +455,9 @@
                       patient_id: null
                   },
                   loading: false,
-              }
+              },
+              authUser: JSON.parse(this.user),
+              deleteId: null
           }
         },
         mounted: function () {
@@ -544,6 +591,24 @@
 
             getBalance: function () {
                 return this.getTotalPayments() - this.getTotalServices();
+            },
+
+            sendDelete: function () {
+                this.loading = true;
+
+                axios.delete('/user/payment/' + this.deleteId)
+                    .then((res) => {
+
+                        if (res.data.success) {
+                            $('#closeDeleteModal').click();
+                            this.filter = false;
+                            this.search();
+                        }
+                    })
+                    .catch((err) => {
+                        this.loading = false;
+                        console.log(err);
+                    })
             }
         }
     }

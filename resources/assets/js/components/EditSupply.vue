@@ -46,6 +46,47 @@
                                         <i class="glyphicon glyphicon-saved"></i>
                                         Actualizar insumo
                                     </button>
+
+                                    <button
+                                            type="button"
+                                            class="btn btn-danger"
+                                            data-toggle="modal"
+                                            data-target="#deleteModal"
+                                            v-bind:disabled="loading"
+                                            v-if="authUser.level === 1"
+                                            >
+                                        <i class="glyphicon glyphicon-remove"></i>
+                                        Eliminar insumo
+                                    </button>
+
+                                    <!-- Modal -->
+                                    <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
+                                        <div class="modal-dialog" role="document">
+                                            <div class="modal-content">
+                                                <div class="modal-body">
+                                                    <h4>¿Esta seguro de eliminar este insumo?</h4>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button
+                                                            type="button"
+                                                            class="btn btn-secondary"
+                                                            data-dismiss="modal"
+                                                            v-if="! loading">
+                                                        NO
+                                                    </button>
+                                                    <button
+                                                            type="button"
+                                                            class="btn btn-danger"
+                                                            @click="sendDelete()"
+                                                            v-if="! loading">
+                                                        SI
+                                                    </button>
+
+                                                    <img src="/img/loading.gif" v-if="loading">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </form>
@@ -59,12 +100,13 @@
 
 <script>
     export default {
-        props: ['viewData'],
+        props: ['viewData', 'user'],
 
         data: function () {
             return {
                 loading: false,
-                form: JSON.parse(this.viewData)
+                form: JSON.parse(this.viewData),
+                authUser: JSON.parse(this.user)
             }
         },
 
@@ -93,6 +135,22 @@
                             console.log('Error', err);
                         })
                 ;
+            },
+
+            sendDelete: function () {
+                this.loading = true;
+
+                axios.delete('/user/supply/' + this.form.public_id)
+                    .then((res) => {
+
+                        if (res.data.success) {
+                            location.href = res.data.redirect;
+                        }
+                    })
+                    .catch((err) => {
+                        this.loading = false;
+                        console.log(err);
+                    })
             }
         }
     }

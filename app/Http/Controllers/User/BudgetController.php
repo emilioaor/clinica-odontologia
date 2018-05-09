@@ -30,6 +30,8 @@ class BudgetController extends Controller
         ]);
 
         $this->middleware('noAssistant');
+
+        $this->middleware('admin')->only(['destroy']);
     }
 
     /**
@@ -212,7 +214,15 @@ class BudgetController extends Controller
      */
     public function destroy($id)
     {
-        abort(404);
+        $budget = Budget::where('public_id', $id)->firstOrFail();
+        $budget->delete();
+
+        $this->sessionMessage('message.budget.delete');
+
+        return new JsonResponse([
+            'success' => true,
+            'redirect' => route('budget.index')
+        ]);
     }
 
     /**

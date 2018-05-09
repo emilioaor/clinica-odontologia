@@ -3,9 +3,11 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class CallLog extends Model
 {
+    use SoftDeletes;
 
     /** Estatus de la lista de llamada */
     const STATUS_PENDING = 1;
@@ -25,6 +27,8 @@ class CallLog extends Model
         'appointment_date'
 
     ];
+
+    protected $dates = ['deleted_at'];
 
     /**
      * Paciente al que se debe llamar

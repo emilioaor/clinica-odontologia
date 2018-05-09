@@ -3,9 +3,12 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Budget extends Model
 {
+    use SoftDeletes;
+
     protected $table = 'budgets';
 
     protected $fillable = [
@@ -38,6 +41,8 @@ class Budget extends Model
         'patient_id'
 
     ];
+
+    protected $dates = ['deleted_at'];
 
     /**
      * Detalles de esta cotización

@@ -112,6 +112,14 @@ class SupplyController extends Controller
      */
     public function destroy($id)
     {
-        abort(404);
+        $supply = Supply::where('public_id', $id)->firstOrFail();
+        $supply->delete();
+
+        $this->sessionMessage('message.supply.delete');
+
+        return new JsonResponse([
+            'success' => true,
+            'redirect' => route('supply.index')
+        ]);
     }
 }

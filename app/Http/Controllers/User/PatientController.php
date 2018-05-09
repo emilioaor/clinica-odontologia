@@ -23,6 +23,8 @@ class PatientController extends Controller
         $this->middleware('noAssistant')->except([
             'search'
         ]);
+
+        $this->middleware('admin')->only(['destroy']);
     }
 
     /**
@@ -142,7 +144,15 @@ class PatientController extends Controller
      */
     public function destroy($id)
     {
-        abort(404);
+        $patient = Patient::where('public_id', $id)->firstOrFail();
+        $patient->delete();
+
+        $this->sessionMessage('message.patient.delete');
+
+        return new JsonResponse([
+            'success' => true,
+            'redirect' => route('patient.index')
+        ]);
     }
 
     /**

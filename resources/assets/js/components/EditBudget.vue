@@ -621,6 +621,49 @@
                                         <i class="glyphicon glyphicon-share"></i>
                                         Generar PDF
                                     </a>
+
+                                    <button
+                                            type="button"
+                                            class="btn btn-danger btn-lg"
+                                            data-toggle="modal"
+                                            data-target="#deleteModal"
+                                            v-bind:disabled="loading"
+                                            v-if="authUser.level === 1"
+                                            >
+                                        <i class="glyphicon glyphicon-remove"></i>
+                                        Eliminar cotización
+                                    </button>
+
+                                    <!-- Modal -->
+                                    <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
+                                        <div class="modal-dialog" role="document">
+                                            <div class="modal-content">
+                                                <div class="modal-body">
+                                                    <h4>¿Esta seguro de eliminar esta cotización?</h4>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button
+                                                            type="button"
+                                                            class="btn btn-secondary"
+                                                            data-dismiss="modal"
+                                                            v-if="! loading">
+                                                        NO
+                                                    </button>
+                                                    <button
+                                                            type="button"
+                                                            class="btn btn-danger"
+                                                            @click="sendDelete()"
+                                                            v-if="! loading">
+                                                        SI
+                                                    </button>
+
+                                                    <img src="/img/loading.gif" v-if="loading">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+
                                     <img src="/img/loading.gif" v-if="loading">
                                 </div>
                             </div>
@@ -665,6 +708,7 @@
                     loading: false,
                     search: ''
                 },
+                authUser: JSON.parse(this.user)
             }
         },
 
@@ -829,6 +873,22 @@
                 }
 
                 return array;
+            },
+
+            sendDelete: function () {
+                this.loading = true;
+
+                axios.delete('/user/budget/' + this.form.public_id)
+                    .then((res) => {
+
+                        if (res.data.success) {
+                            location.href = res.data.redirect;
+                        }
+                    })
+                    .catch((err) => {
+                        this.loading = false;
+                        console.log(err);
+                    })
             }
         }
     }

@@ -26,7 +26,8 @@ class CallLogController extends Controller
 
         $this->middleware('admin')->only([
             'search',
-            'searchCall'
+            'searchCall',
+            'destroy'
         ]);
     }
 
@@ -158,7 +159,12 @@ class CallLogController extends Controller
      */
     public function destroy($id)
     {
-        abort(404);
+        $callLog = CallLog::where('public_id', $id)->firstOrFail();
+        $callLog->delete();
+
+        $this->sessionMessage('message.callLog.delete');
+
+        return redirect()->route('callLog.index');
     }
 
     /**

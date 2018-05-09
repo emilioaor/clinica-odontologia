@@ -3,9 +3,12 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Payment extends Model
 {
+    use SoftDeletes;
+
     /** Tipos de pago */
     const TYPE_CREDIT_CARD = 1;
     const TYPE_CASH = 2;
@@ -19,6 +22,8 @@ class Payment extends Model
         'amount',
         'type'
     ];
+
+    protected $dates = ['deleted_at'];
 
     /**
      * Paciente que pago

@@ -16,6 +16,7 @@ class ProductController extends Controller
     {
         $this->middleware('doctor')->except('index');
         $this->middleware('noAssistant');
+        $this->middleware('admin')->only(['destroy']);
     }
 
     /**
@@ -116,7 +117,15 @@ class ProductController extends Controller
      */
     public function destroy($id)
     {
-        abort(404);
+        $product = Product::where('public_id', $id)->firstOrFail();
+        $product->delete();
+
+        $this->sessionMessage('message.product.delete');
+
+        return new JsonResponse([
+            'success' => true,
+            'redirect' => route('product.index')
+        ]);
     }
 
     /**

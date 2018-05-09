@@ -25,6 +25,11 @@ class PatientHistoryController extends Controller
             'searchService',
             'search'
         ]);
+
+        $this->middleware('admin')->only([
+            'destroy',
+            'deleteNote'
+        ]);
     }
 
     /**
@@ -157,7 +162,10 @@ class PatientHistoryController extends Controller
      */
     public function destroy($id)
     {
-        abort(404);
+        $patientHistory = PatientHistory::findOrFail($id);
+        $patientHistory->delete();
+
+        return new JsonResponse(['success' => true]);
     }
 
     /**
@@ -248,5 +256,19 @@ class PatientHistoryController extends Controller
             'services' => $servicesResponse,
             'notes' => $notesResponse
         ]);
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function deleteNote($id)
+    {
+        $note = Note::findOrFail($id);
+        $note->delete();
+
+        return new JsonResponse(['success' => true]);
     }
 }

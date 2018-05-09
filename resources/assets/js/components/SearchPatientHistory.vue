@@ -126,6 +126,7 @@
                                                 <th>Diente</th>
                                                 <th>Doctor</th>
                                                 <th>Asistente</th>
+                                                <th width="5%"></th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -135,6 +136,18 @@
                                                 <td>{{ service.tooth }}</td>
                                                 <td>{{ service.doctor.name }}</td>
                                                 <td>{{ service.assistant.name }}</td>
+                                                <td>
+                                                    <button
+                                                            type="button"
+                                                            class="btn btn-danger"
+                                                            data-toggle="modal"
+                                                            data-target="#deleteModal"
+                                                            v-if="authUser.level === 1"
+                                                            @click="deletePatientHistory = service.id"
+                                                            >
+                                                        <i class="glyphicon glyphicon-remove"></i>
+                                                    </button>
+                                                </td>
                                             </tr>
                                         </tbody>
                                     </table>
@@ -156,6 +169,16 @@
 
                                                 <p v-for="(note,id) in notes">
                                                     {{ (id + 1) + '. ' + note.user.username + ' - ' + note.content }}
+                                                    <button
+                                                            type="button"
+                                                            class="btn btn-danger btn-xs"
+                                                            data-toggle="modal"
+                                                            data-target="#deleteNoteModal"
+                                                            v-if="authUser.level === 1"
+                                                            @click="deleteNote = note.id"
+                                                            >
+                                                        <i class="glyphicon glyphicon-remove"></i>
+                                                    </button>
                                                 </p>
                                             </div>
                                             <hr>
@@ -242,6 +265,68 @@
                 </div>
             </div>
         </div>
+
+        <!-- Modal -->
+        <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-body">
+                        <h4>¿Esta seguro de eliminar este servicio?</h4>
+                    </div>
+                    <div class="modal-footer">
+                        <button
+                                type="button"
+                                class="btn btn-secondary"
+                                data-dismiss="modal"
+                                v-show="! loading"
+                                @click="deletePatientHistory = null"
+                                id="closeDeleteModal">
+                            NO
+                        </button>
+                        <button
+                                type="button"
+                                class="btn btn-danger"
+                                @click="sendDelete()"
+                                v-show="! loading">
+                            SI
+                        </button>
+
+                        <img src="/img/loading.gif" v-if="loading">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal -->
+        <div class="modal fade" id="deleteNoteModal" tabindex="-1" role="dialog" aria-labelledby="deleteNoteModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-body">
+                        <h4>¿Esta seguro de eliminar esta nota?</h4>
+                    </div>
+                    <div class="modal-footer">
+                        <button
+                                type="button"
+                                class="btn btn-secondary"
+                                data-dismiss="modal"
+                                v-show="! loading"
+                                @click="deleteNote = null"
+                                id="closeDeleteNoteModal">
+                            NO
+                        </button>
+                        <button
+                                type="button"
+                                class="btn btn-danger"
+                                @click="sendDeleteNote()"
+                                v-show="! loading">
+                            SI
+                        </button>
+
+                        <img src="/img/loading.gif" v-if="loading">
+                    </div>
+                </div>
+            </div>
+        </div>
     </section>
 </template>
 
@@ -252,6 +337,7 @@
         components: {
             Datepicker
         },
+        props: ['user'],
         data: function () {
           return {
               loading: false,
@@ -268,7 +354,10 @@
                   data: [],
                   loading: false,
                   search: ''
-              }
+              },
+              authUser: JSON.parse(this.user),
+              deletePatientHistory: null,
+              deleteNote: null
           }
         },
         mounted: function () {
@@ -344,6 +433,40 @@
                 format = format[0].split('-');
 
                 return format[1] + '/' + format[2] + '/' + format[0];
+            },
+
+            sendDelete: function () {
+                this.loading = true;
+
+                axios.delete('/user/service/' + this.deletePatientHistory)
+                    .then((res) => {
+
+                        if (res.data.success) {
+                            $('#closeDeleteModal').click();
+                            this.searchPatientHistory();
+                        }
+                    })
+                    .catch((err) => {
+                        this.loading = false;
+                        console.log(err);
+                    })
+            },
+
+            sendDeleteNote: function () {
+                this.loading = true;
+
+                axios.delete('/user/service/note/' + this.deleteNote)
+                    .then((res) => {
+
+                        if (res.data.success) {
+                            $('#closeDeleteNoteModal').click();
+                            this.searchPatientHistory();
+                        }
+                    })
+                    .catch((err) => {
+                        this.loading = false;
+                        console.log(err);
+                    })
             }
         }
     }

@@ -3,9 +3,12 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Patient extends Model
 {
+    use SoftDeletes;
+
     protected $table = 'patients';
 
     protected $fillable = [
@@ -15,6 +18,8 @@ class Patient extends Model
         'email'
 
     ];
+
+    protected $dates = ['deleted_at'];
 
     /**
      * Todas las cotizaciones asociadas a este paciente

@@ -58,4 +58,8 @@ return [
     'payment.update' => 'Pago actualizado',
     'payment.delete' => 'Pago eliminado',
 
+    'supplier.create' => 'Proveedor registrado',
+    'supplier.update' => 'Proveedor actualizado',
+    'supplier.delete' => 'Proveedor eliminado',
+
 ];

@@ -52,6 +52,9 @@ Route::group(['prefix' => 'user', 'middleware' => 'auth'], function() {
     // Pagos
     Route::get('payment/{patient}/search', 'Secretary\PaymentController@search');
     Route::resource('payment', 'Secretary\PaymentController');
+
+    // Proveedores
+    Route::resource('supplier', 'Secretary\SupplierController');
 });
 
 // Administrador

@@ -40,6 +40,8 @@ Vue.component('register-supply-request', require('./components/RegisterSupplyReq
 Vue.component('change-status-supply-request', require('./components/ChangeStatusSupplyRequest.vue'));
 Vue.component('search-supply', require('./components/SearchSupply'));
 Vue.component('register-payment', require('./components/RegisterPayment.vue'));
+Vue.component('register-supplier', require('./components/RegisterSupplier.vue'));
+Vue.component('edit-supplier', require('./components/EditSupplier.vue'));
 
 const app = new Vue({
     el: '#app'

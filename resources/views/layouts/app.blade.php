@@ -31,12 +31,10 @@
                     @if(Auth::guest())
                         <a class="navbar-brand" href="{{ route('login') }}">
                             <i class="glyphicon glyphicon-home"></i>
-                            {{ config('app.name', 'Laravel') }}
                         </a>
                     @else
                         <a class="navbar-brand" href="{{ route('home') }}">
                             <i class="glyphicon glyphicon-home"></i>
-                            {{ config('app.name', 'Laravel') }}
                         </a>
                     @endif
                 </div>
@@ -244,6 +242,40 @@
                                             <a href="{{ route('payment.create') }}">
                                                 <i class="glyphicon glyphicon-search"></i>
                                                 Buscar pagos
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </li>
+                                <li class="dropdown">
+                                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+                                        Gastos <span class="caret"></span>
+                                    </a>
+
+                                    <ul class="dropdown-menu" role="menu">
+                                        <li>
+                                            <a href="{{ route('payment.create') }}">
+                                                <i class="glyphicon glyphicon-search"></i>
+                                                Buscar pagos
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </li>
+                                <li class="dropdown">
+                                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+                                        Proveedores <span class="caret"></span>
+                                    </a>
+
+                                    <ul class="dropdown-menu" role="menu">
+                                        <li>
+                                            <a href="{{ route('supplier.create') }}">
+                                                <i class="glyphicon glyphicon-plus"></i>
+                                                Registrar proveedor
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="{{ route('supplier.index') }}">
+                                                <i class="glyphicon glyphicon-list-alt"></i>
+                                                Lista de proveedores
                                             </a>
                                         </li>
                                     </ul>

@@ -62,4 +62,7 @@ return [
     'supplier.update' => 'Proveedor actualizado',
     'supplier.delete' => 'Proveedor eliminado',
 
+    'expense.create' => 'Gasto registrado',
+    'expense.delete' => 'Gasto eliminado',
+
 ];

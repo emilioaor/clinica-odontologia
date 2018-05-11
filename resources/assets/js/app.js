@@ -42,6 +42,8 @@ Vue.component('search-supply', require('./components/SearchSupply'));
 Vue.component('register-payment', require('./components/RegisterPayment.vue'));
 Vue.component('register-supplier', require('./components/RegisterSupplier.vue'));
 Vue.component('edit-supplier', require('./components/EditSupplier.vue'));
+Vue.component('register-expense', require('./components/RegisterExpense.vue'));
+Vue.component('search-expense', require('./components/SearchExpense.vue'));
 
 const app = new Vue({
     el: '#app'

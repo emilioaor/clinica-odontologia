@@ -78,4 +78,14 @@ class Patient extends Model
     {
         return $this->hasMany(Payment::class, 'patient_id');
     }
+
+    /**
+     * Todos los gastos asociados a este paciente
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function expenses()
+    {
+        return $this->hasMany(Expense::class, 'patient_id');
+    }
 }

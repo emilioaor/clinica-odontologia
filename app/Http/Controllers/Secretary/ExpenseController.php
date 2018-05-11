@@ -2,12 +2,15 @@
 
 namespace App\Http\Controllers\Secretary;
 
+use App\Expense;
+use App\Patient;
 use App\Supplier;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\DB;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
-class SupplierController extends Controller
+class ExpenseController extends Controller
 {
     /**
      * Construct
@@ -26,9 +29,7 @@ class SupplierController extends Controller
      */
     public function index()
     {
-        $suppliers = Supplier::orderByDesc('id')->paginate();
-
-        return view('secretary.supplier.index', compact('suppliers'));
+        return view('secretary.expense.index');
     }
 
     /**
@@ -38,7 +39,10 @@ class SupplierController extends Controller
      */
     public function create()
     {
-        return view('secretary.supplier.create');
+        $patients = Patient::orderBy('name')->get();
+        $suppliers = Supplier::orderBy('name')->get();
+
+        return view('secretary.expense.create', compact('patients', 'suppliers'));
     }
 
     /**
@@ -49,15 +53,21 @@ class SupplierController extends Controller
      */
     public function store(Request $request)
     {
-        $supplier = new Supplier($request->all());
-        $supplier->nextPublicId();
-        $supplier->save();
+        DB::beginTransaction();
 
-        $this->sessionMessage('message.supplier.create');
+        foreach ($request->all() as $exp) {
+
+            $expense = new Expense($exp);
+            $expense->save();
+        }
+
+        DB::commit();
+
+        $this->sessionMessage('message.expense.create');
 
         return new JsonResponse([
             'success' => true,
-            'redirect' => route('supplier.index')
+            'redirect' => route('expense.create')
         ]);
     }
 
@@ -80,9 +90,7 @@ class SupplierController extends Controller
      */
     public function edit($id)
     {
-        $supplier = Supplier::where('public_id', $id)->firstOrFail();
-
-        return view('secretary.supplier.edit', compact('supplier'));
+        abort(404);
     }
 
     /**
@@ -94,18 +102,7 @@ class SupplierController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $supplier = Supplier::where('public_id', $id)->firstOrFail();
-        $supplier->name = $request->name;
-        $supplier->phone = $request->phone;
-        $supplier->email = $request->email;
-        $supplier->save();
-
-        $this->sessionMessage('message.supplier.update');
-
-        return new JsonResponse([
-            'success' => true,
-            'redirect' => route('supplier.edit', ['supplier' => $id])
-        ]);
+        abort(404);
     }
 
     /**
@@ -116,14 +113,41 @@ class SupplierController extends Controller
      */
     public function destroy($id)
     {
-        $supplier = Supplier::where('public_id', $id)->firstOrFail();
-        $supplier->delete();
+        $expense = Expense::findOrFail($id);
+        $expense->delete();
 
-        $this->sessionMessage('message.supplier.delete');
+        return new JsonResponse(['success' => true]);
+    }
+
+    /**
+     * Busca todos los gastos asociados a un paciente para un
+     * rango de fechas
+     *
+     * @param Request $request
+     * @param $id
+     * @return JsonResponse
+     */
+    public function search(Request $request, $id)
+    {
+        $patient = Patient::where('public_id', $id)->firstOrFail();
+
+        $start = new \DateTime($request->start);
+        $start->setTime(0, 0, 0);
+
+        $end = new \DateTime($request->end);
+        $end->setTime(23, 59, 59);
+
+        $expenses = $patient->expenses()
+            ->where('date', '>=', $start)
+            ->where('date', '<=', $end)
+            ->orderBy('date')
+            ->with('patient')
+            ->with('supplier')
+            ->get();
 
         return new JsonResponse([
             'success' => true,
-            'redirect' => route('supplier.index')
+            'expenses' => $expenses
         ]);
     }
 }

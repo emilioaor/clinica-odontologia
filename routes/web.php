@@ -53,6 +53,10 @@ Route::group(['prefix' => 'user', 'middleware' => 'auth'], function() {
     Route::get('payment/{patient}/search', 'Secretary\PaymentController@search');
     Route::resource('payment', 'Secretary\PaymentController');
 
+    // Gastos
+    Route::get('expense/{expense}/search', 'Secretary\ExpenseController@search');
+    Route::resource('expense', 'Secretary\ExpenseController');
+
     // Proveedores
     Route::resource('supplier', 'Secretary\SupplierController');
 });

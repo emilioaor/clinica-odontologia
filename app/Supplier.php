@@ -25,4 +25,14 @@ class Supplier extends Model
     {
         $this->public_id = 'SUP' . time();
     }
+
+    /**
+     * Todos los gastos asociados a este proveedor
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function expenses()
+    {
+        return $this->hasMany(Expense::class, 'supplier_id');
+    }
 }

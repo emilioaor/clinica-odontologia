@@ -11,7 +11,7 @@
     <title>{{ config('app.name', 'Laravel') }}</title>
 
     <!-- Styles -->
-    <link href="{{ asset('css/app.css') }}?v=1.0.0" rel="stylesheet">
+    <link href="{{ asset('css/app.css') }}?v=1.1.0" rel="stylesheet">
 </head>
 <body>
     <div id="app">
@@ -257,9 +257,15 @@
 
                                     <ul class="dropdown-menu" role="menu">
                                         <li>
-                                            <a href="{{ route('payment.create') }}">
+                                            <a href="{{ route('expense.create') }}">
+                                                <i class="glyphicon glyphicon-plus"></i>
+                                                Registrar gastos
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="{{ route('expense.index') }}">
                                                 <i class="glyphicon glyphicon-search"></i>
-                                                Buscar pagos
+                                                Buscar gastos
                                             </a>
                                         </li>
                                     </ul>
@@ -340,7 +346,7 @@
     </div>
 
     <!-- Scripts -->
-    <script src="{{ asset('js/app.js') }}?v=1.2.0"></script>
+    <script src="{{ asset('js/app.js') }}?v=1.3.0"></script>
     @yield('js')
 </body>
 </html>

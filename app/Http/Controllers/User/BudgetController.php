@@ -29,7 +29,10 @@ class BudgetController extends Controller
             'generatePdf'
         ]);
 
-        $this->middleware('noAssistant');
+        $this->middleware('noAssistant')->except([
+            'index',
+            'generatePdf'
+        ]);
 
         $this->middleware('admin')->only(['destroy']);
     }

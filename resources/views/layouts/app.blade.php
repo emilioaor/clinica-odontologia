@@ -88,28 +88,32 @@
                                         </li>
                                     </ul>
                                 </li>
-                                <li class="dropdown">
-                                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-                                        Cotizaciones <span class="caret"></span>
-                                    </a>
+                            @endif
 
-                                    <ul class="dropdown-menu" role="menu">
-                                        @if(Auth::user()->isAdmin() || Auth::user()->isDoctor())
-                                            <li>
-                                                <a href="{{ route('budget.create') }}">
-                                                    <i class="glyphicon glyphicon-plus"></i>
-                                                    Generar cotización
-                                                </a>
-                                            </li>
-                                        @endif
+                            <li class="dropdown">
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+                                    Cotizaciones <span class="caret"></span>
+                                </a>
+
+                                <ul class="dropdown-menu" role="menu">
+                                    @if(Auth::user()->isAdmin() || Auth::user()->isDoctor())
                                         <li>
-                                            <a href="{{ route('budget.index') }}">
-                                                <i class="glyphicon glyphicon-list-alt"></i>
-                                                Lista de cotizaciones
+                                            <a href="{{ route('budget.create') }}">
+                                                <i class="glyphicon glyphicon-plus"></i>
+                                                Generar cotización
                                             </a>
                                         </li>
-                                    </ul>
-                                </li>
+                                    @endif
+                                    <li>
+                                        <a href="{{ route('budget.index') }}">
+                                            <i class="glyphicon glyphicon-list-alt"></i>
+                                            Lista de cotizaciones
+                                        </a>
+                                    </li>
+                                </ul>
+                            </li>
+
+                            @if(! Auth::user()->isAssistant())
                                 @if(Auth::user()->isAdmin())
                                     <li class="dropdown">
                                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
@@ -336,7 +340,7 @@
     </div>
 
     <!-- Scripts -->
-    <script src="{{ asset('js/app.js') }}?v=1.1.0"></script>
+    <script src="{{ asset('js/app.js') }}?v=1.2.0"></script>
     @yield('js')
 </body>
 </html>

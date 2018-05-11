@@ -385,9 +385,17 @@
                                         <input
                                                 type="text"
                                                 class="form-control"
-                                                v-bind:value="currencySymbol + detail.price + currencySymbol2"
-                                                disabled
+                                                v-bind:name="'price' + id"
+                                                v-model="detail.price"
+                                                v-validate
+                                                data-vv-rules="required"
+                                                min="1"
+                                                v-bind:class="{'input-error': errors.has('price' + id)}"
+                                                :disabled="! detail.product_id"
                                                 >
+                                        <p class="error" v-if="errors.firstByRule('price' + id, 'required')">
+                                            Requerido
+                                        </p>
                                     </td>
                                     <td>
                                         <input
@@ -627,8 +635,7 @@
                                             class="btn btn-danger btn-lg"
                                             data-toggle="modal"
                                             data-target="#deleteModal"
-                                            v-bind:disabled="loading"
-                                            v-if="authUser.level === 1"
+                                            v-if="authUser.level === 1 && ! loading"
                                             >
                                         <i class="glyphicon glyphicon-remove"></i>
                                         Eliminar cotización

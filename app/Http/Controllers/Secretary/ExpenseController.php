@@ -39,10 +39,9 @@ class ExpenseController extends Controller
      */
     public function create()
     {
-        $patients = Patient::orderBy('name')->get();
         $suppliers = Supplier::orderBy('name')->get();
 
-        return view('secretary.expense.create', compact('patients', 'suppliers'));
+        return view('secretary.expense.create', compact('suppliers'));
     }
 
     /**

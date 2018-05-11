@@ -125,6 +125,7 @@
                                                 <th>Paciente</th>
                                                 <th>Proveedor</th>
                                                 <th>Gasto</th>
+                                                <th>Monto</th>
                                                 <th width="5%"></th>
                                             </tr>
                                         </thead>
@@ -134,6 +135,7 @@
                                                 <td>{{ expense.patient.name }}</td>
                                                 <td>{{ expense.supplier.name }}</td>
                                                 <td>{{ expense.description }}</td>
+                                                <td>{{ '$ ' + expense.amount  }}</td>
                                                 <td>
                                                     <button
                                                             type="button"

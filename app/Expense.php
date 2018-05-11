@@ -15,7 +15,8 @@ class Expense extends Model
         'patient_id',
         'supplier_id',
         'description',
-        'date'
+        'date',
+        'amount'
     ];
 
     /**

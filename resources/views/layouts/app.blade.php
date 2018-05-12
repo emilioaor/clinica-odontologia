@@ -11,7 +11,7 @@
     <title>{{ config('app.name', 'Laravel') }}</title>
 
     <!-- Styles -->
-    <link href="{{ asset('css/app.css') }}?v=1.1.0" rel="stylesheet">
+    <link href="{{ asset('css/app.css') }}?v=1.2.0" rel="stylesheet">
 </head>
 <body>
     <div id="app">
@@ -346,7 +346,7 @@
     </div>
 
     <!-- Scripts -->
-    <script src="{{ asset('js/app.js') }}?v=1.3.1"></script>
+    <script src="{{ asset('js/app.js') }}?v=1.4.0"></script>
     @yield('js')
 </body>
 </html>

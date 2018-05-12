@@ -10,7 +10,7 @@
             </div>
         </div>
         <div class="row">
-            <div class="col-sm-8">
+            <div class="col-sm-10">
                 <div class="panel panel-default">
                     <div class="panel-body">
 
@@ -235,7 +235,53 @@
                         </div>
 
                         <div class="row">
+                            <div class="col-xs-12">
+                                <h3>Imagenes y radiografias</h3>
+                            </div>
+                        </div>
+
+                        <div class="row">
+
+                            <div class="col-sm-4 space-image" v-for="(image, id) in images">
+                                <img :src="image" class="img-responsive images">
+
+                                <button class="btn btn-danger btn-sm" @click="removeImage(id)">
+                                    <i class="glyphicon glyphicon-remove"></i>
+                                </button>
+                            </div>
+
+                            <div class="col-sm-4">
+                                <!-- Cargar imagen -->
+                                <input
+                                        type="file"
+                                        name="image"
+                                        id="image"
+                                        class="form-control hide"
+                                        placeholder="Imagen"
+                                        @change="setCapture()"
+                                        v-validate
+                                        data-vv-rules="mimes:image/jpeg,image/png|size:5120"
+                                        >
+
+                                <img
+                                        id="selectImage"
+                                        src="/img/camera.png"
+                                        alt="Agregar imagen"
+                                        class="img-responsive"
+                                        onclick="$('#image').click();">
+
+                                <p class="error" v-if="errors.firstByRule('image', 'size')">
+                                    Maximo 5 mb
+                                </p>
+                                <p class="error" v-if="errors.firstByRule('image', 'mimes')">
+                                    Imagen necesita ser formato .png o .jpg
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="row">
                             <div class="col-xs-12 text-center">
+                                <hr>
                                 <img src="/img/loading.gif" v-if="loading">
                                 <button class="btn btn-primary btn-lg" @click="validateForm()" v-if="!loading">
                                     <i class="glyphicon glyphicon-check"></i>
@@ -342,6 +388,7 @@
                 date: '',
                 initDate: '',
                 notes: [],
+                images: [],
                 user: '',
                 modal: {
                     data: [],
@@ -405,7 +452,8 @@
                 axios.put('/user/service/' + this.data.public_id, {
                     services: this.services,
                     date: this.date,
-                    notes: this.notes
+                    notes: this.notes,
+                    images: this.images
                 })
                     .then((res) => {
                         if (res.data.success) {
@@ -469,6 +517,26 @@
 
             selectPatient: function (patient) {
                 location.href = '/user/service/' + patient.public_id + '/edit?date=' + this.date;
+            },
+
+            setCapture: function() {
+                const file = $('#image')[0].files[0];
+
+                if (file.type !== 'image/png' && file.type !== 'image/jpeg') {
+                    return false;
+                }
+
+                const reader = new FileReader();
+
+                reader.addEventListener('load', () => {
+                    this.images.push(reader.result);
+                });
+
+                reader.readAsDataURL(file);
+            },
+
+            removeImage: function (index) {
+                this.images.splice(index, 1);
             }
         }
     }

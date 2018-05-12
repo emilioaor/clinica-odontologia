@@ -184,6 +184,39 @@
                                             <hr>
                                         </div>
                                     </div>
+
+                                    <div class="row" v-if="data.images.length">
+                                        <div class="col-xs-12">
+                                            <h3>Imagenes y radiografias</h3>
+                                        </div>
+                                    </div>
+
+                                    <div class="row" v-if="! showImages && data.images.length">
+                                        <div class="col-xs-12">
+                                            <button class="btn btn-success" @click="showImages = true">
+                                                <i class="glyphicon glyphicon-picture"></i>
+                                                Mostrar imagenes
+                                            </button>
+                                        </div>
+                                    </div>
+
+                                    <div class="row" v-if="showImages">
+
+                                        <div class="col-sm-4 space-image" v-for="image in data.images">
+                                            <img :src="'/' + image.url" class="img-responsive images">
+
+                                            <button
+                                                    type="button"
+                                                    class="btn btn-danger btn-sm"
+                                                    data-toggle="modal"
+                                                    data-target="#deleteImageModal"
+                                                    v-if="authUser.level === 1"
+                                                    @click="deleteImage = image.id"
+                                                    >
+                                                <i class="glyphicon glyphicon-remove"></i>
+                                            </button>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </section>
@@ -327,6 +360,37 @@
                 </div>
             </div>
         </div>
+
+        <!-- Modal -->
+        <div class="modal fade" id="deleteImageModal" tabindex="-1" role="dialog" aria-labelledby="deleteImageModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-body">
+                        <h4>¿Esta seguro de eliminar esta imagen?</h4>
+                    </div>
+                    <div class="modal-footer">
+                        <button
+                                type="button"
+                                class="btn btn-secondary"
+                                data-dismiss="modal"
+                                v-show="! loading"
+                                @click="deleteImage = null"
+                                id="closeDeleteImageModal">
+                            NO
+                        </button>
+                        <button
+                                type="button"
+                                class="btn btn-danger"
+                                @click="sendDeleteImage()"
+                                v-show="! loading">
+                            SI
+                        </button>
+
+                        <img src="/img/loading.gif" v-if="loading">
+                    </div>
+                </div>
+            </div>
+        </div>
     </section>
 </template>
 
@@ -344,11 +408,13 @@
               patient: null,
               initStart: new Date(),
               initEnd: new Date(),
+              showImages: false,
               data: {
                   start: '',
                   end: '',
                   services: [],
-                  notes: []
+                  notes: [],
+                  images: []
               },
               modal: {
                   data: [],
@@ -357,7 +423,8 @@
               },
               authUser: JSON.parse(this.user),
               deletePatientHistory: null,
-              deleteNote: null
+              deleteNote: null,
+              deleteImage: null
           }
         },
         mounted: function () {
@@ -418,6 +485,7 @@
                         if (res.data.success) {
                             this.data.services = res.data.services;
                             this.data.notes = res.data.notes;
+                            this.data.images = res.data.images;
                         }
                     })
                     .catch((err) => {
@@ -425,6 +493,7 @@
                         this.loading = false;
                         this.data.services = [];
                         this.data.notes = [];
+                        this.data.images = [];
                     })
             },
 
@@ -467,6 +536,23 @@
                         this.loading = false;
                         console.log(err);
                     })
+            },
+
+            sendDeleteImage: function () {
+                this.loading = true;
+
+                axios.delete('/user/service/image/' + this.deleteImage)
+                        .then((res) => {
+
+                    if (res.data.success) {
+                        $('#closeDeleteImageModal').click();
+                        this.searchPatientHistory();
+                    }
+                })
+                .catch((err) => {
+                    this.loading = false;
+                    console.log(err);
+                })
             }
         }
     }

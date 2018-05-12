@@ -6,6 +6,7 @@ use App\Note;
 use App\Patient;
 use App\PatientHistory;
 use App\Product;
+use App\RayX;
 use App\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -28,7 +29,8 @@ class PatientHistoryController extends Controller
 
         $this->middleware('admin')->only([
             'destroy',
-            'deleteNote'
+            'deleteNote',
+            'deleteImage'
         ]);
     }
 
@@ -141,6 +143,31 @@ class PatientHistoryController extends Controller
             }
         }
 
+        foreach ($request->images as $image) {
+
+            $base64 = explode(',', $image);
+
+            $upload = base64_decode($base64[1]);
+            $extension = str_replace('image/png', '', $base64[0]) !== $base64[0] ? '.png' : '.jpg';
+
+            $filename = uniqid() . $extension;
+            $url = 'uploads/ray-x/' . Auth::user()->id . '/' . $filename;
+            $path = public_path('uploads/ray-x') . '/' . Auth::user()->id;
+
+            if (! is_dir($path)) {
+                mkdir($path);
+            }
+
+            $path .= '/' . $filename;
+
+            file_put_contents($path, $upload);
+
+            $rayX = new RayX();
+            $rayX->patient_id = $patient->id;
+            $rayX->url = $url;
+            $rayX->save();
+        }
+
         DB::commit();
 
         $this->sessionMessage('message.service.update');
@@ -188,7 +215,7 @@ class PatientHistoryController extends Controller
      */
     public function searchService(Request $request, $id)
     {
-        $patient = Patient::where('public_id', $id)->firstOrFail();
+        $patient = Patient::where('public_id', $id)->with('rayX')->firstOrFail();
 
         $start = new \DateTime($request->start);
         $start->setTime(00, 00, 00);
@@ -199,7 +226,8 @@ class PatientHistoryController extends Controller
             return new JsonResponse([
                 'success' => true,
                 'services' => [],
-                'notes' => []
+                'notes' => [],
+                'images' => []
             ]);
         }
 
@@ -254,7 +282,8 @@ class PatientHistoryController extends Controller
         return new JsonResponse([
             'success' => true,
             'services' => $servicesResponse,
-            'notes' => $notesResponse
+            'notes' => $notesResponse,
+            'images' => $patient->rayX
         ]);
     }
 
@@ -268,6 +297,20 @@ class PatientHistoryController extends Controller
     {
         $note = Note::findOrFail($id);
         $note->delete();
+
+        return new JsonResponse(['success' => true]);
+    }
+
+    /**
+     * Elimina una imagen del historial de paciente
+     *
+     * @param $id
+     * @return JsonResponse
+     */
+    public function deleteImage($id)
+    {
+        $rayX = RayX::findOrFail($id);
+        $rayX->delete();
 
         return new JsonResponse(['success' => true]);
     }

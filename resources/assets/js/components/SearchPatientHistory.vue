@@ -184,39 +184,39 @@
                                             <hr>
                                         </div>
                                     </div>
+                                </div>
+                            </div>
 
-                                    <div class="row" v-if="data.images.length">
-                                        <div class="col-xs-12">
-                                            <h3>Imagenes y radiografias</h3>
-                                        </div>
-                                    </div>
+                            <div class="row" v-if="data.images.length">
+                                <div class="col-xs-12">
+                                    <h3>Imagenes y radiografias</h3>
+                                </div>
+                            </div>
 
-                                    <div class="row" v-if="! showImages && data.images.length">
-                                        <div class="col-xs-12">
-                                            <button class="btn btn-success" @click="showImages = true">
-                                                <i class="glyphicon glyphicon-picture"></i>
-                                                Mostrar imagenes
-                                            </button>
-                                        </div>
-                                    </div>
+                            <div class="row" v-if="! showImages && data.images.length">
+                                <div class="col-xs-12">
+                                    <button class="btn btn-success" @click="showImages = true">
+                                        <i class="glyphicon glyphicon-picture"></i>
+                                        Mostrar imagenes
+                                    </button>
+                                </div>
+                            </div>
 
-                                    <div class="row" v-if="showImages">
+                            <div class="row" v-if="showImages">
 
-                                        <div class="col-sm-4 space-image" v-for="image in data.images">
-                                            <img :src="'/' + image.url" class="img-responsive images">
+                                <div class="col-sm-4 space-image" v-for="image in data.images">
+                                    <img :src="'/' + image.url" class="img-responsive images">
 
-                                            <button
-                                                    type="button"
-                                                    class="btn btn-danger btn-sm"
-                                                    data-toggle="modal"
-                                                    data-target="#deleteImageModal"
-                                                    v-if="authUser.level === 1"
-                                                    @click="deleteImage = image.id"
-                                                    >
-                                                <i class="glyphicon glyphicon-remove"></i>
-                                            </button>
-                                        </div>
-                                    </div>
+                                    <button
+                                            type="button"
+                                            class="btn btn-danger btn-sm"
+                                            data-toggle="modal"
+                                            data-target="#deleteImageModal"
+                                            v-if="authUser.level === 1"
+                                            @click="deleteImage = image.id"
+                                            >
+                                        <i class="glyphicon glyphicon-remove"></i>
+                                    </button>
                                 </div>
                             </div>
                         </section>
@@ -457,6 +457,7 @@
                 this.patient = patient;
                 this.data.services = [];
                 this.data.notes = [];
+                this.data.images = [];
             },
 
             changeStart: function (date) {

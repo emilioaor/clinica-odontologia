@@ -119,22 +119,25 @@ class BudgetController extends Controller
             $budgetDetail->save();
         }
 
-        // Registra una llamada pendiente para este paciente
-        $callLog = new CallLog();
-        $callLog->public_id = 'CALL' . time();
-        $callLog->description = isset($request->secretary_notes) ?
-            $request->secretary_notes :
-            trans('message.callLog.note.budget', ['public_id' => $budget->public_id]);
-        $callLog->patient_id = $budget->patient_id;
-        $callLog->call_date = new \DateTime();
-        $callLog->status = CallLog::STATUS_PENDING;
-        $callLog->save();
+        if (Auth::user()->isAdmin()) {
 
-        $callStatusHistory = new CallStatusHistory();
-        $callStatusHistory->call_log_id = $callLog->id;
-        $callStatusHistory->status = CallLog::STATUS_PENDING;
-        $callStatusHistory->note = trans('message.callLog.note.budget', ['public_id' => $budget->public_id]);
-        $callStatusHistory->save();
+            // Registra una llamada pendiente para este paciente
+            $callLog = new CallLog();
+            $callLog->public_id = 'CALL' . time();
+            $callLog->description = isset($request->secretary_notes) ?
+                $request->secretary_notes :
+                trans('message.callLog.note.budget', ['public_id' => $budget->public_id]);
+            $callLog->patient_id = $budget->patient_id;
+            $callLog->call_date = new \DateTime();
+            $callLog->status = CallLog::STATUS_PENDING;
+            $callLog->save();
+
+            $callStatusHistory = new CallStatusHistory();
+            $callStatusHistory->call_log_id = $callLog->id;
+            $callStatusHistory->status = CallLog::STATUS_PENDING;
+            $callStatusHistory->note = trans('message.callLog.note.budget', ['public_id' => $budget->public_id]);
+            $callStatusHistory->save();
+        }
 
         $this->sessionMessage('message.budget.create');
         Session::flash('pdf', $budget->public_id);

@@ -151,4 +151,57 @@ class User extends Authenticatable
             $this->public_id = 'ASS' . time();
         }
     }
+
+    /**
+     * Indica si un usuario tiene permiso de acceder a una zona
+     *
+     * @param $permission
+     * @return bool
+     */
+    public function hasPermission($permission)
+    {
+        if ($this->level === self::LEVEL_ADMIN) {
+            return true;
+        }
+
+        if ($this->level === self::LEVEL_DOCTOR && in_array($permission, [
+                'product.create',
+                'product.index',
+                'patient.index',
+                'patient.create',
+                'budget.index',
+                'budget.create',
+                'service.search',
+                'service.create',
+                'supplyRequest.create'
+            ])) {
+            return true;
+        }
+
+        if ($this->level === self::LEVEL_ASSISTANT && in_array($permission, [
+                'budget.index',
+                'service.search',
+                'supplyRequest.create'
+            ])) {
+            return true;
+        }
+
+        if ($this->level === self::LEVEL_SECRETARY && in_array($permission, [
+                'product.index',
+                'patient.index',
+                'budget.index',
+                'service.search',
+                'callLog.index',
+                'supplyRequest.create',
+                'payment.create',
+                'expense.create',
+                'expense.index',
+                'supplier.create',
+                'supplier.index'
+            ])) {
+            return true;
+        }
+
+        return false;
+    }
 }

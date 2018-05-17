@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\User;
 
 use App\Question;
+use App\QuestionAttach;
 use App\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -67,6 +68,33 @@ class QuestionController extends Controller
     {
         DB::beginTransaction();
 
+        $attaches = [];
+
+        foreach ($request->attaches as $attach) {
+
+            $base64 = explode(',', $attach['file']);
+
+            $upload = base64_decode($base64[1]);
+            $explode = explode(';', $attach['file']);
+            $explode = explode('/', $explode[0]);
+            $extension = $explode[1];
+
+            $filename = uniqid() . '.' . $extension;
+            $url = 'uploads/question/' . Auth::user()->id . '/' . $filename;
+            $path = public_path('uploads/question') . '/' . Auth::user()->id;
+
+            if (! is_dir($path)) {
+                mkdir($path);
+            }
+
+            $path .= '/' . $filename;
+
+            file_put_contents($path, $upload);
+
+            $attach['url'] = $url;
+            $attaches[] = $attach;
+        }
+
         foreach ($request->doctors as $doctor) {
 
             $question = new Question($request->all());
@@ -74,6 +102,15 @@ class QuestionController extends Controller
             $question->to_id = $doctor['to_id'];
             $question->generatePublicId();
             $question->save();
+
+            foreach ($attaches as $attach) {
+
+                $questionAttach = new QuestionAttach();
+                $questionAttach->url = $attach['url'];
+                $questionAttach->filename = $attach['filename'];
+                $questionAttach->question_id = $question->id;
+                $questionAttach->save();
+            }
         }
 
         DB::commit();
@@ -108,7 +145,8 @@ class QuestionController extends Controller
         $question = Question::where('public_id', $id)
             ->with([
                 'from',
-                'to'
+                'to',
+                'questionAttaches'
             ])
             ->firstOrFail();
 

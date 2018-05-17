@@ -37,6 +37,16 @@ class Question extends Model
     }
 
     /**
+     * Todos los adjuntos en esta pregunta
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function questionAttaches()
+    {
+        return $this->hasMany(QuestionAttach::class, 'question_id');
+    }
+
+    /**
      * Genera el public_id de la pregunta
      */
     public function generatePublicId()

@@ -52,6 +52,20 @@
                                 </div>
                             </div>
 
+                            <div class="row" v-if="form.question_attaches.length">
+                                <div class="col-xs-12">
+                                    <label>Documentos adjuntos</label>
+                                </div>
+
+                                <div class="col-sm-3" v-for="(attach, index) in form.question_attaches">
+                                    <div class="form-group">
+                                        <a :href="'/' + attach.url" download="">
+                                            {{ attach.filename.length <= 15 ? attach.filename : attach.filename.substring(attach.filename.length - 15) }}
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+
                             <div class="row" v-if="form.answered">
                                 <div class="col-xs-12">
                                     <div class="form-group">
@@ -146,7 +160,7 @@
                             console.log('Error', err);
                         })
                 ;
-            }
+            },
         }
     }
 </script>

@@ -108,6 +108,27 @@
                             </div>
 
                             <div class="row">
+                                <div class="col-sm-3" v-for="(attach, index) in form.attaches">
+                                    <div class="form-group">
+                                        <a @click="removeAttach(index)" class="text-danger">X</a>
+                                        {{ attach.filename.length <= 15 ? attach.filename : attach.filename.substring(attach.filename.length - 15) }}
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-xs-12">
+                                    <div class="form-group">
+                                        <input type="file" id="attach" class="hide" @change="setAttach()">
+                                        <a onclick="$('#attach').click()">
+                                            <i class="glyphicon glyphicon-paperclip"></i>
+                                            Adjuntar
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
                                 <div class="col-xs-12">
                                     <button class="btn btn-success" v-if="!loading">
                                         <i class="glyphicon glyphicon-send"></i>
@@ -142,7 +163,8 @@
                     title: null,
                     doctors: [{
                         to_id: null
-                    }]
+                    }],
+                    attaches: []
                 }
             }
         },
@@ -203,6 +225,26 @@
                 }
 
                 return false;
+            },
+
+            setAttach: function() {
+                const file = $('#attach')[0].files[0];
+
+                const reader = new FileReader();
+
+                reader.addEventListener('load', () => {
+
+                    this.form.attaches.push({
+                        file: reader.result,
+                        filename: file.name
+                    });
+                });
+
+                reader.readAsDataURL(file);
+            },
+
+            removeAttach: function (index) {
+                this.form.attaches.splice(index, 1);
             }
         }
     }

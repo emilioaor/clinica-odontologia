@@ -60,6 +60,9 @@ Route::group(['prefix' => 'user', 'middleware' => 'auth'], function() {
 
     // Proveedores
     Route::resource('supplier', 'Secretary\SupplierController');
+
+    // Preguntas
+    Route::resource('question', 'User\QuestionController');
 });
 
 // Administrador

@@ -65,4 +65,7 @@ return [
     'expense.create' => 'Gasto registrado',
     'expense.delete' => 'Gasto eliminado',
 
+    'question.create' => 'Pregunta enviada',
+    'question.answered' => 'Respuesta enviada',
+
 ];

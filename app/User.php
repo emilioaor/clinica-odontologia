@@ -137,6 +137,26 @@ class User extends Authenticatable
     }
 
     /**
+     * Todas las preguntas hechas a este usuario
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function questionsTo()
+    {
+        return $this->hasMany(Question::class, 'to_id');
+    }
+
+    /**
+     * Todas las preguntas formuladas por este usuario
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function questionsFrom()
+    {
+        return $this->hasMany(Question::class, 'from_id');
+    }
+
+    /**
      * Genera el id publico en base al nivel
      */
     public function generatePublicId()
@@ -173,7 +193,8 @@ class User extends Authenticatable
                 'budget.create',
                 'service.search',
                 'service.create',
-                'supplyRequest.create'
+                'supplyRequest.create',
+                'question.index'
             ])) {
             return true;
         }

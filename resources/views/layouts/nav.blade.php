@@ -271,6 +271,35 @@
                             </ul>
                         </li>
                     @endif
+
+                    <!-- Question -->
+                    @if(Auth::user()->hasPermission('question.create') || Auth::user()->hasPermission('question.index'))
+
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+                                Preguntas <span class="caret"></span>
+                            </a>
+
+                            <ul class="dropdown-menu" role="menu">
+                                @if(Auth::user()->hasPermission('question.create'))
+                                    <li>
+                                        <a href="{{ route('question.create') }}">
+                                            <i class="glyphicon glyphicon-plus"></i>
+                                            Registrar pregunta
+                                        </a>
+                                    </li>
+                                @endif
+                                @if(Auth::user()->hasPermission('question.index'))
+                                    <li>
+                                        <a href="{{ route('question.index') }}">
+                                            <i class="glyphicon glyphicon-list-alt"></i>
+                                            Lista de preguntas
+                                        </a>
+                                    </li>
+                                @endif
+                            </ul>
+                        </li>
+                    @endif
                 </ul>
             @endif
 

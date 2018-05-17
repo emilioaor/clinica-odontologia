@@ -14,16 +14,35 @@
     <div class="row">
         <div class="col-md-8">
             <div class="panel panel-default">
-                <div class="panel-heading">Dashboard</div>
+                <div class="panel-heading">Preguntas</div>
 
                 <div class="panel-body">
-                    @if (session('status'))
-                        <div class="alert alert-success">
-                            {{ session('status') }}
-                        </div>
-                    @endif
 
-                    You are logged in!
+                    <table class="table table-responsive">
+                        <thead>
+                            <tr>
+                                <th>Código</th>
+                                <th>Fecha</th>
+                                <th>De</th>
+                                <th>Para</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach($questions as $question)
+                                <tr>
+                                    <td>
+                                        <a href="{{ route('question.edit', ['edit' => $question->public_id]) }}">
+                                            {{ $question->public_id }}
+                                        </a>
+                                    </td>
+                                    <td>{{ $question->created_at->format('m/d/Y H:i') }}</td>
+                                    <td>{{ $question->from->name }}</td>
+                                    <td>{{ $question->to->name }}</td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+
                 </div>
             </div>
         </div>

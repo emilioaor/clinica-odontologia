@@ -1,0 +1,56 @@
+<?php
+
+namespace App;
+
+use Illuminate\Database\Eloquent\Model;
+
+class Question extends Model
+{
+    protected $table = 'questions';
+
+    protected $fillable = [
+        'title',
+        'question',
+        'answer',
+        'to_id',
+        'from_id'
+    ];
+
+    /**
+     * Usuario al que se le hace la pregunta
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function to()
+    {
+        return $this->belongsTo(User::class, 'to_id');
+    }
+
+    /**
+     * Usuario que formulo esta pregunta
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function from()
+    {
+        return $this->belongsTo(User::class, 'from_id');
+    }
+
+    /**
+     * Genera el public_id de la pregunta
+     */
+    public function generatePublicId()
+    {
+        $this->public_id = 'QUE' . random_int(100000000, 999999999);
+    }
+
+    /**
+     * Indica si una pregunta ya fue contestada
+     *
+     * @return bool
+     */
+    public function isAnswered()
+    {
+        return ! is_null($this->answer);
+    }
+}

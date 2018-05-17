@@ -155,7 +155,7 @@
                                     <li>
                                         <a href="{{ route('payment.create') }}">
                                             <i class="glyphicon glyphicon-search"></i>
-                                            Buscar pagos
+                                            Pagos e ingresos
                                         </a>
                                     </li>
                                 @endif

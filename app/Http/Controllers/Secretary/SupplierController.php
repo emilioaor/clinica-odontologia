@@ -98,6 +98,7 @@ class SupplierController extends Controller
         $supplier->name = $request->name;
         $supplier->phone = $request->phone;
         $supplier->email = $request->email;
+        $supplier->type = $request->type;
         $supplier->save();
 
         $this->sessionMessage('message.supplier.update');

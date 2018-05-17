@@ -94,6 +94,36 @@
                                 </div>
 
                                 <div class="row">
+                                    <div class="col-sm-4">
+                                        <div class="form-group">
+                                            <label for="type">Tipo</label>
+                                            <select
+                                                    name="type"
+                                                    id="type"
+                                                    class="form-control"
+                                                    v-model="form.type"
+                                                    v-validate
+                                                    data-vv-rules="required"
+                                                    :class="{'input-error': errors.has('type')}"
+                                                >
+                                                <option value="1">Oficina</option>
+                                                <option value="2">Servicios generales</option>
+                                                <option value="3">RRHH</option>
+                                                <option value="4">Mantenimiento</option>
+                                                <option value="5">Farmacia</option>
+                                                <option value="6">Implantes</option>
+                                                <option value="7">Deposito dental</option>
+                                                <option value="8">Laboratorio</option>
+                                                <option value="9">Imagenes</option>
+                                            </select>
+                                            <p class="error" v-if="errors.firstByRule('type', 'required')">
+                                                Campo requerido
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
                                     <div class="col-xs-12">
                                         <button class="btn btn-success" v-bind:disabled="loading">
                                             <i class="glyphicon glyphicon-saved"></i>
@@ -121,7 +151,8 @@
                 form: {
                     name: '',
                     phone: '',
-                    email: ''
+                    email: '',
+                    type: null
                 }
             }
         },

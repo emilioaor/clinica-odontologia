@@ -142,6 +142,7 @@ class ExpenseController extends Controller
             ->orderBy('date')
             ->with('patient')
             ->with('supplier')
+            ->with('patientHistory')
             ->get();
 
         return new JsonResponse([

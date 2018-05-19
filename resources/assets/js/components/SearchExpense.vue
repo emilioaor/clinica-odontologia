@@ -124,6 +124,7 @@
                                                 <th>Fecha</th>
                                                 <th>Paciente</th>
                                                 <th>Proveedor</th>
+                                                <th>Servicio</th>
                                                 <th>Gasto</th>
                                                 <th>Monto</th>
                                                 <th width="5%"></th>
@@ -134,6 +135,7 @@
                                                 <td>{{ dateFormat(expense.date) }}</td>
                                                 <td>{{ expense.patient.name }}</td>
                                                 <td>{{ expense.supplier.name }}</td>
+                                                <td>{{ expense.patient_history ? expense.patient_history.public_id : ''  }}</td>
                                                 <td>{{ expense.description }}</td>
                                                 <td>{{ '$ ' + expense.amount  }}</td>
                                                 <td>

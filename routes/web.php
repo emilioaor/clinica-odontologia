@@ -77,4 +77,8 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function () {
     // Comisiones
     Route::get('commission/config', 'Admin\CommissionController@config')->name('commission.config');
     Route::put('commission/{doctor}', 'Admin\CommissionController@update')->name('commission.update');
+
+    // Reportes
+    Route::get('report/servicesAndPayments', 'Admin\ReportController@servicesAndPayments')->name('report.servicesAndPayments');
+    Route::get('report/servicesAndPaymentsData', 'Admin\ReportController@servicesAndPaymentsData')->name('report.servicesAndPaymentsData');
 });

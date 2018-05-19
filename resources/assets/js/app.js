@@ -47,6 +47,7 @@ Vue.component('search-expense', require('./components/SearchExpense.vue'));
 Vue.component('register-question', require('./components/RegisterQuestion.vue'));
 Vue.component('edit-question', require('./components/EditQuestion.vue'));
 Vue.component('config-commission', require('./components/ConfigCommission.vue'));
+Vue.component('report-services-and-payments', require('./components/ReportServicesAndPayments.vue'));
 
 const app = new Vue({
     el: '#app'

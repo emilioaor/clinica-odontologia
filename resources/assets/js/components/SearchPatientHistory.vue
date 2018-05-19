@@ -122,6 +122,7 @@
                                         <thead>
                                             <tr>
                                                 <th>Fecha</th>
+                                                <th v-if="authUser.level == 1">Código</th>
                                                 <th>Servicio</th>
                                                 <th>Diente</th>
                                                 <th>Doctor</th>
@@ -132,6 +133,7 @@
                                         <tbody>
                                             <tr v-for="service in services">
                                                 <td>{{ dateFormat(service.created_at) }}</td>
+                                                <td v-if="authUser.level == 1">{{ service.public_id }}</td>
                                                 <td>{{ service.product.name }}</td>
                                                 <td>{{ service.tooth }}</td>
                                                 <td>{{ service.doctor.name }}</td>

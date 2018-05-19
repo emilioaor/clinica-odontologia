@@ -62,4 +62,12 @@ class PatientHistory extends Model
     {
         return $this->belongsTo(Product::class, 'product_id');
     }
+
+    /**
+     * Genera el siguiente public_id
+     */
+    public function nextPublicId()
+    {
+        $this->public_id = 'SER' . (PatientHistory::withTrashed()->count() + 1);
+    }
 }

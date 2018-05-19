@@ -126,6 +126,7 @@ class PatientHistoryController extends Controller
 
         foreach ($request->services as $service) {
             $service = new PatientHistory($service);
+            $service->nextPublicId();
             $service->patient_id = $patient->id;
             $service->created_at = $date;
             $service->save();

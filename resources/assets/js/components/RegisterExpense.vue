@@ -72,9 +72,10 @@
                                             <thead>
                                             <tr>
                                                 <th width="17%">Fecha</th>
-                                                <th width="23%">Proveedor</th>
-                                                <th width="40%">Gasto</th>
-                                                <th width="20%">Monto</th>
+                                                <th width="20%">Proveedor</th>
+                                                <th width="23%">Servicio</th>
+                                                <th width="25%">Gasto</th>
+                                                <th width="15%">Monto</th>
                                                 <th></th>
                                             </tr>
                                             </thead>
@@ -111,6 +112,35 @@
                                                     </select>
 
                                                     <p class="error" v-if="errors.firstByRule('supplier' + id, 'required')">
+                                                        Requerido
+                                                    </p>
+                                                </td>
+                                                <td>
+                                                    <div class="input-group">
+                                                        <input  type="text"
+                                                                class="form-control"
+                                                                :id="'service' + id"
+                                                                :name="'service' + id"
+                                                                placeholder="Servicio"
+                                                                readonly
+                                                                v-model="expense.patient_history_public_id"
+                                                                v-validate
+                                                                data-vv-rules="required"
+                                                                :class="{'input-error': errors.has('service' + id)}"
+                                                            >
+                                                        <span class="input-group-btn">
+                                                            <button
+                                                                    class="btn btn-info"
+                                                                    type="button"
+                                                                    data-toggle="modal"
+                                                                    data-target="#serviceModal"
+                                                                    @click="selectedExpense = id; searchServices()"
+                                                                >
+                                                                <i class="glyphicon glyphicon-search"></i>
+                                                            </button>
+                                                        </span>
+                                                    </div>
+                                                    <p class="error" v-if="errors.firstByRule('service' + id, 'required')">
                                                         Requerido
                                                     </p>
                                                 </td>
@@ -154,7 +184,7 @@
                                             </tbody>
                                             <tfoot>
                                             <tr>
-                                                <td colspan="5">
+                                                <td colspan="6">
                                                     <button class="btn btn-success" @click="add()">
                                                         <i class="glyphicon glyphicon-plus"></i>
                                                         Agregar
@@ -254,6 +284,81 @@
                                 </div>
                             </div>
 
+                            <!-- Modal -->
+                            <div class="modal fade" id="serviceModal" tabindex="-1" role="dialog" aria-labelledby="serviceModal" aria-hidden="true">
+                                <div class="modal-dialog" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-body">
+                                            <div class="row">
+                                                <div class="col-sm-6">
+                                                    <h3>
+                                                        <strong>
+                                                            Selecciona servicio
+                                                        </strong>
+                                                    </h3>
+                                                </div>
+
+                                                <div class="col-xs-12">
+                                                    <datepicker
+                                                            name = "serviceDate"
+                                                            id = "serviceDate"
+                                                            language="es"
+                                                            input-class = "form-control datepicker"
+                                                            format = "MM/dd/yyyy"
+                                                            v-model="modalService.datePicker"
+                                                            @input="changeDateService($event)"
+                                                            ></datepicker>
+                                                </div>
+                                            </div>
+                                            <hr>
+
+                                            <div class="row">
+
+                                                <div class="col-xs-12">
+
+                                                    <table class="table table-responsive table-striped">
+                                                        <thead>
+                                                        <tr>
+                                                            <th width="30%">Código</th>
+                                                            <th width="50%">Producto</th>
+                                                            <th width="20%">Precio</th>
+                                                            <th></th>
+                                                        </tr>
+                                                        </thead>
+
+                                                        <tbody v-if="! modalService.loading">
+                                                        <tr v-for="s in modalService.data">
+                                                            <td>{{ s.public_id }}</td>
+                                                            <td>{{ s.product.name }}</td>
+                                                            <td>{{ '$' + s.price }}</td>
+                                                            <td>
+                                                                <button
+                                                                        class="btn btn-primary"
+                                                                        @click="selectService(s)"
+                                                                        >
+                                                                    <i class="glyphicon glyphicon-ok"></i>
+                                                                </button>
+                                                            </td>
+                                                        </tr>
+                                                        </tbody>
+                                                    </table>
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button  type="button"
+                                                     id="closeServiceModal"
+                                                     class="btn btn-secondary"
+                                                     data-dismiss="modal"
+                                                >
+                                                Cerrar
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
                         </div>
                     </div>
                 </div>
@@ -285,7 +390,18 @@
                     loading: false,
                     search: ''
                 },
+                modalService: {
+                    data: [],
+                    loading: false,
+                    datePicker: new Date(),
+                    date: null
+                },
+                selectedExpense: null
             }
+        },
+
+        mounted: function () {
+            this.changeDateService(this.modalService.datePicker);
         },
 
         methods: {
@@ -313,11 +429,15 @@
                     description: null,
                     date: null,
                     picker: null,
-                    amount: null
+                    amount: null,
+                    patient_history_id: null,
+                    patient_history_public_id: null
                 }];
 
                 this.expenses[0].picker = new Date();
                 this.changeDate(this.expenses[0].picker, 0);
+
+                this.modalService.data = [];
             },
 
             changeDate: function (date, index) {
@@ -337,7 +457,9 @@
                     description: null,
                     date: null,
                     picker: null,
-                    amount: null
+                    amount: null,
+                    patient_history_public_id: null,
+                    patient_history_id: null
                 });
 
                 this.expenses[index].picker = new Date();
@@ -373,6 +495,47 @@
                         this.loading = false;
                     })
                 ;
+            },
+
+            changeDateService: function (date) {
+                let day = (date.getDate() < 10) ? '0' + date.getDate() : date.getDate();
+                let month = ((date.getMonth() + 1) < 10) ? '0' + (date.getMonth() + 1) : (date.getMonth() + 1);
+                let year = date.getFullYear();
+
+                this.modalService.date = year + '-' + month + '-' + day;
+
+                if (this.patient) {
+                    this.searchServices();
+                }
+            },
+
+            searchServices: function () {
+                this.modalService.data = [];
+                this.modalService.loading = true;
+
+                axios.get('/user/service/' + this.patient.public_id + '/search?start=' + this.modalService.date + '&end=' + this.modalService.date)
+                    .then((res) => {
+                        this.modalService.loading = false;
+
+                        for (let x in res.data.services) {
+
+                            for (let y in res.data.services[x]) {
+
+                                this.modalService.data.push(res.data.services[x][y]);
+                            }
+                        }
+                    })
+                    .catch((err) => {
+                        this.modalService.loading = false;
+                    })
+                ;
+            },
+
+            selectService: function (service) {
+                this.expenses[ this.selectedExpense].patient_history_public_id = service.public_id;
+                this.expenses[ this.selectedExpense].patient_history_id = service.id;
+
+                $('#closeServiceModal').click();
             }
         }
     }

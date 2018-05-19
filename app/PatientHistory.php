@@ -64,6 +64,16 @@ class PatientHistory extends Model
     }
 
     /**
+     * Todos los gastos asociados a este servicio
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function expenses()
+    {
+        return $this->hasMany(Expense::class, 'patient_history_id');
+    }
+
+    /**
      * Genera el siguiente public_id
      */
     public function nextPublicId()

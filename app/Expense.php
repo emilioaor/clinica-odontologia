@@ -16,7 +16,8 @@ class Expense extends Model
         'supplier_id',
         'description',
         'date',
-        'amount'
+        'amount',
+        'patient_history_id'
     ];
 
     /**
@@ -37,5 +38,15 @@ class Expense extends Model
     public function supplier()
     {
         return $this->belongsTo(Supplier::class, 'supplier_id');
+    }
+
+    /**
+     * Servicio al que se asocia este gasto
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function patientHistory()
+    {
+        return $this->belongsTo(PatientHistory::class, 'patient_history_id');
     }
 }

@@ -3,8 +3,10 @@
 namespace App\Http\Controllers\User;
 
 use App\Product;
+use App\User;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\DB;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
 class ProductController extends Controller
@@ -49,9 +51,22 @@ class ProductController extends Controller
      */
     public function store(Request $request)
     {
+        DB::beginTransaction();
+
         $product = new Product($request->all());
         $product->public_id = 'PROD' . time();
         $product->save();
+
+        $users = User::all();
+
+        foreach ($users as $user) {
+
+            $product->commissionUsers()->attach($user->id, [
+                'commission' => User::DEFAULT_PRODUCT_COMMISSION
+            ]);
+        }
+
+        DB::commit();
 
         $this->sessionMessage('message.product.create');
 

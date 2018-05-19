@@ -69,7 +69,12 @@ Route::group(['prefix' => 'user', 'middleware' => 'auth'], function() {
 Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function () {
 
     // Usuarios
+    Route::get('user/search', 'Admin\UserController@search');
     Route::resource('user', 'Admin\UserController');
     Route::put('user/{user}/password', 'Admin\UserController@changePassword');
     Route::get('user/{username}/verify', 'Admin\UserController@verifyUsername');
+
+    // Comisiones
+    Route::get('commission/config', 'Admin\CommissionController@config')->name('commission.config');
+    Route::put('commission/{doctor}', 'Admin\CommissionController@update')->name('commission.update');
 });

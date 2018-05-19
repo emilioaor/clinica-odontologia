@@ -17,6 +17,9 @@ class User extends Authenticatable
     const LEVEL_SECRETARY = 3;
     const LEVEL_ASSISTANT = 4;
 
+    /** Comision por defecto de ganancia por servicio */
+    const DEFAULT_PRODUCT_COMMISSION = 30;
+
     /**
      * The attributes that are mass assignable.
      *
@@ -154,6 +157,17 @@ class User extends Authenticatable
     public function questionsFrom()
     {
         return $this->hasMany(Question::class, 'from_id');
+    }
+
+    /**
+     * Todas las comisiones de productos configuradas
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function commissionProducts()
+    {
+        return $this->belongsToMany(Product::class, 'product_user', 'user_id', 'product_id')
+            ->withPivot(['commission']);
     }
 
     /**

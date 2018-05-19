@@ -78,4 +78,16 @@ class Product extends Model
     {
         return $this->hasMany(PatientHistory::class, 'product_id');
     }
+
+    /**
+     * Todos los usuarios que tienen configurado comision con este
+     * producto
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function commissionUsers()
+    {
+        return $this->belongsToMany(User::class, 'product_user', 'product_id', 'user_id')
+            ->withPivot(['commission']);
+    }
 }

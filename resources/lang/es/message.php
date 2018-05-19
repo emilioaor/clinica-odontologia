@@ -68,4 +68,6 @@ return [
     'question.create' => 'Pregunta enviada',
     'question.answered' => 'Respuesta enviada',
 
+    'commission.update' => 'Comisiones actualizadas',
+
 ];

@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Product;
 use App\User;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
 class UserController extends Controller
@@ -53,6 +55,8 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
+        DB::beginTransaction();
+
         $user = new User($request->all());
         $user->password = bcrypt($request->password);
         $user->logo = Auth::user()->logo;
@@ -63,6 +67,17 @@ class UserController extends Controller
         $user->level = intval($request->level);
         $user->generatePublicId();
         $user->save();
+
+        $products = Product::all();
+
+        foreach ($products as $product) {
+
+            $user->commissionProducts()->attach($product->id, [
+                'commission' => User::DEFAULT_PRODUCT_COMMISSION
+            ]);
+        }
+
+        DB::commit();
 
         $this->sessionMessage('message.user.create');
 
@@ -175,5 +190,41 @@ class UserController extends Controller
         }
 
         return new JsonResponse(['success' => true, 'valid' => true]);
+    }
+
+    /**
+     * Obtiene una lista de usuarios aplicando los
+     * filtros
+     *
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function search(Request $request)
+    {
+        $users = User::orderBy('id', 'DESC')
+            ->orderBy('name')
+            ->with('commissionProducts')
+            ->limit(10);
+
+        if (! empty($request->level)) {
+            $users->where([
+                ['level', '=', $request->level]
+            ]);
+        }
+
+        if (! empty($request->search)) {
+            $users
+                ->where([
+                    ['name', 'LIKE', "%$request->search%", 'or'],
+                    ['email', 'LIKE', "%$request->search%", 'or'],
+                    ['phone', 'LIKE', "%$request->search%", 'or']
+                ])
+            ;
+        }
+
+        return new JsonResponse([
+            'success' => true,
+            'users' => $users->get()
+        ]);
     }
 }

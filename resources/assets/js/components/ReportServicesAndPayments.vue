@@ -3,7 +3,7 @@
         <div class="row">
             <div class="col-xs-12">
                 <h1>
-                    <i class="glyphicon glyphicon-search" v-if="! loading"></i>
+                    <i class="glyphicon glyphicon-file" v-if="! loading"></i>
                     <img src="/img/loading.gif" v-if="loading">
                     Reporte de servicios y pagos
                 </h1>

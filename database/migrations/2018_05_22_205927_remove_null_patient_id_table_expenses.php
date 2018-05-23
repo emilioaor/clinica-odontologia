@@ -14,7 +14,7 @@ class RemoveNullPatientIdTableExpenses extends Migration
     public function up()
     {
         Schema::table('expenses', function (Blueprint $table) {
-            $table->integer('patient_id')->nullable()->change();
+            $table->integer('patient_id')->unsigned()->nullable()->change();
         });
     }
 
@@ -26,7 +26,7 @@ class RemoveNullPatientIdTableExpenses extends Migration
     public function down()
     {
         Schema::table('expenses', function (Blueprint $table) {
-            $table->integer('patient_id')->nullable(false)->change();
+            $table->integer('patient_id')->unsigned()->nullable(false)->change();
         });
     }
 }

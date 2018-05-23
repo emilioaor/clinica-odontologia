@@ -114,11 +114,11 @@
                                 </div>
                             </div>
 
-                            <div class="row" v-if="data.services">
-                                <div class="col-xs-12" v-for="services in data.services">
+                            <div class="row" v-if="data.servicesAndNotes">
+                                <div class="col-xs-12" v-for="dataPerDate in data.servicesAndNotes">
 
                                     <!-- Services -->
-                                    <table class="table table-responsive">
+                                    <table class="table table-responsive" v-if="dataPerDate.services.length">
                                         <thead>
                                             <tr>
                                                 <th>Fecha</th>
@@ -131,7 +131,7 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <tr v-for="service in services">
+                                            <tr v-for="service in dataPerDate.services">
                                                 <td>{{ dateFormat(service.created_at) }}</td>
                                                 <td v-if="authUser.level == 1">{{ service.public_id }}</td>
                                                 <td>{{ service.product.name }}</td>
@@ -155,21 +155,17 @@
                                     </table>
 
                                     <!-- Notes -->
-                                    <div class="row">
+                                    <div class="row" v-if="dataPerDate.notes.length">
                                         <div class="col-xs-12">
                                             <hr>
-                                            <div
-                                                    class="alert alert-info"
-                                                    v-for="notes in data.notes"
-                                                    v-if="notes[0].date === services[0].formatDate"
-                                                >
+                                            <div class="alert alert-info">
                                                 <p>
                                                     <strong>
-                                                        Notas {{ dateFormat(notes[0].date) }}
+                                                        Notas {{ dateFormat(dataPerDate.date) }}
                                                     </strong>
                                                 </p>
 
-                                                <p v-for="(note,id) in notes">
+                                                <p v-for="(note,id) in dataPerDate.notes">
                                                     {{ (id + 1) + '. ' + note.user.username + ' - ' + note.content }}
                                                     <button
                                                             type="button"
@@ -414,8 +410,7 @@
               data: {
                   start: '',
                   end: '',
-                  services: [],
-                  notes: [],
+                  servicesAndNotes: [],
                   images: []
               },
               modal: {
@@ -457,8 +452,7 @@
 
             selectPatient: function (patient) {
                 this.patient = patient;
-                this.data.services = [];
-                this.data.notes = [];
+                this.data.servicesAndNotes = [];
                 this.data.images = [];
             },
 
@@ -486,16 +480,14 @@
                         this.loading = false;
 
                         if (res.data.success) {
-                            this.data.services = res.data.services;
-                            this.data.notes = res.data.notes;
+                            this.data.servicesAndNotes = res.data.data;
                             this.data.images = res.data.images;
                         }
                     })
                     .catch((err) => {
                         console.log(err);
                         this.loading = false;
-                        this.data.services = [];
-                        this.data.notes = [];
+                        this.data.servicesAndNotes = [];
                         this.data.images = [];
                     })
             },

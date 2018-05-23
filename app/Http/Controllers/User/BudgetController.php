@@ -88,7 +88,7 @@ class BudgetController extends Controller
             return redirect()->route('config');
         }
 
-        $products = Product::all();
+        $products = Product::orderBy('name')->get();
 
         return view('user.budget.create', compact('products'));
     }

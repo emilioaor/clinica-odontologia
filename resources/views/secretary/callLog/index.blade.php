@@ -70,7 +70,7 @@
                                                     <div class="modal-dialog" role="document">
                                                         <div class="modal-content">
                                                             <div class="modal-body">
-                                                                <h4>¿Esta seguro de eliminar este insumo?</h4>
+                                                                <h4>¿Esta seguro de eliminar esta llamada?</h4>
                                                             </div>
                                                             <div class="modal-footer">
                                                                 <form method="post" action="{{ route('callLog.destroy', ['callLog' => $call->public_id]) }}">

@@ -11,70 +11,22 @@
                 </div>
             </div>
             <div class="row">
-                <div class="col-sm-10">
+                <div class="col-xs-12">
                     <div class="panel panel-default">
                         <div class="panel-body">
 
-                            <div class="row">
-                                <div class="col-xs-12">
-                                    <a
-                                            data-toggle="modal"
-                                            data-target="#patientModal"
-                                            @click="searchPatients()"
-                                            >
-                                        <i class="glyphicon glyphicon-search"></i>
-
-                                    <span v-if="! patient">
-                                        Seleccionar paciente
-                                    </span>
-                                    <span v-if="patient">
-                                        Cambiar paciente
-                                    </span>
-                                    </a>
-                                    <hr>
-                                </div>
-                            </div>
-
-                            <section v-if="patient">
-                                <div class="row">
-                                    <div class="col-sm-4">
-                                        <div class="form-group">
-                                            <label for="">Nombre</label>
-                                            <p>
-                                                {{ patient.name }}
-                                            </p>
-                                        </div>
-                                    </div>
-
-                                    <div class="col-sm-4">
-                                        <div class="form-group">
-                                            <label for="">Telefono</label>
-                                            <p>
-                                                {{ patient.phone }}
-                                            </p>
-                                        </div>
-                                    </div>
-
-                                    <div class="col-sm-4">
-                                        <div class="form-group">
-                                            <label for="">Email</label>
-                                            <p>
-                                                {{ patient.email }}
-                                            </p>
-                                        </div>
-                                    </div>
-
-                                </div>
+                            <section>
 
                                 <div class="row">
                                     <div class="col-xs-12">
                                         <table class="table table-responsive">
                                             <thead>
                                             <tr>
-                                                <th width="17%">Fecha</th>
-                                                <th width="20%">Proveedor</th>
-                                                <th width="23%">Servicio</th>
-                                                <th width="25%">Gasto</th>
+                                                <th width="15%">Fecha</th>
+                                                <th width="15%">Proveedor</th>
+                                                <th width="17.5%">Paciente</th>
+                                                <th width="17.5%">Servicio</th>
+                                                <th width="20%">Gasto</th>
                                                 <th width="15%">Monto</th>
                                                 <th></th>
                                             </tr>
@@ -99,6 +51,7 @@
                                                             class="form-control"
                                                             placeholder="Proveedor"
                                                             v-model="expense.supplier_id"
+                                                            @change="changeSupplier(id)"
                                                             v-validate
                                                             data-vv-rules="required"
                                                             :class="{'input-error': errors.has('supplier' + id)}"
@@ -116,14 +69,52 @@
                                                     </p>
                                                 </td>
                                                 <td>
-                                                    <div class="input-group">
+                                                    <div
+                                                            class="input-group"
+                                                            v-if="expense.supplier && (expense.supplier.type === 8 || expense.supplier.type === 9)"
+                                                        >
+                                                        <input  type="text"
+                                                                class="form-control"
+                                                                :id="'patient' + id"
+                                                                :name="'patient' + id"
+                                                                placeholder="Paciente"
+                                                                readonly
+                                                                :value="expense.patient ? expense.patient.name : ''"
+                                                                v-validate
+                                                                data-vv-rules="required"
+                                                                :class="{'input-error': errors.has('patient' + id)}"
+                                                            >
+                                                        <span class="input-group-btn">
+                                                            <button
+                                                                    class="btn btn-info"
+                                                                    type="button"
+                                                                    data-toggle="modal"
+                                                                    data-target="#patientModal"
+                                                                    @click="searchPatients(); selectedPatientExpense = id"
+                                                                >
+                                                                <i class="glyphicon glyphicon-search"></i>
+                                                            </button>
+                                                        </span>
+                                                    </div>
+                                                    <div v-else>
+                                                        No aplica
+                                                    </div>
+                                                    <p class="error" v-if="errors.firstByRule('patient' + id, 'required')">
+                                                        Requerido
+                                                    </p>
+                                                </td>
+                                                <td>
+                                                    <div
+                                                            class="input-group"
+                                                            v-if="expense.patient"
+                                                        >
                                                         <input  type="text"
                                                                 class="form-control"
                                                                 :id="'service' + id"
                                                                 :name="'service' + id"
                                                                 placeholder="Servicio"
                                                                 readonly
-                                                                v-model="expense.patient_history_public_id"
+                                                                :value="expense.patient_history ? expense.patient_history.public_id : ''"
                                                                 v-validate
                                                                 data-vv-rules="required"
                                                                 :class="{'input-error': errors.has('service' + id)}"
@@ -134,11 +125,14 @@
                                                                     type="button"
                                                                     data-toggle="modal"
                                                                     data-target="#serviceModal"
-                                                                    @click="selectedExpense = id; searchServices()"
+                                                                    @click="selectedServiceExpense = id; searchServices()"
                                                                 >
                                                                 <i class="glyphicon glyphicon-search"></i>
                                                             </button>
                                                         </span>
+                                                    </div>
+                                                    <div v-else>
+                                                        Sin paciente
                                                     </div>
                                                     <p class="error" v-if="errors.firstByRule('service' + id, 'required')">
                                                         Requerido
@@ -258,14 +252,13 @@
                                                         </thead>
 
                                                         <tbody v-if="! modal.loading">
-                                                        <tr v-for="p in modal.data" v-if="!patient || patient.id !== p.id">
+                                                        <tr v-for="p in modal.data">
                                                             <td>{{ p.phone }}</td>
                                                             <td>{{ p.name }}</td>
                                                             <td>
                                                                 <button
                                                                         class="btn btn-primary"
                                                                         @click="selectPatient(p)"
-                                                                        data-dismiss="modal"
                                                                         >
                                                                     <i class="glyphicon glyphicon-ok"></i>
                                                                 </button>
@@ -278,7 +271,7 @@
                                             </div>
                                         </div>
                                         <div class="modal-footer">
-                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                                            <button type="button" id="closeModalPatient" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
                                         </div>
                                     </div>
                                 </div>
@@ -384,7 +377,6 @@
             return {
                 loading: false,
                 expenses: [],
-                patient: null,
                 modal: {
                     data: [],
                     loading: false,
@@ -396,7 +388,8 @@
                     datePicker: new Date(),
                     date: null
                 },
-                selectedExpense: null
+                selectedPatientExpense: null,
+                selectedServiceExpense: null
             }
         },
 
@@ -422,22 +415,13 @@
             },
 
             selectPatient: function (patient) {
-                this.patient = patient;
-                this.expenses = [{
-                    patient_id: patient.id,
-                    supplier_id: null,
-                    description: null,
-                    date: null,
-                    picker: null,
-                    amount: null,
-                    patient_history_id: null,
-                    patient_history_public_id: null
-                }];
+                this.expenses[ this.selectedPatientExpense].patient = patient;
+                this.expenses[ this.selectedPatientExpense].patient_id = patient.id;
+                this.expenses[ this.selectedPatientExpense].patient_history_id = null;
+                this.expenses[ this.selectedPatientExpense].patient_history = null;
+                this.selectedPatientExpense = null;
 
-                this.expenses[0].picker = new Date();
-                this.changeDate(this.expenses[0].picker, 0);
-
-                this.modalService.data = [];
+                $('#closeModalPatient').click();
             },
 
             changeDate: function (date, index) {
@@ -452,14 +436,16 @@
                 const index = this.expenses.length;
 
                 this.expenses.push({
-                    patient_id: this.patient.id,
+                    patient_id: null,
+                    patient: null,
                     supplier_id: null,
+                    supplier: null,
                     description: null,
                     date: null,
                     picker: null,
                     amount: null,
-                    patient_history_public_id: null,
-                    patient_history_id: null
+                    patient_history_id: null,
+                    patient_history: null
                 });
 
                 this.expenses[index].picker = new Date();
@@ -513,7 +499,9 @@
                 this.modalService.data = [];
                 this.modalService.loading = true;
 
-                axios.get('/user/service/' + this.patient.public_id + '/search?start=' + this.modalService.date + '&end=' + this.modalService.date)
+                const public_id = this.expenses[ this.selectedServiceExpense ].patient.public_id;
+
+                axios.get('/user/service/' + public_id + '/search?start=' + this.modalService.date + '&end=' + this.modalService.date)
                     .then((res) => {
                         this.modalService.loading = false;
 
@@ -532,10 +520,30 @@
             },
 
             selectService: function (service) {
-                this.expenses[ this.selectedExpense].patient_history_public_id = service.public_id;
-                this.expenses[ this.selectedExpense].patient_history_id = service.id;
+                this.expenses[ this.selectedServiceExpense ].patient_history = service;
+                this.expenses[ this.selectedServiceExpense ].patient_history_id = service.id;
+                this.selectedServiceExpense = null;
 
                 $('#closeServiceModal').click();
+            },
+
+            changeSupplier: function (expenseIndex) {
+                const supplierId = this.expenses[expenseIndex].supplier_id;
+
+                for (let i in this.suppliers) {
+                    if (this.suppliers[i].id === supplierId) {
+
+                        this.expenses[expenseIndex].supplier = this.suppliers[i];
+
+                        if (this.suppliers[i].type !== 8 && this.suppliers[i].type !== 9) {
+
+                            this.expenses[expenseIndex].patient = null;
+                            this.expenses[expenseIndex].patient_id = null;
+                            this.expenses[expenseIndex].patient_history = null;
+                            this.expenses[expenseIndex].patient_history_id = null;
+                        }
+                    }
+                }
             }
         }
     }

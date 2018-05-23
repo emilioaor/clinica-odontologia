@@ -85,11 +85,7 @@ class PatientHistoryController extends Controller
      */
     public function edit($id, Request $request)
     {
-        $patient = Patient::where('public_id', $id)->first();
-
-        if (! $patient) {
-            abort(404);
-        }
+        $patient = Patient::where('public_id', $id)->firstOrFail();
 
         $date = new \DateTime(empty($request->date) ? 'now' : $request->date);
         $start = clone $date;
@@ -99,7 +95,7 @@ class PatientHistoryController extends Controller
 
         $patient->patient_history = [];
         $patient->notes = [];
-        $products = Product::all();
+        $products = Product::orderBy('name')->get();
         $assistants = User::where('level', User::LEVEL_ASSISTANT)->orderBy('name')->get();
 
         return view('user.patientHistory.edit', compact('patient', 'products', 'date', 'assistants'));
@@ -226,8 +222,7 @@ class PatientHistoryController extends Controller
         if ($start > $end) {
             return new JsonResponse([
                 'success' => true,
-                'services' => [],
-                'notes' => [],
+                'data' => [],
                 'images' => []
             ]);
         }
@@ -249,41 +244,37 @@ class PatientHistoryController extends Controller
             ->get()
         ;
 
-        $servicesResponse = [];
-        $d = 0;
-        $lastDate = '';
-        foreach ($services as $service) {
+        $response = [];
+        $c = 0;
+        // Armo un array de fechas
+        while ($start <= $end) {
 
-            if ($service->created_at->format('Y-m-d') !== $lastDate) {
-                $d++;
+            $response[$c] = [
+                'date' => $start->format('Y-m-d'),
+                'services' => [],
+                'notes' => []
+            ];
 
-                $service->formatDate = $service->created_at->format('Y-m-d');
-                $lastDate = $service->created_at->format('Y-m-d');
-                $servicesResponse[$d] = [];
+            // Guardo en la fecha todos los servicios y notas del dia
+            foreach ($services as $service) {
+                if ($service->created_at->format('Y-m-d') === $start->format('Y-m-d')) {
+                    $response[$c]['services'][] = $service;
+                }
             }
 
-            $servicesResponse[$d][] = $service;
-        }
-
-
-        $notesResponse = [];
-        $d = 0;
-        $lastDate = '';
-        foreach ($notes as $note) {
-
-            if ($note->date !== $lastDate) {
-                $d++;
-                $lastDate = $note->date;
-                $notesResponse[$d] = [];
+            foreach ($notes as $note) {
+                if ($note->date === $start->format('Y-m-d')) {
+                    $response[$c]['notes'][] = $note;
+                }
             }
 
-            $notesResponse[$d][] = $note;
+            $c++;
+            $start->modify('+1 day');
         }
 
         return new JsonResponse([
             'success' => true,
-            'services' => $servicesResponse,
-            'notes' => $notesResponse,
+            'data' => $response,
             'images' => $patient->rayX
         ]);
     }

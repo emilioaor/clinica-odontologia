@@ -203,7 +203,9 @@
                             <div class="row" v-if="showImages">
 
                                 <div class="col-sm-4 space-image" v-for="image in data.images">
-                                    <img :src="'/' + image.url" class="img-responsive images">
+                                    <a @click="fullScreenUrl = '/' + image.url; showFullScreen = true">
+                                        <img :src="'/' + image.url" class="img-responsive images">
+                                    </a>
 
                                     <button
                                             type="button"
@@ -389,6 +391,14 @@
                 </div>
             </div>
         </div>
+
+        <!-- FullScreen -->
+        <div class="image__full-screen" v-if="showFullScreen" @click="showFullScreen = false">
+            <button class="btn btn-default" @click="showFullScreen = false">
+                <i class="glyphicon glyphicon-remove"></i>
+            </button>
+            <img :src="fullScreenUrl">
+        </div>
     </section>
 </template>
 
@@ -421,7 +431,10 @@
               authUser: JSON.parse(this.user),
               deletePatientHistory: null,
               deleteNote: null,
-              deleteImage: null
+              deleteImage: null,
+
+              showFullScreen: false,
+              fullScreenUrl: ''
           }
         },
         mounted: function () {

@@ -79,7 +79,7 @@
                                                                 :name="'patient' + id"
                                                                 placeholder="Paciente"
                                                                 readonly
-                                                                :value="expense.patient ? expense.patient.name : ''"
+                                                                v-model="expense.patient.name"
                                                                 v-validate
                                                                 data-vv-rules="required"
                                                                 :class="{'input-error': errors.has('patient' + id)}"
@@ -106,7 +106,7 @@
                                                 <td>
                                                     <div
                                                             class="input-group"
-                                                            v-if="expense.patient"
+                                                            v-if="expense.patient.public_id"
                                                         >
                                                         <input  type="text"
                                                                 class="form-control"
@@ -114,7 +114,7 @@
                                                                 :name="'service' + id"
                                                                 placeholder="Servicio"
                                                                 readonly
-                                                                :value="expense.patient_history ? expense.patient_history.public_id : ''"
+                                                                v-model="expense.patient_history.public_id"
                                                                 v-validate
                                                                 data-vv-rules="required"
                                                                 :class="{'input-error': errors.has('service' + id)}"
@@ -418,10 +418,12 @@
                 this.expenses[ this.selectedPatientExpense].patient = patient;
                 this.expenses[ this.selectedPatientExpense].patient_id = patient.id;
                 this.expenses[ this.selectedPatientExpense].patient_history_id = null;
-                this.expenses[ this.selectedPatientExpense].patient_history = null;
-                this.selectedPatientExpense = null;
+                this.expenses[ this.selectedPatientExpense].patient_history = {};
+                this.errors.remove('patient' + this.selectedPatientExpense);
 
                 $('#closeModalPatient').click();
+
+                this.selectedPatientExpense = null;
             },
 
             changeDate: function (date, index) {
@@ -437,7 +439,7 @@
 
                 this.expenses.push({
                     patient_id: null,
-                    patient: null,
+                    patient: {},
                     supplier_id: null,
                     supplier: null,
                     description: null,
@@ -445,7 +447,7 @@
                     picker: null,
                     amount: null,
                     patient_history_id: null,
-                    patient_history: null
+                    patient_history: {}
                 });
 
                 this.expenses[index].picker = new Date();
@@ -490,12 +492,15 @@
 
                 this.modalService.date = year + '-' + month + '-' + day;
 
-                if (this.patient) {
-                    this.searchServices();
-                }
+                this.searchServices();
             },
 
             searchServices: function () {
+
+                if (this.selectedServiceExpense === null) {
+                    return false;
+                }
+
                 this.modalService.data = [];
                 this.modalService.loading = true;
 
@@ -505,11 +510,11 @@
                     .then((res) => {
                         this.modalService.loading = false;
 
-                        for (let x in res.data.services) {
+                        for (let x in res.data.data) {
 
-                            for (let y in res.data.services[x]) {
+                            for (let y in res.data.data[x].services) {
 
-                                this.modalService.data.push(res.data.services[x][y]);
+                                this.modalService.data.push(res.data.data[x].services[y]);
                             }
                         }
                     })
@@ -522,6 +527,7 @@
             selectService: function (service) {
                 this.expenses[ this.selectedServiceExpense ].patient_history = service;
                 this.expenses[ this.selectedServiceExpense ].patient_history_id = service.id;
+                this.errors.remove('service' + this.selectedServiceExpense);
                 this.selectedServiceExpense = null;
 
                 $('#closeServiceModal').click();
@@ -537,9 +543,9 @@
 
                         if (this.suppliers[i].type !== 8 && this.suppliers[i].type !== 9) {
 
-                            this.expenses[expenseIndex].patient = null;
+                            this.expenses[expenseIndex].patient = {};
                             this.expenses[expenseIndex].patient_id = null;
-                            this.expenses[expenseIndex].patient_history = null;
+                            this.expenses[expenseIndex].patient_history = {};
                             this.expenses[expenseIndex].patient_history_id = null;
                         }
                     }

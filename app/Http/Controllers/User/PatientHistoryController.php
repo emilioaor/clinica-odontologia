@@ -30,7 +30,8 @@ class PatientHistoryController extends Controller
         $this->middleware('admin')->only([
             'destroy',
             'deleteNote',
-            'deleteImage'
+            'deleteImage',
+            'updatePatientHistory'
         ]);
     }
 
@@ -303,6 +304,26 @@ class PatientHistoryController extends Controller
     {
         $rayX = RayX::findOrFail($id);
         $rayX->delete();
+
+        return new JsonResponse(['success' => true]);
+    }
+
+    /**
+     * Actualiza un servicio
+     *
+     * @param Request $request
+     * @param $id
+     * @return JsonResponse
+     */
+    public function updatePatientHistory(Request $request, $id)
+    {
+        $patientHistory = PatientHistory::where('public_id', $id)->firstOrFail();
+        $patientHistory->created_at = new \DateTime($request->created_at);
+        $patientHistory->product_id = $request->product_id;
+        $patientHistory->tooth = $request->tooth;
+        $patientHistory->doctor_id = $request->doctor_id;
+        $patientHistory->assistant_id = $request->assistant_id;
+        $patientHistory->save();
 
         return new JsonResponse(['success' => true]);
     }

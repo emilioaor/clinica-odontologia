@@ -24,6 +24,7 @@ Route::group(['prefix' => 'user', 'middleware' => 'auth'], function() {
     Route::get('service/{service}/search', 'User\PatientHistoryController@searchService');
     Route::delete('service/note/{note}', 'User\PatientHistoryController@deleteNote');
     Route::delete('service/image/{note}', 'User\PatientHistoryController@deleteImage');
+    Route::put('service/{service}/updateService', 'User\PatientHistoryController@updatePatientHistory');
     Route::resource('service', 'User\PatientHistoryController');
 
     // Cotizacion

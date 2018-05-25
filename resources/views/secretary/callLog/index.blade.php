@@ -95,6 +95,22 @@
                                             </td>
                                         @endif
                                     </tr>
+
+                                    @if(count($call->statusHistory) > 1)
+                                        <tr>
+                                            <td colspan="{{ Auth::user()->isAdmin() ? '7' : '6' }}">
+                                                @foreach($call->statusHistory as $statusHistory)
+                                                    <div class="alert alert-info">
+                                                        <p>
+                                                            <strong>{{ $statusHistory->statusText() }}</strong><br>
+                                                            {!! str_replace("\n", '<br>', $statusHistory->note) !!}
+                                                        </p>
+                                                    </div>
+                                                @endforeach
+                                            </td>
+                                        </tr>
+                                    @endif
+
                                 @endforeach
                             @else
                                 <tr>

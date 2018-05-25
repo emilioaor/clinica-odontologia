@@ -76,13 +76,27 @@
                                             <th>Estatus</th>
                                         </tr>
                                         </thead>
-                                        <tbody>
-                                        <tr v-for="call in data.calls">
-                                            <td>{{ dateFormat(call.call_date)}}</td>
-                                            <td>{{ call.description }}</td>
-                                            <td>{{ call.patient.name }}</td>
-                                            <td>{{ data.status[call.status].statusText }}</td>
-                                        </tr>
+                                        <tbody v-for="call in data.calls">
+                                            <tr>
+                                                <td>{{ dateFormat(call.call_date)}}</td>
+                                                <td>
+                                                    <span v-html="call.description"></span>
+                                                </td>
+                                                <td>{{ call.patient.name }}</td>
+                                                <td>{{ data.status[call.status].statusText }}</td>
+                                            </tr>
+
+                                            <!-- Status history -->
+                                            <tr v-if="call.status_history.length > 1">
+                                                <td colspan="4">
+
+                                                    <div class="alert alert-info" v-for="statusHistory in call.status_history">
+                                                        <strong>{{ data.status[statusHistory.status].statusText }}</strong><br>
+                                                        <span v-html="statusHistory.note"></span>
+                                                    </div>
+
+                                                </td>
+                                            </tr>
                                         </tbody>
                                     </table>
                                 </div>

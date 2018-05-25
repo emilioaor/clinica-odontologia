@@ -42,6 +42,7 @@ class CallLogController extends Controller
             ->whereDate('call_date', '<=', new \DateTime())
             ->where('status', '<>', CallLog::STATUS_NOT_INTERESTED)
             ->where('status', '<>', CallLog::STATUS_SCHEDULED)
+            ->with('statusHistory')
             ->paginate()
         ;
 
@@ -191,8 +192,17 @@ class CallLogController extends Controller
                 $request->end
             ])
             ->with('patient')
+            ->with('statusHistory')
             ->get()
         ;
+
+        foreach ($calls as $call) {
+            $call->description = str_replace("\n", '<br>', $call->description);
+
+            foreach ($call->statusHistory as $statusHistory) {
+                $statusHistory->note = str_replace("\n", '<br>', $statusHistory->note);
+            }
+        }
 
         $status[CallLog::STATUS_PENDING] = ['statusText' => trans('message.callLog.status.pending')];
         $status[CallLog::STATUS_SCHEDULED] = ['statusText' => trans('message.callLog.status.scheduled')];

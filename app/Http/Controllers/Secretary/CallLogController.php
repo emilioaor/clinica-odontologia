@@ -124,6 +124,7 @@ class CallLogController extends Controller
         DB::beginTransaction();
 
         $callLog = CallLog::where('public_id', $id)->firstOrFail();
+        $callLog->description = $request->note;
         $callLog->status = $request->status;
 
         if ($request->status == CallLog::STATUS_NOT_ANSWER_CALL) {

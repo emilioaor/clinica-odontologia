@@ -142,7 +142,12 @@
                                                             format = "MM/dd/yyyy"
                                                             @input="changeServiceDate($event, snId, id)"
                                                             v-model="service.datePicker"
+                                                            v-if="serviceEdit === service.id"
                                                             ></datepicker>
+
+                                                    <span v-if="serviceEdit !== service.id">
+                                                        {{ dateFormat(service.created_at) }}
+                                                    </span>
                                                 </td>
                                                 <td>{{ service.public_id }}</td>
                                                 <td>
@@ -151,6 +156,7 @@
                                                             :id="'product' + id"
                                                             class="form-control"
                                                             v-model="service.product_id"
+                                                            v-if="serviceEdit === service.id"
                                                         >
                                                         <option
                                                                 v-for="product in products"
@@ -159,6 +165,10 @@
                                                             {{ product.name }}
                                                         </option>
                                                     </select>
+
+                                                    <span v-if="serviceEdit !== service.id">
+                                                        {{ service.product.name }}
+                                                    </span>
                                                 </td>
                                                 <td>
                                                     <input
@@ -168,7 +178,12 @@
                                                             class="form-control"
                                                             placeholder="Diente"
                                                             v-model="service.tooth"
+                                                            v-if="serviceEdit === service.id"
                                                         >
+
+                                                    <span v-if="serviceEdit !== service.id">
+                                                        {{ service.tooth }}
+                                                    </span>
                                                 </td>
                                                 <td>
                                                     <select
@@ -176,6 +191,7 @@
                                                             :id="'doctor' + id"
                                                             class="form-control"
                                                             v-model="service.doctor_id"
+                                                            v-if="serviceEdit === service.id"
                                                         >
                                                         <option
                                                                 v-for="doctor in doctors"
@@ -184,6 +200,10 @@
                                                             {{ doctor.name }}
                                                         </option>
                                                     </select>
+
+                                                    <span v-if="serviceEdit !== service.id">
+                                                        {{ service.doctor.name }}
+                                                    </span>
                                                 </td>
                                                 <td>
                                                     <select
@@ -191,6 +211,7 @@
                                                             :id="'assistant' + id"
                                                             class="form-control"
                                                             v-model="service.assistant_id"
+                                                            v-if="serviceEdit === service.id"
                                                             >
                                                         <option
                                                                 v-for="assistant in assistants"
@@ -199,27 +220,62 @@
                                                             {{ assistant.name }}
                                                         </option>
                                                     </select>
+
+                                                    <span v-if="serviceEdit !== service.id">
+                                                        {{ service.assistant.name }}
+                                                    </span>
                                                 </td>
                                                 <td>
+
+                                                    <!-- Editar -->
                                                     <button
                                                             type="button"
-                                                            class="btn btn-success"
-                                                            @click="updatePatientHistory(service)"
-                                                            :disabled="loading"
+                                                            class="btn btn-warning"
+                                                            @click="serviceEdit = service.id"
+                                                            :disabled="serviceEdit !== null"
+                                                            v-if="serviceEdit !== service.id"
                                                             >
-                                                        <i class="glyphicon glyphicon-check"></i>
+                                                        <i class="glyphicon glyphicon-edit"></i>
                                                     </button>
+
+                                                    <!-- Cancelar edicion -->
+                                                    <button
+                                                            type="button"
+                                                            class="btn btn-warning"
+                                                            @click="serviceEdit = null;"
+                                                            v-if="serviceEdit === service.id && serviceLoading === null"
+                                                            >
+                                                        <i class="glyphicon glyphicon-remove-sign"></i>
+                                                    </button>
+
+
                                                 </td>
                                                 <td>
+
+                                                    <!-- Eliminar -->
                                                     <button
                                                             type="button"
                                                             class="btn btn-danger"
                                                             data-toggle="modal"
                                                             data-target="#deleteModal"
                                                             @click="deletePatientHistory = service.id"
+                                                            v-if="serviceEdit !== service.id"
                                                             >
                                                         <i class="glyphicon glyphicon-remove"></i>
                                                     </button>
+
+                                                    <!-- Guardar -->
+                                                    <button
+                                                            type="button"
+                                                            class="btn btn-success"
+                                                            @click="updatePatientHistory(service)"
+                                                            :disabled="loading"
+                                                            v-if="serviceEdit === service.id && serviceLoading !== service.id"
+                                                            >
+                                                        <i class="glyphicon glyphicon-check"></i>
+                                                    </button>
+
+                                                    <img src="/img/loading.gif" v-if="serviceLoading === service.id">
                                                 </td>
                                             </tr>
                                         </tbody>
@@ -519,7 +575,9 @@
               deleteImage: null,
 
               showFullScreen: false,
-              fullScreenUrl: ''
+              fullScreenUrl: '',
+              serviceEdit: null,
+              serviceLoading: null
           }
         },
         mounted: function () {
@@ -580,6 +638,7 @@
 
             searchPatientHistory: function () {
                 this.loading = true;
+                this.serviceEdit = null;
 
                 axios.get('/user/service/' + this.patient.public_id + '/search?start=' + this.data.start + '&end=' + this.data.end)
                     .then((res) => {
@@ -602,7 +661,6 @@
                                     dp.setFullYear(d[0], parseInt(d[1]) - 1, d[2]);
 
                                     this.data.servicesAndNotes[i].services[x].datePicker = dp;
-                                    this.data.servicesAndNotes[i].services[x].loading = false;
                                 }
                             }
                         }
@@ -674,15 +732,42 @@
             },
 
             updatePatientHistory: function (service) {
-                this.loading = true;
+                this.serviceLoading = service.id;
 
                 axios.put('/user/service/' + service.public_id + '/updateService', service)
                     .then((res) => {
-                        this.loading = false;
+
+                        this.updateRelation(service);
+
+                        this.serviceLoading = null;
+                        this.serviceEdit = null;
                     })
                     .catch((err) => {
                         console.log(err);
                     })
+            },
+
+            updateRelation: function (service) {
+                // asignar producto
+                for (let i in this.products) {
+                    if (this.products[i].id === service.product_id) {
+                        service.product = this.products[i];
+                    }
+                }
+
+                // asignar doctor
+                for (let i in this.doctors) {
+                    if (this.doctors[i].id === service.doctor_id) {
+                        service.doctor = this.doctors[i];
+                    }
+                }
+
+                // asignar asistente
+                for (let i in this.assistants) {
+                    if (this.assistants[i].id === service.assistant_id) {
+                        service.assistant = this.assistants[i];
+                    }
+                }
             }
         }
     }

@@ -323,6 +323,7 @@ class PatientHistoryController extends Controller
         $patientHistory->tooth = $request->tooth;
         $patientHistory->doctor_id = $request->doctor_id;
         $patientHistory->assistant_id = $request->assistant_id;
+        $patientHistory->price = $request->price;
         $patientHistory->save();
 
         return new JsonResponse(['success' => true]);

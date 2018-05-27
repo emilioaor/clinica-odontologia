@@ -10,7 +10,7 @@
             </div>
         </div>
         <div class="row">
-            <div class="col-sm-10">
+            <div class="col-xs-12">
                 <div class="panel panel-default">
                     <div class="panel-body">
 
@@ -182,16 +182,164 @@
                                                 <th>Doctor</th>
                                                 <th>Asistente</th>
                                                 <th>Precio</th>
+                                                <th width="5%" v-if="user.level === 1"></th>
+                                                <th width="5%" v-if="user.level === 1"></th>
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <tr v-for="service in data.services">
-                                                <td>{{ dateFormat(service.created_at) }}</td>
-                                                <td>{{ service.product.name }}</td>
-                                                <td>{{ service.tooth }}</td>
-                                                <td>{{ service.doctor.name }}</td>
-                                                <td>{{ service.assistant.name }}</td>
-                                                <td>{{ '$' + service.price }}</td>
+                                            <tr v-for="(service, id) in data.services">
+                                                <td>
+                                                    <datepicker
+                                                            :name = "'serviceDate' + id"
+                                                            :id = "'serviceDate' + id"
+                                                            language="es"
+                                                            input-class = "form-control"
+                                                            format = "MM/dd/yyyy"
+                                                            @input="changeDateService($event, id)"
+                                                            v-model="service.datePicker"
+                                                            v-if="serviceEdit === service.id"
+                                                            ></datepicker>
+
+                                                    <span v-if="serviceEdit !== service.id">
+                                                        {{ dateFormat(service.created_at) }}
+                                                    </span>
+                                                </td>
+                                                <td>
+                                                    <select
+                                                            :name="'product' + id"
+                                                            :id="'product' + id"
+                                                            placeholder="Servicio"
+                                                            class="form-control"
+                                                            v-model="service.product_id"
+                                                            v-if="serviceEdit === service.id"
+                                                        >
+                                                        <option
+                                                                v-for="product in products"
+                                                                :value="product.id"
+                                                            >
+                                                            {{ product.name }}
+                                                        </option>
+                                                    </select>
+
+                                                    <span v-if="serviceEdit !== service.id">
+                                                        {{ service.product.name }}
+                                                    </span>
+                                                </td>
+                                                <td>
+                                                    <input
+                                                            type="text"
+                                                            class="form-control"
+                                                            :id="'tooth' + id"
+                                                            :name="'tooth' + id"
+                                                            placeholder="Diente"
+                                                            v-model="service.tooth"
+                                                            v-validate
+                                                            data-vv-rules="required"
+                                                            :class="{'input-error': errors.has('tooth' + id)}"
+                                                            v-if="serviceEdit === service.id"
+                                                            >
+                                                    <p class="error" v-if="errors.firstByRule('tooth' + id, 'required')">
+                                                        Requerido
+                                                    </p>
+
+                                                    <span v-if="serviceEdit !== service.id">
+                                                        {{ service.tooth }}
+                                                    </span>
+                                                </td>
+                                                <td>
+                                                    <select
+                                                            :name="'doctor' + id"
+                                                            :id="'doctor' + id"
+                                                            placeholder="Doctor"
+                                                            class="form-control"
+                                                            v-model="service.doctor_id"
+                                                            v-if="serviceEdit === service.id"
+                                                            >
+                                                        <option
+                                                                v-for="doctor in doctors"
+                                                                :value="doctor.id"
+                                                                >
+                                                            {{ doctor.name }}
+                                                        </option>
+                                                    </select>
+
+                                                    <span v-if="serviceEdit !== service.id">
+                                                        {{ service.doctor.name }}
+                                                    </span>
+                                                </td>
+                                                <td>
+                                                    <select
+                                                            :name="'assistant' + id"
+                                                            :id="'assistant' + id"
+                                                            placeholder="Asistente"
+                                                            class="form-control"
+                                                            v-model="service.assistant_id"
+                                                            v-if="serviceEdit === service.id"
+                                                            >
+                                                        <option
+                                                                v-for="assistant in assistants"
+                                                                :value="assistant.id"
+                                                                >
+                                                            {{ assistant.name }}
+                                                        </option>
+                                                    </select>
+
+                                                    <span v-if="serviceEdit !== service.id">
+                                                        {{ service.assistant.name }}
+                                                    </span>
+                                                </td>
+                                                <td>
+                                                    <input
+                                                            type="number"
+                                                            class="form-control"
+                                                            :id="'price' + id"
+                                                            :name="'price' + id"
+                                                            placeholder="Precio"
+                                                            v-model="service.price"
+                                                            v-validate
+                                                            data-vv-rules="required"
+                                                            :class="{'input-error': errors.has('price' + id)}"
+                                                            v-if="serviceEdit === service.id"
+                                                        >
+                                                    <p class="error" v-if="errors.firstByRule('price' + id, 'required')">
+                                                        Requerido
+                                                    </p>
+
+                                                    <span v-if="serviceEdit !== service.id">
+                                                        {{ '$' + service.price }}
+                                                    </span>
+                                                </td>
+                                                <td v-if="user.level === 1">
+                                                    <!-- Cancelar edicion de servicio -->
+                                                    <button
+                                                            class="btn btn-warning"
+                                                            @click="serviceEdit = null"
+                                                            v-if="serviceEdit === service.id"
+                                                            >
+                                                        <i class="glyphicon glyphicon-remove-sign"></i>
+                                                    </button>
+                                                </td>
+                                                <td v-if="user.level === 1">
+                                                    <!-- Editar servicio -->
+                                                    <button
+                                                            class="btn btn-warning"
+                                                            @click="serviceEdit = service.id"
+                                                            :disabled="serviceEdit !== null"
+                                                            v-if="serviceEdit !== service.id"
+                                                        >
+                                                        <i class="glyphicon glyphicon-edit"></i>
+                                                    </button>
+
+                                                    <!-- Guardar servicio -->
+                                                    <button
+                                                            class="btn btn-success"
+                                                            v-if="serviceEdit === service.id && serviceLoading !== service.id"
+                                                            @click="updatePatientHistory(service)"
+                                                            >
+                                                        <i class="glyphicon glyphicon-check"></i>
+                                                    </button>
+                                                    <img src="/img/loading.gif" v-if="serviceLoading === service.id">
+                                                </td>
                                             </tr>
                                         </tbody>
                                     </table>
@@ -214,26 +362,128 @@
                                             <th>Registrado por</th>
                                             <th>Tipo</th>
                                             <th>Monto</th>
-                                            <th width="5%"></th>
+                                            <th width="5%" v-if="user.level === 1"></th>
+                                            <th width="5%" v-if="user.level === 1"></th>
                                         </tr>
                                         </thead>
                                         <tbody>
-                                        <tr v-for="payment in data.payments">
-                                            <td>{{ dateFormat(payment.created_at) }}</td>
-                                            <td>{{ payment.user_created.username }}</td>
+                                        <tr v-for="(payment, id) in data.payments">
                                             <td>
-                                                <span v-if="payment.type === 1">Tarjeta de crédito</span>
-                                                <span v-if="payment.type === 2">Efectivo</span>
-                                                <span v-if="payment.type === 3">Cheque</span>
+                                                <datepicker
+                                                        :name = "'paymentDate' + id"
+                                                        :id = "'paymentDate' + id"
+                                                        language="es"
+                                                        input-class = "form-control"
+                                                        format = "MM/dd/yyyy"
+                                                        @input="changeDatePayment($event, id)"
+                                                        v-model="payment.datePicker"
+                                                        v-if="paymentEdit === payment.id"
+                                                        ></datepicker>
+
+                                                <span v-if="paymentEdit !== payment.id">
+                                                    {{ dateFormat(payment.created_at) }}
+                                                </span>
                                             </td>
-                                            <td>{{ '$' + payment.amount }}</td>
                                             <td>
+                                                <select
+                                                        :name="'user_created' + id"
+                                                        :id="'user_created' + id"
+                                                        class="form-control"
+                                                        placeholder="Secretaria"
+                                                        v-model="payment.user_created_id"
+                                                        v-if="paymentEdit === payment.id"
+                                                    >
+                                                    <option
+                                                            v-for="secretary in secretaries"
+                                                            :value="secretary.id"
+                                                        >
+                                                        {{ secretary.name }}
+                                                    </option>
+                                                </select>
+
+                                                <span v-if="paymentEdit !== payment.id">
+                                                    {{ payment.user_created.name }}
+                                                </span>
+                                            </td>
+                                            <td>
+                                                <select
+                                                        :name="'type' + id"
+                                                        :id="'type' + id"
+                                                        class="form-control"
+                                                        placeholder="Tipo de pago"
+                                                        v-model="payment.type"
+                                                        v-if="paymentEdit === payment.id"
+                                                        >
+                                                    <option value="1">Tarjeta de crédito</option>
+                                                    <option value="2">Efectivo</option>
+                                                    <option value="3">Cheque</option>
+                                                </select>
+
+                                                <span v-if="paymentEdit !== payment.id">
+                                                    <span v-if="payment.type === 1">Tarjeta de crédito</span>
+                                                    <span v-if="payment.type === 2">Efectivo</span>
+                                                    <span v-if="payment.type === 3">Cheque</span>
+                                                </span>
+                                            </td>
+                                            <td>
+                                                <input
+                                                        type="number"
+                                                        class="form-control"
+                                                        :id="'amount' + id"
+                                                        :name="'amount' + id"
+                                                        placeholder="Monto"
+                                                        v-model="payment.amount"
+                                                        v-validate
+                                                        data-vv-rules="required"
+                                                        :class="{'input-error': errors.has('amount' + id)}"
+                                                        v-if="paymentEdit === payment.id"
+                                                        >
+                                                <p class="error" v-if="errors.firstByRule('amount' + id, 'required')">
+                                                    Requerido
+                                                </p>
+
+                                                <span v-if="paymentEdit !== payment.id">
+                                                    {{ '$' + payment.amount }}
+                                                </span>
+                                            </td>
+                                            <td v-if="user.level === 1">
+                                                <!-- Editar pago -->
+                                                <button
+                                                        class="btn btn-warning"
+                                                        @click="paymentEdit = payment.id"
+                                                        :disabled="paymentEdit !== null"
+                                                        v-if="paymentEdit !== payment.id"
+                                                        >
+                                                    <i class="glyphicon glyphicon-edit"></i>
+                                                </button>
+
+                                                <!-- Cancelar edicion de pago -->
+                                                <button
+                                                        class="btn btn-warning"
+                                                        @click="paymentEdit = null"
+                                                        v-if="paymentEdit === payment.id"
+                                                        >
+                                                    <i class="glyphicon glyphicon-remove-sign"></i>
+                                                </button>
+                                            </td>
+                                            <td v-if="user.level === 1">
+                                                <!-- Guardar pago -->
+                                                <button
+                                                        class="btn btn-success"
+                                                        v-if="paymentEdit === payment.id && paymentLoading !== payment.id"
+                                                        @click="updatePayment(payment)"
+                                                        >
+                                                    <i class="glyphicon glyphicon-check"></i>
+                                                </button>
+                                                <img src="/img/loading.gif" v-if="paymentLoading === payment.id">
+
+                                                <!-- Eliminar pago -->
                                                 <button
                                                         type="button"
                                                         class="btn btn-danger"
                                                         data-toggle="modal"
                                                         data-target="#deleteModal"
-                                                        v-if="authUser.level === 1"
+                                                        v-if="paymentEdit !== payment.id"
                                                         @click="deleteId = payment.id"
                                                         >
                                                     <i class="glyphicon glyphicon-remove"></i>
@@ -429,7 +679,28 @@
         components: {
             Datepicker
         },
-        props: ['user'],
+        props: {
+            user: {
+                required: true,
+                type: Object
+            },
+            products: {
+                required: true,
+                type: Array
+            },
+            doctors: {
+                required: true,
+                type: Array
+            },
+            assistants: {
+                required: true,
+                type: Array
+            },
+            secretaries: {
+                required: true,
+                type: Array
+            }
+        },
         data: function () {
           return {
               loading: false,
@@ -456,8 +727,11 @@
                   },
                   loading: false,
               },
-              authUser: JSON.parse(this.user),
-              deleteId: null
+              deleteId: null,
+              serviceEdit: null,
+              serviceLoading: null,
+              paymentEdit: null,
+              paymentLoading: null
           }
         },
         mounted: function () {
@@ -510,8 +784,26 @@
                 this.data.end = year + '-' + month + '-' + day;
             },
 
+            changeDateService: function (date, index) {
+                let day = (date.getDate() < 10) ? '0' + date.getDate() : date.getDate();
+                let month = ((date.getMonth() + 1) < 10) ? '0' + (date.getMonth() + 1) : (date.getMonth() + 1);
+                let year = date.getFullYear();
+
+                this.data.services[index].created_at = year + '-' + month + '-' + day;
+            },
+
+            changeDatePayment: function (date, index) {
+                let day = (date.getDate() < 10) ? '0' + date.getDate() : date.getDate();
+                let month = ((date.getMonth() + 1) < 10) ? '0' + (date.getMonth() + 1) : (date.getMonth() + 1);
+                let year = date.getFullYear();
+
+                this.data.payments[index].created_at = year + '-' + month + '-' + day;
+            },
+
             search: function () {
                 this.loading = true;
+                this.serviceEdit = null;
+                this.paymentEdit = null;
 
                 axios.get('/user/payment/' + this.patient.public_id + '/search?start=' + this.data.start + '&end=' + this.data.end + '&all=' + !this.filter)
                     .then((res) => {
@@ -520,6 +812,32 @@
                         if (res.data.success) {
                             this.data.services = res.data.services;
                             this.data.payments = res.data.payments;
+
+                            this.data.services.forEach((service) => {
+
+                                let date = service.created_at;
+                                let dp = new Date();
+
+                                date = date.split(' ');
+                                date = date[0].split('-');
+                                dp.setFullYear(date[0], parseInt(date[1]) - 1, date[2]);
+
+                                service.datePicker = dp;
+
+                            });
+
+                            this.data.payments.forEach((payment) => {
+
+                                let date = payment.created_at;
+                                let dp = new Date();
+
+                                date = date.split(' ');
+                                date = date[0].split('-');
+                                dp.setFullYear(date[0], parseInt(date[1]) - 1, date[2]);
+
+                                payment.datePicker = dp;
+
+                            });
                         }
                     })
                     .catch((err) => {
@@ -609,6 +927,62 @@
                         this.loading = false;
                         console.log(err);
                     })
+            },
+
+            updatePatientHistory: function (service) {
+                this.serviceLoading = service.id;
+
+                axios.put('/user/service/' + service.public_id + '/updateService', service)
+                    .then((res) => {
+
+                        this.updateRelation(service);
+
+                        this.serviceLoading = null;
+                        this.serviceEdit = null;
+
+                        this.search();
+                    })
+                    .catch((err) => {
+                        console.log(err);
+                    })
+            },
+
+            updatePayment: function (payment) {
+                this.paymentLoading = payment.id;
+
+                axios.put('/user/payment/' + payment.id, payment)
+                    .then((res) => {
+
+                        this.paymentLoading = null;
+                        this.paymentEdit = null;
+                        this.search();
+                    })
+                    .catch((err) => {
+                        console.log(err);
+                    })
+            },
+
+            updateRelation: function (service) {
+                // asignar producto
+                for (let i in this.products) {
+                    if (this.products[i].id === service.product_id) {
+                        service.product = this.products[i];
+                    }
+                }
+
+                // asignar doctor
+                for (let i in this.doctors) {
+                    if (this.doctors[i].id === service.doctor_id) {
+                        service.doctor = this.doctors[i];
+                    }
+                }
+
+                // asignar asistente
+                for (let i in this.assistants) {
+                    if (this.assistants[i].id === service.assistant_id) {
+                        service.assistant = this.assistants[i];
+                    }
+                }
             }
         }
     }

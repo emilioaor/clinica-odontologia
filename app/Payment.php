@@ -18,7 +18,7 @@ class Payment extends Model
 
     protected $fillable = [
         'patient_id',
-        'user_created',
+        'user_created_id',
         'amount',
         'type'
     ];
@@ -42,6 +42,6 @@ class Payment extends Model
      */
     public function userCreated()
     {
-        return $this->belongsTo(User::class, 'user_created');
+        return $this->belongsTo(User::class, 'user_created_id');
     }
 }

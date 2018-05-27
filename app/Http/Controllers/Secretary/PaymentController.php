@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Secretary;
 
 use App\Payment;
 use App\Patient;
+use App\Product;
+use App\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -18,7 +20,10 @@ class PaymentController extends Controller
     {
         $this->middleware('secretary');
 
-        $this->middleware('admin')->only(['destroy']);
+        $this->middleware('admin')->only([
+            'destroy',
+            'update'
+        ]);
     }
 
     /**
@@ -38,7 +43,12 @@ class PaymentController extends Controller
      */
     public function create()
     {
-        return view('secretary.payment.create');
+        $products = Product::orderBy('name')->get();
+        $doctors = User::where('level', User::LEVEL_ADMIN)->orWhere('level', User::LEVEL_DOCTOR)->orderBy('name')->get();
+        $assistants = User::where('level', User::LEVEL_ASSISTANT)->get();
+        $secretaries = User::where('level', User::LEVEL_ADMIN)->orWhere('level', User::LEVEL_SECRETARY)->orderBy('name')->get();
+
+        return view('secretary.payment.create', compact('products', 'doctors', 'assistants', 'secretaries'));
     }
 
     /**
@@ -53,7 +63,7 @@ class PaymentController extends Controller
         $payment->patient_id = $request->patient_id;
         $payment->amount = $request->amount;
         $payment->type = intval($request->type);
-        $payment->user_created = Auth::user()->id;
+        $payment->user_created_id = Auth::user()->id;
         $payment->save();
 
         return new JsonResponse(['success' => true, 'payment' => $payment]);
@@ -90,7 +100,14 @@ class PaymentController extends Controller
      */
     public function update(Request $request, $id)
     {
-        abort(404);
+        $payment = Payment::findOrFail($id);
+        $payment->created_at = new \DateTime($request->created_at);
+        $payment->user_created_id = $request->user_created_id;
+        $payment->type = $request->type;
+        $payment->amount = $request->amount;
+        $payment->save();
+
+        return new JsonResponse(['success' => true]);
     }
 
     /**
@@ -119,6 +136,7 @@ class PaymentController extends Controller
         $patient = Patient::where('public_id', $id)->firstOrFail();
 
         $services = $patient->patientHistory()
+            ->orderBy('created_at')
             ->with([
                 'product',
                 'doctor',
@@ -126,6 +144,7 @@ class PaymentController extends Controller
             ])
         ;
         $payments = $patient->payments()
+            ->orderBy('created_at')
             ->with([
                 'patient',
                 'userCreated'

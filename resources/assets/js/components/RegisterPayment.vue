@@ -177,6 +177,7 @@
                                         <thead>
                                             <tr>
                                                 <th>Fecha</th>
+                                                <th>ID Servicio</th>
                                                 <th>Servicio</th>
                                                 <th>Diente</th>
                                                 <th>Doctor</th>
@@ -203,6 +204,9 @@
                                                     <span v-if="serviceEdit !== service.id">
                                                         {{ dateFormat(service.created_at) }}
                                                     </span>
+                                                </td>
+                                                <td>
+                                                    {{ service.public_id }}
                                                 </td>
                                                 <td>
                                                     <select
@@ -359,6 +363,7 @@
                                         <thead>
                                         <tr>
                                             <th>Fecha</th>
+                                            <th>Servicio</th>
                                             <th>Registrado por</th>
                                             <th>Tipo</th>
                                             <th>Monto</th>
@@ -383,6 +388,9 @@
                                                 <span v-if="paymentEdit !== payment.id">
                                                     {{ dateFormat(payment.created_at) }}
                                                 </span>
+                                            </td>
+                                            <td>
+                                                {{ payment.patient_history ? payment.patient_history.public_id : '' }}
                                             </td>
                                             <td>
                                                 <select
@@ -938,8 +946,6 @@
 
                 axios.post('/user/payment', this.paymentModal.data)
                     .then((res) => {
-                        this.paymentModal.loading = false;
-
                         if (res.data.success) {
                             location.reload();
                         }

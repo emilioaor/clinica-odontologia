@@ -70,4 +70,8 @@ return [
 
     'commission.update' => 'Comisiones actualizadas',
 
+    'report.classification.service' => 'Servicio',
+    'report.classification.payment' => 'Pago',
+    'report.classification.expense' => 'Gasto',
+
 ];

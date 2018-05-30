@@ -136,13 +136,22 @@ class ExpenseController extends Controller
         $end = new \DateTime($request->end);
         $end->setTime(23, 59, 59);
 
-        $expenses = $patient->expenses()
+        $expenseIds = Expense::select(['expenses.id'])
+            ->join('patient_history', 'patient_history.id', '=', 'expenses.patient_history_id')
+            ->join('patients', 'patients.id', '=', 'patient_history.patient_id')
+            ->where('patients.id', $patient->id)
             ->where('date', '>=', $start)
             ->where('date', '<=', $end)
+            ->distinct()
+            ->get()
+        ;
+
+        $expenses = Expense::whereIn('id', $expenseIds->toArray())
+            ->with([
+                'patientHistory',
+                'supplier'
+            ])
             ->orderBy('date')
-            ->with('patient')
-            ->with('supplier')
-            ->with('patientHistory')
             ->get();
 
         return new JsonResponse([

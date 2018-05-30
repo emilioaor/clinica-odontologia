@@ -150,7 +150,8 @@ class PaymentController extends Controller
             ->orderBy('created_at')
             ->with([
                 'patient',
-                'userCreated'
+                'userCreated',
+                'patientHistory'
             ])
         ;
 

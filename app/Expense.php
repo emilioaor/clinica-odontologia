@@ -12,23 +12,12 @@ class Expense extends Model
     protected $table = 'expenses';
 
     protected $fillable = [
-        'patient_id',
         'supplier_id',
         'description',
         'date',
         'amount',
         'patient_history_id'
     ];
-
-    /**
-     * Paciente al que se le asocia el gasto
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
-     */
-    public function patient()
-    {
-        return $this->belongsTo(Patient::class, 'patient_id');
-    }
 
     /**
      * Proveedor al que se le asocia el gasto

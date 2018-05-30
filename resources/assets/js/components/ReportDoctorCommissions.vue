@@ -10,7 +10,7 @@
             </div>
         </div>
         <div class="row">
-            <div class="col-xs-12">
+            <div class="col-sm-10">
                 <div class="panel panel-default">
                     <div class="panel-body">
 
@@ -67,9 +67,23 @@
                             </div>
 
                             <div class="row">
+                                <div class="col-xs-12">
+                                    <div class="form-group">
+                                        <label for="balance">¿Solo balance en 0?</label>
+                                        <input
+                                                id="balance"
+                                                name="balance"
+                                                type="checkbox"
+                                                v-model="balanceZero"
+                                                >
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
                                 <div class="col-sm-4">
                                     <div class="form-group">
-                                        <label for="">Desde</label>
+                                        <label for="start">Desde</label>
                                         <datepicker
                                                 name = "start"
                                                 id = "start"
@@ -84,7 +98,7 @@
 
                                 <div class="col-sm-4">
                                     <div class="form-group">
-                                        <label for="">Hasta</label>
+                                        <label for="end">Hasta</label>
                                         <datepicker
                                                 name = "end"
                                                 id = "end"
@@ -110,33 +124,66 @@
                                 </div>
                             </div>
 
-                            <div class="row">
+                            <div class="row" v-for="p in data.report">
                                 <div class="col-xs-12">
+
+                                    <div class="alert alert-info">
+                                        <p>
+                                            <strong>Paciente:</strong>
+                                            {{ p.patient.name }}
+                                        </p>
+                                    </div>
 
                                     <table class="table table-responsive">
                                         <thead>
                                             <tr>
                                                 <th>Fecha</th>
-                                                <th>Paciente</th>
-                                                <th>Servicio</th>
+                                                <th>Tipo</th>
+                                                <th>Descripci&oacute;n</th>
                                                 <th>Monto</th>
-                                                <th>Gastos</th>
-                                                <th>%</th>
-                                                <th>Comisión</th>
                                             </tr>
                                         </thead>
-                                        <tbody>
-                                            <tr v-for="(service, index) in data.services">
-                                                <td>{{ dateFormat(service.created_at) }}</td>
-                                                <td>{{ service.patient.name }}</td>
-                                                <td>{{ service.product.name }}</td>
-                                                <td>{{ '$' + service.price }}</td>
-                                                <td>{{ '$' + service.expense_total }}</td>
-                                                <td>{{ service.commission_product }}</td>
-                                                <td>{{ '$' + service.commission }}</td>
+                                        <tbody v-for="d in p.data">
+                                            <tr
+                                                    v-for="line in d.services"
+                                            >
+                                                <td>{{ dateFormat(line.date) }}</td>
+                                                <td>{{ line.classification }}</td>
+                                                <td>{{ line.description }}</td>
+                                                <td>{{ line.amount }}</td>
                                             </tr>
                                         </tbody>
                                     </table>
+
+                                    <div class="row">
+                                        <div class="col-sm-3">
+                                            <h5 class="text-center">
+                                                <strong>Servicios:</strong>
+                                                {{ totalServices(p.data) }}
+                                            </h5>
+                                        </div>
+                                        <div class="col-sm-3">
+                                            <h5 class="text-center">
+                                                <strong>Pagos:</strong>
+                                                {{ totalPayments(p.data) }}
+                                            </h5>
+                                        </div>
+                                        <div class="col-sm-3">
+                                            <h5 class="text-center">
+                                                <strong>Balance:</strong>
+                                                {{ totalServices(p.data) - totalPayments(p.data) }}
+                                            </h5>
+                                        </div>
+
+                                        <div class="col-sm-3">
+                                            <h5 class="text-center">
+                                                <strong>Comisi&oacute;n:</strong>
+                                                {{ totalCommission(p.data) }}
+                                            </h5>
+                                        </div>
+                                    </div>
+
+                                    <hr>
                                 </div>
                             </div>
 
@@ -229,10 +276,11 @@
               doctor: null,
               initStart: new Date(),
               initEnd: new Date(),
+              balanceZero: false,
               data: {
                   start: null,
                   end: null,
-                  services: []
+                  report: []
               },
               modal: {
                   data: [],
@@ -277,14 +325,15 @@
                 axios.get(
                         '/admin/report/doctorCommissionsData?doctor=' + this.doctor.public_id +
                         '&start=' + this.data.start +
-                        '&end=' + this.data.end
+                        '&end=' + this.data.end +
+                        '&balance=' + this.balanceZero
                 )
                     .then((res) => {
 
                         this.loading = false;
 
                         if (res.data.success) {
-                            this.data.services = res.data.services;
+                            this.data.report = res.data.response;
                         }
                     })
                     .catch((err) => {
@@ -316,6 +365,68 @@
 
                 return format[1] + '/' + format[2] + '/' + format[0];
             },
+
+            totalServices: function (data) {
+                let total = 0;
+                data =  Object.values(data);
+
+                data.forEach((item) => {
+                    item.services.forEach((service) => {
+                        if (service.classification === 'Servicio') {
+                            total += service.amount;
+                        }
+                    });
+                });
+
+                return total;
+            },
+
+            totalPayments: function (data) {
+                let total = 0;
+                data =  Object.values(data);
+
+                data.forEach((item) => {
+                    item.services.forEach((service) => {
+                        if (service.classification === 'Pago') {
+                            total += service.amount;
+                        }
+                    });
+                });
+
+                return total;
+            },
+
+            calculateExpenses: function (services) {
+                let total = 0;
+
+                services.forEach((service) => {
+                    if (service.classification === 'Gasto') {
+                        total += service.amount;
+                    }
+                });
+
+                return total;
+            },
+
+            totalCommission: function (data) {
+                let total = 0;
+                let expenses;
+                let commission;
+
+                data =  Object.values(data);
+
+                data.forEach((item) => {
+
+                    expenses = this.calculateExpenses(item.services);
+
+                    commission = (item.price - expenses) * (item.commission / 100);
+
+                    total += commission;
+                });
+
+                return total;
+            }
+
         }
     }
 </script>

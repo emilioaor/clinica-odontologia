@@ -91,6 +91,7 @@ class ReportController extends Controller
         // registrado en el rango de fechas
         $patientHistoryIds = PatientHistory::select('patient_history.id')
             ->leftJoin('payments', 'patient_history.id', '=', 'payments.patient_history_id')
+            ->leftJoin('expenses', 'patient_history.id', '=', 'expenses.patient_history_id')
             ->where('doctor_id', $doctor->id)
             ->where(function ($query) use ($start, $end) {
 
@@ -101,6 +102,10 @@ class ReportController extends Controller
                 ->orWhere([
                     ['patient_history.created_at', '>=', $start],
                     ['patient_history.created_at', '<=', $end]
+                ])
+                ->orWhere([
+                    ['expenses.created_at', '>=', $start],
+                    ['expenses.created_at', '<=', $end]
                 ]);
             })
             ->distinct()
@@ -118,7 +123,7 @@ class ReportController extends Controller
 
         foreach ($patientHistory as $history) {
 
-            if ($request->balance === 'true' && $history->pendingAmount() > 0) {
+            if ($request->balance === 'true' && ! $history->hasComplete()) {
                 // Si se pide solo balance 0 y este servicio tiene un monto pendiente, paso al siguiente
                 continue;
             }

@@ -106,4 +106,44 @@ class PatientHistory extends Model
 
         return $pending;
     }
+
+    /**
+     * Indica si un servicio ya esta completo. En este momento para que
+     * un servicio de considere completo debe tener el balance en 0, y
+     * ademas si el servicio requiere gastos de laboratorio estos ya deben
+     * estar asociados o se considera incompleto
+     *
+     * @return bool
+     */
+    public function hasComplete()
+    {
+        if ($this->pendingAmount() > 0) {
+            // Si no tiene el balance en 0 no esta completo
+            return false;
+        }
+
+        if ($this->product->required_lab && ! $this->hasLabExpense()) {
+            // Si el servicio requiere gastos de laboratorio y no los tiene esta incompleto
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * Indica si el servicio posee gastos de laboratorio
+     * asociados
+     *
+     * @return bool
+     */
+    public function hasLabExpense()
+    {
+        foreach ($this->expenses as $expense) {
+            if ($expense->supplier->type === Supplier::TYPE_LAB) {
+                return true;
+            }
+        }
+
+        return false;
+    }
 }

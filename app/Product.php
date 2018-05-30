@@ -14,7 +14,8 @@ class Product extends Model
     protected $fillable = [
         'public_id',
         'name',
-        'price'
+        'price',
+        'required_lab'
     ];
 
     protected $dates = ['deleted_at'];

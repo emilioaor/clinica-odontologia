@@ -114,6 +114,7 @@ class ProductController extends Controller
         $product->public_id = $request->public_id;
         $product->name = $request->name;
         $product->price = $request->price;
+        $product->required_lab = $request->required_lab;
         $product->save();
 
         $this->sessionMessage('message.product.update');

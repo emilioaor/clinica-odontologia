@@ -89,6 +89,19 @@
 
                             <div class="row">
                                 <div class="col-xs-12">
+                                    <div class="form-group">
+                                        <label for="required_lab">¿Requiere laboratorio?</label>
+                                        <input
+                                                type="checkbox"
+                                                id="required_lab"
+                                                name="required_lab"
+                                                v-model="form.required_lab">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-xs-12">
                                     <button class="btn btn-warning" v-bind:disabled="loading">
                                         <i class="glyphicon glyphicon-saved"></i>
                                         Actualizar producto

@@ -74,10 +74,36 @@ class PatientHistory extends Model
     }
 
     /**
+     * Pagos asociados al servicio
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function payments()
+    {
+        return $this->hasMany(Payment::class, 'patient_history_id');
+    }
+
+    /**
      * Genera el siguiente public_id
      */
     public function nextPublicId()
     {
         $this->public_id = 'SER' . (PatientHistory::withTrashed()->count() + 1);
+    }
+
+    /**
+     * Indica el monto restante por pagar para este servicio
+     *
+     * @return mixed
+     */
+    public function pendingAmount()
+    {
+        $pending = $this->price;
+
+        foreach ($this->payments as $payment) {
+            $pending -= $payment->amount;
+        }
+
+        return $pending;
     }
 }

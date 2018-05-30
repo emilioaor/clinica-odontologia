@@ -20,7 +20,8 @@ class Payment extends Model
         'patient_id',
         'user_created_id',
         'amount',
-        'type'
+        'type',
+        'patient_history_id'
     ];
 
     protected $dates = ['deleted_at'];
@@ -43,5 +44,15 @@ class Payment extends Model
     public function userCreated()
     {
         return $this->belongsTo(User::class, 'user_created_id');
+    }
+
+    /**
+     * Servicio al que esta asociado este pago
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function patientHistory()
+    {
+        return $this->belongsTo(PatientHistory::class, 'patient_history_id');
     }
 }

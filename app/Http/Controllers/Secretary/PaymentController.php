@@ -63,8 +63,11 @@ class PaymentController extends Controller
         $payment->patient_id = $request->patient_id;
         $payment->amount = $request->amount;
         $payment->type = intval($request->type);
+        $payment->patient_history_id = $request->patient_history_id;
         $payment->user_created_id = Auth::user()->id;
         $payment->save();
+
+        $this->sessionMessage('message.payment.create');
 
         return new JsonResponse(['success' => true, 'payment' => $payment]);
     }
@@ -171,9 +174,15 @@ class PaymentController extends Controller
                 ->where('payments.created_at', '<=', $end);
         }
 
+        $services = $services->get();
+
+        foreach ($services as $service) {
+            $service->pending_amount = $service->pendingAmount();
+        }
+
         return new JsonResponse([
             'success' => true,
-            'services' => $services->get(),
+            'services' => $services,
             'payments' => $payments->get()
         ]);
     }

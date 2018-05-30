@@ -580,52 +580,101 @@
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-body">
-                        <div class="row">
 
-                            <div class="col-xs-8">
+                        <div class="row">
+                            <div class="col-xs-12">
                                 <div class="form-group">
-                                    <label for="type">Tipo</label>
+                                    <label for="service">Servicio</label>
                                     <select
-                                            name="type"
-                                            id="type"
+                                            name="service"
+                                            id="service"
                                             class="form-control"
                                             v-validate
                                             data-vv-rules="required"
                                             data-vv-scope="paymentModal"
-                                            :class="{'input-error': errors.has('paymentModal.type')}"
-                                            v-model="paymentModal.data.type"
+                                            :class="{'input-error': errors.has('paymentModal.service')}"
+                                            v-model="paymentModal.data.patient_history_id"
+                                            @change="changePatientHistory()"
                                         >
-                                        <option value="1">Tarjeta de crédito</option>
-                                        <option value="2">Efectivo</option>
-                                        <option value="3">Cheque</option>
+                                        <option
+                                                v-for="service in data.services"
+                                                :value="service.id"
+                                                v-if="service.pending_amount > 0"
+                                                >
+                                            {{ service.public_id + ' - ' + service.product.name + ' - $' + service.price }}
+                                        </option>
                                     </select>
 
-                                    <p class="error" v-if="errors.firstByRule('type', 'required', 'paymentModal')">
+                                    <p class="error" v-if="errors.firstByRule('service', 'required', 'paymentModal')">
                                         Requerido
                                     </p>
                                 </div>
                             </div>
+                        </div>
 
-                            <div class="col-xs-4">
-                                <div class="form-group">
-                                    <label for="amount">Monto</label>
-                                    <input
-                                            type="number"
-                                            id="amount"
-                                            name="amount"
-                                            class="form-control"
-                                            v-validate
-                                            data-vv-rules="required|numeric"
-                                            data-vv-scope="paymentModal"
-                                            :class="{'input-error': errors.has('paymentModal.amount')}"
-                                            v-model="paymentModal.data.amount"
-                                        >
-                                    <p class="error" v-if="errors.firstByRule('amount', 'required', 'paymentModal')">
-                                        Requerido
-                                    </p>
-                                    <p class="error" v-if="errors.firstByRule('amount', 'numeric', 'paymentModal')">
-                                        Formato invalido
-                                    </p>
+                        <div v-if="paymentModal.data.patient_history_id">
+                            <div class="row">
+                                <div class="col-xs-12">
+                                    <div class="form-group">
+                                        <p>
+                                            <strong>Por pagar:</strong>
+                                            ${{ paymentModalService.pending_amount }}
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-xs-8">
+                                    <div class="form-group">
+                                        <label for="type">Tipo</label>
+                                        <select
+                                                name="type"
+                                                id="type"
+                                                class="form-control"
+                                                v-validate
+                                                data-vv-rules="required"
+                                                data-vv-scope="paymentModal"
+                                                :class="{'input-error': errors.has('paymentModal.type')}"
+                                                v-model="paymentModal.data.type"
+                                                >
+                                            <option value="1">Tarjeta de crédito</option>
+                                            <option value="2">Efectivo</option>
+                                            <option value="3">Cheque</option>
+                                        </select>
+
+                                        <p class="error" v-if="errors.firstByRule('type', 'required', 'paymentModal')">
+                                            Requerido
+                                        </p>
+                                    </div>
+                                </div>
+
+                                <div class="col-xs-4">
+                                    <div class="form-group">
+                                        <label for="amount">Monto</label>
+                                        <input
+                                                v-for="service in data.services"
+                                                v-if="service.id === paymentModal.data.patient_history_id"
+                                                type="number"
+                                                id="amount"
+                                                name="amount"
+                                                class="form-control"
+                                                v-validate
+                                                :data-vv-rules="'required|numeric|max_value:' + service.pending_amount"
+                                                data-vv-scope="paymentModal"
+                                                :class="{'input-error': errors.has('paymentModal.amount')}"
+                                                v-model="paymentModal.data.amount"
+                                                >
+                                        <p class="error" v-if="errors.firstByRule('amount', 'required', 'paymentModal')">
+                                            Requerido
+                                        </p>
+                                        <p class="error" v-if="errors.firstByRule('amount', 'numeric', 'paymentModal')">
+                                            Formato invalido
+                                        </p>
+                                        <p class="error" v-if="errors.firstByRule('amount', 'max_value', 'paymentModal')">
+                                            Maximo ${{ paymentModalService.pending_amount }}
+                                        </p>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -723,7 +772,8 @@
                   data: {
                       amount: null,
                       type: null,
-                      patient_id: null
+                      patient_id: null,
+                      patient_history_id: null
                   },
                   loading: false,
               },
@@ -742,6 +792,19 @@
 
             this.data.start = year + '-' + month + '-' + day;
             this.data.end = year + '-' + month + '-' + day;
+        },
+        computed: {
+            paymentModalService: function () {
+                let selected = null;
+
+                this.data.services.forEach((service) => {
+                    if (service.id === this.paymentModal.data.patient_history_id) {
+                        selected = service;
+                    }
+                });
+
+                return selected;
+            }
         },
         methods: {
             searchPatients: function () {
@@ -798,6 +861,11 @@
                 let year = date.getFullYear();
 
                 this.data.payments[index].created_at = year + '-' + month + '-' + day;
+            },
+
+            changePatientHistory: function () {
+                this.paymentModal.data.amount = null;
+                this.paymentModal.data.type = null;
             },
 
             search: function () {
@@ -873,11 +941,7 @@
                         this.paymentModal.loading = false;
 
                         if (res.data.success) {
-                            this.paymentModal.data.type = null;
-                            this.paymentModal.data.amount = null;
-                            $('#closePaymentModal').click();
-                            this.filter = false;
-                            this.search();
+                            location.reload();
                         }
                     })
                     .catch((err) => {

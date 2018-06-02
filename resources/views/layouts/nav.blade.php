@@ -311,7 +311,8 @@
                     @endif
 
                     <!-- Reportes -->
-                    @if(Auth::user()->hasPermission('report.servicesAndPayments') || Auth::user()->hasPermission('report.doctorCommissions'))
+                    @if(Auth::user()->hasPermission('report.servicesAndPayments') || Auth::user()->hasPermission('report.doctorCommissions') ||
+                        Auth::user()->hasPermission('report.expenses'))
 
                         <li class="dropdown">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
@@ -332,6 +333,14 @@
                                         <a href="{{ route('report.doctorCommissions') }}">
                                             <i class="glyphicon glyphicon-file"></i>
                                             Comisión de doctores
+                                        </a>
+                                    </li>
+                                @endif
+                                @if(Auth::user()->hasPermission('report.expenses'))
+                                    <li>
+                                        <a href="{{ route('report.expenses') }}">
+                                            <i class="glyphicon glyphicon-file"></i>
+                                            Gastos
                                         </a>
                                     </li>
                                 @endif

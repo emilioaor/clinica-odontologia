@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Expense;
 use App\Payment;
 use App\PatientHistory;
 use App\Supplier;
@@ -180,6 +181,46 @@ class ReportController extends Controller
         return new JsonResponse([
             'success' => true,
             'response' => $response
+        ]);
+    }
+
+    /**
+     * Reporte de gastos
+     *
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function expenses()
+    {
+        return view('admin.report.expenses');
+    }
+
+    /**
+     * Obteniene el reporte de gastos
+     *
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function expensesData(Request $request)
+    {
+        $start = new \DateTime($request->start);
+        $start->setTime(00, 00, 00);
+        $end = new \DateTime($request->end);
+        $end->setTime(23, 59, 59);
+
+        $expenses = Expense::query()
+            ->whereBetween('date', [
+                $start,
+                $end
+            ])
+            ->with('supplier')
+            ->with('patientHistory')
+            ->with('patientHistory.patient')
+            ->orderBy('date')
+            ->get();
+
+        return new JsonResponse([
+            'success' => true,
+            'expenses' => $expenses
         ]);
     }
 }

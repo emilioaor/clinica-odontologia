@@ -50,6 +50,7 @@ Vue.component('edit-question', require('./components/EditQuestion.vue'));
 Vue.component('config-commission', require('./components/ConfigCommission.vue'));
 Vue.component('report-services-and-payments', require('./components/ReportServicesAndPayments.vue'));
 Vue.component('report-doctor-commissions', require('./components/ReportDoctorCommissions.vue'));
+Vue.component('edit-email', require('./components/EditEmail.vue'));
 
 const app = new Vue({
     el: '#app'

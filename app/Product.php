@@ -15,7 +15,8 @@ class Product extends Model
         'public_id',
         'name',
         'price',
-        'required_lab'
+        'required_lab',
+        'email_text'
     ];
 
     protected $dates = ['deleted_at'];
@@ -90,5 +91,16 @@ class Product extends Model
     {
         return $this->belongsToMany(User::class, 'product_user', 'product_id', 'user_id')
             ->withPivot(['commission']);
+    }
+
+    /**
+     * Todos los documentos adjuntos para el correo enviado en respuesta
+     * a prestar este servicio
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function emailAttaches()
+    {
+        return $this->hasMany(EmailAttach::class, 'product_id');
     }
 }

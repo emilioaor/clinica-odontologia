@@ -64,6 +64,9 @@ Route::group(['prefix' => 'user', 'middleware' => 'auth'], function() {
 
     // Preguntas
     Route::resource('question', 'User\QuestionController');
+
+    // Email
+    Route::resource('email', 'User\EmailController');
 });
 
 // Administrador

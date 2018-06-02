@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\User;
 
+use App\Mail\ServiceRegisterEmail;
+use App\EmailSpooler;
 use App\Note;
 use App\Patient;
 use App\PatientHistory;
@@ -127,6 +129,13 @@ class PatientHistoryController extends Controller
             $service->patient_id = $patient->id;
             $service->created_at = $date;
             $service->save();
+
+            $emailSpooler = new EmailSpooler();
+            $emailSpooler->setRecipients([$service->patient->email]);
+            $emailSpooler->setParams(['product_id' => $service->product_id]);
+            $emailSpooler->class = ServiceRegisterEmail::class;
+            $emailSpooler->status = EmailSpooler::STATUS_PENDING;
+            $emailSpooler->save();
         }
 
         foreach ($request->notes as $newNote) {

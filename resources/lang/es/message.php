@@ -74,4 +74,6 @@ return [
     'report.classification.payment' => 'Pago',
     'report.classification.expense' => 'Gasto',
 
+    'email.update' => 'Email actualizado'
+
 ];

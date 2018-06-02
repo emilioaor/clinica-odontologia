@@ -338,6 +338,27 @@
                             </ul>
                         </li>
                     @endif
+
+                    <!-- Post venta -->
+                    @if(Auth::user()->hasPermission('email.index'))
+
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+                                Post venta <span class="caret"></span>
+                            </a>
+
+                            <ul class="dropdown-menu" role="menu">
+                                @if(Auth::user()->hasPermission('email.index'))
+                                    <li>
+                                        <a href="{{ route('email.index') }}">
+                                            <i class="glyphicon glyphicon-envelope"></i>
+                                            Correos
+                                        </a>
+                                    </li>
+                                @endif
+                            </ul>
+                        </li>
+                    @endif
                 </ul>
             @endif
 

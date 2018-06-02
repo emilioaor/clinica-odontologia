@@ -45,6 +45,25 @@
                                                 ></datepicker>
                                     </div>
                                 </div>
+
+                                <div class="col-sm-4">
+                                    <div class="form-group">
+                                        <label for="status">Estatus</label>
+                                        <select
+                                                name="status"
+                                                id="status"
+                                                v-model="data.filter"
+                                                class="form-control"
+                                            >
+                                            <option value="0">Todos</option>
+                                            <option value="1">Pendiente</option>
+                                            <option value="2">Citado</option>
+                                            <option value="3">No interesado</option>
+                                            <option value="4">No contesto</option>
+                                            <option value="5">Volver a llamar</option>
+                                        </select>
+                                    </div>
+                                </div>
                             </div>
 
                             <div class="row">
@@ -125,6 +144,7 @@
                 data: {
                     start: '',
                     end: '',
+                    filter: 0,
                     calls: [],
                     status: []
                 }
@@ -160,7 +180,7 @@
             search: function () {
                 this.loading = true;
 
-                axios.get('/user/callLog/search/call?start=' + this.data.start + '&end=' + this.data.end)
+                axios.get('/user/callLog/search/call?start=' + this.data.start + '&end=' + this.data.end + '&status=' + this.data.filter)
                     .then((res) => {
                         this.loading = false;
 

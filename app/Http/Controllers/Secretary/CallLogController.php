@@ -194,8 +194,13 @@ class CallLogController extends Controller
             ])
             ->with('patient')
             ->with('statusHistory')
-            ->get()
         ;
+
+        if ($request->status > 0) {
+            $calls->where('status', $request->status);
+        }
+
+        $calls = $calls->get();
 
         foreach ($calls as $call) {
             $call->description = str_replace("\n", '<br>', $call->description);

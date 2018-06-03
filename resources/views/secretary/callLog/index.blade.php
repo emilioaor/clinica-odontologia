@@ -102,7 +102,10 @@
                                                 @foreach($call->statusHistory as $statusHistory)
                                                     <div class="alert alert-info">
                                                         <p>
-                                                            <strong>{{ $statusHistory->statusText() }}</strong><br>
+                                                            <strong>
+                                                                {{ $statusHistory->statusText() }}
+                                                                <small>({{ $statusHistory->created_at->format('m/d/Y')  }})</small>
+                                                            </strong><br>
                                                             {!! str_replace("\n", '<br>', $statusHistory->note) !!}
                                                         </p>
                                                     </div>

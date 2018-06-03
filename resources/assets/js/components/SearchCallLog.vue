@@ -85,7 +85,7 @@
                             <div class="row" v-if="data.calls">
                                 <div class="col-xs-12">
 
-                                    <!-- Services -->
+                                    <!-- CallLogs -->
                                     <table class="table table-responsive">
                                         <thead>
                                         <tr>
@@ -110,7 +110,10 @@
                                                 <td colspan="4">
 
                                                     <div class="alert alert-info" v-for="statusHistory in call.status_history">
-                                                        <strong>{{ data.status[statusHistory.status].statusText }}</strong><br>
+                                                        <strong>
+                                                            {{ data.status[statusHistory.status].statusText }}
+                                                            <small>({{ dateFormat(statusHistory.created_at) }})</small>
+                                                        </strong><br>
                                                         <span v-html="statusHistory.note"></span>
                                                     </div>
 

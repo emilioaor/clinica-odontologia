@@ -61,7 +61,7 @@ class Budget extends Model
      */
     public static function nextPublicId()
     {
-        return 860 + (Budget::count() + 1);
+        return 860 + (Budget::withTrashed()->count() + 1);
     }
 
     /**

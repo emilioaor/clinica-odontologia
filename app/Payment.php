@@ -33,7 +33,7 @@ class Payment extends Model
      */
     public function patient()
     {
-        return $this->belongsTo(Patient::class, 'patient_id');
+        return $this->belongsTo(Patient::class, 'patient_id')->withTrashed();
     }
 
     /**
@@ -43,7 +43,7 @@ class Payment extends Model
      */
     public function userCreated()
     {
-        return $this->belongsTo(User::class, 'user_created_id');
+        return $this->belongsTo(User::class, 'user_created_id')->withTrashed();
     }
 
     /**
@@ -53,6 +53,6 @@ class Payment extends Model
      */
     public function patientHistory()
     {
-        return $this->belongsTo(PatientHistory::class, 'patient_history_id');
+        return $this->belongsTo(PatientHistory::class, 'patient_history_id')->withTrashed();
     }
 }

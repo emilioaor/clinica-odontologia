@@ -28,7 +28,7 @@ class CallStatusHistory extends Model
      */
     public function callLog()
     {
-        return $this->belongsTo(CallLog::class, 'call_log_id');
+        return $this->belongsTo(CallLog::class, 'call_log_id')->withTrashed();
     }
 
     /**

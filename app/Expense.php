@@ -26,7 +26,7 @@ class Expense extends Model
      */
     public function supplier()
     {
-        return $this->belongsTo(Supplier::class, 'supplier_id');
+        return $this->belongsTo(Supplier::class, 'supplier_id')->withTrashed();
     }
 
     /**
@@ -36,6 +36,6 @@ class Expense extends Model
      */
     public function patientHistory()
     {
-        return $this->belongsTo(PatientHistory::class, 'patient_history_id');
+        return $this->belongsTo(PatientHistory::class, 'patient_history_id')->withTrashed();
     }
 }

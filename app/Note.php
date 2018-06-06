@@ -25,7 +25,7 @@ class Note extends Model
      */
     public function patient()
     {
-        return $this->belongsTo(Patient::class, 'patient_id');
+        return $this->belongsTo(Patient::class, 'patient_id')->withTrashed();
     }
 
     /**
@@ -35,6 +35,6 @@ class Note extends Model
      */
     public function user()
     {
-        return $this->belongsTo(User::class, 'user_id');
+        return $this->belongsTo(User::class, 'user_id')->withTrashed();
     }
 }

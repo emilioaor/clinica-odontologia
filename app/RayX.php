@@ -23,6 +23,6 @@ class RayX extends Model
      */
     public function patient()
     {
-        return $this->belongsTo(Patient::class, 'patient_id');
+        return $this->belongsTo(Patient::class, 'patient_id')->withTrashed();
     }
 }

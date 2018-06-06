@@ -23,7 +23,7 @@ class Question extends Model
      */
     public function to()
     {
-        return $this->belongsTo(User::class, 'to_id');
+        return $this->belongsTo(User::class, 'to_id')->withTrashed();
     }
 
     /**
@@ -33,7 +33,7 @@ class Question extends Model
      */
     public function from()
     {
-        return $this->belongsTo(User::class, 'from_id');
+        return $this->belongsTo(User::class, 'from_id')->withTrashed();
     }
 
     /**

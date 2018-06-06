@@ -24,7 +24,7 @@ class SupplyRequestDetail extends Model
      */
     public function supplyRequest()
     {
-        return $this->belongsTo(SupplyRequest::class, 'supply_request_id');
+        return $this->belongsTo(SupplyRequest::class, 'supply_request_id')->withTrashed();
     }
 
     /**
@@ -34,6 +34,6 @@ class SupplyRequestDetail extends Model
      */
     public function supply()
     {
-        return $this->belongsTo(Supply::class, 'supply_id');
+        return $this->belongsTo(Supply::class, 'supply_id')->withTrashed();
     }
 }

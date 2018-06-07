@@ -223,4 +223,44 @@ class ReportController extends Controller
             'expenses' => $expenses
         ]);
     }
+
+    /**
+     * Reporte de pagos
+     *
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function payments()
+    {
+        return view('admin.report.payments');
+    }
+
+    /**
+     * Reporte de pagos
+     *
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function paymentsData(Request $request)
+    {
+        $start = new \DateTime($request->start);
+        $start->setTime(00, 00, 00);
+        $end = new \DateTime($request->end);
+        $end->setTime(23, 59, 59);
+
+        $payments = Payment::query()
+            ->whereBetween('created_at', [
+                $start,
+                $end
+            ])
+            ->with([
+                'patient',
+                'patientHistory'
+            ]);
+
+        if ($request->type > 0) {
+            $payments->where('type', $request->type);
+        }
+
+        return new JsonResponse(['success' => true, 'payments' => $payments->get()]);
+    }
 }

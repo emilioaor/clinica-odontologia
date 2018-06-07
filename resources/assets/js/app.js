@@ -51,6 +51,7 @@ Vue.component('config-commission', require('./components/ConfigCommission.vue'))
 Vue.component('report-services-and-payments', require('./components/ReportServicesAndPayments.vue'));
 Vue.component('report-doctor-commissions', require('./components/ReportDoctorCommissions.vue'));
 Vue.component('report-expenses', require('./components/ReportExpenses.vue'));
+Vue.component('report-payments', require('./components/ReportPayments.vue'));
 Vue.component('edit-email', require('./components/EditEmail.vue'));
 
 const app = new Vue({

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Secretary;
 
 use App\CallLog;
 use App\CallStatusHistory;
+use App\Patient;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -198,6 +199,12 @@ class CallLogController extends Controller
 
         if ($request->status > 0) {
             $calls->where('status', $request->status);
+        }
+
+        if (isset($request->patient)) {
+            $patient = Patient::where('public_id', $request->patient)->firstOrFail();
+
+            $calls->where('patient_id', $patient->id);
         }
 
         $calls = $calls->get();

@@ -67,6 +67,41 @@
                             </div>
 
                             <div class="row">
+                                <div class="col-sm-4">
+                                    <div class="form-group input-group">
+                                        <input  type="text"
+                                                class="form-control"
+                                                id="patient"
+                                                name="patient"
+                                                placeholder="Paciente"
+                                                :value="!patient ? '': patient.name"
+                                                readonly
+                                                >
+                                                <span class="input-group-btn">
+                                                    <button
+                                                            class="btn btn-danger"
+                                                            type="button"
+                                                            @click="patient = null"
+                                                            v-if="patient"
+                                                            >
+                                                        <i class="glyphicon glyphicon-remove"></i>
+                                                    </button>
+
+                                                    <button
+                                                            class="btn btn-info"
+                                                            type="button"
+                                                            data-toggle="modal"
+                                                            data-target="#patientModal"
+                                                            @click="searchPatients();"
+                                                            >
+                                                        <i class="glyphicon glyphicon-search"></i>
+                                                    </button>
+                                                </span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
                                 <div class="col-xs-12">
                                     <div class="form-group">
                                         <button
@@ -129,6 +164,79 @@
                 </div>
             </div>
         </div>
+
+        <!-- Modal -->
+        <div class="modal fade" id="patientModal" tabindex="-1" role="dialog" aria-labelledby="patientModal" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <h3>
+                                    <strong>
+                                        Selecciona al paciente
+                                    </strong>
+                                </h3>
+                            </div>
+                            <div class="col-sm-6">
+                                <h3 class="text-right">
+                                    <a href="/user/patient/create">
+                                        <i class="glyphicon glyphicon-plus"></i>
+                                        Registrar paciente
+                                    </a>
+                                </h3>
+                            </div>
+                            <div class="col-xs-12">
+                                <input
+                                        type="text"
+                                        class="form-control"
+                                        placeholder="Buscador"
+                                        v-model="modal.search"
+                                        @keyup="searchPatients()"
+                                        >
+                            </div>
+                        </div>
+                        <hr>
+
+                        <div class="row">
+
+                            <div class="col-xs-12">
+
+                                <table class="table table-responsive table-striped">
+                                    <thead>
+                                    <tr>
+                                        <th width="50%">Telefono</th>
+                                        <th width="50%">Nombre</th>
+                                        <th></th>
+                                    </tr>
+                                    </thead>
+
+                                    <tbody v-if="! modal.loading">
+                                    <tr v-for="p in modal.data" v-if="!patient || patient.id !== p.id">
+                                        <td>{{ p.phone }}</td>
+                                        <td>{{ p.name }}</td>
+                                        <td>
+                                            <button
+                                                    class="btn btn-primary"
+                                                    @click="selectPatient(p)"
+                                                    data-dismiss="modal"
+                                                    >
+                                                <i class="glyphicon glyphicon-ok"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
     </section>
 </template>
 
@@ -144,12 +252,18 @@
                 loading: false,
                 initStart: new Date(),
                 initEnd: new Date(),
+                patient: null,
                 data: {
                     start: '',
                     end: '',
                     filter: 0,
                     calls: [],
                     status: []
+                },
+                modal: {
+                    data: [],
+                    loading: false,
+                    search: ''
                 }
             }
         },
@@ -183,7 +297,17 @@
             search: function () {
                 this.loading = true;
 
-                axios.get('/user/callLog/search/call?start=' + this.data.start + '&end=' + this.data.end + '&status=' + this.data.filter)
+                let url = '/user/callLog/search/call';
+
+                url += '?start=' + this.data.start;
+                url += '&end=' + this.data.end;
+                url += '&status=' + this.data.filter;
+
+                if (this.patient !== null) {
+                    url += '&patient=' + this.patient.public_id;
+                }
+
+                axios.get(url)
                     .then((res) => {
                         this.loading = false;
 
@@ -204,7 +328,29 @@
                 format = format[0].split('-');
 
                 return format[1] + '/' + format[2] + '/' + format[0];
-            }
+            },
+
+            searchPatients: function () {
+                this.modal.data = [];
+                this.modal.loading = true;
+
+                axios.get('/user/patient/budget/search?search=' + this.modal.search)
+                        .then((res) => {
+                    this.modal.loading = false;
+
+                    this.modal.data = res.data.patients;
+                })
+                .catch((err) => {
+                    this.modal.loading = false;
+                })
+                ;
+            },
+
+            selectPatient: function (patient) {
+                this.patient = patient;
+                this.data.servicesAndNotes = [];
+                this.data.images = [];
+            },
         }
     }
 </script>

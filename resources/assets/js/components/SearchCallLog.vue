@@ -317,6 +317,9 @@
                         }
                     })
                     .catch((err) => {
+    if (err.response.status === 403) {
+        location.href = '/';
+    }
                         console.log(err);
                         this.loading = false;
                         this.data.calls = [];
@@ -341,6 +344,9 @@
                     this.modal.data = res.data.patients;
                 })
                 .catch((err) => {
+    if (err.response.status === 403) {
+        location.href = '/';
+    }
                     this.modal.loading = false;
                 })
                 ;

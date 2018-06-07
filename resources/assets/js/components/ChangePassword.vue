@@ -141,6 +141,9 @@
                         return res;
                     })
                     .catch((err) => {
+    if (err.response.status === 403) {
+        location.href = '/';
+    }
                         this.loading = false;
 
                         return err;

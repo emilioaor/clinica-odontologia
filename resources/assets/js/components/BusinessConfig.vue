@@ -193,6 +193,9 @@
 
                 })
                 .catch((err) => {
+    if (err.response.status === 403) {
+        location.href = '/';
+    }
                     alert('Error al cargar imagen, intente nuevamente');
                     this.form.logo = '';
                 })
@@ -218,6 +221,9 @@
                         }
                     })
                     .catch((err) => {
+                        if (err.response.status === 403) {
+                            location.href = '/';
+                        }
                         this.loading = false;
                     })
             }

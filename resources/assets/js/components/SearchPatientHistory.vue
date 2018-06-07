@@ -458,6 +458,9 @@
                         this.modal.data = res.data.patients;
                     })
                     .catch((err) => {
+    if (err.response.status === 403) {
+        location.href = '/';
+    }
                         this.modal.loading = false;
                     })
                 ;
@@ -498,6 +501,9 @@
                         }
                     })
                     .catch((err) => {
+    if (err.response.status === 403) {
+        location.href = '/';
+    }
                         console.log(err);
                         this.loading = false;
                         this.data.servicesAndNotes = [];
@@ -524,6 +530,9 @@
                         }
                     })
                     .catch((err) => {
+    if (err.response.status === 403) {
+        location.href = '/';
+    }
                         this.loading = false;
                         console.log(err);
                     })
@@ -541,6 +550,9 @@
                         }
                     })
                     .catch((err) => {
+    if (err.response.status === 403) {
+        location.href = '/';
+    }
                         this.loading = false;
                         console.log(err);
                     })
@@ -558,6 +570,9 @@
                     }
                 })
                 .catch((err) => {
+    if (err.response.status === 403) {
+        location.href = '/';
+    }
                     this.loading = false;
                     console.log(err);
                 })

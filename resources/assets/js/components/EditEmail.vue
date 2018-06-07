@@ -136,6 +136,9 @@
                         location.reload();
                     })
                     .catch((err) => {
+    if (err.response.status === 403) {
+        location.href = '/';
+    }
                         console.log(err);
                         this.loading = false;
                     });

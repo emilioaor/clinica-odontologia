@@ -59,14 +59,13 @@
                                                         type="button"
                                                         class="btn btn-danger"
                                                         data-toggle="modal"
-                                                        data-target="#deleteModal"
-                                                        onclick="window.callLogPublicId = '{{ $call->public_id }}'"
+                                                        data-target="#deleteModal{{ $call->id }}"
                                                         >
                                                     <i class="glyphicon glyphicon-remove"></i>
                                                 </button>
 
                                                 <!-- Modal -->
-                                                <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
+                                                <div class="modal fade" id="deleteModal{{ $call->id }}" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel{{ $call->id }}" aria-hidden="true">
                                                     <div class="modal-dialog" role="document">
                                                         <div class="modal-content">
                                                             <div class="modal-body">

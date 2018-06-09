@@ -66,6 +66,15 @@
                             </div>
 
                             <div class="row">
+                                <div class="col-sm-4">
+                                    <div class="form-group">
+                                        <label for="">Total</label>
+                                        <p>{{ getTotal() }} $</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
                                 <div class="col-xs-12">
                                     <div class="form-group">
                                         <button
@@ -182,9 +191,9 @@
                         }
                     })
                     .catch((err) => {
-    if (err.response.status === 403) {
-        location.href = '/';
-    }
+                        if (err.response.status === 403) {
+                            location.href = '/';
+                        }
                         console.log(err);
                         this.loading = false;
                         this.data.payments = [];
@@ -196,6 +205,16 @@
                 format = format[0].split('-');
 
                 return format[1] + '/' + format[2] + '/' + format[0];
+            },
+
+            getTotal: function () {
+                let total = 0;
+
+                this.data.payments.forEach((payment) => {
+                    total += payment.amount;
+                });
+
+                return total;
             }
         }
     }

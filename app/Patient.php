@@ -88,4 +88,14 @@ class Patient extends Model
     {
         return $this->hasMany(RayX::class, 'patient_id');
     }
+
+    /**
+     * Todas las citas asociadas al paciente
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function appointments()
+    {
+        return $this->hasMany(Appointment::class, 'patient_id');
+    }
 }

@@ -103,4 +103,14 @@ class Product extends Model
     {
         return $this->hasMany(EmailAttach::class, 'product_id');
     }
+
+    /**
+     * Todos los detalles de cita que apuntan a este producto
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function appointmentDetails()
+    {
+        return $this->hasMany(AppointmentDetail::class, 'product_id');
+    }
 }

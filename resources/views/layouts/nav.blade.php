@@ -104,7 +104,8 @@
                         Auth::user()->hasPermission('service.create') || Auth::user()->hasPermission('service.search') ||
                         Auth::user()->hasPermission('budget.create') || Auth::user()->hasPermission('budget.index') ||
                         Auth::user()->hasPermission('expense.create') || Auth::user()->hasPermission('expense.index') ||
-                        Auth::user()->hasPermission('payment.create'))
+                        Auth::user()->hasPermission('payment.create') || Auth::user()->hasPermission('appointment.index') ||
+                        Auth::user()->hasPermission('appointment.create'))
 
                         <li class="dropdown">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
@@ -181,6 +182,22 @@
                                         <a href="{{ route('expense.index') }}">
                                             <i class="glyphicon glyphicon-search"></i>
                                             Buscar gastos
+                                        </a>
+                                    </li>
+                                @endif
+                                @if(Auth::user()->hasPermission('appointment.create'))
+                                    <li>
+                                        <a href="{{ route('appointment.create') }}">
+                                            <i class="glyphicon glyphicon-plus"></i>
+                                            Registrar cita
+                                        </a>
+                                    </li>
+                                @endif
+                                @if(Auth::user()->hasPermission('appointment.index'))
+                                    <li>
+                                        <a href="{{ route('appointment.index') }}">
+                                            <i class="glyphicon glyphicon-calendar"></i>
+                                            Calendario de citas
                                         </a>
                                     </li>
                                 @endif

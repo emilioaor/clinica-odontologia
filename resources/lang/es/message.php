@@ -74,6 +74,22 @@ return [
     'report.classification.payment' => 'Pago',
     'report.classification.expense' => 'Gasto',
 
-    'email.update' => 'Email actualizado'
+    'email.update' => 'Email actualizado',
+
+    'appointment.create' => 'Cita registrada',
+    'appointment.update' => 'Cita actualizada',
+
+    'January' => 'Enero',
+    'February' => 'Febrero',
+    'March' => 'Marzo',
+    'April' => 'Abril',
+    'May' => 'Mayo',
+    'June' => 'Junio',
+    'July' => 'Julio',
+    'August' => 'Agosto',
+    'September' => 'Septiembre',
+    'October' => 'Octubre',
+    'November' => 'Noviembre',
+    'December' => 'Diciembre'
 
 ];

@@ -53,6 +53,7 @@ Vue.component('report-doctor-commissions', require('./components/ReportDoctorCom
 Vue.component('report-expenses', require('./components/ReportExpenses.vue'));
 Vue.component('report-payments', require('./components/ReportPayments.vue'));
 Vue.component('edit-email', require('./components/EditEmail.vue'));
+Vue.component('register-appointment', require('./components/RegisterAppointment.vue'));
 
 const app = new Vue({
     el: '#app'

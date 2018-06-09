@@ -67,6 +67,9 @@ Route::group(['prefix' => 'user', 'middleware' => 'auth'], function() {
 
     // Email
     Route::resource('email', 'User\EmailController');
+
+    // Citas
+    Route::resource('appointment', 'User\AppointmentController');
 });
 
 // Administrador

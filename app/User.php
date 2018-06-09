@@ -171,6 +171,26 @@ class User extends Authenticatable
     }
 
     /**
+     * Todas las citas registradas por este usuario
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function appointments()
+    {
+        return $this->hasMany(Appointment::class, 'user_id');
+    }
+
+    /**
+     * Todas las citas programadas para este doctor
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function doctorAppointments()
+    {
+        return $this->hasMany(Appointment::class, 'doctor_id');
+    }
+
+    /**
      * Genera el id publico en base al nivel
      */
     public function generatePublicId()

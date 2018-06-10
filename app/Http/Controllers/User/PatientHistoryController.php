@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\User;
 
+use App\Appointment;
 use App\Mail\ServiceRegisterEmail;
 use App\EmailSpooler;
 use App\Note;
@@ -174,6 +175,21 @@ class PatientHistoryController extends Controller
             $rayX->url = $url;
             $rayX->save();
         }
+
+        // Si hay alguna cita asociada al paciente para ese dia se marca completa
+        $appointments = Appointment::query()->whereBetween('date', [
+                $start,
+                $end
+            ])
+            ->where('patient_id', $patient->id)
+            ->where('status', Appointment::STATUS_PENDING)
+            ->get();
+
+        foreach ($appointments as $appointment) {
+            $appointment->status = Appointment::STATUS_COMPLETE;
+            $appointment->save();
+        }
+
 
         DB::commit();
 

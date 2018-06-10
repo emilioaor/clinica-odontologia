@@ -13,6 +13,16 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 class UserController extends Controller
 {
     /**
+     * construct
+     */
+    public function __construct()
+    {
+        $this->middleware('admin')->except(['search']);
+
+        $this->middleware('secretary')->only(['search']);
+    }
+
+    /**
      * Display a listing of the resource.
      *
      * @param Request $request

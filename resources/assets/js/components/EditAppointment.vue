@@ -5,7 +5,7 @@
                 <h1>
                     <i class="glyphicon glyphicon-calendar" v-if="! loading"></i>
                     <img src="/img/loading.gif" v-if="loading">
-                    Registrar cita
+                    Editar cita
                 </h1>
             </div>
         </div>
@@ -398,6 +398,10 @@
             products: {
                 type: Array,
                 required: true
+            },
+            appointment: {
+                type: Object,
+                required: true
             }
         },
         data: function () {
@@ -425,12 +429,22 @@
         },
 
         mounted: function () {
-            const date = new Date();
-            const day = date.getDate() >= 10 ? date.getDate() : '0' + date.getDate();
-            const month = (date.getMonth() + 1) >= 10 ? (date.getMonth() + 1) : '0' + (date.getMonth() + 1);
-            const year = date.getFullYear();
+            const splitDateAndTime = this.appointment.date.split(' ');
 
-            this.form.date = year + '-' + month + '-' + day;
+            const splitDate = splitDateAndTime[0].split('-');
+            const splitTime = splitDateAndTime[1].split(':');
+
+            this.initDate = new Date(splitDate[0], parseInt(splitDate[1]) - 1, splitDate[2]);
+
+            this.form.date = splitDateAndTime[0];
+            this.form.hour = splitTime[0];
+            this.form.minute = splitTime[1];
+            this.form.patient_id = this.appointment.patient_id;
+            this.form.doctor_id = this.appointment.doctor_id;
+            this.form.details = this.appointment.appointment_details;
+
+            this.patient = this.appointment.patient;
+            this.doctor = this.appointment.doctor;
         },
 
         methods: {
@@ -470,7 +484,7 @@
 
                 this.loading = true;
 
-                axios.post('/user/appointment', this.form)
+                axios.put('/user/appointment/' + this.appointment.id, this.form)
                         .then((res) => {
                             if (res.data.success) {
                                 location.href = res.data.redirect;

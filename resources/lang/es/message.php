@@ -78,6 +78,12 @@ return [
 
     'appointment.create' => 'Cita registrada',
     'appointment.update' => 'Cita actualizada',
+    'appointment.cancel' => 'Cita cancelada',
+
+    'appointment.status.pending' => 'Pendiente',
+    'appointment.status.complete' => 'Completa',
+    'appointment.status.cancel' => 'Cancelada',
+    'appointment.status.noAssisted' => 'No asistio',
 
     'email.subject.registerAppointment' => 'Correo de confirmación de cita',
 

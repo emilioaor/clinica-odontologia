@@ -70,6 +70,10 @@ Route::group(['prefix' => 'user', 'middleware' => 'auth'], function() {
 
     // Citas
     Route::resource('appointment', 'User\AppointmentController');
+    Route::put('appointment/{id}/cancel', 'User\AppointmentController@cancel')->name('appointment.cancel');
+
+    // Usuarios
+    Route::get('user/search', 'Admin\UserController@search');
 });
 
 // Administrador

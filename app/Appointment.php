@@ -64,4 +64,84 @@ class Appointment extends Model
     {
         return $this->belongsTo(User::class, 'doctor_id')->withTrashed();
     }
+
+    /**
+     * Indica si la cita esta pendiente
+     *
+     * @return bool
+     */
+    public function isPending()
+    {
+        return $this->status === self::STATUS_PENDING  && $this->date >= (new \DateTime());
+    }
+
+    /**
+     * Indica si la cita esta completa
+     *
+     * @return bool
+     */
+    public function isComplete()
+    {
+        return $this->status === self::STATUS_COMPLETE;
+    }
+
+    /**
+     * Indica si la cita esta cancelada
+     *
+     * @return bool
+     */
+    public function isCancel()
+    {
+        return $this->status === self::STATUS_CANCEL;
+    }
+
+    /**
+     * Indica si el paciente no asistio a la cita
+     *
+     * @return bool
+     */
+    public function isNoAssisted()
+    {
+        return $this->status === self::STATUS_PENDING && $this->date < (new \DateTime());
+    }
+
+    /**
+     * Retorna la clase para cada status
+     *
+     * @return string
+     */
+    public function statusClass()
+    {
+        if ($this->isPending()) {
+            return 'warning';
+        } elseif ($this->isNoAssisted()) {
+            return 'info';
+        } elseif ($this->isComplete()) {
+            return 'success';
+        } elseif ($this->isCancel()) {
+            return 'danger';
+        }
+
+        return '';
+    }
+
+    /**
+     * Retorna el texto para cada status
+     *
+     * @return string
+     */
+    public function statusText()
+    {
+        if ($this->isPending()) {
+            return trans('message.appointment.status.pending');
+        } elseif ($this->isNoAssisted()) {
+            return trans('message.appointment.status.noAssisted');
+        } elseif ($this->isComplete()) {
+            return trans('message.appointment.status.complete');
+        } elseif ($this->isCancel()) {
+            return trans('message.appointment.status.cancel');
+        }
+
+        return '';
+    }
 }

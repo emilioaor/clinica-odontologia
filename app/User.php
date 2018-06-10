@@ -252,7 +252,9 @@ class User extends Authenticatable
                 'expense.create',
                 'expense.index',
                 'supplier.create',
-                'supplier.index'
+                'supplier.index',
+                'appointment.create',
+                'appointment.index'
             ])) {
             return true;
         }

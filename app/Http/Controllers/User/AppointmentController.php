@@ -16,6 +16,14 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 class AppointmentController extends Controller
 {
     /**
+     * construct
+     */
+    public function __construct()
+    {
+        $this->middleware('secretary');
+    }
+
+    /**
      * Display a listing of the resource.
      *
      * @param Request $request
@@ -31,6 +39,8 @@ class AppointmentController extends Controller
             // Si hoy no es domingo, voy al domingo anterior para marcar el inicio de semana
             $start->modify('last Sunday');
         }
+
+        $start->setTime(0, 0, 0);
 
         // Calculo el final de la semana
         $end = clone $start;
@@ -51,7 +61,10 @@ class AppointmentController extends Controller
             ])
             ->orderBy('date')
             ->with([
-                'patient'
+                'patient',
+                'user',
+                'doctor',
+                'appointmentDetails.product'
             ])
             ->get();
 
@@ -137,7 +150,7 @@ class AppointmentController extends Controller
      */
     public function show($id)
     {
-        //
+        abort(404);
     }
 
     /**
@@ -148,7 +161,17 @@ class AppointmentController extends Controller
      */
     public function edit($id)
     {
-        //
+        $products = Product::orderBy('name')->get();
+        $appointment = Appointment::query()
+            ->with([
+                'patient',
+                'doctor',
+                'appointmentDetails',
+                'appointmentDetails.product'
+            ])
+            ->findOrFail($id);
+
+        return view('user.appointment.edit', compact('products', 'appointment'));
     }
 
     /**
@@ -160,7 +183,45 @@ class AppointmentController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        DB::beginTransaction();
+
+        $date = $request->date . ' ' . $request->hour . ':' . $request->minute;
+
+        $appointment = Appointment::findOrFail($id);
+        $appointment->date = new \DateTime($date);
+        $appointment->patient_id = $request->patient_id;
+        $appointment->doctor_id = $request->doctor_id;
+        $appointment->save();
+
+        $detailIds = [];
+
+        // Agrego y actualizo los detalles
+        foreach ($request->details as $detail) {
+
+            if (! isset($detail['id'])) {
+                $appointmentDetail = new AppointmentDetail();
+            } else {
+                $appointmentDetail = AppointmentDetail::find($detail['id']);
+            }
+
+            $appointmentDetail->appointment_id = $appointment->id;
+            $appointmentDetail->product_id = $detail['product_id'];
+            $appointmentDetail->save();
+
+            $detailIds[] = $appointmentDetail->id;
+        }
+
+        // Elimino todos los detalles que no llegaron del frontend, asumo que fueron eliminados
+        AppointmentDetail::query()->where('appointment_id', $appointment->id)->whereNotIn('id', $detailIds)->delete();
+
+        DB::commit();
+
+        $this->sessionMessage('message.appointment.update');
+
+        return new JsonResponse([
+            'success' => true,
+            'redirect' => route('appointment.edit', ['id' => $id])
+        ]);
     }
 
     /**
@@ -171,6 +232,23 @@ class AppointmentController extends Controller
      */
     public function destroy($id)
     {
-        //
+        abort(404);
+    }
+
+    /**
+     * Cancela una cita
+     *
+     * @param $id
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function cancel($id)
+    {
+        $appointment = Appointment::findOrFail($id);
+        $appointment->status = Appointment::STATUS_CANCEL;
+        $appointment->save();
+
+        $this->sessionMessage('message.appointment.cancel');
+
+        return redirect()->route('appointment.index');
     }
 }

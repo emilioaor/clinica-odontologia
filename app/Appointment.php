@@ -9,6 +9,11 @@ class Appointment extends Model
 {
     use SoftDeletes;
 
+    /** Estatus de las citas */
+    const STATUS_PENDING = 1;
+    const STATUS_COMPLETE = 2;
+    const STATUS_CANCEL = 3;
+
     protected $table = 'appointments';
 
     protected $fillable = [

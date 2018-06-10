@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers\User;
 
+use App\Mail\RegisterAppointmentEmail;
 use App\Appointment;
 use App\AppointmentDetail;
+use App\EmailSpooler;
 use App\Product;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -99,6 +101,7 @@ class AppointmentController extends Controller
         $appointment->date = new \DateTime($date);
         $appointment->patient_id = $request->patient_id;
         $appointment->doctor_id = $request->doctor_id;
+        $appointment->status = Appointment::STATUS_PENDING;
         $appointment->save();
 
         foreach ($request->details as $detail) {
@@ -108,6 +111,13 @@ class AppointmentController extends Controller
             $appointmentDetail->product_id = $detail['product_id'];
             $appointmentDetail->save();
         }
+
+        $email = new EmailSpooler();
+        $email->class = RegisterAppointmentEmail::class;
+        $email->status = EmailSpooler::STATUS_PENDING;
+        $email->setRecipients([$appointment->patient->email]);
+        $email->setParams(['appointment_id' => $appointment->id]);
+        $email->save();
 
         DB::commit();
 

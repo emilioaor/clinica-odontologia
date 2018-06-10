@@ -79,6 +79,8 @@ return [
     'appointment.create' => 'Cita registrada',
     'appointment.update' => 'Cita actualizada',
 
+    'email.subject.registerAppointment' => 'Correo de confirmación de cita',
+
     'January' => 'Enero',
     'February' => 'Febrero',
     'March' => 'Marzo',

@@ -12,7 +12,7 @@
 
     <p>
         This email is a  confirmation of the appointment you have schedule with Dr.
-        Xochipilli Bojorquez D.D.S. In Our office location:
+        {{ $appointment->doctor->name }}. In Our office location:
     </p>
 
     <p>

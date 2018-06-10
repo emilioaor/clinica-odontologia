@@ -23,7 +23,7 @@ class RegisterAppointmentEmail extends Mailable
      */
     public function __construct(array $params)
     {
-        $this->appointment = Appointment::find($params['appointment_id']);
+        $this->appointment = Appointment::with(['doctor'])->find($params['appointment_id']);
         $this->recipients = $params['recipients'];
     }
 

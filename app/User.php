@@ -191,6 +191,16 @@ class User extends Authenticatable
     }
 
     /**
+     * Todas las cotizaciones generadas por este usuario
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function budgets()
+    {
+        return $this->hasMany(Budget::class, 'user_id');
+    }
+
+    /**
      * Genera el id publico en base al nivel
      */
     public function generatePublicId()

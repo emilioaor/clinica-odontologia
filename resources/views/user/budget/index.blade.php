@@ -54,10 +54,11 @@
                             <thead>
                                 <tr>
                                     <th width="10%">Código</th>
-                                    <th width="20%">Telefono</th>
-                                    <th width="25%">Nombre</th>
+                                    <th width="15%">Telefono</th>
+                                    <th width="20%">Nombre</th>
                                     <th width="20%">Creación</th>
-                                    <th width="25%">Total</th>
+                                    <th width="20%">Total</th>
+                                    <th width="15%">Creado por</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -79,11 +80,12 @@
                                             <td>{{ $budget->patient->name }}</td>
                                             <td>{{ $budget->created_at->format('m/d/Y') }}</td>
                                             <td>{{ '$' . number_format($budget->total_head_value, 2) . ' USD' }}</td>
+                                            <td>{{ $budget->user->name ?? '' }}</td>
                                         </tr>
                                     @endforeach
                                 @else
                                     <tr>
-                                        <td colspan="5">
+                                        <td colspan="6">
                                             No hay cotizaciones registradas.
                                             @if(Auth::user()->isAdmin() || Auth::user()->isDoctor())
                                                 <a href="{{ route('budget.create') }}">Registrar cotización</a>

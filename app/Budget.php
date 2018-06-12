@@ -38,7 +38,8 @@ class Budget extends Model
         'table_quantity_label',
         'table_price_label',
         'table_total_label',
-        'patient_id'
+        'patient_id',
+        'user_id'
 
     ];
 
@@ -72,5 +73,15 @@ class Budget extends Model
     public function patient()
     {
         return $this->belongsTo(Patient::class, 'patient_id')->withTrashed();
+    }
+
+    /**
+     * Usuario que registro la cotizacion
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'user_id')->withTrashed();
     }
 }

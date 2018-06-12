@@ -53,7 +53,7 @@ class BudgetController extends Controller
                 ->get()
             ;
 
-            $budgets = Budget::orderByDesc('id')->limit(15);
+            $budgets = Budget::orderByDesc('id')->with('user')->limit(15);
 
             foreach ($patients as $patient) {
                 $budgets->orWhere('patient_id', $patient['id']);
@@ -62,7 +62,7 @@ class BudgetController extends Controller
             $budgets = $budgets->paginate();
 
         } else {
-            $budgets = Budget::orderByDesc('id')->paginate();
+            $budgets = Budget::orderByDesc('id')->with('user')->paginate();
         }
 
         return view('user.budget.index', compact('budgets'));
@@ -105,6 +105,7 @@ class BudgetController extends Controller
 
         $budget = new Budget($request->all());
         $budget->public_id = Budget::nextPublicId();
+        $budget->user_id = Auth::user()->id;
 
         $budget->save();
 

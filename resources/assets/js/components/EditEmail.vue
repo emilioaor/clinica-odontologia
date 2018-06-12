@@ -24,6 +24,11 @@
 
                                 <div v-if="selectedProduct === product.id">
                                     <div class="form-group">
+                                        <label for="send_email">¿Enviar correo al registrar servicio?</label>
+                                        <input type="checkbox" id="send_email" v-model="product.send_email">
+                                    </div>
+
+                                    <div class="form-group">
                                         <label for="email_title">Asunto</label>
                                         <input
                                                 type="text"
@@ -136,9 +141,9 @@
                         location.reload();
                     })
                     .catch((err) => {
-    if (err.response.status === 403) {
-        location.href = '/';
-    }
+                        if (err.response.status === 403) {
+                            location.href = '/';
+                        }
                         console.log(err);
                         this.loading = false;
                     });

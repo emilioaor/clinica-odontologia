@@ -131,12 +131,14 @@ class PatientHistoryController extends Controller
             $service->created_at = $date;
             $service->save();
 
-            $emailSpooler = new EmailSpooler();
-            $emailSpooler->setRecipients([$service->patient->email]);
-            $emailSpooler->setParams(['product_id' => $service->product_id]);
-            $emailSpooler->class = ServiceRegisterEmail::class;
-            $emailSpooler->status = EmailSpooler::STATUS_PENDING;
-            $emailSpooler->save();
+            if ($service->product->send_email) {
+                $emailSpooler = new EmailSpooler();
+                $emailSpooler->setRecipients([$service->patient->email]);
+                $emailSpooler->setParams(['product_id' => $service->product_id]);
+                $emailSpooler->class = ServiceRegisterEmail::class;
+                $emailSpooler->status = EmailSpooler::STATUS_PENDING;
+                $emailSpooler->save();
+            }
         }
 
         foreach ($request->notes as $newNote) {

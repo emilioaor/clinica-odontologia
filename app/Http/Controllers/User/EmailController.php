@@ -88,6 +88,7 @@ class EmailController extends Controller
         $product = Product::where('public_id', $id)->firstOrFail();
         $product->email_title = $request->email_title;
         $product->email_text = $request->email_text;
+        $product->send_email = $request->send_email;
         $product->save();
 
         $attachIds = [];

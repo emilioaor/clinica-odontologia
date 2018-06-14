@@ -22,7 +22,8 @@ class QuestionController extends Controller
 
         $this->middleware('admin')->only([
             'create',
-            'store'
+            'store',
+            'hide'
         ]);
     }
 
@@ -187,5 +188,26 @@ class QuestionController extends Controller
     public function destroy($id)
     {
         abort(404);
+    }
+
+    /**
+     * Oculta la pregunta para el usuario que la registro
+     *
+     * @param Request $request
+     * @param $id
+     * @return JsonResponse
+     */
+    public function hide(Request $request, $id)
+    {
+        $question = Question::where('public_id', $id)->firstOrFail();
+        $question->hide = true;
+        $question->save();
+
+        $this->sessionMessage('message.question.hide');
+
+        return new JsonResponse([
+            'success' => true,
+            'redirect' => route('question.edit', ['id' => $id])
+        ]);
     }
 }

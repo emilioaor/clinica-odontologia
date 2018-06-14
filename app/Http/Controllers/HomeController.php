@@ -19,21 +19,18 @@ class HomeController extends Controller
         $questions = [];
 
         if (Auth::user()->isAdmin()) {
-            // Preguntas ya contestadas
+            // Preguntas enviadas por el admin
             $questions = Question::orderByDesc('id')
-                ->whereNotNull('answer')
                 ->where('from_id', Auth::user()->id)
-                ->orWhere('to_id', Auth::user()->id)
+                ->where('hide', false)
                 ->with(['from', 'to'])
-                ->limit(10)
                 ->get();
 
         } elseif (Auth::user()->isDoctor()) {
-            // Preguntas sin contestar
+            // Preguntas sin contestar por el doctor
             $questions = Question::orderByDesc('id')
                 ->whereNull('answer')
-                ->where('from_id', Auth::user()->id)
-                ->orWhere('to_id', Auth::user()->id)
+                ->where('to_id', Auth::user()->id)
                 ->with(['from', 'to'])
                 ->get();
         }

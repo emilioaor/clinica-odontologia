@@ -63,6 +63,7 @@ Route::group(['prefix' => 'user', 'middleware' => 'auth'], function() {
     Route::resource('supplier', 'Secretary\SupplierController');
 
     // Preguntas
+    Route::put('question/{id}/hide', 'User\QuestionController@hide');
     Route::resource('question', 'User\QuestionController');
 
     // Email

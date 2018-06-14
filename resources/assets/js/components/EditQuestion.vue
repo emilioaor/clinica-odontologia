@@ -107,6 +107,17 @@
                                     <img src="/img/loading.gif" v-if="loading">
                                 </div>
                             </div>
+
+                            <div class="row" v-if="user.id === form.from.id && !form.hide">
+                                <div class="col-xs-12">
+                                    <button type="button" class="btn btn-warning" v-if="!loading" @click="hideQuestion()">
+                                        <i class="glyphicon glyphicon-eye-close"></i>
+                                        Ocultar
+                                    </button>
+
+                                    <img src="/img/loading.gif" v-if="loading">
+                                </div>
+                            </div>
                         </form>
 
                     </div>
@@ -155,15 +166,35 @@
                             }
                         })
                         .catch((err) => {
-    if (err.response.status === 403) {
-        location.href = '/';
-    }
+                            if (err.response.status === 403) {
+                                location.href = '/';
+                            }
                             this.loading = false;
 
                             console.log('Error', err);
                         })
                 ;
             },
+
+            hideQuestion: function () {
+                this.loading = true;
+
+                axios.put('/user/question/' + this.form.public_id + '/hide')
+                        .then((res) => {
+                            if (res.data.success) {
+                                location.href = res.data.redirect;
+                            }
+                        })
+                        .catch((err) => {
+                            if (err.response.status === 403) {
+                                location.href = '/';
+                            }
+                            this.loading = false;
+
+                            console.log('Error', err);
+                        })
+                ;
+            }
         }
     }
 </script>

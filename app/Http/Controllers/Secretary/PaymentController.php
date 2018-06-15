@@ -67,8 +67,6 @@ class PaymentController extends Controller
         $payment->user_created_id = Auth::user()->id;
         $payment->save();
 
-        $this->sessionMessage('message.payment.create');
-
         return new JsonResponse(['success' => true, 'payment' => $payment]);
     }
 

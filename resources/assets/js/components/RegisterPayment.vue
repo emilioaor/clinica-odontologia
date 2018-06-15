@@ -826,9 +826,9 @@
                         this.modal.data = res.data.patients;
                     })
                     .catch((err) => {
-    if (err.response.status === 403) {
-        location.href = '/';
-    }
+                        if (err.response.status === 403) {
+                            location.href = '/';
+                        }
                         this.modal.loading = false;
                     })
                 ;
@@ -920,9 +920,9 @@
                         }
                     })
                     .catch((err) => {
-    if (err.response.status === 403) {
-        location.href = '/';
-    }
+                        if (err.response.status === 403) {
+                            location.href = '/';
+                        }
                         console.log(err);
                         this.loading = false;
                         this.data.services = [];
@@ -953,13 +953,18 @@
                 axios.post('/user/payment', this.paymentModal.data)
                     .then((res) => {
                         if (res.data.success) {
-                            location.reload();
+                            this.search();
+                            $('#closePaymentModal').click();
+                            this.paymentModal.data.amount = null;
+                            this.paymentModal.data.type = null;
+                            this.paymentModal.data.patient_history_id = null;
+                            this.paymentModal.loading = false;
                         }
                     })
                     .catch((err) => {
-    if (err.response.status === 403) {
-        location.href = '/';
-    }
+                        if (err.response.status === 403) {
+                            location.href = '/';
+                        }
                         console.log(err);
                         this.paymentModal.loading = false;
                     })
@@ -1003,9 +1008,9 @@
                         }
                     })
                     .catch((err) => {
-    if (err.response.status === 403) {
-        location.href = '/';
-    }
+                        if (err.response.status === 403) {
+                            location.href = '/';
+                        }
                         this.loading = false;
                         console.log(err);
                     })
@@ -1025,9 +1030,9 @@
                         this.search();
                     })
                     .catch((err) => {
-    if (err.response.status === 403) {
-        location.href = '/';
-    }
+                        if (err.response.status === 403) {
+                            location.href = '/';
+                        }
                         console.log(err);
                     })
             },
@@ -1043,9 +1048,9 @@
                         this.search();
                     })
                     .catch((err) => {
-    if (err.response.status === 403) {
-        location.href = '/';
-    }
+                        if (err.response.status === 403) {
+                            location.href = '/';
+                        }
                         console.log(err);
                     })
             },

@@ -193,7 +193,7 @@
 
                 })
                 .catch((err) => {
-    if (err.response.status === 403) {
+    if (err.response.status === 403 || err.response.status === 405 || err.response.status === 405) {
         location.href = '/';
     }
                     alert('Error al cargar imagen, intente nuevamente');
@@ -221,7 +221,7 @@
                         }
                     })
                     .catch((err) => {
-                        if (err.response.status === 403) {
+                        if (err.response.status === 403 || err.response.status === 405 || err.response.status === 405) {
                             location.href = '/';
                         }
                         this.loading = false;

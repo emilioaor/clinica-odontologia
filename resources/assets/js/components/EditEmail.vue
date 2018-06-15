@@ -141,7 +141,7 @@
                         location.reload();
                     })
                     .catch((err) => {
-                        if (err.response.status === 403) {
+                        if (err.response.status === 403 || err.response.status === 405) {
                             location.href = '/';
                         }
                         console.log(err);

@@ -107,7 +107,7 @@
                                         <tbody>
                                             <tr v-for="payment in data.payments">
                                                 <td>{{ dateFormat(payment.created_at) }}</td>
-                                                <td>{{ payment.patient.name }}</td>
+                                                <td>{{ payment.patient_history ? payment.patient_history.patient.name : '' }}</td>
                                                 <td>
                                                     <span v-if="payment.type === 1">Tarjeta de credito</span>
                                                     <span v-if="payment.type === 2">Efectivo</span>

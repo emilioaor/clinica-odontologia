@@ -48,7 +48,8 @@ class ReportController extends Controller
         ;
 
         $payments = Payment::with([
-                'patient',
+                'patientHistory',
+                'patientHistory.patient',
                 'userCreated'
             ])
             ->where('payments.created_at', '>=', $start)
@@ -60,6 +61,48 @@ class ReportController extends Controller
             'success' => true,
             'services' => $services,
             'payments' => $payments
+        ]);
+    }
+
+    /**
+     * Carga la vista para el reporte de servicios y pagos por paciente
+     *
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function servicesAndPaymentsPerPatient()
+    {
+        return view('admin.report.servicesAndPaymentsPerPatient');
+    }
+
+    /**
+     * Consulta la data para el reporte de servicios y pagos por paciente
+     *
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function servicesAndPaymentsPerPatientData(Request $request)
+    {
+        $start = new \DateTime($request->start);
+        $start->setTime(00, 00, 00);
+        $end = new \DateTime($request->end);
+        $end->setTime(23, 59, 59);
+
+        $services = PatientHistory::with([
+                'product',
+                'doctor',
+                'assistant',
+                'patient',
+                'payments',
+            ])
+            ->where('patient_history.created_at', '>=', $start)
+            ->where('patient_history.created_at', '<=', $end)
+            ->where('patient_id', $request->patient_id)
+            ->get()
+        ;
+
+        return new JsonResponse([
+            'success' => true,
+            'services' => $services
         ]);
     }
 
@@ -253,8 +296,8 @@ class ReportController extends Controller
                 $end
             ])
             ->with([
-                'patient',
-                'patientHistory'
+                'patientHistory',
+                'patientHistory.patient'
             ]);
 
         if ($request->type > 0) {

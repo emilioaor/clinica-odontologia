@@ -60,7 +60,6 @@ class PaymentController extends Controller
     public function store(Request $request)
     {
         $payment = new Payment();
-        $payment->patient_id = $request->patient_id;
         $payment->amount = $request->amount;
         $payment->type = intval($request->type);
         $payment->patient_history_id = $request->patient_history_id;
@@ -144,13 +143,10 @@ class PaymentController extends Controller
                 'assistant'
             ])
         ;
-        $payments = $patient->payments()
-            ->orderBy('created_at')
-            ->with([
-                'patient',
-                'userCreated',
-                'patientHistory'
-            ])
+        $paymentIds = Payment::query()
+            ->select('payments.id')
+            ->join('patient_history', 'patient_history.id', '=', 'payments.patient_history_id')
+            ->where('patient_history.patient_id', $patient->id)
         ;
 
         if ($request->all === 'false') {
@@ -168,12 +164,20 @@ class PaymentController extends Controller
                 ->where('patient_history.created_at', '>=', $start)
                 ->where('patient_history.created_at', '<=', $end);
 
-            $payments
+            $paymentIds
                 ->where('payments.created_at', '>=', $start)
                 ->where('payments.created_at', '<=', $end);
         }
 
         $services = $services->get();
+        $payments = Payment::query()
+            ->whereIn('id', $paymentIds->get()->toArray())
+            ->with([
+                'userCreated',
+                'patientHistory'
+            ])
+            ->get()
+        ;
 
         foreach ($services as $service) {
             $service->pending_amount = $service->pendingAmount();
@@ -182,7 +186,7 @@ class PaymentController extends Controller
         return new JsonResponse([
             'success' => true,
             'services' => $services,
-            'payments' => $payments->get()
+            'payments' => $payments
         ]);
     }
 }

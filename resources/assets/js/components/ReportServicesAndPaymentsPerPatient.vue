@@ -5,7 +5,7 @@
                 <h1>
                     <i class="glyphicon glyphicon-file" v-if="! loading"></i>
                     <img src="/img/loading.gif" v-if="loading">
-                    Reporte de servicios y pagos
+                    Reporte de servicios y pagos por paciente
                 </h1>
             </div>
         </div>
@@ -14,7 +14,27 @@
                 <div class="panel panel-default">
                     <div class="panel-body">
 
-                        <section>
+                        <div class="row">
+                            <div class="col-xs-12">
+                                <a
+                                        data-toggle="modal"
+                                        data-target="#patientModal"
+                                        @click="searchPatients()"
+                                        >
+                                    <i class="glyphicon glyphicon-search"></i>
+
+                                    <span v-if="! patient">
+                                        Seleccionar paciente
+                                    </span>
+                                    <span v-if="patient">
+                                        Cambiar paciente
+                                    </span>
+                                </a>
+                                <hr>
+                            </div>
+                        </div>
+
+                        <section v-if="patient">
 
                             <div class="row">
                                 <div class="col-sm-4">
@@ -93,9 +113,9 @@
                                 </div>
                             </div>
 
-                            <div class="row" v-if="data.services.length || data.payments.length">
+                            <div class="row" v-if="data.services.length">
                                 <div class="col-xs-12">
-                                    <h4 class="bg-info text-info">Servicios</h4>
+                                    <h4 class="bg-info text-info">Servicios y pagos</h4>
                                 </div>
 
                                 <div class="col-xs-12">
@@ -106,7 +126,7 @@
                                             <tr>
                                                 <th width="12%">Fecha</th>
                                                 <th width="20%">Paciente</th>
-                                                <th>Código</th>
+                                                <th>Tipo</th>
                                                 <th>Servicio</th>
                                                 <th>Diente</th>
                                                 <th>Doctor</th>
@@ -115,52 +135,29 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <tr v-for="service in data.services">
-                                                <td>{{ dateFormat(service.created_at) }}</td>
-                                                <td>{{ service.patient.name }}</td>
-                                                <td>{{ service.public_id }}</td>
-                                                <td>{{ service.product.name }}</td>
-                                                <td>{{ service.tooth }}</td>
-                                                <td>{{ service.doctor.name }}</td>
-                                                <td>{{ service.assistant.name }}</td>
-                                                <td>{{ '$' + service.price }}</td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
+                                            <template v-for="service in data.services">
+                                                <tr>
+                                                    <td>{{ dateFormat(service.created_at) }}</td>
+                                                    <td>{{ service.patient.name }}</td>
+                                                    <td>Servicio</td>
+                                                    <td>{{ service.public_id }}</td>
+                                                    <td>{{ service.tooth }}</td>
+                                                    <td>{{ service.doctor.name }}</td>
+                                                    <td>{{ service.assistant.name }}</td>
+                                                    <td>{{ '$' + service.price }}</td>
+                                                </tr>
 
-                                </div>
-                            </div>
-
-                            <div class="row" v-if="data.services.length || data.payments.length">
-                                <div class="col-xs-12">
-                                    <h4 class="bg-info text-info">Pagos</h4>
-                                </div>
-
-                                <div class="col-xs-12">
-
-                                    <!-- Payments -->
-                                    <table class="table table-responsive">
-                                        <thead>
-                                        <tr>
-                                            <th width="12%">Fecha</th>
-                                            <th width="20%">Paciente</th>
-                                            <th>Registrado por</th>
-                                            <th>Tipo</th>
-                                            <th>Monto</th>
-                                        </tr>
-                                        </thead>
-                                        <tbody>
-                                        <tr v-for="payment in data.payments">
-                                            <td>{{ dateFormat(payment.created_at) }}</td>
-                                            <td>{{ payment.patient_history ? payment.patient_history.patient.name : '' }}</td>
-                                            <td>{{ payment.user_created.name }}</td>
-                                            <td>
-                                                <span v-if="payment.type === 1">Tarjeta de crédito</span>
-                                                <span v-if="payment.type === 2">Efectivo</span>
-                                                <span v-if="payment.type === 3">Cheque</span>
-                                            </td>
-                                            <td>{{ '$' + payment.amount }}</td>
-                                        </tr>
+                                                <tr v-for="payment in service.payments" style="background-color: #eee">
+                                                    <td>{{ dateFormat(payment.created_at) }}</td>
+                                                    <td></td>
+                                                    <td>Pago</td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td>{{ '$' + payment.amount }}</td>
+                                                </tr>
+                                            </template>
                                         </tbody>
                                     </table>
 
@@ -173,6 +170,78 @@
             </div>
         </div>
 
+        <!-- Modal -->
+        <div class="modal fade" id="patientModal" tabindex="-1" role="dialog" aria-labelledby="patientModal" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <h3>
+                                    <strong>
+                                        Selecciona al paciente
+                                    </strong>
+                                </h3>
+                            </div>
+                            <div class="col-sm-6">
+                                <h3 class="text-right">
+                                    <a href="/user/patient/create">
+                                        <i class="glyphicon glyphicon-plus"></i>
+                                        Registrar paciente
+                                    </a>
+                                </h3>
+                            </div>
+                            <div class="col-xs-12">
+                                <input
+                                        type="text"
+                                        class="form-control"
+                                        placeholder="Buscador"
+                                        v-model="modal.search"
+                                        @keyup="searchPatients()"
+                                        >
+                            </div>
+                        </div>
+                        <hr>
+
+                        <div class="row">
+
+                            <div class="col-xs-12">
+
+                                <table class="table table-responsive table-striped">
+                                    <thead>
+                                    <tr>
+                                        <th width="50%">Telefono</th>
+                                        <th width="50%">Nombre</th>
+                                        <th></th>
+                                    </tr>
+                                    </thead>
+
+                                    <tbody v-if="! modal.loading">
+                                    <tr v-for="p in modal.data" v-if="!patient || patient.id !== p.id">
+                                        <td>{{ p.phone }}</td>
+                                        <td>{{ p.name }}</td>
+                                        <td>
+                                            <button
+                                                    class="btn btn-primary"
+                                                    @click="selectPatient(p)"
+                                                    data-dismiss="modal"
+                                                    >
+                                                <i class="glyphicon glyphicon-ok"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
     </section>
 </template>
 
@@ -185,15 +254,21 @@
         },
         data: function () {
             return {
-              loading: false,
-              initStart: new Date(),
-              initEnd: new Date(),
-              data: {
-                  start: '',
-                  end: '',
-                  services: [],
-                  payments: []
-              },
+                loading: false,
+                initStart: new Date(),
+                initEnd: new Date(),
+                patient: null,
+                data: {
+                    start: '',
+                    end: '',
+                    patient_id: null,
+                    services: []
+                },
+                modal: {
+                    data: [],
+                    loading: false,
+                    search: ''
+                }
             }
         },
         mounted: function () {
@@ -206,6 +281,31 @@
             this.data.end = year + '-' + month + '-' + day;
         },
         methods: {
+            searchPatients: function () {
+                this.modal.data = [];
+                this.modal.loading = true;
+
+                axios.get('/user/patient/budget/search?search=' + this.modal.search)
+                        .then((res) => {
+                    this.modal.loading = false;
+
+                    this.modal.data = res.data.patients;
+                })
+                .catch((err) => {
+                    if (err.response.status === 403 || err.response.status === 405) {
+                        location.href = '/';
+                    }
+                    this.modal.loading = false;
+                })
+                ;
+            },
+
+            selectPatient: function (patient) {
+                this.patient = patient;
+                this.data.services = [];
+                this.data.patient_id = patient.id;
+            },
+
             changeStart: function (date) {
                 let day = (date.getDate() < 10) ? '0' + date.getDate() : date.getDate();
                 let month = ((date.getMonth() + 1) < 10) ? '0' + (date.getMonth() + 1) : (date.getMonth() + 1);
@@ -225,23 +325,26 @@
             search: function () {
                 this.loading = true;
 
-                axios.get('/admin/report/servicesAndPaymentsData?start=' + this.data.start + '&end=' + this.data.end)
+                axios.get(
+                        '/admin/report/servicesAndPaymentsPerPatientData?' +
+                        'start=' + this.data.start +
+                        '&end=' + this.data.end +
+                        '&patient_id=' + this.data.patient_id
+                )
                     .then((res) => {
                         this.loading = false;
 
                         if (res.data.success) {
                             this.data.services = res.data.services;
-                            this.data.payments = res.data.payments;
                         }
                     })
                     .catch((err) => {
-    if (err.response.status === 403 || err.response.status === 405) {
-        location.href = '/';
-    }
+                        if (err.response.status === 403 || err.response.status === 405) {
+                            location.href = '/';
+                        }
                         console.log(err);
                         this.loading = false;
                         this.data.services = [];
-                        this.data.payments = [];
                     })
             },
 
@@ -265,9 +368,11 @@
             getTotalPayments: function () {
                 let total = 0;
 
-                for (let i in this.data.payments) {
-                    total += parseInt(this.data.payments[i].amount);
-                }
+                this.data.services.forEach((service) => {
+                    service.payments.forEach((payment) => {
+                        total += payment.amount;
+                    });
+                });
 
                 return total;
             },

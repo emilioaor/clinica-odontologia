@@ -17,7 +17,6 @@ class Payment extends Model
     protected $table = 'payments';
 
     protected $fillable = [
-        'patient_id',
         'user_created_id',
         'amount',
         'type',
@@ -25,16 +24,6 @@ class Payment extends Model
     ];
 
     protected $dates = ['deleted_at'];
-
-    /**
-     * Paciente que pago
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
-     */
-    public function patient()
-    {
-        return $this->belongsTo(Patient::class, 'patient_id')->withTrashed();
-    }
 
     /**
      * Usuario que registro el pago

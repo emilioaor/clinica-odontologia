@@ -70,16 +70,6 @@ class Patient extends Model
     }
 
     /**
-     * Pagos del paciente
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
-     */
-    public function payments()
-    {
-        return $this->hasMany(Payment::class, 'patient_id');
-    }
-
-    /**
      * Todos los ray x asociados al paciente
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany

@@ -57,10 +57,26 @@ class ReportController extends Controller
             ->get()
         ;
 
+        // Agrupar por paciente
+        $serviceResponse = [];
+        $paymentsResponse = [];
+
+        foreach ($services as $service) {
+            $serviceResponse[$service->patient->id][] = $service;
+        }
+
+        foreach ($payments as $payment) {
+            if ($payment->patientHistory) {
+                $paymentsResponse[$payment->patientHistory->patient->id][] = $payment;
+            } else {
+                $paymentsResponse[0][] = $payment;
+            }
+        }
+
         return new JsonResponse([
             'success' => true,
-            'services' => $services,
-            'payments' => $payments
+            'services' => $serviceResponse,
+            'payments' => $paymentsResponse
         ]);
     }
 

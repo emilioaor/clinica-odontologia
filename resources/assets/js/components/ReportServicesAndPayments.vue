@@ -21,7 +21,7 @@
                                     <div class="form-group">
                                         <label for="">Servicios</label>
                                         <p>
-                                            {{ '$ ' + getTotalServices() }}
+                                            {{ '$ ' + getTotalAllServices() }}
                                         </p>
                                     </div>
                                 </div>
@@ -30,7 +30,7 @@
                                     <div class="form-group">
                                         <label for="">Pagos</label>
                                         <p>
-                                            {{ '$ ' + getTotalPayments() }}
+                                            {{ '$ ' + getTotalAllPayments() }}
                                         </p>
                                     </div>
                                 </div>
@@ -93,12 +93,21 @@
                                 </div>
                             </div>
 
-                            <div class="row" v-if="data.services.length || data.payments.length">
+                            <div class="row" v-if="Object.keys(data.services).length">
                                 <div class="col-xs-12">
-                                    <h4 class="bg-info text-info">Servicios</h4>
+                                    <h4>
+                                        <strong>Servicios</strong>
+                                    </h4>
                                 </div>
 
-                                <div class="col-xs-12">
+                                <div class="col-xs-12" v-for="servicesPerPatient in data.services">
+
+                                    <div class="alert alert-info">
+                                        <p>
+                                            <strong>Servicios del paciente:</strong>
+                                            {{ servicesPerPatient[0].patient.name }}
+                                        </p>
+                                    </div>
 
                                     <!-- Services -->
                                     <table class="table table-responsive">
@@ -115,7 +124,7 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <tr v-for="service in data.services">
+                                            <tr v-for="service in servicesPerPatient">
                                                 <td>{{ dateFormat(service.created_at) }}</td>
                                                 <td>{{ service.patient.name }}</td>
                                                 <td>{{ service.public_id }}</td>
@@ -126,17 +135,44 @@
                                                 <td>{{ '$' + service.price }}</td>
                                             </tr>
                                         </tbody>
+                                        <tfoot>
+                                            <tr>
+                                                <th>Total</th>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td>{{ '$' + getTotalServices(servicesPerPatient) }}</td>
+                                            </tr>
+                                        </tfoot>
                                     </table>
 
                                 </div>
                             </div>
 
-                            <div class="row" v-if="data.services.length || data.payments.length">
-                                <div class="col-xs-12">
-                                    <h4 class="bg-info text-info">Pagos</h4>
-                                </div>
+                            <div class="row" v-if="Object.keys(data.payments).length">
 
                                 <div class="col-xs-12">
+                                    <br>
+                                    <br>
+                                    <h4>
+                                        <strong>Pagos</strong>
+                                    </h4>
+                                </div>
+
+                                <div class="col-xs-12" v-for="paymentsPerPatient in data.payments">
+
+                                    <div class="alert alert-info">
+                                        <p class="bg-info text-info" v-if="paymentsPerPatient[0].patient_history">
+                                            <strong>Pagos del paciente:</strong>
+                                            {{ paymentsPerPatient[0].patient_history.patient.name }}
+                                        </p>
+                                        <p class="bg-info text-info" v-if="! paymentsPerPatient[0].patient_history">
+                                            Pagos sin paciente
+                                        </p>
+                                    </div>
 
                                     <!-- Payments -->
                                     <table class="table table-responsive">
@@ -150,7 +186,7 @@
                                         </tr>
                                         </thead>
                                         <tbody>
-                                        <tr v-for="payment in data.payments">
+                                        <tr v-for="payment in paymentsPerPatient">
                                             <td>{{ dateFormat(payment.created_at) }}</td>
                                             <td>{{ payment.patient_history ? payment.patient_history.patient.name : '' }}</td>
                                             <td>{{ payment.user_created.name }}</td>
@@ -162,6 +198,15 @@
                                             <td>{{ '$' + payment.amount }}</td>
                                         </tr>
                                         </tbody>
+                                        <tfoot>
+                                        <tr>
+                                            <th>Total</th>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td>{{ '$' + getTotalPayments(paymentsPerPatient) }}</td>
+                                        </tr>
+                                        </tfoot>
                                     </table>
 
                                 </div>
@@ -193,7 +238,7 @@
                   end: '',
                   services: [],
                   payments: []
-              },
+              }
             }
         },
         mounted: function () {
@@ -235,9 +280,9 @@
                         }
                     })
                     .catch((err) => {
-    if (err.response.status === 403 || err.response.status === 405) {
-        location.href = '/';
-    }
+                        if (err.response.status === 403 || err.response.status === 405) {
+                            location.href = '/';
+                        }
                         console.log(err);
                         this.loading = false;
                         this.data.services = [];
@@ -252,28 +297,48 @@
                 return format[1] + '/' + format[2] + '/' + format[0];
             },
 
-            getTotalServices: function () {
+            getTotalServices: function (services) {
                 let total = 0;
 
-                for (let i in this.data.services) {
-                    total += parseInt(this.data.services[i].price);
+                for (let i in services) {
+                    total += parseInt(services[i].price);
                 }
 
                 return total;
             },
 
-            getTotalPayments: function () {
+            getTotalPayments: function (payments) {
                 let total = 0;
 
-                for (let i in this.data.payments) {
-                    total += parseInt(this.data.payments[i].amount);
+                for (let i in payments) {
+                    total += parseInt(payments[i].amount);
                 }
+
+                return total;
+            },
+
+            getTotalAllServices: function () {
+                let total = 0;
+
+                Object.values(this.data.services).forEach((servicePerPatient) => {
+                    total += this.getTotalServices(servicePerPatient);
+                });
+
+                return total;
+            },
+
+            getTotalAllPayments: function () {
+                let total = 0;
+
+                Object.values(this.data.payments).forEach((paymentPerPatient) => {
+                    total += this.getTotalPayments(paymentPerPatient);
+                });
 
                 return total;
             },
 
             getBalance: function () {
-                return this.getTotalPayments() - this.getTotalServices();
+                return this.getTotalAllPayments() - this.getTotalAllServices();
             }
         }
     }

@@ -94,6 +94,29 @@
                                 </div>
 
                                 <div class="row">
+                                    <div class="col-sm-4">
+                                        <div class="form-group">
+                                            <label for="name">Referencia</label>
+
+                                            <select
+                                                    name="patient_reference_id"
+                                                    id="patient_reference_id"
+                                                    class="form-control"
+                                                    v-model="form.patient_reference_id"
+                                                    >
+                                                <option :value="null">Ninguno</option>
+                                                <option
+                                                        v-for="reference in patientReferences"
+                                                        :value="reference.id"
+                                                        >
+                                                    {{ reference.description }}
+                                                </option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
                                     <div class="col-xs-12">
                                         <button class="btn btn-warning" v-bind:disabled="loading">
                                             <i class="glyphicon glyphicon-saved"></i>
@@ -243,7 +266,20 @@
 
 <script>
     export default {
-        props: ['patient', 'user'],
+        props: {
+            patientReferences: {
+                type: Array,
+                required: true
+            },
+            patient: {
+                type: Object,
+                required: true
+            },
+            user: {
+                type: Object,
+                required: true
+            }
+        },
 
         data: function () {
             return {
@@ -259,12 +295,12 @@
                     total: null,
                     per_page: null
                 },
-                authUser: JSON.parse(this.user)
+                authUser: this.user
             }
         },
 
         beforeMount: function () {
-            this.form = JSON.parse(this.patient);
+            this.form = this.patient;
             this.generatePagination();
         },
 

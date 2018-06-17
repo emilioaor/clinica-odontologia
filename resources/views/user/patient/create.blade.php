@@ -1,5 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-    <register-patient></register-patient>
+    <register-patient
+           :patient-references = "{{ json_encode($patientReferences) }}"
+    ></register-patient>
 @endsection

@@ -75,6 +75,9 @@ Route::group(['prefix' => 'user', 'middleware' => 'auth'], function() {
 
     // Usuarios
     Route::get('user/search', 'Admin\UserController@search');
+
+    // Referencia de pacientes
+    Route::resource('patientReference', 'User\PatientReferenceController');
 });
 
 // Administrador

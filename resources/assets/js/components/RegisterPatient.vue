@@ -94,6 +94,29 @@
                                 </div>
 
                                 <div class="row">
+                                    <div class="col-sm-4">
+                                        <div class="form-group">
+                                            <label for="name">Referencia</label>
+
+                                            <select
+                                                    name="patient_reference_id"
+                                                    id="patient_reference_id"
+                                                    class="form-control"
+                                                    v-model="form.patient_reference_id"
+                                                    >
+                                                <option :value="null">Ninguno</option>
+                                                <option
+                                                        v-for="reference in patientReferences"
+                                                        :value="reference.id"
+                                                        >
+                                                    {{ reference.description }}
+                                                </option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
                                     <div class="col-xs-12">
                                         <button class="btn btn-success" v-bind:disabled="loading">
                                             <i class="glyphicon glyphicon-saved"></i>
@@ -114,6 +137,13 @@
 
 <script>
     export default {
+        props: {
+            patientReferences: {
+                type: Array,
+                required: true
+            }
+        },
+
         data: function () {
             return {
                 loading: false,
@@ -121,7 +151,8 @@
                 form: {
                     name: '',
                     phone: '',
-                    email: ''
+                    email: '',
+                    patient_reference_id: null
                 }
             }
         },

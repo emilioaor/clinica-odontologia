@@ -31,7 +31,7 @@
                     @if(Auth::user()->hasPermission('product.create') || Auth::user()->hasPermission('product.index') ||
                         Auth::user()->hasPermission('supplier.create') || Auth::user()->hasPermission('supplier.index') ||
                         Auth::user()->hasPermission('user.create') || Auth::user()->hasPermission('user.index') ||
-                        Auth::user()->hasPermission('commission.config'))
+                        Auth::user()->hasPermission('commission.config') || Auth::user()->hasPermission('patientReference.index'))
 
                         <li class="dropdown">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
@@ -92,6 +92,14 @@
                                         <a href="{{ route('commission.config') }}">
                                             <i class="glyphicon glyphicon-usd"></i>
                                             Comisiones
+                                        </a>
+                                    </li>
+                                @endif
+                                @if(Auth::user()->hasPermission('patientReference.index'))
+                                    <li>
+                                        <a href="{{ route('patientReference.index') }}">
+                                            <i class="glyphicon glyphicon-list-alt"></i>
+                                            Referencia de pacientes
                                         </a>
                                     </li>
                                 @endif

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\User;
 
 use App\Patient;
+use App\PatientReference;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -57,7 +58,9 @@ class PatientController extends Controller
      */
     public function create()
     {
-        return view('user.patient.create');
+        $patientReferences = PatientReference::orderBy('description')->get();
+
+        return view('user.patient.create', compact('patientReferences'));
     }
 
     /**
@@ -99,18 +102,15 @@ class PatientController extends Controller
      */
     public function edit($id)
     {
-        $patient = Patient::where('public_id', $id)->first();
-
-        if (! $patient) {
-            abort(404);
-        }
+        $patient = Patient::where('public_id', $id)->firstOrFail();
+        $patientReferences = PatientReference::orderBy('description')->get();
 
         $patient->budgets = $patient->budgets()
             ->orderBy('id', 'DESC')
             ->paginate(12)
         ;
 
-        return view('user.patient.edit', compact('patient'));
+        return view('user.patient.edit', compact('patient', 'patientReferences'));
     }
 
     /**
@@ -126,6 +126,7 @@ class PatientController extends Controller
         $patient->phone = $request->phone;
         $patient->name = $request->name;
         $patient->email = $request->email;
+        $patient->patient_reference_id = $request->patient_reference_id;
         $patient->save();
 
         $this->sessionMessage('message.patient.update');

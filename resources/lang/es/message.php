@@ -88,6 +88,8 @@ return [
 
     'email.subject.registerAppointment' => 'Correo de confirmación de cita',
 
+    'patientReference.update' => 'Referencias actualizadas',
+
     'January' => 'Enero',
     'February' => 'Febrero',
     'March' => 'Marzo',

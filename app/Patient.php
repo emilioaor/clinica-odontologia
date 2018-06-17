@@ -15,7 +15,8 @@ class Patient extends Model
         'public_id',
         'name',
         'phone',
-        'email'
+        'email',
+        'patient_reference_id'
 
     ];
 
@@ -87,5 +88,15 @@ class Patient extends Model
     public function appointments()
     {
         return $this->hasMany(Appointment::class, 'patient_id');
+    }
+
+    /**
+     * Medio por donde llego el paciente al negocio
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function patientReference()
+    {
+        return $this->belongsTo(PatientReference::class, 'patient_reference_id')->withTrashed();
     }
 }

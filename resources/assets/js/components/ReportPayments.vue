@@ -69,7 +69,7 @@
                                 <div class="col-sm-4">
                                     <div class="form-group">
                                         <label for="">Total</label>
-                                        <p>{{ getTotal() }} $</p>
+                                        <p>{{ getAllTotal() }} $</p>
                                     </div>
                                 </div>
                             </div>
@@ -91,7 +91,17 @@
                             </div>
 
                             <div class="row">
-                                <div class="col-xs-12">
+                                <div class="col-xs-12" v-for="paymentsPerPatient in data.payments">
+
+                                    <div class="alert alert-info">
+                                        <p class="bg-info text-info" v-if="paymentsPerPatient[0].patient_history">
+                                            <strong>Pagos del paciente:</strong>
+                                            {{ paymentsPerPatient[0].patient_history.patient.name }}
+                                        </p>
+                                        <p class="bg-info text-info" v-if="! paymentsPerPatient[0].patient_history">
+                                            Pagos sin paciente
+                                        </p>
+                                    </div>
 
                                     <!-- Payments -->
                                     <table class="table table-responsive">
@@ -105,7 +115,7 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <tr v-for="payment in data.payments">
+                                            <tr v-for="payment in paymentsPerPatient">
                                                 <td>{{ dateFormat(payment.created_at) }}</td>
                                                 <td>{{ payment.patient_history ? payment.patient_history.patient.name : '' }}</td>
                                                 <td>
@@ -119,6 +129,15 @@
                                                 <td>{{ payment.amount }}</td>
                                             </tr>
                                         </tbody>
+                                        <tfoot>
+                                        <tr>
+                                            <th>Total</th>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td>{{ '$' + getTotal(paymentsPerPatient) }}</td>
+                                        </tr>
+                                        </tfoot>
                                     </table>
 
                                 </div>
@@ -207,15 +226,25 @@
                 return format[1] + '/' + format[2] + '/' + format[0];
             },
 
-            getTotal: function () {
+            getAllTotal: function () {
                 let total = 0;
 
-                this.data.payments.forEach((payment) => {
-                    total += payment.amount;
+                Object.values(this.data.payments).forEach((paymentPerPatient) => {
+                    total += this.getTotal(paymentPerPatient);
                 });
 
                 return total;
-            }
+            },
+
+            getTotal: function (payments) {
+                let total = 0;
+
+                for (let i in payments) {
+                    total += parseInt(payments[i].amount);
+                }
+
+                return total;
+            },
         }
     }
 </script>

@@ -320,6 +320,17 @@ class ReportController extends Controller
             $payments->where('type', $request->type);
         }
 
-        return new JsonResponse(['success' => true, 'payments' => $payments->get()]);
+        // Agrupo por paciente
+        $paymentsResponse = [];
+
+        foreach ($payments->get() as $payment) {
+            if ($payment->patientHistory) {
+                $paymentsResponse[$payment->patientHistory->patient->id][] = $payment;
+            } else {
+                $paymentsResponse[0][] = $payment;
+            }
+        }
+
+        return new JsonResponse(['success' => true, 'payments' => $paymentsResponse]);
     }
 }

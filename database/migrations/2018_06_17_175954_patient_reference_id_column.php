@@ -15,6 +15,9 @@ class PatientReferenceIdColumn extends Migration
     {
         Schema::table('patients', function (Blueprint $table) {
             $table->addColumn('integer', 'patient_reference_id')->unsigned()->nullable();
+        });
+
+        Schema::table('patients', function (Blueprint $table) {
             $table->foreign('patient_reference_id')->references('id')->on('patient_references');
         });
     }

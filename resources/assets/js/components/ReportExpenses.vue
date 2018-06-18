@@ -94,7 +94,7 @@
                                                 <td>{{ expense.supplier.name }}</td>
                                                 <td>{{ expense.description }}</td>
                                                 <td>
-                                                    {{ expense.patient_history ? expense.patient_history.public_id : '' }}
+                                                    {{ expense.patient_history ? expense.patient_history.product.name : '' }}
                                                 </td>
                                                 <td>
                                                     {{ expense.patient_history ? expense.patient_history.patient.name : '' }}

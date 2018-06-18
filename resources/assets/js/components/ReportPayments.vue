@@ -93,16 +93,6 @@
                             <div class="row">
                                 <div class="col-xs-12" v-for="paymentsPerPatient in data.payments">
 
-                                    <div class="alert alert-info">
-                                        <p class="bg-info text-info" v-if="paymentsPerPatient[0].patient_history">
-                                            <strong>Pagos del paciente:</strong>
-                                            {{ paymentsPerPatient[0].patient_history.patient.name }}
-                                        </p>
-                                        <p class="bg-info text-info" v-if="! paymentsPerPatient[0].patient_history">
-                                            Pagos sin paciente
-                                        </p>
-                                    </div>
-
                                     <!-- Payments -->
                                     <table class="table table-responsive">
                                         <thead>
@@ -124,7 +114,7 @@
                                                     <span v-if="payment.type === 3">Cheque</span>
                                                 </td>
                                                 <td>
-                                                    {{ !payment.patient_history ? '' : payment.patient_history.public_id }}
+                                                    {{ !payment.patient_history ? '' : payment.patient_history.product.name }}
                                                 </td>
                                                 <td>{{ payment.amount }}</td>
                                             </tr>

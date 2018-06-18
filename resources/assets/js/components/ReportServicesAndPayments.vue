@@ -102,13 +102,6 @@
 
                                 <div class="col-xs-12" v-for="servicesPerPatient in data.services">
 
-                                    <div class="alert alert-info">
-                                        <p>
-                                            <strong>Servicios del paciente:</strong>
-                                            {{ servicesPerPatient[0].patient.name }}
-                                        </p>
-                                    </div>
-
                                     <!-- Services -->
                                     <table class="table table-responsive">
                                         <thead>
@@ -156,23 +149,13 @@
 
                                 <div class="col-xs-12">
                                     <br>
-                                    <br>
+                                    <hr>
                                     <h4>
                                         <strong>Pagos</strong>
                                     </h4>
                                 </div>
 
                                 <div class="col-xs-12" v-for="paymentsPerPatient in data.payments">
-
-                                    <div class="alert alert-info">
-                                        <p class="bg-info text-info" v-if="paymentsPerPatient[0].patient_history">
-                                            <strong>Pagos del paciente:</strong>
-                                            {{ paymentsPerPatient[0].patient_history.patient.name }}
-                                        </p>
-                                        <p class="bg-info text-info" v-if="! paymentsPerPatient[0].patient_history">
-                                            Pagos sin paciente
-                                        </p>
-                                    </div>
 
                                     <!-- Payments -->
                                     <table class="table table-responsive">

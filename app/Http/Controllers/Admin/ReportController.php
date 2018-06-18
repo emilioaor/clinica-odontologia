@@ -271,9 +271,12 @@ class ReportController extends Controller
                 $start,
                 $end
             ])
-            ->with('supplier')
-            ->with('patientHistory')
-            ->with('patientHistory.patient')
+            ->with([
+                'supplier',
+                'patientHistory',
+                'patientHistory.patient',
+                'patientHistory.product'
+            ])
             ->orderBy('date')
             ->get();
 
@@ -313,7 +316,8 @@ class ReportController extends Controller
             ])
             ->with([
                 'patientHistory',
-                'patientHistory.patient'
+                'patientHistory.patient',
+                'patientHistory.product'
             ]);
 
         if ($request->type > 0) {

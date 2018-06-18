@@ -14,8 +14,8 @@ class PatientReferenceIdColumn extends Migration
     public function up()
     {
         Schema::table('patients', function (Blueprint $table) {
-            $table->integer('patient_reference_id')->unsigned()->nullable();
-            $table->foreign('patient_reference_id', 'patient_references_foreign_in_patients')->references('id')->on('patient_references');
+            $table->addColumn('integer', 'patient_reference_id')->unsigned()->nullable();
+            $table->foreign('patient_reference_id')->references('id')->on('patient_references');
         });
     }
 
@@ -27,7 +27,7 @@ class PatientReferenceIdColumn extends Migration
     public function down()
     {
         Schema::table('patients', function (Blueprint $table) {
-            $table->dropForeign('patient_references_foreign_in_patients');
+            $table->dropForeign('patients_patient_reference_id_foreign');
             $table->dropColumn('patient_reference_id');
         });
     }

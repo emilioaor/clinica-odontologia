@@ -156,8 +156,8 @@ class ReportController extends Controller
             ->where(function ($query) use ($start, $end) {
 
                 $query->where([
-                    ['payments.created_at', '>=', $start],
-                    ['payments.created_at', '<=', $end]
+                    ['payments.date', '>=', $start],
+                    ['payments.date', '<=', $end]
                 ])
                 ->orWhere([
                     ['patient_history.created_at', '>=', $start],
@@ -229,7 +229,7 @@ class ReportController extends Controller
             foreach ($history->payments as $payment) {
 
                 $response[$patient->id]['data'][$history->id]['services'][] = [
-                    'date' => $payment->created_at->format('Y-m-d H:i:s'),
+                    'date' => $payment->date->format('Y-m-d H:i:s'),
                     'classification' => trans('message.report.classification.payment'),
                     'description' => trans('message.report.classification.payment'),
                     'amount' => $payment->amount

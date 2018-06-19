@@ -20,10 +20,11 @@ class Payment extends Model
         'user_created_id',
         'amount',
         'type',
-        'patient_history_id'
+        'patient_history_id',
+        'date'
     ];
 
-    protected $dates = ['deleted_at'];
+    protected $dates = ['deleted_at', 'date'];
 
     /**
      * Usuario que registro el pago

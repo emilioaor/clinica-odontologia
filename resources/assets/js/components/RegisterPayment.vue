@@ -386,7 +386,7 @@
                                                         ></datepicker>
 
                                                 <span v-if="paymentEdit !== payment.id">
-                                                    {{ dateFormat(payment.created_at) }}
+                                                    {{ dateFormat(payment.date) }}
                                                 </span>
                                             </td>
                                             <td>
@@ -633,7 +633,7 @@
                             </div>
 
                             <div class="row">
-                                <div class="col-xs-8">
+                                <div class="col-xs-12">
                                     <div class="form-group">
                                         <label for="type">Tipo</label>
                                         <select
@@ -657,7 +657,26 @@
                                     </div>
                                 </div>
 
-                                <div class="col-xs-4">
+
+                            </div>
+
+                            <div class="row">
+                                <div class="col-xs-6">
+                                    <div class="form-group">
+                                        <label for="paymentDate">Fecha</label>
+                                        <datepicker
+                                                name = "paymentDate"
+                                                id = "paymentDate"
+                                                language="es"
+                                                input-class = "form-control"
+                                                format = "MM/dd/yyyy"
+                                                @input="changePaymentDate($event)"
+                                                v-model="initPaymentDate"
+                                                ></datepicker>
+                                    </div>
+                                </div>
+
+                                <div class="col-xs-6">
                                     <div class="form-group">
                                         <label for="amount">Monto</label>
                                         <input
@@ -764,6 +783,7 @@
               patient: null,
               initStart: new Date(),
               initEnd: new Date(),
+              initPaymentDate: new Date(),
               filter: false,
               data: {
                   start: '',
@@ -781,7 +801,8 @@
                       amount: null,
                       type: null,
                       patient_id: null,
-                      patient_history_id: null
+                      patient_history_id: null,
+                      date: null
                   },
                   loading: false,
               },
@@ -800,6 +821,7 @@
 
             this.data.start = year + '-' + month + '-' + day;
             this.data.end = year + '-' + month + '-' + day;
+            this.paymentModal.data.date = year + '-' + month + '-' + day;
         },
         computed: {
             paymentModalService: function () {
@@ -858,6 +880,14 @@
                 this.data.end = year + '-' + month + '-' + day;
             },
 
+            changePaymentDate: function (date) {
+                let day = (date.getDate() < 10) ? '0' + date.getDate() : date.getDate();
+                let month = ((date.getMonth() + 1) < 10) ? '0' + (date.getMonth() + 1) : (date.getMonth() + 1);
+                let year = date.getFullYear();
+
+                this.paymentModal.data.date = year + '-' + month + '-' + day;
+            },
+
             changeDateService: function (date, index) {
                 let day = (date.getDate() < 10) ? '0' + date.getDate() : date.getDate();
                 let month = ((date.getMonth() + 1) < 10) ? '0' + (date.getMonth() + 1) : (date.getMonth() + 1);
@@ -871,7 +901,7 @@
                 let month = ((date.getMonth() + 1) < 10) ? '0' + (date.getMonth() + 1) : (date.getMonth() + 1);
                 let year = date.getFullYear();
 
-                this.data.payments[index].created_at = year + '-' + month + '-' + day;
+                this.data.payments[index].date = year + '-' + month + '-' + day;
             },
 
             changePatientHistory: function () {
@@ -907,7 +937,7 @@
 
                             this.data.payments.forEach((payment) => {
 
-                                let date = payment.created_at;
+                                let date = payment.date;
                                 let dp = new Date();
 
                                 date = date.split(' ');

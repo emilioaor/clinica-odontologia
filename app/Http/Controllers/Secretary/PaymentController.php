@@ -64,6 +64,7 @@ class PaymentController extends Controller
         $payment->type = intval($request->type);
         $payment->patient_history_id = $request->patient_history_id;
         $payment->user_created_id = Auth::user()->id;
+        $payment->date = $request->date;
         $payment->save();
 
         return new JsonResponse(['success' => true, 'payment' => $payment]);
@@ -101,7 +102,7 @@ class PaymentController extends Controller
     public function update(Request $request, $id)
     {
         $payment = Payment::findOrFail($id);
-        $payment->created_at = new \DateTime($request->created_at);
+        $payment->date = new \DateTime($request->date);
         $payment->user_created_id = $request->user_created_id;
         $payment->type = $request->type;
         $payment->amount = $request->amount;
@@ -165,12 +166,13 @@ class PaymentController extends Controller
                 ->where('patient_history.created_at', '<=', $end);
 
             $paymentIds
-                ->where('payments.created_at', '>=', $start)
-                ->where('payments.created_at', '<=', $end);
+                ->where('payments.date', '>=', $start)
+                ->where('payments.date', '<=', $end);
         }
 
         $services = $services->get();
         $payments = Payment::query()
+            ->orderBy('date')
             ->whereIn('id', $paymentIds->get()->toArray())
             ->with([
                 'userCreated',

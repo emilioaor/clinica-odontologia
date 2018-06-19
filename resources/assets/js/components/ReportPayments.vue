@@ -68,6 +68,26 @@
                             <div class="row">
                                 <div class="col-sm-4">
                                     <div class="form-group">
+                                        <label for="references">Referencia</label>
+                                        <select
+                                                name="references"
+                                                id="references"
+                                                class="form-control"
+                                                v-model="data.reference"
+                                                >
+                                            <option value="0">Todos</option>
+                                            <option
+                                                    v-for="reference in references"
+                                                    :value="reference.id"
+                                                    >
+                                                {{ reference.description }}
+                                            </option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="col-sm-4">
+                                    <div class="form-group">
                                         <label for="">Total</label>
                                         <p>{{ getAllTotal() }} $</p>
                                     </div>
@@ -149,6 +169,12 @@
         components: {
             Datepicker
         },
+        props: {
+            references: {
+                type: Array,
+                required: true
+            }
+        },
         data: function () {
             return {
               loading: false,
@@ -158,7 +184,8 @@
                   start: '',
                   end: '',
                   type: 0,
-                  payments: [],
+                  reference: 0,
+                  payments: []
               },
             }
         },
@@ -191,7 +218,12 @@
             search: function () {
                 this.loading = true;
 
-                axios.get('/admin/report/paymentsData?start=' + this.data.start + '&end=' + this.data.end + '&type=' + this.data.type)
+                axios.get(
+                        '/admin/report/paymentsData?start=' + this.data.start +
+                        '&end=' + this.data.end +
+                        '&type=' + this.data.type +
+                        '&reference=' + this.data.reference
+                )
                     .then((res) => {
                         this.loading = false;
 

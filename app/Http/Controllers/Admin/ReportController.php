@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Expense;
+use App\PatientReference;
 use App\Payment;
 use App\PatientHistory;
 use App\Supplier;
@@ -293,7 +294,9 @@ class ReportController extends Controller
      */
     public function payments()
     {
-        return view('admin.report.payments');
+        $references = PatientReference::all();
+
+        return view('admin.report.payments', compact('references'));
     }
 
     /**
@@ -309,25 +312,40 @@ class ReportController extends Controller
         $end = new \DateTime($request->end);
         $end->setTime(23, 59, 59);
 
+        $paymentIds = Payment::query()
+            ->select(['payments.id'])
+            ->where('date', '>=', $start)
+            ->where('date', '<=', $end)
+        ;
+
+        if ($request->type > 0) {
+            $paymentIds->where('type', $request->type);
+        }
+
+        if ($request->reference > 0) {
+
+            $paymentIds
+                ->join('patient_history', 'patient_history.id', '=', 'payments.patient_history_id')
+                ->join('patients', 'patients.id', '=', 'patient_history.patient_id')
+                ->join('patient_references', 'patient_references.id', '=', 'patients.patient_reference_id')
+                ->where('patient_references.id', $request->reference)
+            ;
+        }
+
         $payments = Payment::query()
-            ->whereBetween('created_at', [
-                $start,
-                $end
-            ])
+            ->whereIn('id', $paymentIds->get()->toArray())
             ->with([
                 'patientHistory',
                 'patientHistory.patient',
+                'patientHistory.patient.patientReference',
                 'patientHistory.product'
-            ]);
-
-        if ($request->type > 0) {
-            $payments->where('type', $request->type);
-        }
+            ])
+            ->get();
 
         // Agrupo por paciente
         $paymentsResponse = [];
 
-        foreach ($payments->get() as $payment) {
+        foreach ($payments as $payment) {
             if ($payment->patientHistory) {
                 $paymentsResponse[$payment->patientHistory->patient->id][] = $payment;
             } else {

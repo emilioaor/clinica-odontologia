@@ -1,5 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-    <report-payments></report-payments>
+    <report-payments
+        :references = "{{ json_encode($references) }}"
+    ></report-payments>
 @endsection

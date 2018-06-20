@@ -165,8 +165,8 @@ class ReportController extends Controller
                     ['patient_history.created_at', '<=', $end]
                 ])
                 ->orWhere([
-                    ['expenses.created_at', '>=', $start],
-                    ['expenses.created_at', '<=', $end]
+                    ['expenses.date', '>=', $start],
+                    ['expenses.date', '<=', $end]
                 ]);
             })
             ->distinct()

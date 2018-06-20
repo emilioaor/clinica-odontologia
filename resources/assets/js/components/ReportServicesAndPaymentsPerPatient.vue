@@ -68,6 +68,20 @@
                             <div class="row">
                                 <div class="col-sm-4">
                                     <div class="form-group">
+                                        <label for="filter">¿Solo servicios sin pagos asociados?</label>
+                                        <input
+                                                type="checkbox"
+                                                v-model="data.filter"
+                                                id="filter"
+                                                name="filter"
+                                                >
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-sm-4">
+                                    <div class="form-group">
                                         <label for="">Desde</label>
                                         <datepicker
                                                 name = "start"
@@ -127,6 +141,7 @@
                                                 <th width="12%">Fecha</th>
                                                 <th width="20%">Paciente</th>
                                                 <th>Tipo</th>
+                                                <th>C&oacute;digo</th>
                                                 <th>Servicio</th>
                                                 <th>Diente</th>
                                                 <th>Doctor</th>
@@ -140,6 +155,7 @@
                                                     <td>{{ dateFormat(service.created_at) }}</td>
                                                     <td>{{ service.patient.name }}</td>
                                                     <td>Servicio</td>
+                                                    <td>{{ service.public_id }}</td>
                                                     <td>{{ service.product.name }}</td>
                                                     <td>{{ service.tooth }}</td>
                                                     <td>{{ service.doctor.name }}</td>
@@ -151,6 +167,7 @@
                                                     <td>{{ dateFormat(payment.created_at) }}</td>
                                                     <td></td>
                                                     <td>Pago</td>
+                                                    <td></td>
                                                     <td></td>
                                                     <td></td>
                                                     <td></td>
@@ -262,6 +279,7 @@
                     start: '',
                     end: '',
                     patient_id: null,
+                    filter: false,
                     services: []
                 },
                 modal: {
@@ -326,16 +344,17 @@
                 this.loading = true;
 
                 axios.get(
-                        '/admin/report/servicesAndPaymentsPerPatientData?' +
-                        'start=' + this.data.start +
+                        '/admin/report/servicesAndPaymentsPerPatientData' +
+                        '?start=' + this.data.start +
                         '&end=' + this.data.end +
-                        '&patient_id=' + this.data.patient_id
+                        '&patient_id=' + this.data.patient_id +
+                        '&filter=' + this.data.filter
                 )
                     .then((res) => {
                         this.loading = false;
 
                         if (res.data.success) {
-                            this.data.services = res.data.services;
+                            this.data.services = Object.values(res.data.services);
                         }
                     })
                     .catch((err) => {

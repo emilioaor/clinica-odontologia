@@ -48,6 +48,20 @@
                             <div class="row">
                                 <div class="col-sm-4">
                                     <div class="form-group">
+                                        <label for="filter">¿Solo servicios sin pagos asociados?</label>
+                                        <input
+                                                type="checkbox"
+                                                v-model="data.filter"
+                                                id="filter"
+                                                name="filter"
+                                                >
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-sm-4">
+                                    <div class="form-group">
                                         <label for="">Desde</label>
                                         <datepicker
                                                 name = "start"
@@ -170,7 +184,7 @@
                                         </thead>
                                         <tbody>
                                         <tr v-for="payment in paymentsPerPatient">
-                                            <td>{{ dateFormat(payment.created_at) }}</td>
+                                            <td>{{ dateFormat(payment.date) }}</td>
                                             <td>{{ payment.patient_history ? payment.patient_history.patient.name : '' }}</td>
                                             <td>{{ payment.user_created.name }}</td>
                                             <td>
@@ -219,6 +233,7 @@
               data: {
                   start: '',
                   end: '',
+                  filter: false,
                   services: [],
                   payments: []
               }
@@ -253,7 +268,12 @@
             search: function () {
                 this.loading = true;
 
-                axios.get('/admin/report/servicesAndPaymentsData?start=' + this.data.start + '&end=' + this.data.end)
+                axios.get(
+                        '/admin/report/servicesAndPaymentsData'
+                        + '?start=' + this.data.start
+                        + '&end=' + this.data.end
+                        + '&filter=' + this.data.filter
+                )
                     .then((res) => {
                         this.loading = false;
 

@@ -45,16 +45,26 @@ class ReportController extends Controller
             ])
             ->where('patient_history.created_at', '>=', $start)
             ->where('patient_history.created_at', '<=', $end)
+            ->withCount('payments')
             ->get()
         ;
+
+        if ($request->filter == 'true') {
+            // Elimino los servicios que tienen pagos asociados
+            foreach ($services as $i => $service) {
+                if ($service->payments_count > 0) {
+                    unset($services[$i]);
+                }
+            }
+        }
 
         $payments = Payment::with([
                 'patientHistory',
                 'patientHistory.patient',
                 'userCreated'
             ])
-            ->where('payments.created_at', '>=', $start)
-            ->where('payments.created_at', '<=', $end)
+            ->where('payments.date', '>=', $start)
+            ->where('payments.date', '<=', $end)
             ->get()
         ;
 
@@ -114,12 +124,22 @@ class ReportController extends Controller
             ->where('patient_history.created_at', '>=', $start)
             ->where('patient_history.created_at', '<=', $end)
             ->where('patient_id', $request->patient_id)
+            ->withCount('payments')
             ->get()
         ;
 
+        if ($request->filter == 'true') {
+            // Elimino los servicios que tienen pagos asociados
+            foreach ($services as $i => $service) {
+                if ($service->payments_count > 0) {
+                    unset($services[$i]);
+                }
+            }
+        }
+
         return new JsonResponse([
             'success' => true,
-            'services' => $services
+            'services' => $services->toArray()
         ]);
     }
 

@@ -246,7 +246,8 @@ class User extends Authenticatable
         if ($this->level === self::LEVEL_ASSISTANT && in_array($permission, [
                 'budget.index',
                 'service.search',
-                'supplyRequest.create'
+                'supplyRequest.create',
+                'question.index'
             ])) {
             return true;
         }

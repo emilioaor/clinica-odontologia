@@ -26,8 +26,8 @@ class HomeController extends Controller
                 ->with(['from', 'to'])
                 ->get();
 
-        } elseif (Auth::user()->isDoctor()) {
-            // Preguntas sin contestar por el doctor
+        } elseif (Auth::user()->isDoctor() || Auth::user()->isAssistant()) {
+            // Preguntas sin contestar por el doctor o asistente
             $questions = Question::orderByDesc('id')
                 ->whereNull('answer')
                 ->where('to_id', Auth::user()->id)

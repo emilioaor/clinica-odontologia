@@ -110,6 +110,15 @@
                                                 ></datepicker>
                                     </div>
                                 </div>
+
+                                <div class="col-sm-4">
+                                    <div class="form-group">
+                                        <label for="">Total en comisiones</label>
+                                        <p>
+                                            $ {{ totalAllCommission() }}
+                                        </p>
+                                    </div>
+                                </div>
                             </div>
 
                             <div class="row">
@@ -428,6 +437,16 @@
                     commission = (item.price - expenses) * (item.commission / 100);
 
                     total += commission;
+                });
+
+                return total;
+            },
+
+            totalAllCommission: function () {
+                let total = 0;
+
+                Object.values(this.data.report).forEach((patient) => {
+                    total += this.totalCommission(patient.data);
                 });
 
                 return total;

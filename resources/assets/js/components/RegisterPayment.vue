@@ -390,7 +390,7 @@
                                                 </span>
                                             </td>
                                             <td>
-                                                {{ payment.patient_history ? payment.patient_history.public_id : '' }}
+                                                {{ payment.patient_history ? payment.patient_history.product.name : '' }}
                                             </td>
                                             <td>
                                                 <select

@@ -176,7 +176,8 @@ class PaymentController extends Controller
             ->whereIn('id', $paymentIds->get()->toArray())
             ->with([
                 'userCreated',
-                'patientHistory'
+                'patientHistory',
+                'patientHistory.product'
             ])
             ->get()
         ;

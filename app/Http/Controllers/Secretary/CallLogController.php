@@ -5,9 +5,11 @@ namespace App\Http\Controllers\Secretary;
 use App\CallLog;
 use App\CallStatusHistory;
 use App\Patient;
+use App\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class CallLogController extends Controller
@@ -44,8 +46,13 @@ class CallLogController extends Controller
             ->where('status', '<>', CallLog::STATUS_NOT_INTERESTED)
             ->where('status', '<>', CallLog::STATUS_SCHEDULED)
             ->with('statusHistory')
-            ->paginate()
         ;
+
+        if (! Auth::user()->isAdmin()) {
+            $callLogs->where('user_id', Auth::user()->id);
+        }
+
+        $callLogs = $callLogs->paginate();
 
         return view('secretary.callLog.index', compact('callLogs'));
     }
@@ -57,7 +64,9 @@ class CallLogController extends Controller
      */
     public function create()
     {
-        return view('secretary.callLog.create');
+        $users = User::where('level', User::LEVEL_SECRETARY)->orderBy('name')->get();
+
+        return view('secretary.callLog.create', compact('users'));
     }
 
     /**
@@ -76,6 +85,7 @@ class CallLogController extends Controller
         $callLog->patient_id = $request->patient_id;
         $callLog->status = CallLog::STATUS_PENDING;
         $callLog->call_date = new \DateTime();
+        $callLog->user_id = $request->user_id;
         $callLog->save();
 
         $callStatusHistory = new CallStatusHistory();

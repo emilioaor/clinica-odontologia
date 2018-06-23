@@ -8,6 +8,7 @@ use App\CallLog;
 use App\CallStatusHistory;
 use App\Patient;
 use App\Product;
+use App\User;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
@@ -89,8 +90,9 @@ class BudgetController extends Controller
         }
 
         $products = Product::orderBy('name')->get();
+        $users = User::where('level', User::LEVEL_SECRETARY)->orderBy('name')->get();
 
-        return view('user.budget.create', compact('products'));
+        return view('user.budget.create', compact('products', 'users'));
     }
 
     /**
@@ -131,6 +133,7 @@ class BudgetController extends Controller
             $callLog->patient_id = $budget->patient_id;
             $callLog->call_date = new \DateTime();
             $callLog->status = CallLog::STATUS_PENDING;
+            $callLog->user_id = $request->user_id;
             $callLog->save();
 
             $callStatusHistory = new CallStatusHistory();

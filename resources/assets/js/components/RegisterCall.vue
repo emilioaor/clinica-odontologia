@@ -68,6 +68,33 @@
                                 </div>
 
                                 <div class="row">
+                                    <div class="col-sm-4">
+                                        <div class="form-group">
+                                            <label for="user">Secretaria</label>
+                                            <select
+                                                    name="user"
+                                                    id="user"
+                                                    class="form-control"
+                                                    v-model="form.user_id"
+                                                    v-validate
+                                                    data-vv-rules="required"
+                                                    :class="{'input-error': errors.has('user')}"
+                                                    >
+                                                <option
+                                                        v-for="user in users"
+                                                        :value="user.id"
+                                                        >
+                                                    {{ user.name }}
+                                                </option>
+                                            </select>
+                                            <p class="error" v-if="errors.firstByRule('user', 'required')">
+                                                Requerido
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
 
                                     <div class="col-xs-12">
                                         <div class="form-group">
@@ -184,13 +211,21 @@
 
 <script>
     export default {
+        props: {
+            users: {
+                type: Array,
+                required: true
+            }
+        },
+
         data: function() {
             return {
                 loading: false,
                 patient: null,
                 form: {
                     description: null,
-                    patient_id: null
+                    patient_id: null,
+                    user_id: null
                 },
                 modal: {
                     data: [],

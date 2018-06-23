@@ -612,20 +612,53 @@
                                 </tr>
 
                                 <!-- Secretary notes -->
-                                <tr>
+                                <tr v-if="userData.level === 1">
                                     <td colspan="5" style="padding-top: 20px;">
                                         <p>
                                             Notas para la secretaria
                                         </p>
 
-                                        <textarea
-                                                name="secretary_notes"
-                                                id="secretary_notes"
-                                                placeholder="Notas para la secretaria"
-                                                class="form-control"
-                                                rows="2"
-                                                v-model="form.secretary_notes"
-                                                ></textarea>
+                                        <div class="row">
+                                            <div class="col-sm-4">
+                                                <div class="form-group">
+                                                    <label for="user">Secretaria</label>
+                                                    <select
+                                                            name="user"
+                                                            id="user"
+                                                            class="form-control"
+                                                            v-model="form.user_id"
+                                                            v-validate
+                                                            data-vv-rules="required"
+                                                            :class="{'input-error': errors.has('user')}"
+                                                            >
+                                                        <option
+                                                                v-for="user in users"
+                                                                :value="user.id"
+                                                                >
+                                                            {{ user.name }}
+                                                        </option>
+                                                    </select>
+                                                    <p class="error" v-if="errors.firstByRule('user', 'required')">
+                                                        Requerido
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="row">
+                                            <div class="col-xs-12">
+                                                <div class="form-group">
+                                                    <textarea
+                                                            name="secretary_notes"
+                                                            id="secretary_notes"
+                                                            placeholder="Notas para la secretaria"
+                                                            class="form-control"
+                                                            rows="2"
+                                                            v-model="form.secretary_notes"
+                                                            ></textarea>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </td>
                                 </tr>
                             </table>
@@ -685,7 +718,7 @@
     import Datepicker from 'vuejs-datepicker';
 
     export default {
-        props: ['products', 'user', 'next'],
+        props: ['products', 'user', 'next', 'users'],
         components: {
             Datepicker
         },
@@ -731,6 +764,7 @@
                     table_total_label: 'AMOUNT',
                     patient_id: null,
                     secretary_notes: '',
+                    user_id: null,
                     details: [{
                         price: 0,
                         quantity: 1,

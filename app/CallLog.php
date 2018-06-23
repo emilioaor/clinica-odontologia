@@ -24,7 +24,8 @@ class CallLog extends Model
         'patient_id',
         'call_date',
         'status',
-        'appointment_date'
+        'appointment_date',
+        'user_id'
 
     ];
 
@@ -48,6 +49,16 @@ class CallLog extends Model
     public function statusHistory()
     {
         return $this->hasMany(CallStatusHistory::class, 'call_log_id');
+    }
+
+    /**
+     * Indica la secretaria a la que se registra la llamada
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function to()
+    {
+        return $this->belongsTo(User::class, 'user_id')->withTrashed();
     }
 
     /**

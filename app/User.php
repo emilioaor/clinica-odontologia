@@ -201,6 +201,16 @@ class User extends Authenticatable
     }
 
     /**
+     * Todas las llamadas que debe hacer un usuario secretaria
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function callLogs()
+    {
+        return $this->hasMany(CallLog::class, 'user_id');
+    }
+
+    /**
      * Genera el id publico en base al nivel
      */
     public function generatePublicId()

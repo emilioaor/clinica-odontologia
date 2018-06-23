@@ -1,5 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-    <register-call></register-call>
+    <register-call
+        :users = "{{ json_encode($users) }}"
+    ></register-call>
 @endsection

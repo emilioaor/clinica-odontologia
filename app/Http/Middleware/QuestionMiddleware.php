@@ -6,7 +6,7 @@ use Closure;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
 
-class DoctorOrAssistantMiddleware
+class QuestionMiddleware
 {
     /**
      * Handle an incoming request.
@@ -17,7 +17,12 @@ class DoctorOrAssistantMiddleware
      */
     public function handle($request, Closure $next)
     {
-        if (! Auth::user()->isAdmin() && ! Auth::user()->isDoctor() && ! Auth::user()->isAssistant()) {
+        if (
+            ! Auth::user()->isAdmin() &&
+            ! Auth::user()->isDoctor() &&
+            ! Auth::user()->isAssistant() &&
+            ! Auth::user()->isSecretary()
+        ) {
 
             if ($request->ajax()) {
                 return new JsonResponse(null, 403);

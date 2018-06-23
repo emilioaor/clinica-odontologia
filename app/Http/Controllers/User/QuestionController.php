@@ -18,7 +18,7 @@ class QuestionController extends Controller
      */
     public function __construct()
     {
-       $this->middleware('doctorOrAssistant');
+       $this->middleware('question');
 
         $this->middleware('admin')->only([
             'create',
@@ -57,6 +57,7 @@ class QuestionController extends Controller
         $doctors = User::orderBy('name')
             ->where('level', User::LEVEL_DOCTOR)
             ->orWhere('level', User::LEVEL_ASSISTANT)
+            ->orWhere('level', User::LEVEL_SECRETARY)
             ->get();
 
         return view('user.question.create', compact('doctors'));

@@ -10,7 +10,7 @@
             </div>
         </div>
         <div class="row">
-            <div class="col-sm-10">
+            <div class="col-xs-12">
                 <div class="panel panel-default">
                     <div class="panel-body">
 
@@ -89,11 +89,13 @@
                                 <table class="table table-responsive">
                                     <thead>
                                         <tr>
-                                            <th width="30%">Servicio</th>
-                                            <th width="25%">Asistente</th>
+                                            <th width="20%">Servicio</th>
+                                            <th width="15%">Asistente</th>
                                             <th width="15%">Diente</th>
-                                            <th width="20%" v-show="user.level === 1 || user.level === 2">Precio</th>
-                                            <th width="10%"></th>
+                                            <th width="15%">Precio</th>
+                                            <th width="15%">Qty</th>
+                                            <th width="15%">Total</th>
+                                            <th width="5%"></th>
                                         </tr>
                                     </thead>
                                     <tbody v-for="(service, id) in services">
@@ -152,13 +154,13 @@
                                                         :disabled="user.level !== 1 && service.doctor_id !== user.id"
                                                 >
                                             </td>
-                                            <td v-show="user.level === 1 || user.level === 2">
+                                            <td>
                                                 <input
                                                         type="number"
                                                         class="form-control"
                                                         :name="'price' + id"
                                                         :id="'price' + id"
-                                                        v-model="service.price"
+                                                        v-model="service.unit_price"
                                                         v-validate
                                                         data-vv-rules="required"
                                                         :class="{'input-error': errors.has('price' + id)}"
@@ -169,6 +171,23 @@
                                                 </p>
                                             </td>
                                             <td>
+                                                <input
+                                                        type="number"
+                                                        class="form-control"
+                                                        :name="'qty' + id"
+                                                        :id="'qty' + id"
+                                                        v-model="service.qty"
+                                                        v-validate
+                                                        data-vv-rules="required"
+                                                        :class="{'input-error': errors.has('qty' + id)}"
+                                                        :disabled="!service.product_id || (user.level !== 1 && service.doctor_id !== user.id)"
+                                                        >
+                                                <p class="error" v-if="errors.firstByRule('qty' + id, 'required')">
+                                                    Campo requerido
+                                                </p>
+                                            </td>
+                                            <td>{{ service.unit_price * service.qty }}</td>
+                                            <td>
                                                 <a @click="removeService(id)" v-if="user.level === 1 || service.doctor_id === user.id">
                                                     X
                                                 </a>
@@ -177,7 +196,7 @@
                                     </tbody>
                                     <tfoot>
                                         <tr>
-                                            <td colspan="5">
+                                            <td colspan="7">
                                                 <button class="btn btn-success" @click="addService()">
                                                     <i class="glyphicon glyphicon-plus"></i>
                                                     Agregar
@@ -198,7 +217,7 @@
                                     <thead>
                                         <tr>
                                             <th>Notas</th>
-                                            <th></th>
+                                            <th width="5%"></th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -418,9 +437,10 @@
                 this.services.push({
                     tooth: null,
                     product_id: null,
-                    price: null,
                     doctor_id: this.user.id,
-                    assistant_id: null
+                    assistant_id: null,
+                    unit_price: null,
+                    qty: null
                 });
             },
 
@@ -497,7 +517,7 @@
             changeProduct: function (service, index) {
                 for (let i in this.productList) {
                     if (this.productList[i].id == service.product_id) {
-                        this.services[index].price = this.productList[i].price;
+                        this.services[index].unit_price = this.productList[i].price;
                     }
                 }
             },

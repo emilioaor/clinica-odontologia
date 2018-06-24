@@ -147,6 +147,8 @@
                                                 <th>Doctor</th>
                                                 <th>Asistente</th>
                                                 <th>Precio</th>
+                                                <th>Qty</th>
+                                                <th>Total</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -160,6 +162,8 @@
                                                     <td>{{ service.tooth }}</td>
                                                     <td>{{ service.doctor.name }}</td>
                                                     <td>{{ service.assistant.name }}</td>
+                                                    <td>{{ '$' + service.unit_price }}</td>
+                                                    <td>{{ service.qty }}</td>
                                                     <td>{{ '$' + service.price }}</td>
                                                 </tr>
 
@@ -167,6 +171,8 @@
                                                     <td>{{ dateFormat(payment.created_at) }}</td>
                                                     <td></td>
                                                     <td>Pago</td>
+                                                    <td></td>
+                                                    <td></td>
                                                     <td></td>
                                                     <td></td>
                                                     <td></td>

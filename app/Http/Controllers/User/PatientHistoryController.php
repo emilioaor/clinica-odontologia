@@ -129,6 +129,7 @@ class PatientHistoryController extends Controller
             $service->nextPublicId();
             $service->patient_id = $patient->id;
             $service->created_at = $date;
+            $service->price = $service->unit_price * $service->qty;
             $service->save();
 
             if ($service->product->send_email) {

@@ -91,9 +91,9 @@
                                         <tr>
                                             <th width="20%">Servicio</th>
                                             <th width="15%">Asistente</th>
+                                            <th width="15%">Qty</th>
                                             <th width="15%">Diente</th>
                                             <th width="15%">Precio</th>
-                                            <th width="15%">Qty</th>
                                             <th width="15%">Total</th>
                                             <th width="5%"></th>
                                         </tr>
@@ -146,6 +146,22 @@
                                             </td>
                                             <td>
                                                 <input
+                                                        type="number"
+                                                        class="form-control"
+                                                        :name="'qty' + id"
+                                                        :id="'qty' + id"
+                                                        v-model="service.qty"
+                                                        v-validate
+                                                        data-vv-rules="required"
+                                                        :class="{'input-error': errors.has('qty' + id)}"
+                                                        :disabled="!service.product_id || (user.level !== 1 && service.doctor_id !== user.id)"
+                                                        >
+                                                <p class="error" v-if="errors.firstByRule('qty' + id, 'required')">
+                                                    Campo requerido
+                                                </p>
+                                            </td>
+                                            <td>
+                                                <input
                                                         type="text"
                                                         :name="'tooth' + id"
                                                         :id="'tooth' + id"
@@ -167,22 +183,6 @@
                                                         :disabled="!service.product_id || (user.level !== 1 && service.doctor_id !== user.id)"
                                                 >
                                                 <p class="error" v-if="errors.firstByRule('price' + id, 'required')">
-                                                    Campo requerido
-                                                </p>
-                                            </td>
-                                            <td>
-                                                <input
-                                                        type="number"
-                                                        class="form-control"
-                                                        :name="'qty' + id"
-                                                        :id="'qty' + id"
-                                                        v-model="service.qty"
-                                                        v-validate
-                                                        data-vv-rules="required"
-                                                        :class="{'input-error': errors.has('qty' + id)}"
-                                                        :disabled="!service.product_id || (user.level !== 1 && service.doctor_id !== user.id)"
-                                                        >
-                                                <p class="error" v-if="errors.firstByRule('qty' + id, 'required')">
                                                     Campo requerido
                                                 </p>
                                             </td>

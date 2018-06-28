@@ -122,7 +122,6 @@
                                             <tr>
                                                 <th width="12%">Fecha</th>
                                                 <th width="20%">Paciente</th>
-                                                <th>Código</th>
                                                 <th>Servicio</th>
                                                 <th>Diente</th>
                                                 <th>Doctor</th>
@@ -136,7 +135,6 @@
                                             <tr v-for="service in servicesPerPatient">
                                                 <td>{{ dateFormat(service.created_at) }}</td>
                                                 <td>{{ service.patient.name }}</td>
-                                                <td>{{ service.public_id }}</td>
                                                 <td>{{ service.product.name }}</td>
                                                 <td>{{ service.tooth }}</td>
                                                 <td>{{ service.doctor.name }}</td>

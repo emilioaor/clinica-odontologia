@@ -141,7 +141,6 @@
                                                 <th width="12%">Fecha</th>
                                                 <th width="20%">Paciente</th>
                                                 <th>Tipo</th>
-                                                <th>C&oacute;digo</th>
                                                 <th>Servicio</th>
                                                 <th>Diente</th>
                                                 <th>Doctor</th>
@@ -157,7 +156,6 @@
                                                     <td>{{ dateFormat(service.created_at) }}</td>
                                                     <td>{{ service.patient.name }}</td>
                                                     <td>Servicio</td>
-                                                    <td>{{ service.public_id }}</td>
                                                     <td>{{ service.product.name }}</td>
                                                     <td>{{ service.tooth }}</td>
                                                     <td>{{ service.doctor.name }}</td>
@@ -171,7 +169,6 @@
                                                     <td>{{ dateFormat(payment.created_at) }}</td>
                                                     <td></td>
                                                     <td>Pago</td>
-                                                    <td></td>
                                                     <td></td>
                                                     <td></td>
                                                     <td></td>

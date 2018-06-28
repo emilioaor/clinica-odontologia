@@ -109,9 +109,7 @@
 
                             <div class="row" v-if="Object.keys(data.services).length">
                                 <div class="col-xs-12">
-                                    <h4>
-                                        <strong>Servicios</strong>
-                                    </h4>
+                                    <h4 class="bg-info text-info">Servicios</h4>
                                 </div>
 
                                 <div class="col-xs-12" v-for="servicesPerPatient in data.services">
@@ -166,11 +164,7 @@
                             <div class="row" v-if="Object.keys(data.payments).length">
 
                                 <div class="col-xs-12">
-                                    <br>
-                                    <hr>
-                                    <h4>
-                                        <strong>Pagos</strong>
-                                    </h4>
+                                    <h4 class="bg-info text-info">Pagos</h4>
                                 </div>
 
                                 <div class="col-xs-12" v-for="paymentsPerPatient in data.payments">

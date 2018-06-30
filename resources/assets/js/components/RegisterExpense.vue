@@ -71,7 +71,7 @@
                                                 <td>
                                                     <div
                                                             class="input-group"
-                                                            v-if="expense.supplier && (expense.supplier.type === 8 || expense.supplier.type === 9)"
+                                                            v-if="expense.supplier && (expense.supplier.type === 8 || expense.supplier.type === 9 || expense.supplier.type === 6)"
                                                         >
                                                         <input  type="text"
                                                                 class="form-control"
@@ -409,9 +409,9 @@
                     this.modal.data = res.data.patients;
                 })
                 .catch((err) => {
-    if (err.response.status === 403 || err.response.status === 405) {
-        location.href = '/';
-    }
+                    if (err.response.status === 403 || err.response.status === 405) {
+                        location.href = '/';
+                    }
                     this.modal.loading = false;
                 })
                 ;
@@ -482,9 +482,9 @@
                         }
                     })
                     .catch((err) => {
-    if (err.response.status === 403 || err.response.status === 405) {
-        location.href = '/';
-    }
+                        if (err.response.status === 403 || err.response.status === 405) {
+                            location.href = '/';
+                        }
                         console.log(err);
                         this.loading = false;
                     })
@@ -525,9 +525,9 @@
                         }
                     })
                     .catch((err) => {
-    if (err.response.status === 403 || err.response.status === 405) {
-        location.href = '/';
-    }
+                        if (err.response.status === 403 || err.response.status === 405) {
+                            location.href = '/';
+                        }
                         this.modalService.loading = false;
                     })
                 ;
@@ -550,7 +550,7 @@
 
                         this.expenses[expenseIndex].supplier = this.suppliers[i];
 
-                        if (this.suppliers[i].type !== 8 && this.suppliers[i].type !== 9) {
+                        if (this.suppliers[i].type !== 8 && this.suppliers[i].type !== 9 && this.suppliers[i].type !== 6) {
 
                             this.expenses[expenseIndex].patient = {};
                             this.expenses[expenseIndex].patient_id = null;

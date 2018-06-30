@@ -271,7 +271,9 @@ class ReportController extends Controller
      */
     public function expenses()
     {
-        return view('admin.report.expenses');
+        $suppliers = Supplier::orderBy('name')->get();
+
+        return view('admin.report.expenses', compact('suppliers'));
     }
 
     /**
@@ -282,16 +284,23 @@ class ReportController extends Controller
      */
     public function expensesData(Request $request)
     {
-        $start = new \DateTime($request->start);
-        $start->setTime(00, 00, 00);
-        $end = new \DateTime($request->end);
-        $end->setTime(23, 59, 59);
+        $start = new \DateTime("{$request->start} 00:00:00");
+        $end = new \DateTime("{$request->end} 23:59:59");
 
-        $expenses = Expense::query()
+        $expenseIds = Expense::query()->select(['expenses.id'])
             ->whereBetween('date', [
                 $start,
                 $end
-            ])
+            ]);
+
+        if ($request->type > 0) {
+            $expenseIds
+                ->join('suppliers', 'suppliers.id', '=', 'expenses.supplier_id')
+                ->where('suppliers.type', $request->type);
+        }
+
+        $expenses = Expense::query()
+            ->whereIn('id', $expenseIds->get()->toArray())
             ->with([
                 'supplier',
                 'patientHistory',

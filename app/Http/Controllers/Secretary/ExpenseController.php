@@ -104,7 +104,15 @@ class ExpenseController extends Controller
      */
     public function update(Request $request, $id)
     {
-        abort(404);
+        $expense = Expense::findOrFail($id);
+        $expense->supplier_id = $request->supplier_id;
+        $expense->description = $request->description;
+        $expense->patient_history_id = $request->patient_history_id;
+        $expense->amount = $request->amount;
+        $expense->date = new \DateTime($request->date);
+        $expense->save();
+
+        return new JsonResponse(['success' => true]);
     }
 
     /**

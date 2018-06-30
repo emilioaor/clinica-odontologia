@@ -246,7 +246,7 @@
                                 class="btn btn-secondary"
                                 data-dismiss="modal"
                                 v-show="! loading"
-                                @click="deletePatientHistory = null"
+                                @click="deleteExpense = null"
                                 id="closeDeleteModal">
                             NO
                         </button>

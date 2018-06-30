@@ -1,5 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-    <report-expenses></report-expenses>
+    <report-expenses
+            :suppliers = "{{ json_encode($suppliers) }}"
+    ></report-expenses>
 @endsection

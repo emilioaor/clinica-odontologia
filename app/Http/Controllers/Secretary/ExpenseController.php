@@ -19,7 +19,10 @@ class ExpenseController extends Controller
     {
         $this->middleware('secretary');
 
-        $this->middleware('admin')->only(['destroy']);
+        $this->middleware('admin')->only([
+            'destroy',
+            'expenseCommission'
+        ]);
     }
 
     /**
@@ -158,5 +161,27 @@ class ExpenseController extends Controller
             'success' => true,
             'expenses' => $expenses
         ]);
+    }
+
+    /**
+     * Registra un gasto a partir de la comision de un doctor
+     *
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function expenseCommission(Request $request)
+    {
+        $supplier = Supplier::where('doctor_commission', true)->first();
+
+        $expense = new Expense();
+        $expense->amount = $request->amount;
+        $expense->date = new \DateTime();
+        $expense->description = trans('message.expense.doctor.commission');
+        $expense->supplier_id = $supplier->id;
+        $expense->save();
+
+        $this->sessionMessage('message.expense.create');
+
+        return new JsonResponse(['success' => true]);
     }
 }

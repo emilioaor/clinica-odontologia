@@ -64,6 +64,7 @@ return [
 
     'expense.create' => 'Gasto registrado',
     'expense.delete' => 'Gasto eliminado',
+    'expense.doctor.commission' => 'Comisión de doctores',
 
     'question.create' => 'Pregunta enviada',
     'question.answered' => 'Respuesta enviada',

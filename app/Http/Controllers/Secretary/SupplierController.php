@@ -26,7 +26,7 @@ class SupplierController extends Controller
      */
     public function index()
     {
-        $suppliers = Supplier::orderByDesc('id')->paginate();
+        $suppliers = Supplier::orderByDesc('id')->where('doctor_commission', false)->paginate();
 
         return view('secretary.supplier.index', compact('suppliers'));
     }

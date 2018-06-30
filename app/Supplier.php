@@ -19,6 +19,7 @@ class Supplier extends Model
     const TYPE_DENTAL_DEPOSIT = 7;
     const TYPE_LAB = 8;
     const TYPE_IMAGES = 9;
+    const TYPE_DOCTOR_COMMISSION = 10;
 
     protected $table = 'suppliers';
 

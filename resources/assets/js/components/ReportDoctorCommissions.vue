@@ -128,6 +128,18 @@
                                             <i class="glyphicon glyphicon-search"></i>
                                             Buscar
                                         </button>
+
+                                        <button
+                                                type="button"
+                                                class="btn btn-success"
+                                                data-toggle="modal"
+                                                data-target="#registerExpenseModal"
+                                                v-if="!loading && totalAllCommission() > 0"
+                                                >
+                                            <i class="glyphicon glyphicon-plus"></i>
+                                            Registrar gasto por la comisi&oacute;n
+                                        </button>
+
                                         <img src="/img/loading.gif" v-if="loading">
                                     </div>
                                 </div>
@@ -265,6 +277,37 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal -->
+        <div class="modal fade" id="registerExpenseModal" tabindex="-1" role="dialog" aria-labelledby="registerExpenseModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-body">
+                        <h4>¿Seguro quiere registrar un gasto por ${{ totalAllCommission() }}?</h4>
+                    </div>
+                    <div class="modal-footer">
+                        <button
+                                type="button"
+                                class="btn btn-secondary"
+                                data-dismiss="modal"
+                                v-show="! loading"
+                                >
+                            NO
+                        </button>
+                        <button
+                                type="button"
+                                class="btn btn-danger"
+                                v-show="! loading"
+                                @click="registerExpense()"
+                                >
+                            SI
+                        </button>
+
+                        <img src="/img/loading.gif" v-if="loading">
                     </div>
                 </div>
             </div>
@@ -450,6 +493,29 @@
                 });
 
                 return total;
+            },
+
+            registerExpense: function () {
+                this.loading = true;
+
+                const expense = {
+                    amount: this.totalAllCommission()
+                };
+
+                axios.post('/user/expense/expenseCommission', expense)
+                    .then((res) => {
+
+                        if (res.data.success) {
+                            location.reload();
+                        }
+                    })
+                    .catch((err) => {
+                        if (err.response.status === 403 || err.response.status === 405) {
+                            location.href = '/';
+                        }
+                        this.loading = false;
+                        console.log(err);
+                    })
             }
 
         }

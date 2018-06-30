@@ -57,6 +57,7 @@ Route::group(['prefix' => 'user', 'middleware' => 'auth'], function() {
 
     // Gastos
     Route::get('expense/{expense}/search', 'Secretary\ExpenseController@search');
+    Route::post('expense/expenseCommission', 'Secretary\ExpenseController@expenseCommission');
     Route::resource('expense', 'Secretary\ExpenseController');
 
     // Proveedores

@@ -42,7 +42,7 @@ class ExpenseController extends Controller
      */
     public function create()
     {
-        $suppliers = Supplier::orderBy('name')->get();
+        $suppliers = Supplier::orderBy('name')->where('doctor_commission', false)->get();
 
         return view('secretary.expense.create', compact('suppliers'));
     }

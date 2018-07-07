@@ -107,4 +107,6 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function () {
     Route::get('report/paymentsData', 'Admin\ReportController@paymentsData');
     Route::get('report/guarantees', 'Admin\ReportController@guarantees')->name('report.guarantees');
     Route::get('report/guaranteesData', 'Admin\ReportController@guaranteesData');
+    Route::get('report/patientsAndPatientsWithServices', 'Admin\ReportController@patientsAndPatientsWithServices')->name('report.patientsAndPatientsWithServices');
+    Route::get('report/patientsAndPatientsWithServicesData', 'Admin\ReportController@patientsAndPatientsWithServicesData');
 });

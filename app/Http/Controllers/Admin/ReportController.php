@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Expense;
+use App\Patient;
 use App\PatientReference;
 use App\Payment;
 use App\PatientHistory;
@@ -436,6 +437,60 @@ class ReportController extends Controller
         return new JsonResponse([
             'success' => true,
             'guarantees' => $guarantees->get()
+        ]);
+    }
+
+    /**
+     * Reporte de pacientes Vs pacientes con servicios
+     *
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function patientsAndPatientsWithServices()
+    {
+        $references = PatientReference::orderBy('description')->get();
+
+        return view('admin.report.patientsAndPatientsWithService', compact('references'));
+    }
+
+    /**
+     * Reporte de pacientes Vs pacientes con servicios
+     *
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function patientsAndPatientsWithServicesData(Request $request)
+    {
+        $start = new \DateTime("{$request->start} 00:00:00");
+        $end = new \DateTime("{$request->end} 23:59:59");
+
+        $patients = Patient::query()
+            ->where('created_at', '>=', $start)
+            ->where('created_at', '<=', $end)
+            ->withCount('patientHistory');
+
+        if ($request->reference > 0) {
+            // Filtro por referencia
+            $patients->where('patient_reference_id', $request->reference);
+        }
+
+        $patients = $patients->get();
+
+        $patientsRegistered = 0;
+        $patientsWithServices = 0;
+
+        foreach ($patients as $patient) {
+
+            $patientsRegistered++;
+
+            if ($patient->patient_history_count > 0) {
+                $patientsWithServices++;
+            }
+        }
+
+        return new JsonResponse([
+            'success' => true,
+            'patients' => $patientsRegistered,
+            'patientsWithServices' => $patientsWithServices
         ]);
     }
 }

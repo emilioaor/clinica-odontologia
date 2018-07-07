@@ -53,6 +53,7 @@ Vue.component('report-services-and-payments-per-patient', require('./components/
 Vue.component('report-doctor-commissions', require('./components/ReportDoctorCommissions.vue'));
 Vue.component('report-expenses', require('./components/ReportExpenses.vue'));
 Vue.component('report-payments', require('./components/ReportPayments.vue'));
+Vue.component('report-guarantees', require('./components/ReportGuarantees.vue'));
 Vue.component('edit-email', require('./components/EditEmail.vue'));
 Vue.component('register-appointment', require('./components/RegisterAppointment.vue'));
 Vue.component('edit-appointment', require('./components/EditAppointment.vue'));

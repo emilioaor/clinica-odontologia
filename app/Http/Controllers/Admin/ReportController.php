@@ -6,6 +6,7 @@ use App\Expense;
 use App\PatientReference;
 use App\Payment;
 use App\PatientHistory;
+use App\Product;
 use App\Supplier;
 use App\User;
 use Illuminate\Http\Request;
@@ -383,5 +384,58 @@ class ReportController extends Controller
         }
 
         return new JsonResponse(['success' => true, 'payments' => $paymentsResponse]);
+    }
+
+    /**
+     * Reporte de garantias
+     *
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function guarantees()
+    {
+        $products = Product::orderBy('name')->get();
+        $doctors = User::where('level', User::LEVEL_DOCTOR)->orderBy('name')->get();
+
+        return view('admin.report.guarantees', compact('products', 'doctors'));
+    }
+
+    /**
+     * Data de reporte de garantias. En este momento una garantia no es
+     * mas que un servicio con costo en 0
+     *
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function guaranteesData(Request $request)
+    {
+        $start = new \DateTime("{$request->start} 00:00:00");
+        $end = new \DateTime("{$request->end} 23:59:59");
+
+        $guarantees = PatientHistory::query()
+            ->with([
+                'patient',
+                'product',
+                'doctor',
+                'assistant'
+            ])
+            ->where('patient_history.created_at', '>=', $start)
+            ->where('patient_history.created_at', '<=', $end)
+            ->where('price', 0)
+        ;
+
+        if ($request->service > 0) {
+            // filtro por producto
+            $guarantees->where('product_id', $request->service);
+        }
+
+        if ($request->doctor > 0) {
+            // filtro por doctor
+            $guarantees->where('doctor_id', $request->doctor);
+        }
+
+        return new JsonResponse([
+            'success' => true,
+            'guarantees' => $guarantees->get()
+        ]);
     }
 }

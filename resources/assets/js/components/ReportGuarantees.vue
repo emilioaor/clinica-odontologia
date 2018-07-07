@@ -5,7 +5,7 @@
                 <h1>
                     <i class="glyphicon glyphicon-file" v-if="! loading"></i>
                     <img src="/img/loading.gif" v-if="loading">
-                    Reporte de pagos
+                    Reporte de garant&iacute;as
                 </h1>
             </div>
         </div>
@@ -19,7 +19,7 @@
                             <div class="row">
                                 <div class="col-sm-4">
                                     <div class="form-group">
-                                        <label for="">Desde</label>
+                                        <label for="start">Desde</label>
                                         <datepicker
                                                 name = "start"
                                                 id = "start"
@@ -34,7 +34,7 @@
 
                                 <div class="col-sm-4">
                                     <div class="form-group">
-                                        <label for="">Hasta</label>
+                                        <label for="end">Hasta</label>
                                         <datepicker
                                                 name = "end"
                                                 id = "end"
@@ -49,17 +49,20 @@
 
                                 <div class="col-sm-4">
                                     <div class="form-group">
-                                        <label for="type">Tipo</label>
+                                        <label for="service">Servicio</label>
                                         <select
-                                                name="type"
-                                                id="type"
+                                                name="service"
+                                                id="service"
                                                 class="form-control"
-                                                v-model="data.type"
+                                                v-model="data.service"
                                                 >
                                             <option value="0">Todos</option>
-                                            <option value="1">Tarjeta de credito</option>
-                                            <option value="2">Efectivo</option>
-                                            <option value="3">Cheque</option>
+                                            <option
+                                                    v-for="product in products"
+                                                    :value="product.id"
+                                                    >
+                                                {{ product.name }}
+                                            </option>
                                         </select>
                                     </div>
                                 </div>
@@ -68,28 +71,21 @@
                             <div class="row">
                                 <div class="col-sm-4">
                                     <div class="form-group">
-                                        <label for="references">Referencia</label>
+                                        <label for="doctor">Doctor</label>
                                         <select
-                                                name="references"
-                                                id="references"
+                                                name="doctor"
+                                                id="doctor"
                                                 class="form-control"
-                                                v-model="data.reference"
+                                                v-model="data.doctor"
                                                 >
                                             <option value="0">Todos</option>
                                             <option
-                                                    v-for="reference in references"
-                                                    :value="reference.id"
+                                                    v-for="doctor in doctors"
+                                                    :value="doctor.id"
                                                     >
-                                                {{ reference.description }}
+                                                {{ doctor.name }}
                                             </option>
                                         </select>
-                                    </div>
-                                </div>
-
-                                <div class="col-sm-4">
-                                    <div class="form-group">
-                                        <label for="">Total</label>
-                                        <p>{{ getAllTotal() }} $</p>
                                     </div>
                                 </div>
                             </div>
@@ -111,43 +107,36 @@
                             </div>
 
                             <div class="row">
-                                <div class="col-xs-12" v-for="paymentsPerPatient in data.payments">
+                                <div class="col-xs-12">
 
-                                    <!-- Payments -->
+                                    <!-- Guarantees -->
                                     <table class="table table-responsive">
                                         <thead>
                                             <tr>
                                                 <th>Fecha</th>
                                                 <th>Paciente</th>
-                                                <th>Tipo</th>
                                                 <th>Servicio</th>
-                                                <th>Monto</th>
+                                                <th>Diente</th>
+                                                <th>Doctor</th>
+                                                <th>Asistente</th>
+                                                <th>Precio</th>
+                                                <th>Qty</th>
+                                                <th>Total</th>
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <tr v-for="payment in paymentsPerPatient">
-                                                <td>{{ dateFormat(payment.created_at) }}</td>
-                                                <td>{{ payment.patient_history ? payment.patient_history.patient.name : '' }}</td>
-                                                <td>
-                                                    <span v-if="payment.type === 1">Tarjeta de credito</span>
-                                                    <span v-if="payment.type === 2">Efectivo</span>
-                                                    <span v-if="payment.type === 3">Cheque</span>
-                                                </td>
-                                                <td>
-                                                    {{ !payment.patient_history ? '' : payment.patient_history.product.name }}
-                                                </td>
-                                                <td>{{ payment.amount }}</td>
+                                            <tr v-for="guarantee in data.guarantees">
+                                                <td>{{ dateFormat(guarantee.created_at) }}</td>
+                                                <td>{{ guarantee.patient.name }}</td>
+                                                <td>{{ guarantee.product.name }}</td>
+                                                <td>{{ guarantee.tooth }}</td>
+                                                <td>{{ guarantee.doctor.name }}</td>
+                                                <td>{{ guarantee.assistant.name }}</td>
+                                                <td>{{ guarantee.unit_price }}</td>
+                                                <td>{{ guarantee.qty }}</td>
+                                                <td>{{ guarantee.price }}</td>
                                             </tr>
                                         </tbody>
-                                        <tfoot>
-                                        <tr>
-                                            <th>Total</th>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td>{{ '$' + getTotal(paymentsPerPatient) }}</td>
-                                        </tr>
-                                        </tfoot>
                                     </table>
 
                                 </div>
@@ -170,7 +159,11 @@
             Datepicker
         },
         props: {
-            references: {
+            products: {
+                type: Array,
+                required: true
+            },
+            doctors: {
                 type: Array,
                 required: true
             }
@@ -183,9 +176,9 @@
               data: {
                   start: '',
                   end: '',
-                  type: 0,
-                  reference: 0,
-                  payments: []
+                  service: 0,
+                  doctor: 0,
+                  guarantees: []
               },
             }
         },
@@ -219,16 +212,17 @@
                 this.loading = true;
 
                 axios.get(
-                        '/admin/report/paymentsData?start=' + this.data.start +
+                        '/admin/report/guaranteesData' +
+                        '?start=' + this.data.start +
                         '&end=' + this.data.end +
-                        '&type=' + this.data.type +
-                        '&reference=' + this.data.reference
+                        '&service=' + this.data.service +
+                        '&doctor=' + this.data.doctor
                 )
                     .then((res) => {
                         this.loading = false;
 
                         if (res.data.success) {
-                            this.data.payments = res.data.payments;
+                            this.data.guarantees = res.data.guarantees;
                         }
                     })
                     .catch((err) => {
@@ -237,7 +231,7 @@
                         }
                         console.log(err);
                         this.loading = false;
-                        this.data.payments = [];
+                        this.data.guarantees = [];
                     })
             },
 
@@ -246,27 +240,7 @@
                 format = format[0].split('-');
 
                 return format[1] + '/' + format[2] + '/' + format[0];
-            },
-
-            getAllTotal: function () {
-                let total = 0;
-
-                Object.values(this.data.payments).forEach((paymentPerPatient) => {
-                    total += this.getTotal(paymentPerPatient);
-                });
-
-                return total;
-            },
-
-            getTotal: function (payments) {
-                let total = 0;
-
-                for (let i in payments) {
-                    total += parseInt(payments[i].amount);
-                }
-
-                return total;
-            },
+            }
         }
     }
 </script>

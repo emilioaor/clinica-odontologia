@@ -61,6 +61,7 @@ Route::group(['prefix' => 'user', 'middleware' => 'auth'], function() {
     Route::resource('expense', 'Secretary\ExpenseController');
 
     // Proveedores
+    Route::get('supplier/list', 'Secretary\SupplierController@supplierList');
     Route::resource('supplier', 'Secretary\SupplierController');
 
     // Preguntas

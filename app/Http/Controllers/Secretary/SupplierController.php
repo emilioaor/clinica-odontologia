@@ -127,4 +127,19 @@ class SupplierController extends Controller
             'redirect' => route('supplier.index')
         ]);
     }
+
+    /**
+     * Obtiene una lista de proveedores
+     *
+     * @return JsonResponse
+     */
+    public function supplierList()
+    {
+        $suppliers = Supplier::where('type', '<>', Supplier::TYPE_DOCTOR_COMMISSION)->get();
+
+        return new JsonResponse([
+            'success' => true,
+            'suppliers' => $suppliers
+        ]);
+    }
 }

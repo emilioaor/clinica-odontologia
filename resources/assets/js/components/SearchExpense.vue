@@ -109,6 +109,21 @@
                                             <i class="glyphicon glyphicon-search"></i>
                                             Buscar
                                         </button>
+
+                                        <button
+                                                type="button"
+                                                class="btn btn-success"
+                                                data-toggle="modal"
+                                                data-target="#registerExpenseModal"
+                                                >
+                                            Registrar gasto
+                                        </button>
+
+                                        <register-expense-modal
+                                               modal-id = "registerExpenseModal"
+                                               @register="search()"
+                                        ></register-expense-modal>
+
                                         <img src="/img/loading.gif" v-if="loading">
                                     </div>
                                 </div>
@@ -268,10 +283,12 @@
 
 <script>
     import Datepicker from 'vuejs-datepicker';
+    import RegisterExpenseModal from './RegisterExpenseModal.vue';
 
     export default {
         components: {
-            Datepicker
+            Datepicker,
+            RegisterExpenseModal
         },
         props: ['user'],
         data: function () {

@@ -69,6 +69,7 @@ return [
     'question.create' => 'Pregunta enviada',
     'question.answered' => 'Respuesta enviada',
     'question.hide' => 'Respuesta se ha ocultado',
+    'question.delete' => 'Pregunta eliminada',
 
     'commission.update' => 'Comisiones actualizadas',
 

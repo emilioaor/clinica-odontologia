@@ -152,7 +152,6 @@
                                                 <td></td>
                                                 <td></td>
                                                 <td></td>
-                                                <td></td>
                                                 <td>{{ '$' + getTotalServices(servicesPerPatient) }}</td>
                                             </tr>
                                         </tfoot>

@@ -98,6 +98,13 @@
                                         {{ data.patientsWithServices }}
                                     </p>
                                 </div>
+
+                                <div class="col-xs-12">
+                                    <p>
+                                        <strong>Porcentaje de conversi&oacute;n:</strong>
+                                        {{ conversion }}%
+                                    </p>
+                                </div>
                             </div>
                         </section>
 
@@ -120,6 +127,22 @@
             references: {
                 type: Array,
                 required: true
+            }
+        },
+        computed: {
+            conversion: function () {
+
+                if (this.data.patientsWithServices === null || this.data.patients === null) {
+                    return null;
+                }
+
+                if (this.data.patients === 0) {
+                    return 0;
+                }
+
+                const conversion = (this.data.patientsWithServices * 100) / this.data.patients;
+
+                return conversion.toFixed(2);
             }
         },
         data: function () {

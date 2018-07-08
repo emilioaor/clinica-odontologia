@@ -191,7 +191,15 @@ class QuestionController extends Controller
      */
     public function destroy($id)
     {
-        abort(404);
+        $question = Question::where('public_id', $id)->firstOrFail();
+        $question->delete();
+
+        $this->sessionMessage('message.question.delete');
+
+        return new JsonResponse([
+            'success' => true,
+            'redirect' => route('question.index')
+        ]);
     }
 
     /**

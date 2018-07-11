@@ -54,6 +54,7 @@ Vue.component('report-doctor-commissions', require('./components/ReportDoctorCom
 Vue.component('report-expenses', require('./components/ReportExpenses.vue'));
 Vue.component('report-payments', require('./components/ReportPayments.vue'));
 Vue.component('report-guarantees', require('./components/ReportGuarantees.vue'));
+Vue.component('report-budgets', require('./components/ReportBudgets.vue'));
 Vue.component('report-patients-with-services', require('./components/ReportPatientsAndPatientsWithService.vue'));
 Vue.component('edit-email', require('./components/EditEmail.vue'));
 Vue.component('register-appointment', require('./components/RegisterAppointment.vue'));

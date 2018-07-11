@@ -339,7 +339,7 @@
                     @if(Auth::user()->hasPermission('report.servicesAndPayments') || Auth::user()->hasPermission('report.doctorCommissions') ||
                         Auth::user()->hasPermission('report.expenses') || Auth::user()->hasPermission('report.payments') ||
                         Auth::user()->hasPermission('report.servicesAndPaymentsPerPatient') || Auth::user()->hasPermission('report.guarantees') ||
-                        Auth::user()->hasPermission('report.patientsAndPatientsWithServices'))
+                        Auth::user()->hasPermission('report.patientsAndPatientsWithServices') || Auth::user()->hasPermission('report.budgets'))
 
                         <li class="dropdown">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
@@ -400,6 +400,14 @@
                                         <a href="{{ route('report.patientsAndPatientsWithServices') }}">
                                             <i class="glyphicon glyphicon-file"></i>
                                             Pacientes / Pacientes con servicios
+                                        </a>
+                                    </li>
+                                @endif
+                                @if(Auth::user()->hasPermission('report.budgets'))
+                                    <li>
+                                        <a href="{{ route('report.budgets') }}">
+                                            <i class="glyphicon glyphicon-file"></i>
+                                            Cotizaciones
                                         </a>
                                     </li>
                                 @endif

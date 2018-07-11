@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Budget;
 use App\Expense;
 use App\Patient;
 use App\PatientReference;
@@ -491,6 +492,59 @@ class ReportController extends Controller
             'success' => true,
             'patients' => $patientsRegistered,
             'patientsWithServices' => $patientsWithServices
+        ]);
+    }
+
+    /**
+     * Reporte de cotizaciones
+     *
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function budgets()
+    {
+        return view('admin.report.budgets');
+    }
+
+    /**
+     * Reporte de cotizaciones
+     *
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function budgetsData(Request $request)
+    {
+        $start = new \DateTime("{$request->start} 00:00:00");
+        $end = new \DateTime("{$request->end} 23:59:59");
+
+        $budgets = Budget::query()
+            ->where('creation_date_Value', '>=', $start)
+            ->where('creation_date_value', '<=', $end)
+            ->orderBy('creation_date_value')
+            ->with([
+                'patient',
+                'user',
+                'budgetDetails'
+            ])
+            ->get();
+
+        $budgetsResponse = [];
+
+        foreach ($budgets as $budget) {
+
+            $amount = 0;
+
+            foreach ($budget->budgetDetails as $budgetDetail) {
+                $amount += ($budgetDetail->quantity * $budgetDetail->price);
+            }
+
+            $budget->amount = $amount;
+
+            $budgetsResponse[$budget->patient->id][] = $budget;
+        }
+
+        return new JsonResponse([
+            'success' => true,
+            'budgets' => $budgetsResponse
         ]);
     }
 }

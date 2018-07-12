@@ -6,12 +6,17 @@ use Illuminate\Database\Eloquent\Model;
 
 class QuestionAttach extends Model
 {
+    /** Tipos de adjuntos */
+    const TYPE_QUESTION = 1;
+    const TYPE_ANSWER = 2;
+
     protected $table = 'question_attaches';
 
     protected $fillable = [
         'question_id',
         'url',
-        'filename'
+        'filename',
+        'type'
     ];
 
     /**

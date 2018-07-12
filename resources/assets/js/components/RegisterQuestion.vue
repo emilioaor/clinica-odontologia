@@ -183,19 +183,19 @@
                 this.loading = true;
 
                 axios.post('/user/question', this.form)
-                        .then((res) => {
-                            if (res.data.success) {
-                                location.href = res.data.redirect;
-                            }
-                        })
-                        .catch((err) => {
-    if (err.response.status === 403 || err.response.status === 405) {
-        location.href = '/';
-    }
-                            this.loading = false;
+                    .then((res) => {
+                        if (res.data.success) {
+                            location.href = res.data.redirect;
+                        }
+                    })
+                    .catch((err) => {
+                        if (err.response.status === 403 || err.response.status === 405) {
+                            location.href = '/';
+                        }
+                        this.loading = false;
 
-                            console.log('Error', err);
-                        })
+                        console.log('Error', err);
+                    })
                 ;
             },
 

@@ -73,32 +73,7 @@ class QuestionController extends Controller
     {
         DB::beginTransaction();
 
-        $attaches = [];
-
-        foreach ($request->attaches as $attach) {
-
-            $base64 = explode(',', $attach['file']);
-
-            $upload = base64_decode($base64[1]);
-            $explode = explode(';', $attach['file']);
-            $explode = explode('/', $explode[0]);
-            $extension = $explode[1];
-
-            $filename = uniqid() . '.' . $extension;
-            $url = 'uploads/question/' . Auth::user()->id . '/' . $filename;
-            $path = public_path('uploads/question') . '/' . Auth::user()->id;
-
-            if (! is_dir($path)) {
-                mkdir($path);
-            }
-
-            $path .= '/' . $filename;
-
-            file_put_contents($path, $upload);
-
-            $attach['url'] = $url;
-            $attaches[] = $attach;
-        }
+        $attaches = $this->uploadAttach($request->attaches);
 
         foreach ($request->doctors as $doctor) {
 
@@ -114,6 +89,7 @@ class QuestionController extends Controller
                 $questionAttach->url = $attach['url'];
                 $questionAttach->filename = $attach['filename'];
                 $questionAttach->question_id = $question->id;
+                $questionAttach->type = QuestionAttach::TYPE_QUESTION;
                 $questionAttach->save();
             }
         }
@@ -171,9 +147,33 @@ class QuestionController extends Controller
      */
     public function update(Request $request, $id)
     {
+        DB::beginTransaction();
+
         $question = Question::where('public_id', $id)->firstOrFail();
         $question->answer = $request->answer;
         $question->save();
+
+        $answerAttaches = [];
+
+        foreach ($request->question_attaches as $attach) {
+            if ($attach['type'] === QuestionAttach::TYPE_ANSWER) {
+                $answerAttaches[] = $attach;
+            }
+        }
+
+        $attaches = $this->uploadAttach($answerAttaches);
+
+        foreach ($attaches as $attach) {
+
+            $questionAttach = new QuestionAttach();
+            $questionAttach->url = $attach['url'];
+            $questionAttach->filename = $attach['filename'];
+            $questionAttach->question_id = $question->id;
+            $questionAttach->type = QuestionAttach::TYPE_ANSWER;
+            $questionAttach->save();
+        }
+
+        DB::commit();
 
         $this->sessionMessage('message.question.answered');
 
@@ -221,5 +221,43 @@ class QuestionController extends Controller
             'success' => true,
             'redirect' => route('question.edit', ['id' => $id])
         ]);
+    }
+
+    /**
+     * Sube los documentos adjuntos
+     *
+     * @param array $attaches
+     * @return array
+     */
+    private function uploadAttach(array $attaches)
+    {
+        $responseAttaches = [];
+
+        foreach ($attaches as $attach) {
+
+            $base64 = explode(',', $attach['file']);
+
+            $upload = base64_decode($base64[1]);
+            $explode = explode(';', $attach['file']);
+            $explode = explode('/', $explode[0]);
+            $extension = $explode[1];
+
+            $filename = uniqid() . '.' . $extension;
+            $url = 'uploads/question/' . Auth::user()->id . '/' . $filename;
+            $path = public_path('uploads/question') . '/' . Auth::user()->id;
+
+            if (! is_dir($path)) {
+                mkdir($path);
+            }
+
+            $path .= '/' . $filename;
+
+            file_put_contents($path, $upload);
+
+            $attach['url'] = $url;
+            $responseAttaches[] = $attach;
+        }
+
+        return $responseAttaches;
     }
 }

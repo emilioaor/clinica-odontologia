@@ -52,12 +52,12 @@
                                 </div>
                             </div>
 
-                            <div class="row" v-if="form.question_attaches.length">
+                            <div class="row" v-if="hasQuestionAttach()">
                                 <div class="col-xs-12">
-                                    <label>Documentos adjuntos</label>
+                                    <label>Documentos adjuntos en la pregunta</label>
                                 </div>
 
-                                <div class="col-sm-3" v-for="(attach, index) in form.question_attaches">
+                                <div class="col-sm-3" v-for="(attach, index) in form.question_attaches" v-if="attach.type === 1">
                                     <div class="form-group">
                                         <a :href="'/' + attach.url" download="">
                                             {{ attach.filename.length <= 15 ? attach.filename : attach.filename.substring(attach.filename.length - 15) }}
@@ -93,6 +93,43 @@
                                         <p class="error" v-if="errors.firstByRule('answer', 'required')">
                                             Este campo es requerido
                                         </p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Adjuntar en respuesta -->
+                            <div class="row" v-if="hasAnswerAttach() && ! form.answered">
+                                <div class="col-sm-3" v-for="(attach, index) in form.question_attaches" v-if="attach.type === 2">
+                                    <div class="form-group">
+                                        <a @click="removeAttach(index)" class="text-danger">X</a>
+                                        {{ attach.filename.length <= 15 ? attach.filename : attach.filename.substring(attach.filename.length - 15) }}
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Show de adjuntos en respuesta -->
+                            <div class="row" v-if="hasQuestionAttach() && form.answered">
+                                <div class="col-xs-12">
+                                    <label>Documentos adjuntos en la respuesta</label>
+                                </div>
+
+                                <div class="col-sm-3" v-for="(attach, index) in form.question_attaches" v-if="attach.type === 2">
+                                    <div class="form-group">
+                                        <a :href="'/' + attach.url" download="">
+                                            {{ attach.filename.length <= 15 ? attach.filename : attach.filename.substring(attach.filename.length - 15) }}
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row" v-if="user.id === form.to.id && ! form.answered">
+                                <div class="col-xs-12">
+                                    <div class="form-group">
+                                        <input type="file" id="attach" class="hide" @change="setAttach()">
+                                        <a onclick="$('#attach').click()">
+                                            <i class="glyphicon glyphicon-paperclip"></i>
+                                            Adjuntar
+                                        </a>
                                     </div>
                                 </div>
                             </div>
@@ -200,19 +237,19 @@
                 this.loading = true;
 
                 axios.put('/user/question/' + this.form.public_id, this.form)
-                        .then((res) => {
-                            if (res.data.success) {
-                                location.href = res.data.redirect;
-                            }
-                        })
-                        .catch((err) => {
-                            if (err.response.status === 403 || err.response.status === 405) {
-                                location.href = '/';
-                            }
-                            this.loading = false;
+                    .then((res) => {
+                        if (res.data.success) {
+                            location.href = res.data.redirect;
+                        }
+                    })
+                    .catch((err) => {
+                        if (err.response.status === 403 || err.response.status === 405) {
+                            location.href = '/';
+                        }
+                        this.loading = false;
 
-                            console.log('Error', err);
-                        })
+                        console.log('Error', err);
+                    })
                 ;
             },
 
@@ -220,19 +257,19 @@
                 this.loading = true;
 
                 axios.put('/user/question/' + this.form.public_id + '/hide')
-                        .then((res) => {
-                            if (res.data.success) {
-                                location.href = res.data.redirect;
-                            }
-                        })
-                        .catch((err) => {
-                            if (err.response.status === 403 || err.response.status === 405) {
-                                location.href = '/';
-                            }
-                            this.loading = false;
+                    .then((res) => {
+                        if (res.data.success) {
+                            location.href = res.data.redirect;
+                        }
+                    })
+                    .catch((err) => {
+                        if (err.response.status === 403 || err.response.status === 405) {
+                            location.href = '/';
+                        }
+                        this.loading = false;
 
-                            console.log('Error', err);
-                        })
+                        console.log('Error', err);
+                    })
                 ;
             },
 
@@ -253,6 +290,51 @@
                         this.loading = false;
                         console.log(err);
                     })
+            },
+
+            setAttach: function() {
+                const file = $('#attach')[0].files[0];
+
+                const reader = new FileReader();
+
+                reader.addEventListener('load', () => {
+
+                    this.form.question_attaches.push({
+                        file: reader.result,
+                        filename: file.name,
+                        type: 2
+                    });
+                });
+
+                reader.readAsDataURL(file);
+            },
+
+            removeAttach: function (index) {
+                this.form.question_attaches.splice(index, 1);
+            },
+
+            hasQuestionAttach: function () {
+                let hasAttach = false;
+
+                this.form.question_attaches.forEach(function (attach) {
+                    if (attach.type === 1) {
+                        hasAttach = true;
+                    }
+                });
+
+                return hasAttach;
+            },
+
+            hasAnswerAttach: function () {
+                let hasAttach = false;
+
+                this.form.question_attaches.forEach(function (attach) {
+                    if (attach.type === 2) {
+                        hasAttach = true;
+                    }
+                });
+
+                return hasAttach;
             }
         }
     }

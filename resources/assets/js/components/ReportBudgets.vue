@@ -64,12 +64,50 @@
                                 </div>
                             </div>
 
-                            <div class="row">
+                            <div class="row" v-if="countBudgets(data.budgetsPerDoctor) > 0">
+
+                                <div class="col-xs-12">
+                                    <h1 class="bg-success text-success">Resumen por doctor</h1>
+                                </div>
+
+                                <div class="col-xs-12">
+
+                                    <table class="table table-responsive">
+                                        <thead>
+                                            <tr>
+                                                <th>Doctor</th>
+                                                <th class="text-center">Cotizaciones</th>
+                                                <th>Monto</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <!-- Doctors -->
+                                            <tr v-for="budgetsPerDoctor in data.budgetsPerDoctor">
+                                                <td>{{ budgetsPerDoctor[0].user.name }}</td>
+                                                <td class="text-center">{{ budgetsPerDoctor.length }}</td>
+                                                <td>{{ getTotal(budgetsPerDoctor) }}</td>
+                                            </tr>
+                                        </tbody>
+                                        <tfoot>
+                                            <tr>
+                                                <th>Total</th>
+                                                <th class="text-center">{{ countBudgets(data.budgetsPerDoctor) }}</th>
+                                                <th>{{ getAllTotal(data.budgetsPerDoctor) }}</th>
+                                            </tr>
+                                        </tfoot>
+                                    </table>
+                                </div>
+                            </div>
+
+                            <div class="row"  v-if="countBudgets(data.budgetsPerPatient) > 0">
+
+                                <div class="col-xs-12">
+                                    <h1 class="bg-success text-success">Cotizaciones por paciente</h1>
+                                </div>
 
                                 <!-- Patients -->
                                 <div class="col-xs-12" v-for="budgetsPerPatient in data.budgetsPerPatient">
 
-                                    <br>
                                     <div class="alert alert-info">
                                         <p>
                                             <strong>Paciente:</strong>
@@ -139,7 +177,8 @@
               data: {
                   start: '',
                   end: '',
-                  budgetsPerPatient: []
+                  budgetsPerPatient: [],
+                  budgetsPerDoctor: []
               },
             }
         },
@@ -182,6 +221,7 @@
 
                         if (res.data.success) {
                             this.data.budgetsPerPatient = res.data.budgets;
+                            this.data.budgetsPerDoctor = res.data.budgetsPerDoctor;
                         }
                     })
                     .catch((err) => {
@@ -207,6 +247,30 @@
                 budgets.forEach(function (budget) {
                     total += budget.amount;
                 });
+
+                return total;
+            },
+
+            countBudgets: function (budgets) {
+                let count = 0;
+
+                for (let i in budgets) {
+
+                    count += budgets[i].length;
+                }
+
+                return count;
+            },
+
+            getAllTotal: function (budgets) {
+                let total = 0;
+
+                for (let i in budgets) {
+
+                    budgets[i].forEach(function (budget) {
+                        total += budget.amount;
+                    });
+                }
 
                 return total;
             }

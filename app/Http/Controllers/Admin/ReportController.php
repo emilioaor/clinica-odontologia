@@ -528,6 +528,7 @@ class ReportController extends Controller
             ->get();
 
         $budgetsResponse = [];
+        $budgetsPerDoctor = [];
 
         foreach ($budgets as $budget) {
 
@@ -540,11 +541,16 @@ class ReportController extends Controller
             $budget->amount = $amount;
 
             $budgetsResponse[$budget->patient->id][] = $budget;
+
+            if ($budget->user) {
+                $budgetsPerDoctor[$budget->user->id][] = $budget;
+            }
         }
 
         return new JsonResponse([
             'success' => true,
-            'budgets' => $budgetsResponse
+            'budgets' => $budgetsResponse,
+            'budgetsPerDoctor' => $budgetsPerDoctor
         ]);
     }
 }

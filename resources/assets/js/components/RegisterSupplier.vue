@@ -177,9 +177,9 @@
                         }
                     })
                     .catch((err) => {
-    if (err.response.status === 403 || err.response.status === 405) {
-        location.href = '/';
-    }
+                        if (err.response.status === 403 || err.response.status === 405) {
+                            location.href = '/';
+                        }
 
                         this.loading = false;
                     })

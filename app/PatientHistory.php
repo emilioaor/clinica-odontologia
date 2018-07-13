@@ -86,6 +86,28 @@ class PatientHistory extends Model
     }
 
     /**
+     * Proveedor asociado, en este momento el proveedor representa el
+     * laboratorio a que se envio examenenes para este servicio
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function supplier()
+    {
+        return $this->belongsTo(Supplier::class, 'supplier_id')->withTrashed();
+    }
+
+    /**
+     * Responsable de enviar los examenes de laboratorio. En este
+     * momento es un usuario asistente
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function responsible()
+    {
+        return $this->belongsTo(User::class, 'responsible_id')->withTrashed();
+    }
+
+    /**
      * Genera el siguiente public_id
      */
     public function nextPublicId()

@@ -86,6 +86,8 @@
                         <div class="row">
 
                             <div class="col-xs-12">
+                                <h4 class="bg-info text-info">Servicios</h4>
+
                                 <table class="table table-responsive">
                                     <thead>
                                         <tr>
@@ -209,9 +211,145 @@
 
                         </div>
 
+                        <div class="row" v-if="anyRequiredLab()">
+
+                            <div class="col-xs-12">
+                                <h4 class="bg-info text-info">Enviar al laboratorio</h4>
+
+                                <table class="table table-responsive">
+                                    <thead>
+                                    <tr>
+                                        <th width="20%">Servicio</th>
+                                        <th width="20%">Laboratorio</th>
+                                        <th width="20%">Responsable</th>
+                                        <th width="20%">Fecha de entrega</th>
+                                        <th width="20%" colspan="2">Hora de entrega</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody v-for="(service, id) in services">
+                                        <tr v-if="requiredLab(service)">
+                                            <td>
+                                                <select
+                                                        class="form-control"
+                                                        v-model="service.product_id"
+                                                        disabled
+                                                        >
+                                                    <option
+                                                            v-for="product in productList"
+                                                            :value="product.id"
+                                                            >
+                                                        {{ product.name }}
+                                                    </option>
+                                                </select>
+                                            </td>
+                                            <td>
+                                                <select
+                                                        :name="'supplier' + id"
+                                                        :id="'supplier' + id"
+                                                        class="form-control"
+                                                        :class="{'input-error': errors.has('supplier' + id)}"
+                                                        v-model="service.supplier_id"
+                                                        v-validate
+                                                        data-vv-rules="required"
+                                                        >
+                                                    <option
+                                                            v-for="supplier in suppliers"
+                                                            :value="supplier.id"
+                                                            >
+                                                        {{ supplier.name }}
+                                                    </option>
+                                                </select>
+                                                <p class="error" v-if="errors.firstByRule('supplier' + id, 'required')">
+                                                    Campo requerido
+                                                </p>
+                                            </td>
+                                            <td>
+                                                <select
+                                                        :name="'responsible' + id"
+                                                        :id="'responsible' + id"
+                                                        class="form-control"
+                                                        :class="{'input-error': errors.has('responsible' + id)}"
+                                                        v-model="service.responsible_id"
+                                                        v-validate
+                                                        data-vv-rules="required"
+                                                        >
+                                                    <option
+                                                            v-for="assistant in assistantUsers"
+                                                            :value="assistant.id"
+                                                            >
+                                                        {{ assistant.name }}
+                                                    </option>
+                                                </select>
+                                                <p class="error" v-if="errors.firstByRule('responsible' + id, 'required')">
+                                                    Campo requerido
+                                                </p>
+                                            </td>
+                                            <td>
+                                                <datepicker
+                                                        :name = "'delivery_date' + id"
+                                                        :id = "'delivery_date' + id"
+                                                        language="es"
+                                                        input-class = "form-control"
+                                                        format = "MM/dd/yyyy"
+                                                        v-model="service.datePicker"
+                                                        @input="service.delivery_date = updateDate($event)"
+                                                        ></datepicker>
+                                            </td>
+                                            <td>
+                                                <select
+                                                        :name="'hour' + id"
+                                                        :id="'hour' + id"
+                                                        class="form-control"
+                                                        v-model="service.hour"
+                                                        v-validate
+                                                        data-vv-rules="required"
+                                                        :class="{'input-error': errors.has('hour' + id)}"
+                                                        >
+                                                    <option
+                                                            v-for="i in 24"
+                                                            :value="(i - 1) >= 10 ? (i - 1) : '0' + (i - 1)"
+                                                            >
+                                                        {{ (i - 1) >= 10 ? (i - 1) : '0' + (i - 1) }}
+                                                    </option>
+                                                </select>
+
+                                                <p class="error" v-if="errors.firstByRule('hour' + id, 'required')">
+                                                    Requerido
+                                                </p>
+                                            </td>
+                                            <td>
+                                                <select
+                                                        :name="'minute' + id"
+                                                        :id="'minute' + id"
+                                                        class="form-control"
+                                                        v-model="service.minute"
+                                                        v-validate
+                                                        data-vv-rules="required"
+                                                        :class="{'input-error': errors.has('minute' + id)}"
+                                                        >
+                                                    <option
+                                                            v-for="i in 60"
+                                                            :value="(i - 1) >= 10 ? (i - 1) : '0' + (i - 1)"
+                                                            >
+                                                        {{ (i - 1) >= 10 ? (i - 1) : '0' + (i - 1) }}
+                                                    </option>
+                                                </select>
+
+                                                <p class="error" v-if="errors.firstByRule('minute' + id, 'required')">
+                                                    Requerido
+                                                </p>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+
+                        </div>
+
                         <div class="row">
 
                             <div class="col-xs-12">
+                                <h4 class="bg-info text-info">Notas</h4>
 
                                 <table class="table table-responsive">
                                     <thead>
@@ -392,7 +530,14 @@
     import Datepicker from 'vuejs-datepicker';
 
     export default {
-        props: ['patient', 'products', 'historyDate', 'currentUser', 'assistants'],
+        props: [
+            'patient',
+            'products',
+            'historyDate',
+            'currentUser',
+            'assistants',
+            'suppliers'
+        ],
         components: {
             Datepicker
         },
@@ -434,13 +579,21 @@
 
         methods: {
             addService: function () {
+                const date = new Date();
+
                 this.services.push({
                     tooth: null,
                     product_id: null,
                     doctor_id: this.user.id,
                     assistant_id: null,
                     unit_price: null,
-                    qty: null
+                    qty: null,
+                    responsible_id: null,
+                    supplier_id: null,
+                    datePicker: date,
+                    delivery_date: this.updateDate(date),
+                    hour: null,
+                    minute: null
                 });
             },
 
@@ -481,9 +634,9 @@
                         }
                     })
                     .catch((err) => {
-    if (err.response.status === 403 || err.response.status === 405) {
-        location.href = '/';
-    }
+                        if (err.response.status === 403 || err.response.status === 405) {
+                            location.href = '/';
+                        }
                         console.log(err);
                         this.loading = false;
                     })
@@ -533,9 +686,9 @@
                     this.modal.data = res.data.patients;
                 })
                 .catch((err) => {
-    if (err.response.status === 403 || err.response.status === 405) {
-        location.href = '/';
-    }
+                    if (err.response.status === 403 || err.response.status === 405) {
+                        location.href = '/';
+                    }
                     this.modal.loading = false;
                 })
                 ;
@@ -563,6 +716,39 @@
 
             removeImage: function (index) {
                 this.images.splice(index, 1);
+            },
+
+            requiredLab: function (service) {
+
+                let requiredLab = false;
+
+                this.productList.forEach(function (product) {
+                    if (product.id === service.product_id && product.required_lab) {
+                        requiredLab = true;
+                    }
+                });
+
+                return requiredLab;
+            },
+
+            anyRequiredLab: function () {
+                let anyRequiredLab = false;
+
+                this.services.forEach((service) => {
+                    if (this.requiredLab(service)) {
+                        anyRequiredLab = true;
+                    }
+                });
+
+                return anyRequiredLab;
+            },
+
+            updateDate: function (date) {
+                let day = (date.getDate() < 10) ? '0' + date.getDate() : date.getDate();
+                let month = ((date.getMonth() + 1) < 10) ? '0' + (date.getMonth() + 1) : (date.getMonth() + 1);
+                let year = date.getFullYear();
+
+                return year + '-' + month + '-' + day;
             }
         }
     }

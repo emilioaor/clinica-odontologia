@@ -10,6 +10,7 @@ use App\Patient;
 use App\PatientHistory;
 use App\Product;
 use App\RayX;
+use App\Supplier;
 use App\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -101,8 +102,9 @@ class PatientHistoryController extends Controller
         $patient->notes = [];
         $products = Product::orderBy('name')->get();
         $assistants = User::where('level', User::LEVEL_ASSISTANT)->orderBy('name')->get();
+        $suppliers = Supplier::orderBy('name')->where('type', '<>', Supplier::TYPE_DOCTOR_COMMISSION)->get();
 
-        return view('user.patientHistory.edit', compact('patient', 'products', 'date', 'assistants'));
+        return view('user.patientHistory.edit', compact('patient', 'products', 'date', 'assistants', 'suppliers'));
     }
 
     /**
@@ -124,12 +126,21 @@ class PatientHistoryController extends Controller
         $end = clone $date;
         $end->setTime(23, 59, 59);
 
-        foreach ($request->services as $service) {
-            $service = new PatientHistory($service);
+        foreach ($request->services as $serviceArray) {
+            $service = new PatientHistory($serviceArray);
             $service->nextPublicId();
             $service->patient_id = $patient->id;
             $service->created_at = $date;
             $service->price = $service->unit_price * $service->qty;
+
+            if ($service->product->required_lab) {
+                // Si el servicio requiere laboratiro, guardo los datos de envio
+                $service->supplier_id = $serviceArray['supplier_id'];
+                $service->responsible_id = $serviceArray['responsible_id'];
+                $service->send_date = new \DateTime();
+                $service->delivery_date = new \DateTime("{$serviceArray['delivery_date']} {$serviceArray['hour']}:{$serviceArray['minute']}");
+            }
+
             $service->save();
 
             if ($service->product->send_email) {

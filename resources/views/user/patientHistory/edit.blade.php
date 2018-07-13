@@ -7,5 +7,6 @@
         history-date = "{{ $date->format('Y-m-d') }}"
         current-user = "{{ Auth::user() }}"
         assistants = "{{ json_encode($assistants) }}"
+        :suppliers = "{{ json_encode($suppliers) }}"
     ></edit-patient-history>
 @endsection

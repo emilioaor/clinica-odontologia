@@ -110,6 +110,17 @@ class User extends Authenticatable
     }
 
     /**
+     * Todos los servicios que indican a este usuario como responsable
+     * de los examenes de laboratorio
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function patientHistoryResponsible()
+    {
+        return $this->hasMany(PatientHistory::class, 'responsible_id');
+    }
+
+    /**
      * Todas las solicitudes de insumos generadas por el usuario
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany

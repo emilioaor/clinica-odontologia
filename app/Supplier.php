@@ -48,4 +48,15 @@ class Supplier extends Model
     {
         return $this->hasMany(Expense::class, 'supplier_id');
     }
+
+    /**
+     * Historial de paciente que indica a este proveedor como
+     * laboratorio utilizado
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function patientHistory()
+    {
+        return $this->hasMany(PatientHistory::class, 'supplier_id');
+    }
 }

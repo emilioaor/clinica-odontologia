@@ -553,4 +553,80 @@ class ReportController extends Controller
             'budgetsPerDoctor' => $budgetsPerDoctor
         ]);
     }
+
+    /**
+     * Reporte de servicios pagos y gastos
+     *
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function servicesPaymentsAndExpenses()
+    {
+        return view('admin.report.servicesPaymentsAndExpenses');
+    }
+
+    /**
+     * Reporte de servicios pagos y gastos
+     *
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function servicesPaymentsAndExpensesData(Request $request)
+    {
+        $start = new \DateTime("{$request->start} 00:00:00");
+        $end = new \DateTime("{$request->end} 23:59:59");
+
+        $response = [];
+
+        $patientHistory = PatientHistory::query()
+            ->where('created_at', '>=', $start)
+            ->where('created_at', '<=', $end)
+            ->with([
+                'patient',
+                'payments',
+                'expenses',
+                'product'
+            ]);
+
+        if ($request->patient > 0) {
+            $patientHistory->where('patient_id', $request->patient);
+        }
+
+        $patientHistory = $patientHistory->get();
+
+        foreach ($patientHistory as $history) {
+            // Agrego los servicios a la respuesta
+            $response[$history->patient->id]['patient'] = $history->patient;
+            $response[$history->patient->id]['data'][] = [
+                'date' => $history->created_at->format('Y-m-d'),
+                'type' => 'Servicio',
+                'amount' => $history->price,
+                'service' => $history->product->name
+            ];
+
+            foreach ($history->payments as $payment) {
+                // Agrego los pagos a la respuesta
+                $response[$history->patient->id]['data'][] = [
+                    'date' => $payment->date->format('Y-m-d'),
+                    'type' => 'Pago',
+                    'amount' => $payment->amount,
+                    'service' => $history->product->name
+                ];
+            }
+
+            foreach ($history->expenses as $expense) {
+                // Agrego los gastos a la respuesta
+                $response[$history->patient->id]['data'][] = [
+                    'date' => $expense->date->format('Y-m-d'),
+                    'type' => 'Gasto',
+                    'amount' => $expense->amount,
+                    'service' => $history->product->name
+                ];
+            }
+        }
+
+        return new JsonResponse([
+            'success' => true,
+            'data' => $response
+        ]);
+    }
 }

@@ -19,6 +19,8 @@ class Expense extends Model
         'patient_history_id'
     ];
 
+    protected $dates = ['date'];
+
     /**
      * Proveedor al que se le asocia el gasto
      *

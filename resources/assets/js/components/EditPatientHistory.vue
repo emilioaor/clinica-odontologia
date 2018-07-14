@@ -250,7 +250,7 @@
                                                         :class="{'input-error': errors.has('supplier' + id)}"
                                                         v-model="service.supplier_id"
                                                         v-validate
-                                                        data-vv-rules="required"
+                                                        :data-vv-rules="authUser.level !== 1 ? 'required' : ''"
                                                         >
                                                     <option
                                                             v-for="supplier in suppliers"
@@ -271,7 +271,7 @@
                                                         :class="{'input-error': errors.has('responsible' + id)}"
                                                         v-model="service.responsible_id"
                                                         v-validate
-                                                        data-vv-rules="required"
+                                                        :data-vv-rules="authUser.level !== 1 ? 'required' : ''"
                                                         >
                                                     <option
                                                             v-for="assistant in assistantUsers"
@@ -302,7 +302,7 @@
                                                         class="form-control"
                                                         v-model="service.hour"
                                                         v-validate
-                                                        data-vv-rules="required"
+                                                        :data-vv-rules="authUser.level !== 1 ? 'required' : ''"
                                                         :class="{'input-error': errors.has('hour' + id)}"
                                                         >
                                                     <option
@@ -324,7 +324,7 @@
                                                         class="form-control"
                                                         v-model="service.minute"
                                                         v-validate
-                                                        data-vv-rules="required"
+                                                        :data-vv-rules="authUser.level !== 1 ? 'required' : ''"
                                                         :class="{'input-error': errors.has('minute' + id)}"
                                                         >
                                                     <option
@@ -536,7 +536,8 @@
             'historyDate',
             'currentUser',
             'assistants',
-            'suppliers'
+            'suppliers',
+            'authUser'
         ],
         components: {
             Datepicker

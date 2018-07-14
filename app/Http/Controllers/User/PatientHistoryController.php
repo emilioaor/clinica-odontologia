@@ -135,10 +135,13 @@ class PatientHistoryController extends Controller
 
             if ($service->product->required_lab) {
                 // Si el servicio requiere laboratiro, guardo los datos de envio
-                $service->supplier_id = $serviceArray['supplier_id'];
-                $service->responsible_id = $serviceArray['responsible_id'];
+                $service->supplier_id = ! empty($serviceArray['supplier_id']) ? $serviceArray['supplier_id'] : null;
+                $service->responsible_id = ! empty($serviceArray['responsible_id']) ? $serviceArray['responsible_id'] : null;
                 $service->send_date = new \DateTime();
-                $service->delivery_date = new \DateTime("{$serviceArray['delivery_date']} {$serviceArray['hour']}:{$serviceArray['minute']}");
+
+                if (! empty($serviceArray['hour']) && ! empty($serviceArray['minute'])) {
+                    $service->delivery_date = new \DateTime("{$serviceArray['delivery_date']} {$serviceArray['hour']}:{$serviceArray['minute']}");
+                }
             }
 
             $service->save();

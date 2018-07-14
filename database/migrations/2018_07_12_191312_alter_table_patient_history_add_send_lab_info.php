@@ -15,9 +15,9 @@ class AlterTablePatientHistoryAddSendLabInfo extends Migration
     {
         Schema::table('patient_history', function (Blueprint $table) {
             $table->addColumn('integer', 'supplier_id')->unsigned()->nullable();
-            $table->foreign('supplier_id')->references('id')->on('suppliers');
+            //$table->foreign('supplier_id')->references('id')->on('suppliers')->change();
             $table->addColumn('integer', 'responsible_id')->unsigned()->nullable();
-            $table->foreign('responsible_id')->references('id')->on('users');
+            //$table->foreign('responsible_id')->references('id')->on('users')->change();
             $table->date('send_date')->nullable();
             $table->dateTime('delivery_date')->nullable();
         });
@@ -31,8 +31,8 @@ class AlterTablePatientHistoryAddSendLabInfo extends Migration
     public function down()
     {
         Schema::table('patient_history', function (Blueprint $table) {
-            $table->dropForeign('patient_history_supplier_id_foreign');
-            $table->dropForeign('patient_history_responsible_id_foreign');
+            //$table->dropForeign('patient_history_supplier_id_foreign');
+            //$table->dropForeign('patient_history_responsible_id_foreign');
             $table->dropColumn('supplier_id');
             $table->dropColumn('responsible_id');
             $table->dropColumn('send_date');

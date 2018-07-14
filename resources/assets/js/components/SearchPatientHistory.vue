@@ -109,6 +109,20 @@
                                             <i class="glyphicon glyphicon-search"></i>
                                             Buscar
                                         </button>
+
+                                        <button
+                                                class="btn btn-success"
+                                                data-toggle="modal"
+                                                data-target="#registerServiceModal"
+                                                >
+                                            Registrar servicio
+                                        </button>
+                                        <register-service-modal
+                                            modal-id = "registerServiceModal"
+                                            :patient-id = "patient.id"
+                                            @register-patient-history="searchPatientHistory()"
+                                        ></register-service-modal>
+
                                         <img src="/img/loading.gif" v-if="loading">
                                     </div>
                                 </div>
@@ -404,10 +418,12 @@
 
 <script>
     import Datepicker from 'vuejs-datepicker';
+    import RegisterServiceModal from './RegisterPatientHistoryModal.vue';
 
     export default {
         components: {
-            Datepicker
+            Datepicker,
+            RegisterServiceModal
         },
         props: ['user'],
         data: function () {

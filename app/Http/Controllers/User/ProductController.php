@@ -159,4 +159,19 @@ class ProductController extends Controller
 
         return new JsonResponse(['success' => true, 'valid' => true]);
     }
+
+    /**
+     * Obtiene todos los productos
+     *
+     * @return JsonResponse
+     */
+    public function productList()
+    {
+        $products = Product::orderBy('name')->get();
+
+        return new JsonResponse([
+            'success' => true,
+            'products' => $products
+        ]);
+    }
 }

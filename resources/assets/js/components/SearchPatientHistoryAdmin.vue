@@ -109,6 +109,20 @@
                                             <i class="glyphicon glyphicon-search"></i>
                                             Buscar
                                         </button>
+
+                                        <button
+                                                class="btn btn-success"
+                                                data-toggle="modal"
+                                                data-target="#registerServiceModal"
+                                        >
+                                            Registrar servicio
+                                        </button>
+                                        <register-service-modal
+                                            modal-id = "registerServiceModal"
+                                            :patient-id = "patient.id"
+                                            @register-patient-history="searchPatientHistory()"
+                                        ></register-service-modal>
+
                                         <img src="/img/loading.gif" v-if="loading">
                                     </div>
                                 </div>
@@ -529,10 +543,12 @@
 
 <script>
     import Datepicker from 'vuejs-datepicker';
+    import RegisterServiceModal from './RegisterPatientHistoryModal.vue';
 
     export default {
         components: {
-            Datepicker
+            Datepicker,
+            RegisterServiceModal
         },
         props: {
             user: {
@@ -601,9 +617,9 @@
                         this.modal.data = res.data.patients;
                     })
                     .catch((err) => {
-    if (err.response.status === 403 || err.response.status === 405) {
-        location.href = '/';
-    }
+                        if (err.response.status === 403 || err.response.status === 405) {
+                            location.href = '/';
+                        }
                         this.modal.loading = false;
                     })
                 ;
@@ -669,9 +685,9 @@
                         }
                     })
                     .catch((err) => {
-    if (err.response.status === 403 || err.response.status === 405) {
-        location.href = '/';
-    }
+                        if (err.response.status === 403 || err.response.status === 405) {
+                            location.href = '/';
+                        }
                         console.log(err);
                         this.loading = false;
                         this.data.servicesAndNotes = [];
@@ -698,9 +714,9 @@
                         }
                     })
                     .catch((err) => {
-    if (err.response.status === 403 || err.response.status === 405) {
-        location.href = '/';
-    }
+                        if (err.response.status === 403 || err.response.status === 405) {
+                            location.href = '/';
+                        }
                         this.loading = false;
                         console.log(err);
                     })
@@ -718,9 +734,9 @@
                         }
                     })
                     .catch((err) => {
-    if (err.response.status === 403 || err.response.status === 405) {
-        location.href = '/';
-    }
+                        if (err.response.status === 403 || err.response.status === 405) {
+                            location.href = '/';
+                        }
                         this.loading = false;
                         console.log(err);
                     })
@@ -738,9 +754,9 @@
                     }
                 })
                 .catch((err) => {
-    if (err.response.status === 403 || err.response.status === 405) {
-        location.href = '/';
-    }
+                    if (err.response.status === 403 || err.response.status === 405) {
+                        location.href = '/';
+                    }
                     this.loading = false;
                     console.log(err);
                 })
@@ -758,9 +774,9 @@
                         this.serviceEdit = null;
                     })
                     .catch((err) => {
-    if (err.response.status === 403 || err.response.status === 405) {
-        location.href = '/';
-    }
+                        if (err.response.status === 403 || err.response.status === 405) {
+                            location.href = '/';
+                        }
                         console.log(err);
                     })
             },

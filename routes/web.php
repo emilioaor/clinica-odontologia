@@ -12,6 +12,7 @@ Route::group(['prefix' => 'user', 'middleware' => 'auth'], function() {
 
     // Productos
     Route::get('product/validate/{product}/{id}', 'User\ProductController@validatePublicId');
+    Route::get('product/list', 'User\ProductController@productList');
     Route::resource('product', 'User\ProductController');
 
     // Pacientes
@@ -25,6 +26,7 @@ Route::group(['prefix' => 'user', 'middleware' => 'auth'], function() {
     Route::delete('service/note/{note}', 'User\PatientHistoryController@deleteNote');
     Route::delete('service/image/{note}', 'User\PatientHistoryController@deleteImage');
     Route::put('service/{service}/updateService', 'User\PatientHistoryController@updatePatientHistory');
+    Route::post('service/register/patientHistory', 'User\PatientHistoryController@registerPatientHistory');
     Route::resource('service', 'User\PatientHistoryController');
 
     // Cotizacion
@@ -77,6 +79,7 @@ Route::group(['prefix' => 'user', 'middleware' => 'auth'], function() {
 
     // Usuarios
     Route::get('user/search', 'Admin\UserController@search');
+    Route::get('user/assistant', 'Admin\UserController@assistantList');
 
     // Referencia de pacientes
     Route::resource('patientReference', 'User\PatientReferenceController');

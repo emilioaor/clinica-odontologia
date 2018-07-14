@@ -222,7 +222,7 @@
                                         <th width="20%">Servicio</th>
                                         <th width="20%">Laboratorio</th>
                                         <th width="20%">Responsable</th>
-                                        <th width="20%">Fecha de entrega</th>
+                                        <th width="20%">Fecha solicitud entrega</th>
                                         <th width="20%" colspan="2">Hora de entrega</th>
                                     </tr>
                                     </thead>

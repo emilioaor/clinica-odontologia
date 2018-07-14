@@ -17,7 +17,12 @@ class UserController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('admin')->except(['search']);
+        $this->middleware('admin')->except([
+            'search',
+            'assistantList'
+        ]);
+
+        $this->middleware('doctor')->only(['assistantList']);
 
         $this->middleware('secretary')->only(['search']);
     }
@@ -235,6 +240,21 @@ class UserController extends Controller
         return new JsonResponse([
             'success' => true,
             'users' => $users->get()
+        ]);
+    }
+
+    /**
+     * Obtiene todos los asistentes
+     *
+     * @return JsonResponse
+     */
+    public function assistantList()
+    {
+        $assistants = User::orderBy('name')->where('level', User::LEVEL_ASSISTANT)->get();
+
+        return new JsonResponse([
+            'success' => true,
+            'assistants' => $assistants
         ]);
     }
 }

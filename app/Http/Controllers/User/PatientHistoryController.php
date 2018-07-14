@@ -367,4 +367,20 @@ class PatientHistoryController extends Controller
 
         return new JsonResponse(['success' => true]);
     }
+
+    /**
+     * Registra un servicio
+     *
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function registerPatientHistory(Request $request)
+    {
+        $patientHistory = new PatientHistory($request->all());
+        $patientHistory->doctor_id = Auth::user()->id;
+        $patientHistory->price = $patientHistory->qty * $patientHistory->unit_price;
+        $patientHistory->save();
+
+        return new JsonResponse(['success' => true]);
+    }
 }

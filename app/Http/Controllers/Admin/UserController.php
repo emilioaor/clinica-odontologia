@@ -81,6 +81,7 @@ class UserController extends Controller
         $user->phone = Auth::user()->phone;
         $user->level = intval($request->level);
         $user->generatePublicId();
+        $user->external = $request->level == User::LEVEL_DOCTOR ? $request->external : false;
         $user->save();
 
         $products = Product::all();
@@ -140,6 +141,7 @@ class UserController extends Controller
 
         $user->name = $request->name;
         $user->level = $request->level;
+        $user->external = $request->level == User::LEVEL_DOCTOR ? $request->external : false;
         $user->save();
 
         $this->sessionMessage('message.user.update');

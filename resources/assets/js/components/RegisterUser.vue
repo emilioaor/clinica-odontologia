@@ -134,6 +134,15 @@
                                             </p>
                                         </div>
                                     </div>
+
+                                    <div class="col-sm-4" v-if="form.level == 2">
+                                        <div class="form-group">
+                                            <label for="password">¿Externo?</label>
+                                            <div>
+                                                <input type="checkbox" v-model="form.external">
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
 
                                 <div class="row">
@@ -169,7 +178,8 @@
                     name: '',
                     level: 2,
                     password: '',
-                    password_confirmation: ''
+                    password_confirmation: '',
+                    external: false
                 }
             }
         },
@@ -191,9 +201,9 @@
                         }
                     })
                     .catch((err) => {
-    if (err.response.status === 403 || err.response.status === 405) {
-        location.href = '/';
-    }
+                        if (err.response.status === 403 || err.response.status === 405) {
+                            location.href = '/';
+                        }
                         this.loading = false;
                         console.log(err);
                     })
@@ -213,9 +223,9 @@
                         }
                     })
                     .catch((err) => {
-    if (err.response.status === 403 || err.response.status === 405) {
-        location.href = '/';
-    }
+                        if (err.response.status === 403 || err.response.status === 405) {
+                            location.href = '/';
+                        }
                         this.loading = false;
                         console.log(err);
                     })

@@ -61,6 +61,7 @@ Vue.component('register-appointment', require('./components/RegisterAppointment.
 Vue.component('edit-appointment', require('./components/EditAppointment.vue'));
 Vue.component('register-patient-reference', require('./components/RegisterPatientReference.vue'));
 Vue.component('report-services-payments-expenses', require('./components/ReportServicesPaymentsAndExpenses.vue'));
+Vue.component('report-services-diagnostics', require('./components/ReportServicesDiagnostics.vue'));
 
 const app = new Vue({
     el: '#app'

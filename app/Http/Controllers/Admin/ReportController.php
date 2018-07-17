@@ -629,4 +629,47 @@ class ReportController extends Controller
             'data' => $response
         ]);
     }
+
+    /**
+     * Reporte de servicios diagnosticados
+     *
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function servicesDiagnostics()
+    {
+        $doctors = User::where('level', User::LEVEL_DOCTOR)->orderBy('name')->get();
+
+        return view('admin.report.servicesDiagnostics', compact('doctors'));
+    }
+
+    /**
+     * Reporte de servicios diagnosticados
+     *
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function servicesDiagnosticsData(Request $request)
+    {
+        $start = new \DateTime("{$request->start} 00:00:00");
+        $end = new \DateTime("{$request->end} 23:59:59");
+
+        $services = PatientHistory::query()
+            ->where('created_at', '>=', $start)
+            ->where('created_at', '<=', $end)
+            ->where('doctor_id', '<>', $request->doctor)
+            ->where('diagnostic_id', $request->doctor)
+            ->with([
+                'patient',
+                'product',
+                'doctor',
+                'assistant'
+            ])
+            ->orderBy('created_at')
+            ->get();
+
+        return new JsonResponse([
+            'success' => true,
+            'services' => $services
+        ]);
+    }
 }

@@ -420,6 +420,14 @@
                                         </a>
                                     </li>
                                 @endif
+                                @if(Auth::user()->hasPermission('report.servicesDiagnostics'))
+                                    <li>
+                                        <a href="{{ route('report.servicesDiagnostics') }}">
+                                            <i class="glyphicon glyphicon-file"></i>
+                                            Servicios diagn&oacute;sticados
+                                        </a>
+                                    </li>
+                                @endif
                             </ul>
                         </li>
                     @endif

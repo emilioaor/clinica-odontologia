@@ -121,6 +121,16 @@ class User extends Authenticatable
     }
 
     /**
+     * Todos los servicios diagnosticados por un doctor
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function patientHistoryDiagnostic()
+    {
+        return $this->hasMany(PatientHistory::class, 'diagnostic_id');
+    }
+
+    /**
      * Todas las solicitudes de insumos generadas por el usuario
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany

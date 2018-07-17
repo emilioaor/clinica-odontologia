@@ -4,6 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Foundation\Auth\User;
 
 class PatientHistory extends Model
 {
@@ -19,7 +20,8 @@ class PatientHistory extends Model
         'assistant_id',
         'price',
         'qty',
-        'unit_price'
+        'unit_price',
+        'diagnostic_id'
 
     ];
 
@@ -105,6 +107,16 @@ class PatientHistory extends Model
     public function responsible()
     {
         return $this->belongsTo(User::class, 'responsible_id')->withTrashed();
+    }
+
+    /**
+     * Doctor que diagnostico el servicio
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function diagnostic()
+    {
+        return $this->belongsTo(User::class, 'diagnostic_id')->withTrashed();
     }
 
     /**

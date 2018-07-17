@@ -103,8 +103,16 @@ class PatientHistoryController extends Controller
         $products = Product::orderBy('name')->get();
         $assistants = User::where('level', User::LEVEL_ASSISTANT)->orderBy('name')->get();
         $suppliers = Supplier::orderBy('name')->where('type', '<>', Supplier::TYPE_DOCTOR_COMMISSION)->get();
+        $doctors = User::where('level', User::LEVEL_DOCTOR)->orderBy('name')->get();
 
-        return view('user.patientHistory.edit', compact('patient', 'products', 'date', 'assistants', 'suppliers'));
+        return view('user.patientHistory.edit', compact(
+            'patient',
+            'products',
+            'date',
+            'assistants',
+            'suppliers',
+            'doctors'
+        ));
     }
 
     /**

@@ -93,10 +93,11 @@
                                         <tr>
                                             <th width="20%">Servicio</th>
                                             <th width="15%">Asistente</th>
-                                            <th width="15%">Qty</th>
+                                            <th width="15%">Diagnosticado por</th>
+                                            <th width="10%">Qty</th>
                                             <th width="15%">Diente</th>
-                                            <th width="15%">Precio</th>
-                                            <th width="15%">Total</th>
+                                            <th width="10%">Precio</th>
+                                            <th width="10%">Total</th>
                                             <th width="5%"></th>
                                         </tr>
                                     </thead>
@@ -143,6 +144,27 @@
                                                     </option>
                                                 </select>
                                                 <p class="error" v-if="errors.firstByRule('assistant' + id, 'required')">
+                                                    Campo requerido
+                                                </p>
+                                            </td>
+                                            <td>
+                                                <select
+                                                        :name="'diagnostic' + id"
+                                                        :id="'diagnostic' + id"
+                                                        class="form-control"
+                                                        :class="{'input-error': errors.has('diagnostic' + id)}"
+                                                        v-model="service.diagnostic_id"
+                                                        v-validate
+                                                        data-vv-rules="required"
+                                                        >
+                                                    <option
+                                                            v-for="doctor in doctors"
+                                                            :value="doctor.id"
+                                                            >
+                                                        {{ doctor.name }}
+                                                    </option>
+                                                </select>
+                                                <p class="error" v-if="errors.firstByRule('diagnostic' + id, 'required')">
                                                     Campo requerido
                                                 </p>
                                             </td>
@@ -198,7 +220,7 @@
                                     </tbody>
                                     <tfoot>
                                         <tr>
-                                            <td colspan="7">
+                                            <td colspan="8">
                                                 <button class="btn btn-success" @click="addService()">
                                                     <i class="glyphicon glyphicon-plus"></i>
                                                     Agregar
@@ -537,7 +559,8 @@
             'currentUser',
             'assistants',
             'suppliers',
-            'authUser'
+            'authUser',
+            'doctors'
         ],
         components: {
             Datepicker
@@ -573,7 +596,7 @@
             date = new Date(parseInt(date[0]), parseInt(date[1]) - 1, parseInt(date[2]));
 
             this.initDate = date;
-            this.setDate(date)
+            this.setDate(date);
 
             this.notes = this.data.notes;
         },
@@ -594,7 +617,8 @@
                     datePicker: date,
                     delivery_date: this.updateDate(date),
                     hour: null,
-                    minute: null
+                    minute: null,
+                    diagnostic_id: null
                 });
             },
 

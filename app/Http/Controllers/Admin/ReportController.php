@@ -690,4 +690,52 @@ class ReportController extends Controller
             'services' => $response
         ]);
     }
+
+    /**
+     * Reporte de servicios enviados a laboratorio
+     *
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function servicesSendLab()
+    {
+        return view('admin.report.servicesSendLab');
+    }
+
+    /**
+     * Reporte de servicios enviados a laboratorio
+     *
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function servicesSendLabData(Request $request)
+    {
+        $start = new \DateTime("{$request->start} 00:00:00");
+        $end = new \DateTime("{$request->end} 23:59:59");
+
+        $serviceIds = PatientHistory::query()
+            ->select(['patient_history.id'])
+            ->where('patient_history.created_at', '>=', $start)
+            ->where('patient_history.created_at', '<=', $end)
+            ->join('products', 'products.id', '=', 'patient_history.product_id')
+            ->where('products.required_lab', true)
+            ->get()
+            ->toArray();
+
+        $services = PatientHistory::query()
+            ->whereIn('id', $serviceIds)
+            ->whereNotNull('supplier_id')
+            ->with([
+                'product',
+                'doctor',
+                'patient',
+                'supplier',
+                'responsible'
+            ])
+            ->get();
+
+        return new JsonResponse([
+            'success' => true,
+            'services' => $services
+        ]);
+    }
 }

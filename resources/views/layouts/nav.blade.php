@@ -340,7 +340,8 @@
                         Auth::user()->hasPermission('report.expenses') || Auth::user()->hasPermission('report.payments') ||
                         Auth::user()->hasPermission('report.servicesAndPaymentsPerPatient') || Auth::user()->hasPermission('report.guarantees') ||
                         Auth::user()->hasPermission('report.patientsAndPatientsWithServices') || Auth::user()->hasPermission('report.budgets') ||
-                        Auth::user()->hasPermission('report.servicesPaymentsAndExpenses'))
+                        Auth::user()->hasPermission('report.servicesPaymentsAndExpenses') || Auth::user()->hasPermission('report.servicesDiagnostics') ||
+                        Auth::user()->hasPermission('report.servicesSendLab'))
 
                         <li class="dropdown">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
@@ -425,6 +426,14 @@
                                         <a href="{{ route('report.servicesDiagnostics') }}">
                                             <i class="glyphicon glyphicon-file"></i>
                                             Servicios diagn&oacute;sticados
+                                        </a>
+                                    </li>
+                                @endif
+                                @if(Auth::user()->hasPermission('report.servicesSendLab'))
+                                    <li>
+                                        <a href="{{ route('report.servicesSendLab') }}">
+                                            <i class="glyphicon glyphicon-file"></i>
+                                            Servicios enviados a laboratorio
                                         </a>
                                     </li>
                                 @endif

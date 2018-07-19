@@ -656,20 +656,38 @@ class ReportController extends Controller
         $services = PatientHistory::query()
             ->where('created_at', '>=', $start)
             ->where('created_at', '<=', $end)
-            ->where('doctor_id', '<>', $request->doctor)
-            ->where('diagnostic_id', $request->doctor)
             ->with([
                 'patient',
                 'product',
                 'doctor',
                 'assistant'
             ])
-            ->orderBy('created_at')
-            ->get();
+            ->orderBy('created_at');
+
+        if ($request->doctor > 0) {
+            // Si indica el doctor busca todos los servicios diagnosticados por el doctor,
+            // pero registrado por otra persona
+            $services
+                ->where('diagnostic_id', $request->doctor)
+                ->where('doctor_id', '<>', $request->doctor);
+        } else {
+            // Si no indica el doctor busca todos los servicios donde el doctor que lo
+            // registro, sea distinto al doctor que diagnostico
+            $services
+                ->whereColumn('doctor_id', '<>', 'diagnostic_id')
+                ->whereNotNull('diagnostic_id');
+        }
+
+        $response = [];
+
+        // Agrupa por doctor que diagnostica
+        foreach ($services->get() as $service) {
+            $response[$service->diagnostic->id][] = $service;
+        }
 
         return new JsonResponse([
             'success' => true,
-            'services' => $services
+            'services' => $response
         ]);
     }
 }

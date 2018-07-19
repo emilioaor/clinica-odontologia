@@ -55,10 +55,8 @@
                                                 id="doctor"
                                                 class="form-control"
                                                 v-model="data.doctor"
-                                                v-validate
-                                                data-vv-rules="required"
-                                                :class="{'input-error': errors.has('doctor')}"
                                                 >
+                                            <option :value="0">Todos</option>
                                             <option
                                                     v-for="doctor in doctors"
                                                     :value="doctor.id"
@@ -66,9 +64,6 @@
                                                 {{ doctor.name }}
                                             </option>
                                         </select>
-                                        <p class="error" v-if="errors.firstByRule('doctor', 'required')">
-                                            Requerido
-                                        </p>
                                     </div>
                                 </div>
                             </div>
@@ -78,7 +73,7 @@
                                     <div class="form-group">
                                         <label for="">Total</label>
                                         <p>
-                                            $ {{ getTotal() }}
+                                            $ {{ getAllTotal() }}
                                         </p>
                                     </div>
                                 </div>
@@ -100,7 +95,17 @@
                                 </div>
                             </div>
 
-                            <div class="row" v-if="data.services.length">
+                            <div class="row" v-for="servicePerDoctor in data.services">
+
+                                <div class="col-xs-12">
+                                    <div class="alert alert-info">
+                                        <p>
+                                            <strong>Doctor:</strong>
+                                            {{ servicePerDoctor[0].diagnostic.name }}
+                                        </p>
+                                    </div>
+                                </div>
+
                                 <div class="col-xs-12">
 
                                     <!-- Services -->
@@ -119,7 +124,7 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <tr v-for="service in data.services">
+                                            <tr v-for="service in servicePerDoctor">
                                                 <td>{{ dateFormat(service.created_at) }}</td>
                                                 <td>{{ service.patient.name }}</td>
                                                 <td>{{ service.product.name }}</td>
@@ -131,6 +136,19 @@
                                                 <td>{{ service.price }}</td>
                                             </tr>
                                         </tbody>
+                                        <tfoot>
+                                            <tr>
+                                                <th>Total</th>
+                                                <th></th>
+                                                <th></th>
+                                                <th></th>
+                                                <th></th>
+                                                <th></th>
+                                                <th></th>
+                                                <th></th>
+                                                <th>{{ getTotal(servicePerDoctor) }}</th>
+                                            </tr>
+                                        </tfoot>
                                     </table>
 
                                 </div>
@@ -166,7 +184,7 @@
                 data: {
                     start: '',
                     end: '',
-                    doctor: null,
+                    doctor: 0,
                     services: []
                 }
             }
@@ -238,12 +256,22 @@
                 return format[1] + '/' + format[2] + '/' + format[0];
             },
 
-            getTotal: function () {
+            getTotal: function (services) {
                 let total = 0;
 
-                this.data.services.forEach((service) => {
+                services.forEach((service) => {
                     total += service.price;
                 });
+
+                return total;
+            },
+
+            getAllTotal: function () {
+                let total = 0;
+
+                for (let i in this.data.services) {
+                    total += this.getTotal(this.data.services[i]);
+                }
 
                 return total;
             }

@@ -81,6 +81,31 @@
                                             ></datepicker>
                                 </div>
                             </div>
+
+                            <div class="col-sm-4">
+                                <div class="form-group">
+                                    <label for="diagnostic">Diagnosticado por</label>
+                                    <select
+                                            name="diagnostic"
+                                            id="diagnostic"
+                                            class="form-control"
+                                            :class="{'input-error': errors.has('diagnostic')}"
+                                            v-model="diagnostic"
+                                            v-validate
+                                            data-vv-rules="required"
+                                            >
+                                        <option
+                                                v-for="doctor in doctors"
+                                                :value="doctor.id"
+                                                >
+                                            {{ doctor.name }}
+                                        </option>
+                                    </select>
+                                    <p class="error" v-if="errors.firstByRule('diagnostic', 'required')">
+                                        Campo requerido
+                                    </p>
+                                </div>
+                            </div>
                         </div>
 
                         <div class="row">
@@ -92,12 +117,11 @@
                                     <thead>
                                         <tr>
                                             <th width="20%">Servicio</th>
-                                            <th width="15%">Asistente</th>
-                                            <th width="15%">Diagnosticado por</th>
+                                            <th width="20%">Asistente</th>
                                             <th width="10%">Qty</th>
                                             <th width="15%">Diente</th>
-                                            <th width="10%">Precio</th>
-                                            <th width="10%">Total</th>
+                                            <th width="15%">Precio</th>
+                                            <th width="15%">Total</th>
                                             <th width="5%"></th>
                                         </tr>
                                     </thead>
@@ -144,27 +168,6 @@
                                                     </option>
                                                 </select>
                                                 <p class="error" v-if="errors.firstByRule('assistant' + id, 'required')">
-                                                    Campo requerido
-                                                </p>
-                                            </td>
-                                            <td>
-                                                <select
-                                                        :name="'diagnostic' + id"
-                                                        :id="'diagnostic' + id"
-                                                        class="form-control"
-                                                        :class="{'input-error': errors.has('diagnostic' + id)}"
-                                                        v-model="service.diagnostic_id"
-                                                        v-validate
-                                                        data-vv-rules="required"
-                                                        >
-                                                    <option
-                                                            v-for="doctor in doctors"
-                                                            :value="doctor.id"
-                                                            >
-                                                        {{ doctor.name }}
-                                                    </option>
-                                                </select>
-                                                <p class="error" v-if="errors.firstByRule('diagnostic' + id, 'required')">
                                                     Campo requerido
                                                 </p>
                                             </td>
@@ -577,6 +580,7 @@
                 initDate: '',
                 notes: [],
                 images: [],
+                diagnostic: null,
                 user: '',
                 modal: {
                     data: [],
@@ -651,7 +655,8 @@
                     services: this.services,
                     date: this.date,
                     notes: this.notes,
-                    images: this.images
+                    images: this.images,
+                    diagnostic: this.diagnostic
                 })
                     .then((res) => {
                         if (res.data.success) {

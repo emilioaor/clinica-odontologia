@@ -243,7 +243,7 @@ class ReportController extends Controller
             foreach ($expenses as $expense) {
 
                 $response[$patient->id]['data'][$history->id]['services'][] = [
-                    'date' => $expense->date,
+                    'date' => $expense->date->format('Y-m-d H:i:s'),
                     'classification' => trans('message.report.classification.expense'),
                     'description' => $expense->description,
                     'amount' => $expense->amount

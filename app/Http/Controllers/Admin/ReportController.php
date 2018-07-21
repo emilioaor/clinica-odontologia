@@ -207,7 +207,7 @@ class ReportController extends Controller
 
         foreach ($patientHistory as $history) {
 
-            if ($request->balance === 'true' && ! $history->hasComplete()) {
+            if ($request->balance === 'true' && ! $history->hasCompleteToDate($end)) {
                 // Si se pide solo balance 0 y este servicio tiene un monto pendiente, paso al siguiente
                 continue;
             }
@@ -237,7 +237,7 @@ class ReportController extends Controller
             // Todos los gastos asociados al servicio y al laboratorio
             $expenses = $history->expenses()
                 ->join('suppliers', 'suppliers.id', '=', 'expenses.supplier_id')
-                ->where('suppliers.type', Supplier::TYPE_LAB)
+                ->where('expenses.date', '<=', $end)
                 ->get();
 
             foreach ($expenses as $expense) {
@@ -250,7 +250,9 @@ class ReportController extends Controller
                 ];
             }
 
-            foreach ($history->payments as $payment) {
+            $payments = $history->payments()->where('payments.date', '<=', $end)->get();
+
+            foreach ($payments as $payment) {
 
                 $response[$patient->id]['data'][$history->id]['services'][] = [
                     'date' => $payment->date->format('Y-m-d H:i:s'),

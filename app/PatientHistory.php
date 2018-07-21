@@ -143,6 +143,23 @@ class PatientHistory extends Model
     }
 
     /**
+     * Indica el monto restante por pagar para este servicio en la fecha indicada
+     *
+     * @return mixed
+     */
+    public function pendingAmountToDate($topDate)
+    {
+        $pending = $this->price;
+        $payments = $this->payments()->where('date', '<=', $topDate)->get();
+
+        foreach ($payments as $payment) {
+            $pending -= $payment->amount;
+        }
+
+        return $pending;
+    }
+
+    /**
      * Indica si un servicio ya esta completo. En este momento para que
      * un servicio de considere completo debe tener el balance en 0, y
      * ademas si el servicio requiere gastos de laboratorio estos ya deben
@@ -166,6 +183,30 @@ class PatientHistory extends Model
     }
 
     /**
+     * Indica si un servicio ya esta completo. En este momento para que
+     * un servicio de considere completo debe tener el balance en 0, y
+     * ademas si el servicio requiere gastos de laboratorio estos ya deben
+     * estar asociados o se considera incompleto
+     *
+     * @param $topDate
+     * @return bool
+     */
+    public function hasCompleteToDate($topDate)
+    {
+        if ($this->pendingAmountToDate($topDate) > 0) {
+            // Si no tiene el balance en 0 no esta completo
+            return false;
+        }
+
+        if ($this->product->required_lab && ! $this->hasLabExpenseToDate($topDate)) {
+            // Si el servicio requiere gastos de laboratorio y no los tiene esta incompleto
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
      * Indica si el servicio posee gastos de laboratorio
      * asociados
      *
@@ -174,6 +215,26 @@ class PatientHistory extends Model
     public function hasLabExpense()
     {
         foreach ($this->expenses as $expense) {
+            if ($expense->supplier->type === Supplier::TYPE_LAB) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Indica si el servicio posee gastos de laboratorio
+     * asociados igual o anteriores a la fecha indicada
+     *
+     * @param $topDate
+     * @return bool
+     */
+    public function hasLabExpenseToDate($topDate)
+    {
+        $expenses = $this->expenses()->where('date', '<=', $topDate)->get();
+
+        foreach ($expenses as $expense) {
             if ($expense->supplier->type === Supplier::TYPE_LAB) {
                 return true;
             }

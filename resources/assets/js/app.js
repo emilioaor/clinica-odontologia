@@ -63,6 +63,7 @@ Vue.component('register-patient-reference', require('./components/RegisterPatien
 Vue.component('report-services-payments-expenses', require('./components/ReportServicesPaymentsAndExpenses.vue'));
 Vue.component('report-services-diagnostics', require('./components/ReportServicesDiagnostics.vue'));
 Vue.component('report-services-send-lab', require('./components/ReportServicesSendLab.vue'));
+Vue.component('send-lab-notification', require('./components/SendLabNotification.vue'));
 
 const app = new Vue({
     el: '#app'

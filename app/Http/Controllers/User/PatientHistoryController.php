@@ -6,6 +6,7 @@ use App\Appointment;
 use App\Mail\ServiceRegisterEmail;
 use App\EmailSpooler;
 use App\Note;
+use App\Notifications\SendLabNotification;
 use App\Patient;
 use App\PatientHistory;
 use App\Product;
@@ -17,6 +18,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Notification;
 
 class PatientHistoryController extends Controller
 {
@@ -150,6 +152,14 @@ class PatientHistoryController extends Controller
 
                 if (! empty($serviceArray['hour']) && ! empty($serviceArray['minute'])) {
                     $service->delivery_date = new \DateTime("{$serviceArray['delivery_date']} {$serviceArray['hour']}:{$serviceArray['minute']}");
+
+                    // Genero la notificacion
+                    $users[] = $service->doctor;
+                    $users[] = $service->assistant;
+                    $users[] = $service->responsible;
+
+                    Notification::send($users, new SendLabNotification($service, 24));
+                    Notification::send($users, new SendLabNotification($service, 1));
                 }
             }
 

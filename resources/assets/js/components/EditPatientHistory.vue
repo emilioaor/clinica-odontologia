@@ -620,8 +620,8 @@
                     supplier_id: null,
                     datePicker: date,
                     delivery_date: this.updateDate(date),
-                    hour: null,
-                    minute: null,
+                    hour: '00',
+                    minute: '00',
                     diagnostic_id: null
                 });
             },

@@ -83,6 +83,10 @@ Route::group(['prefix' => 'user', 'middleware' => 'auth'], function() {
 
     // Referencia de pacientes
     Route::resource('patientReference', 'User\PatientReferenceController');
+
+    // Notificaciones
+    Route::get('notification', 'NotificationController@sendLabNotifications');
+    Route::put('notification', 'NotificationController@markAsRead');
 });
 
 // Administrador

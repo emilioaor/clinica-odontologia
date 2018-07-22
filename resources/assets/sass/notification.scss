@@ -1,0 +1,24 @@
+.odt-notification {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 99999999;
+  background-color: rgba(0,0,0,.3);
+
+  &__content {
+    background-color: #FFFFFF;
+    width: 60%;
+    height: auto;
+    margin: 7% 20%;
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+    border-radius: 3px;
+    padding: 10px;
+
+    h4 {
+      margin-top: 0;
+    }
+  }
+}

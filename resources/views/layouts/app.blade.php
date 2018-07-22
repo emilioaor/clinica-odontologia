@@ -11,7 +11,7 @@
     <title>{{ config('app.name', 'Laravel') }}</title>
 
     <!-- Styles -->
-    <link href="{{ asset('css/app.css') }}?v=1.5.0" rel="stylesheet">
+    <link href="{{ asset('css/app.css') }}?v=1.6.0" rel="stylesheet">
 </head>
 <body>
     <div id="app">
@@ -27,10 +27,12 @@
         @endif
 
         @yield('content')
+
+        <send-lab-notification></send-lab-notification>
     </div>
 
     <!-- Scripts -->
-    <script src="{{ asset('js/app.js') }}?v=1.46.0"></script>
+    <script src="{{ asset('js/app.js') }}?v=1.47.0"></script>
     @yield('js')
 </body>
 </html>

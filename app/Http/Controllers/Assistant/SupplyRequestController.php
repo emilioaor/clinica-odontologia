@@ -72,12 +72,17 @@ class SupplyRequestController extends Controller
 
         foreach ($request->details as $detail) {
 
-            $supply = Supply::findOrFail($detail['supply']);
-
             $supplyRequestDetail = new SupplyRequestDetail();
-            $supplyRequestDetail->supply_id = $supply->id;
             $supplyRequestDetail->supply_request_id = $supplyRequest->id;
             $supplyRequestDetail->qty = $detail['qty'];
+
+            if ($detail['freeText']) {
+
+                $supplyRequestDetail->description = $detail['description'];
+            } else {
+                $supplyRequestDetail->supply_id = Supply::findOrFail($detail['supply'])->id;
+            }
+
             $supplyRequestDetail->save();
         }
 

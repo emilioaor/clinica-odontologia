@@ -21,6 +21,7 @@
                                     <table class="table table-responsive">
                                         <thead>
                                             <tr>
+                                                <th class="text-center">Libre</th>
                                                 <th>Insumo</th>
                                                 <th>Cantidad</th>
                                                 <th></th>
@@ -28,7 +29,10 @@
                                         </thead>
                                         <tbody>
                                             <tr v-for="(detail, id) in form.details">
-                                                <td width="70%">
+                                                <th width="10%" class="text-center">
+                                                    <input type="checkbox" v-model="detail.freeText">
+                                                </th>
+                                                <td width="70%" v-if="! detail.freeText">
                                                     <select
                                                             :name="'supply' + id"
                                                             :id="'supply' + id"
@@ -49,7 +53,22 @@
                                                         Campo requerido
                                                     </p>
                                                 </td>
-                                                <td width="30%">
+                                                <td width="70%" v-if="detail.freeText">
+                                                    <input
+                                                            type="text"
+                                                            :name="'description' + id"
+                                                            :id="'description' + id"
+                                                            class="form-control"
+                                                            v-model="detail.description"
+                                                            v-validate
+                                                            data-vv-rules="required"
+                                                            :class="{'input-error': errors.has('description' + id)}"
+                                                            >
+                                                    <p class="error" v-if="errors.firstByRule('description' + id, 'required')">
+                                                        Campo requerido
+                                                    </p>
+                                                </td>
+                                                <td width="20%">
                                                     <input
                                                             type="number"
                                                             :name="'qty' + id"
@@ -115,7 +134,9 @@
                 form: {
                     details: [{
                         supply: null,
-                        qty: 1
+                        qty: 1,
+                        freeText: false,
+                        description: null
                     }]
                 }
             }
@@ -141,9 +162,9 @@
                             }
                         })
                         .catch((err) => {
-    if (err.response.status === 403 || err.response.status === 405) {
-        location.href = '/';
-    }
+                            if (err.response.status === 403 || err.response.status === 405) {
+                                location.href = '/';
+                            }
                             this.loading = false;
 
                             console.log('Error', err);
@@ -154,7 +175,9 @@
             addDetail: function () {
                 this.form.details.push({
                     supply: null,
-                    qty: 1
+                    qty: 1,
+                    freeText: false,
+                    description: null
                 });
             },
 

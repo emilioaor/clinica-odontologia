@@ -188,6 +188,7 @@
                                                 <span v-if="payment.type === 1">Tarjeta de crédito</span>
                                                 <span v-if="payment.type === 2">Efectivo</span>
                                                 <span v-if="payment.type === 3">Cheque</span>
+                                                <span v-if="payment.type === 4">Descuento</span>
                                             </td>
                                             <td>{{ '$' + payment.amount }}</td>
                                         </tr>

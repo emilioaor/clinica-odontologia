@@ -13,6 +13,7 @@ class Payment extends Model
     const TYPE_CREDIT_CARD = 1;
     const TYPE_CASH = 2;
     const TYPE_CHECK = 3;
+    const TYPE_DISCOUNT = 4;
 
     protected $table = 'payments';
 

@@ -425,12 +425,14 @@
                                                     <option value="1">Tarjeta de crédito</option>
                                                     <option value="2">Efectivo</option>
                                                     <option value="3">Cheque</option>
+                                                    <option value="4">Descuento</option>
                                                 </select>
 
                                                 <span v-if="paymentEdit !== payment.id">
                                                     <span v-if="payment.type === 1">Tarjeta de crédito</span>
                                                     <span v-if="payment.type === 2">Efectivo</span>
                                                     <span v-if="payment.type === 3">Cheque</span>
+                                                    <span v-if="payment.type === 4">Descuento</span>
                                                 </span>
                                             </td>
                                             <td>
@@ -649,6 +651,7 @@
                                             <option value="1">Tarjeta de crédito</option>
                                             <option value="2">Efectivo</option>
                                             <option value="3">Cheque</option>
+                                            <option value="4">Descuento</option>
                                         </select>
 
                                         <p class="error" v-if="errors.firstByRule('type', 'required', 'paymentModal')">

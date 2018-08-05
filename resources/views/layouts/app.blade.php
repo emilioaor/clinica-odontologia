@@ -32,7 +32,7 @@
     </div>
 
     <!-- Scripts -->
-    <script src="{{ asset('js/app.js') }}?v=1.49.0"></script>
+    <script src="{{ asset('js/app.js') }}?v=hjghasdgashdgahhasdhjashdajahsdjaj"></script>
     @yield('js')
 </body>
 </html>

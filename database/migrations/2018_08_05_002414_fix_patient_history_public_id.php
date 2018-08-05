@@ -13,14 +13,14 @@ class FixPatientHistoryPublicId extends Migration
      */
     public function up()
     {
-        $services = \App\PatientHistory::query()->whereNull('public_id')->get();
+        $services = \App\PatientHistory::query()->whereNull('public_id')->withTrashed()->get();
 
         $c = 0;
 
         foreach ($services as $service) {
             $c++;
 
-            $service->public_id = 'SERF' . $c;
+            $service->public_id = 'SERV' . $c;
             $service->save();
         }
 

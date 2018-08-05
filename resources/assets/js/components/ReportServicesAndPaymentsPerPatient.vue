@@ -168,7 +168,7 @@
                                                 <tr v-for="payment in service.payments" style="background-color: #eee">
                                                     <td>{{ dateFormat(payment.created_at) }}</td>
                                                     <td></td>
-                                                    <td>Pago</td>
+                                                    <td>{{ payment.type === 4 ? 'Descuento' : 'Pago' }}</td>
                                                     <td></td>
                                                     <td></td>
                                                     <td></td>

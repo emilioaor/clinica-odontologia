@@ -609,7 +609,7 @@ class ReportController extends Controller
                 // Agrego los pagos a la respuesta
                 $response[$history->patient->id]['data'][] = [
                     'date' => $payment->date->format('Y-m-d'),
-                    'type' => 'Pago',
+                    'type' => $payment->isDiscount() ? 'Descuento' : 'Pago',
                     'amount' => $payment->amount,
                     'service' => $history->product->name
                 ];

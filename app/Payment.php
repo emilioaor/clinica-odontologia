@@ -46,4 +46,44 @@ class Payment extends Model
     {
         return $this->belongsTo(PatientHistory::class, 'patient_history_id')->withTrashed();
     }
+
+    /**
+     * Indica si el pago es por tarjeta de credito
+     *
+     * @return bool
+     */
+    public function isCreditCard()
+    {
+        return $this->type === self::TYPE_CREDIT_CARD;
+    }
+
+    /**
+     * Indica si el pago es en efectivo
+     *
+     * @return bool
+     */
+    public function isCash()
+    {
+        return $this->type === self::TYPE_CASH;
+    }
+
+    /**
+     * Indica si el pago es en cheque
+     *
+     * @return bool
+     */
+    public function isCheck()
+    {
+        return $this->type === self::TYPE_CHECK;
+    }
+
+    /**
+     * Indica si es un descuento
+     *
+     * @return bool
+     */
+    public function isDiscount()
+    {
+        return $this->type === self::TYPE_DISCOUNT;
+    }
 }

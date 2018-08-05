@@ -60,6 +60,7 @@
                                             <option value="1">Tarjeta de credito</option>
                                             <option value="2">Efectivo</option>
                                             <option value="3">Cheque</option>
+                                            <option value="4">Descuento</option>
                                         </select>
                                     </div>
                                 </div>
@@ -132,6 +133,7 @@
                                                     <span v-if="payment.type === 1">Tarjeta de credito</span>
                                                     <span v-if="payment.type === 2">Efectivo</span>
                                                     <span v-if="payment.type === 3">Cheque</span>
+                                                    <span v-if="payment.type === 4">Descuento</span>
                                                 </td>
                                                 <td>
                                                     {{ !payment.patient_history ? '' : payment.patient_history.product.name }}

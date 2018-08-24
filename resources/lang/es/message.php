@@ -76,6 +76,7 @@ return [
     'report.classification.service' => 'Servicio',
     'report.classification.payment' => 'Pago',
     'report.classification.expense' => 'Gasto',
+    'report.classification.discount' => 'Descuento',
 
     'email.update' => 'Email actualizado',
 

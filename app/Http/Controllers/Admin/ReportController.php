@@ -254,10 +254,12 @@ class ReportController extends Controller
 
             foreach ($payments as $payment) {
 
+                $type = $payment->isDiscount() ? 'discount' : 'payment';
+
                 $response[$patient->id]['data'][$history->id]['services'][] = [
                     'date' => $payment->date->format('Y-m-d H:i:s'),
-                    'classification' => trans('message.report.classification.payment'),
-                    'description' => trans('message.report.classification.payment'),
+                    'classification' => trans('message.report.classification.' . $type),
+                    'description' => trans('message.report.classification.' . $type),
                     'amount' => $payment->amount
                 ];
             }

@@ -177,26 +177,32 @@
                                     </table>
 
                                     <div class="row">
-                                        <div class="col-sm-3">
+                                        <div class="col-sm-2 col-sm-offset-1">
                                             <h5 class="text-center">
                                                 <strong>Servicios:</strong>
                                                 {{ totalServices(p.data) }}
                                             </h5>
                                         </div>
-                                        <div class="col-sm-3">
+                                        <div class="col-sm-2">
                                             <h5 class="text-center">
                                                 <strong>Pagos:</strong>
                                                 {{ totalPayments(p.data) }}
                                             </h5>
                                         </div>
-                                        <div class="col-sm-3">
+                                        <div class="col-sm-2">
+                                            <h5 class="text-center">
+                                                <strong>Descuentos:</strong>
+                                                {{ totalDiscounts(p.data) }}
+                                            </h5>
+                                        </div>
+                                        <div class="col-sm-2">
                                             <h5 class="text-center">
                                                 <strong>Balance:</strong>
-                                                {{ totalServices(p.data) - totalPayments(p.data) }}
+                                                {{ totalServices(p.data) - (totalPayments(p.data) + totalDiscounts(p.data)) }}
                                             </h5>
                                         </div>
 
-                                        <div class="col-sm-3">
+                                        <div class="col-sm-2">
                                             <h5 class="text-center">
                                                 <strong>Comisi&oacute;n:</strong>
                                                 {{ totalCommission(p.data) }}
@@ -446,6 +452,21 @@
                 data.forEach((item) => {
                     item.services.forEach((service) => {
                         if (service.classification === 'Pago') {
+                            total += service.amount;
+                        }
+                    });
+                });
+
+                return total;
+            },
+
+            totalDiscounts: function (data) {
+                let total = 0;
+                data =  Object.values(data);
+
+                data.forEach((item) => {
+                    item.services.forEach((service) => {
+                        if (service.classification === 'Descuento') {
                             total += service.amount;
                         }
                     });

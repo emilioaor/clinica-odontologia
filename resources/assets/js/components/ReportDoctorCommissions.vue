@@ -465,11 +465,19 @@
                 data =  Object.values(data);
 
                 data.forEach((item) => {
-                    item.services.forEach((service) => {
-                        if (service.classification === 'Descuento') {
-                            total += service.amount;
-                        }
-                    });
+                    total += this.calculateDiscount(item.services);
+                });
+
+                return total;
+            },
+
+            calculateDiscount: function (services) {
+                let total = 0;
+
+                services.forEach((service) => {
+                    if (service.classification === 'Descuento') {
+                        total += service.amount;
+                    }
                 });
 
                 return total;
@@ -491,14 +499,16 @@
                 let total = 0;
                 let expenses;
                 let commission;
+                let discount;
 
                 data =  Object.values(data);
 
                 data.forEach((item) => {
 
                     expenses = this.calculateExpenses(item.services);
+                    discount = this.calculateDiscount(item.services);
 
-                    commission = (item.price - expenses) * (item.commission / 100);
+                    commission = (item.price - expenses - discount) * (item.commission / 100);
 
                     total += commission;
                 });

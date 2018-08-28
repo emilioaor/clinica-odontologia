@@ -293,7 +293,26 @@
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-body">
-                        <h4>¿Seguro quiere registrar un gasto por ${{ totalAllCommission() }}?</h4>
+                        <h4>Registrar un gasto por la comisi&oacute;n</h4>
+                        <div class="row">
+                            <div class="form-group col-sm-6">
+                                <input
+                                        type="text"
+                                        class="form-control"
+                                        name="commission"
+                                        :class="{'input-error': errors.has('commission')}"
+                                        v-model="commission"
+                                        v-validate
+                                        data-vv-rules="required|regex:^([0-9]+)(\.[0-9]+)?$"
+                                        >
+                                <p class="error" v-if="errors.firstByRule('commission', 'required')">
+                                    Requerido
+                                </p>
+                                <p class="error" v-if="errors.firstByRule('commission', 'regex')">
+                                    Formato invalido
+                                </p>
+                            </div>
+                        </div>
                     </div>
                     <div class="modal-footer">
                         <button
@@ -308,7 +327,7 @@
                                 type="button"
                                 class="btn btn-danger"
                                 v-show="! loading"
-                                @click="registerExpense()"
+                                @click="validateExpense()"
                                 >
                             SI
                         </button>
@@ -345,6 +364,7 @@
                   loading: false,
                   search: ''
               },
+              commission: null
           }
         },
         mounted: function () {
@@ -395,6 +415,7 @@
 
                         if (res.data.success) {
                             this.data.report = res.data.response;
+                            this.commission = this.totalAllCommission();
                         }
                     })
                     .catch((err) => {
@@ -526,11 +547,19 @@
                 return total;
             },
 
+            validateExpense: function () {
+                this.$validator.validateAll().then((res) => {
+                    if (res) {
+                        this.registerExpense();
+                    }
+                })
+            },
+
             registerExpense: function () {
                 this.loading = true;
 
                 const expense = {
-                    amount: this.totalAllCommission()
+                    amount: this.commission
                 };
 
                 axios.post('/user/expense/expenseCommission', expense)

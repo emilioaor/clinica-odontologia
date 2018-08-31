@@ -16,6 +16,7 @@
                                         format = "MM/dd/yyyy"
                                         @input="changeDate($event)"
                                         v-model="initDate"
+                                        :disabled="disabledDates"
                                         ></datepicker>
                             </div>
                         </div>
@@ -323,6 +324,10 @@
             modalId: {
                 type: String,
                 required: true
+            },
+            user: {
+                type: Object,
+                required: true
             }
         },
 
@@ -358,7 +363,8 @@
                     public_id: null
                 },
                 searchPatient: false,
-                searchService: false
+                searchService: false,
+                disabledDates: {}
             }
         },
 
@@ -374,6 +380,10 @@
 
             // Obtiene los proveedores
             this.getSuppliers();
+
+            const today = new Date();
+            const yesterday = new Date(today.getTime() - 24*60*60*1000);
+            this.disabledDates = this.user.level === 1 ? {} : {to: yesterday}
         },
 
         methods: {

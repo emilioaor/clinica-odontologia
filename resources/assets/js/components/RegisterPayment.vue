@@ -383,6 +383,7 @@
                                                         @input="changeDatePayment($event, id)"
                                                         v-model="payment.datePicker"
                                                         v-if="paymentEdit === payment.id"
+                                                        :disabled="disabledDates"
                                                         ></datepicker>
 
                                                 <span v-if="paymentEdit !== payment.id">
@@ -675,6 +676,7 @@
                                                 format = "MM/dd/yyyy"
                                                 @input="changePaymentDate($event)"
                                                 v-model="initPaymentDate"
+                                                :disabled="disabledDates"
                                                 ></datepicker>
                                     </div>
                                 </div>
@@ -813,7 +815,8 @@
               serviceEdit: null,
               serviceLoading: null,
               paymentEdit: null,
-              paymentLoading: null
+              paymentLoading: null,
+              disabledDates: {}
           }
         },
         mounted: function () {
@@ -825,6 +828,10 @@
             this.data.start = year + '-' + month + '-' + day;
             this.data.end = year + '-' + month + '-' + day;
             this.paymentModal.data.date = year + '-' + month + '-' + day;
+
+            const today = new Date();
+            const yesterday = new Date(today.getTime() - 24*60*60*1000);
+            this.disabledDates = this.user.level === 1 ? {} : {to: yesterday}
         },
         computed: {
             paymentModalService: function () {

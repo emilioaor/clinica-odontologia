@@ -16,8 +16,8 @@ class ProductController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('doctor')->except('index');
-        $this->middleware('noAssistant');
+        $this->middleware('doctor')->except(['index', 'productList']);
+        $this->middleware('noAssistant')->except(['productList']);
         $this->middleware('admin')->only(['destroy']);
     }
 

@@ -92,9 +92,15 @@ class PatientHistoryController extends Controller
      */
     public function edit($id, Request $request)
     {
+        $today = new \DateTime('now 00:00:00');
+        $date = new \DateTime(empty($request->date) ? 'now' : $request->date);
+
+        if ($date < $today && ! Auth::user()->isAdmin()) {
+            return redirect()->route('service.edit', ['service' => $id]);
+        }
+
         $patient = Patient::where('public_id', $id)->firstOrFail();
 
-        $date = new \DateTime(empty($request->date) ? 'now' : $request->date);
         $start = clone $date;
         $start->setTime(00, 00, 00);
         $end = clone $date;

@@ -78,6 +78,7 @@
                                             format = "MM/dd/yyyy"
                                             v-model="initDate"
                                             @input="changeDate($event)"
+                                            :disabled="disabledDates"
                                             ></datepicker>
                                 </div>
                             </div>
@@ -318,6 +319,7 @@
                                                         format = "MM/dd/yyyy"
                                                         v-model="service.datePicker"
                                                         @input="service.delivery_date = updateDate($event)"
+                                                        :disabled="disabledDates"
                                                         ></datepicker>
                                             </td>
                                             <td>
@@ -586,7 +588,8 @@
                     data: [],
                     loading: false,
                     search: ''
-                }
+                },
+                disabledDates: {}
             }
         },
         mounted: function () {
@@ -603,6 +606,10 @@
             this.setDate(date);
 
             this.notes = this.data.notes;
+
+            const today = new Date();
+            const yesterday = new Date(today.getTime() - 24*60*60*1000);
+            this.disabledDates = this.user.level === 1 ? {} : {to: yesterday}
         },
 
         methods: {

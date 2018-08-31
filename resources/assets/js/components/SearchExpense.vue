@@ -121,6 +121,7 @@
 
                                         <register-expense-modal
                                                modal-id = "registerExpenseModal"
+                                               :user = "authUser"
                                                @register="search()"
                                         ></register-expense-modal>
 

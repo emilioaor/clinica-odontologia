@@ -22,7 +22,7 @@ class UserController extends Controller
             'assistantList'
         ]);
 
-        $this->middleware('doctor')->only(['assistantList']);
+       // $this->middleware('doctor')->only(['assistantList']);
 
         $this->middleware('secretary')->only(['search']);
     }

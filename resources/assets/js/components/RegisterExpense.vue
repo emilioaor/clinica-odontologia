@@ -42,6 +42,7 @@
                                                             format = "MM/dd/yyyy"
                                                             @input="changeDate($event, id)"
                                                             v-model="expense.picker"
+                                                            :disabled="disabledDates"
                                                             ></datepicker>
                                                 </td>
                                                 <td>
@@ -371,6 +372,10 @@
             suppliers: {
                 type: Array,
                 required: true
+            },
+            user: {
+                type: Object,
+                required: true
             }
         },
         data: function () {
@@ -389,12 +394,17 @@
                     date: null
                 },
                 selectedPatientExpense: null,
-                selectedServiceExpense: null
+                selectedServiceExpense: null,
+                disabledDates: {}
             }
         },
 
         mounted: function () {
             this.changeDateService(this.modalService.datePicker);
+
+            const today = new Date();
+            const yesterday = new Date(today.getTime() - 24*60*60*1000);
+            this.disabledDates = this.user.level === 1 ? {} : {to: yesterday}
         },
 
         methods: {

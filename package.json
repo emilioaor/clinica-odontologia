@@ -19,5 +19,8 @@
     "vee-validate": "~2.0.4",
     "vue": "^2.1.10",
     "vuejs-datepicker": "^0.9.29"
+  },
+  "dependencies": {
+    "node-sass": "^4.9.3"
   }
 }

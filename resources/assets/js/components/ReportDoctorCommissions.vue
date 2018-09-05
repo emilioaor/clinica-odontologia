@@ -471,11 +471,7 @@
                 data =  Object.values(data);
 
                 data.forEach((item) => {
-                    item.services.forEach((service) => {
-                        if (service.classification === 'Pago') {
-                            total += service.amount;
-                        }
-                    });
+                    total += this.calculatePayments(item.services);
                 });
 
                 return total;
@@ -504,6 +500,18 @@
                 return total;
             },
 
+            calculatePayments: function (services) {
+                let total = 0;
+
+                services.forEach((service) => {
+                    if (service.classification === 'Pago') {
+                        total += service.amount;
+                    }
+                });
+
+                return total;
+            },
+
             calculateExpenses: function (services) {
                 let total = 0;
 
@@ -520,21 +528,23 @@
                 let total = 0;
                 let expenses;
                 let commission;
-                let discount;
+                //let discount;
+                let payments;
 
                 data =  Object.values(data);
 
                 data.forEach((item) => {
 
                     expenses = this.calculateExpenses(item.services);
-                    discount = this.calculateDiscount(item.services);
+                    //discount = this.calculateDiscount(item.services);
+                    payments = this.calculatePayments(item.services);
 
-                    commission = (item.price - expenses - discount) * (item.commission / 100);
+                    commission = (payments - expenses) * (item.commission / 100);
 
                     total += commission;
                 });
 
-                return total;
+                return total > 0 ? total : 0;
             },
 
             totalAllCommission: function () {

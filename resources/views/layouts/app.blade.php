@@ -28,11 +28,13 @@
 
         @yield('content')
 
-        <send-lab-notification></send-lab-notification>
+        @if(Auth::check())
+            <send-lab-notification></send-lab-notification>
+        @endif
     </div>
 
     <!-- Scripts -->
-    <script src="{{ asset('js/app.js') }}?v=1.54.0"></script>
+    <script src="{{ asset('js/app.js') }}?v=1.55.0"></script>
     @yield('js')
 </body>
 </html>

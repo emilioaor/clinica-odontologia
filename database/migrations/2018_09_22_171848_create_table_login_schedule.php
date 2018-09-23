@@ -13,37 +13,35 @@ class CreateTableLoginSchedule extends Migration
      */
     public function up()
     {
-        \Illuminate\Support\Facades\DB::statement("
-            ALTER TABLE appointment_details ENGINE = InnoDB;
-            ALTER TABLE appointments ENGINE = InnoDB;
-            ALTER TABLE budget_details ENGINE = InnoDB;
-            ALTER TABLE budgets ENGINE = InnoDB;
-            ALTER TABLE call_logs ENGINE = InnoDB;
-            ALTER TABLE call_status_history ENGINE = InnoDB;
-            ALTER TABLE email_attaches ENGINE = InnoDB;
-            ALTER TABLE email_spooler ENGINE = InnoDB;
-            ALTER TABLE expenses ENGINE = InnoDB;
-            ALTER TABLE login_schedules ENGINE = InnoDB;
-            ALTER TABLE migrations ENGINE = InnoDB;
-            ALTER TABLE notes ENGINE = InnoDB;
-            ALTER TABLE notifications ENGINE = InnoDB;
-            ALTER TABLE password_resets ENGINE = InnoDB;
-            ALTER TABLE patient_history ENGINE = InnoDB;
-            ALTER TABLE patient_references ENGINE = InnoDB;
-            ALTER TABLE patients ENGINE = InnoDB;
-            ALTER TABLE payments ENGINE = InnoDB;
-            ALTER TABLE product_user ENGINE = InnoDB;
-            ALTER TABLE products ENGINE = InnoDB;
-            ALTER TABLE question_attaches ENGINE = InnoDB;
-            ALTER TABLE questions ENGINE = InnoDB;
-            ALTER TABLE ray_x ENGINE = InnoDB;
-            ALTER TABLE suppliers ENGINE = InnoDB;
-            ALTER TABLE supplies ENGINE = InnoDB;
-            ALTER TABLE supply_request_details ENGINE = InnoDB;
-            ALTER TABLE supply_requests ENGINE = InnoDB;
-            ALTER TABLE users ENGINE = InnoDB;
-            ALTER TABLE weekdays ENGINE = InnoDB;
-        ");
+        \Illuminate\Support\Facades\DB::statement("ALTER TABLE appointment_details ENGINE = InnoDB");
+        \Illuminate\Support\Facades\DB::statement("ALTER TABLE appointments ENGINE = InnoDB");
+        \Illuminate\Support\Facades\DB::statement("ALTER TABLE budget_details ENGINE = InnoDB");
+        \Illuminate\Support\Facades\DB::statement("ALTER TABLE budgets ENGINE = InnoDB");
+        \Illuminate\Support\Facades\DB::statement("ALTER TABLE call_logs ENGINE = InnoDB");
+        \Illuminate\Support\Facades\DB::statement("ALTER TABLE call_status_history ENGINE = InnoDB");
+        \Illuminate\Support\Facades\DB::statement("ALTER TABLE email_attaches ENGINE = InnoDB");
+        \Illuminate\Support\Facades\DB::statement("ALTER TABLE email_spooler ENGINE = InnoDB");
+        \Illuminate\Support\Facades\DB::statement("ALTER TABLE expenses ENGINE = InnoDB");
+        \Illuminate\Support\Facades\DB::statement("ALTER TABLE login_schedules ENGINE = InnoDB");
+        \Illuminate\Support\Facades\DB::statement("ALTER TABLE migrations ENGINE = InnoDB");
+        \Illuminate\Support\Facades\DB::statement("ALTER TABLE notes ENGINE = InnoDB");
+        \Illuminate\Support\Facades\DB::statement("ALTER TABLE notifications ENGINE = InnoDB");
+        \Illuminate\Support\Facades\DB::statement("ALTER TABLE password_resets ENGINE = InnoDB");
+        \Illuminate\Support\Facades\DB::statement("ALTER TABLE patient_history ENGINE = InnoDB");
+        \Illuminate\Support\Facades\DB::statement("ALTER TABLE patient_references ENGINE = InnoDB");
+        \Illuminate\Support\Facades\DB::statement("ALTER TABLE patients ENGINE = InnoDB");
+        \Illuminate\Support\Facades\DB::statement("ALTER TABLE payments ENGINE = InnoDB");
+        \Illuminate\Support\Facades\DB::statement("ALTER TABLE product_user ENGINE = InnoDB");
+        \Illuminate\Support\Facades\DB::statement("ALTER TABLE products ENGINE = InnoDB");
+        \Illuminate\Support\Facades\DB::statement("ALTER TABLE question_attaches ENGINE = InnoDB");
+        \Illuminate\Support\Facades\DB::statement("ALTER TABLE questions ENGINE = InnoDB");
+        \Illuminate\Support\Facades\DB::statement("ALTER TABLE ray_x ENGINE = InnoDB");
+        \Illuminate\Support\Facades\DB::statement("ALTER TABLE suppliers ENGINE = InnoDB");
+        \Illuminate\Support\Facades\DB::statement("ALTER TABLE supplies ENGINE = InnoDB");
+        \Illuminate\Support\Facades\DB::statement("ALTER TABLE supply_request_details ENGINE = InnoDB");
+        \Illuminate\Support\Facades\DB::statement("ALTER TABLE supply_requests ENGINE = InnoDB");
+        \Illuminate\Support\Facades\DB::statement("ALTER TABLE users ENGINE = InnoDB");
+        \Illuminate\Support\Facades\DB::statement("ALTER TABLE weekdays ENGINE = InnoDB");
 
         Schema::create('login_schedules', function (Blueprint $table) {
             $table->increments('id');

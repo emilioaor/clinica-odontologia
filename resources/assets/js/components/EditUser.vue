@@ -226,6 +226,178 @@
                     </div>
                 </div>
             </div>
+
+            <div class="row">
+
+                <div class="col-md-10 space-schedule">
+                    <div class="panel panel-default">
+                        <div class="panel-body">
+
+                            <form @submit.prevent="validateScheduleForm()">
+
+                                <div class="row">
+                                    <div class="col-xs-12">
+                                        <div class="form-group">
+                                            <label for="password">Habilitar restricci&oacute;n de horario</label>
+                                            <input type="checkbox" v-model="form.login_schedule">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row" v-if="form.login_schedule">
+                                    <div class="col-xs-12" v-for="(weekday, day) in configuredSchedule">
+                                        <div class="form-group">
+                                            <p>
+                                                <strong>
+                                                    {{ translations[day] }} (desde - hasta)
+                                                </strong>
+                                            </p>
+
+                                            <div class="row" v-for="(range, i) in weekday" v-if="weekday.length">
+                                                <div class="col-xs-5">
+                                                    <div class="select-time">
+                                                        <small>
+                                                            Hora
+                                                        </small>
+                                                        <select
+                                                                class="form-control"
+                                                                v-model="range.timeStartHour"
+                                                                @change="range.timeEndMinute = null;range.timeEndHour = null"
+                                                                :name="'startHour' + day + i"
+                                                                v-validate
+                                                                data-vv-rules="required"
+                                                                data-vv-scope="schedule"
+                                                                :class="{'input-error': errors.has('schedule.startHour' + day + i)}"
+                                                                >
+                                                            <option
+                                                                    v-for="i in 24"
+                                                                    :value="(i - 1) >= 10 ? (i - 1) : '0' + (i - 1)"
+                                                                    >
+                                                                {{ (i - 1) >= 10 ? (i - 1) : '0' + (i - 1) }}
+                                                            </option>
+                                                        </select>
+
+                                                        <p class="error" v-if="errors.firstByRule('startHour' + day + i, 'required', 'schedule')">
+                                                            Requerido
+                                                        </p>
+                                                    </div>
+                                                    <div class="select-time">
+                                                        <small>
+                                                            Minuto
+                                                        </small>
+                                                        <select
+                                                                class="form-control"
+                                                                v-model="range.timeStartMinute"
+                                                                @change="changeScheduleStart(day, i)"
+                                                                :name="'startMinute' + day + i"
+                                                                v-validate
+                                                                data-vv-rules="required"
+                                                                data-vv-scope="schedule"
+                                                                :class="{'input-error': errors.has('schedule.startMinute' + day + i)}"
+                                                                >
+                                                            <option
+                                                                    v-for="i in 60"
+                                                                    :value="(i - 1) >= 10 ? (i - 1) : '0' + (i - 1)"
+                                                                    >
+                                                                {{ (i - 1) >= 10 ? (i - 1) : '0' + (i - 1) }}
+                                                            </option>
+                                                        </select>
+
+                                                        <p class="error" v-if="errors.firstByRule('startMinute' + day + i, 'required', 'schedule')">
+                                                            Requerido
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                                <div class="col-xs-5">
+                                                    <div class="select-time">
+                                                        <small>
+                                                            Hora
+                                                        </small>
+                                                        <select
+                                                                class="form-control"
+                                                                v-model="range.timeEndHour"
+                                                                :disabled="! range.timeStartHour || ! range.timeStartMinute"
+                                                                :name="'endHour' + day + i"
+                                                                v-validate
+                                                                data-vv-rules="required"
+                                                                data-vv-scope="schedule"
+                                                                :class="{'input-error': errors.has('schedule.endHour' + day + i)}"
+                                                                >
+                                                            <option
+                                                                    v-for="i in 24"
+                                                                    :value="(i - 1) >= 10 ? (i - 1) : '0' + (i - 1)"
+                                                                    v-if="(i - 1) > range.timeStartHour"
+                                                                    >
+                                                                {{ (i - 1) >= 10 ? (i - 1) : '0' + (i - 1) }}
+                                                            </option>
+                                                        </select>
+
+                                                        <p class="error" v-if="errors.firstByRule('endHour' + day + i, 'required', 'schedule')">
+                                                            Requerido
+                                                        </p>
+                                                    </div>
+                                                    <div class="select-time">
+                                                        <small>
+                                                            Minuto
+                                                        </small>
+                                                        <select
+                                                                class="form-control"
+                                                                v-model="range.timeEndMinute"
+                                                                :disabled="! range.timeStartHour || ! range.timeStartMinute"
+                                                                :name="'endMinute' + day + i"
+                                                                v-validate
+                                                                data-vv-rules="required"
+                                                                data-vv-scope="schedule"
+                                                                :class="{'input-error': errors.has('schedule.endMinute' + day + i)}"
+                                                                >
+                                                            <option
+                                                                    v-for="i in 60"
+                                                                    :value="(i - 1) >= 10 ? (i - 1) : '0' + (i - 1)"
+                                                                    >
+                                                                {{ (i - 1) >= 10 ? (i - 1) : '0' + (i - 1) }}
+                                                            </option>
+                                                        </select>
+
+                                                        <p class="error" v-if="errors.firstByRule('endMinute' + day + i, 'required', 'schedule')">
+                                                            Requerido
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                                <div class="col-xs-2">
+                                                    <button type="button" class="btn btn-danger" @click="removeSchedule(day, i)">
+                                                        <i class="glyphicon glyphicon-remove"></i>
+                                                    </button>
+                                                </div>
+                                            </div>
+
+                                            <div class="row" v-if="! weekday.length">
+                                                <div class="col-xs-12">
+                                                    <button type="button" class="btn btn-default" @click="addSchedule(day)">
+                                                        <i class="glyphicon glyphicon-plus"></i>
+                                                        Agregar horario
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-xs-12">
+                                        <img src="/img/loading.gif" v-if="loading">
+                                        <button class="btn btn-success" v-if="!loading">
+                                            <i class="glyphicon glyphicon-saved"></i>
+                                            Guardar cambios
+                                        </button>
+                                    </div>
+                                </div>
+
+                            </form>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </section>
 </template>
@@ -233,17 +405,40 @@
 
 <script>
     export default {
-        props: ['user'],
+        props: {
+            user: {
+                type: Object,
+                required: true
+            },
+            weekdays: {
+                type: Array,
+                required: true
+            },
+            translations: {
+                type: Object,
+                required: true
+            }
+        },
 
         data: function () {
             return {
                 loading: false,
-                form: {}
+                form: {},
+                configuredSchedule: {
+                    monday: [],
+                    tuesday: [],
+                    wednesday: [],
+                    thursday: [],
+                    friday: [],
+                    saturday: [],
+                    sunday: []
+                }
             }
         },
 
         beforeMount: function () {
-            this.form = JSON.parse(this.user);
+            this.form = this.user;
+            this.initConfiguredSchedule();
         },
 
         methods: {
@@ -273,9 +468,9 @@
                         }
                     })
                     .catch((err) => {
-    if (err.response.status === 403 || err.response.status === 405) {
-        location.href = '/';
-    }
+                        if (err.response.status === 403 || err.response.status === 405) {
+                            location.href = '/';
+                        }
                         this.loading = false;
                         console.log(err);
                     })
@@ -292,9 +487,9 @@
                     }
                 })
                 .catch((err) => {
-    if (err.response.status === 403 || err.response.status === 405) {
-        location.href = '/';
-    }
+                    if (err.response.status === 403 || err.response.status === 405) {
+                        location.href = '/';
+                    }
                     this.loading = false;
                     console.log(err);
                 })
@@ -312,13 +507,92 @@
                         }
                     })
                     .catch((err) => {
-    if (err.response.status === 403 || err.response.status === 405) {
-        location.href = '/';
-    }
+                        if (err.response.status === 403 || err.response.status === 405) {
+                            location.href = '/';
+                        }
                         this.loading = false;
                         console.log(err);
                     })
+            },
+
+            initConfiguredSchedule: function () {
+                let day;
+                let start;
+                let end;
+
+                for (let i in this.user.weekdays) {
+
+                    day = this.user.weekdays[i].weekday;
+                    start = this.user.weekdays[i].pivot.time_start.split(':');
+                    end = this.user.weekdays[i].pivot.time_end.split(':');
+
+                    this.configuredSchedule[day].push({
+                        timeStartHour: start[0],
+                        timeStartMinute: start[1],
+                        timeEndHour: end[0],
+                        timeEndMinute: end[1]
+                    });
+                }
+            },
+
+            validateScheduleForm: function () {
+                this.$validator.validateAll('schedule').then((res) => {
+                    if (res) {
+                        this.sendScheduleForm();
+                    }
+                })
+            },
+
+            sendScheduleForm : function () {
+                this.loading = true;
+                const data = {
+                    configuredSchedule: this.configuredSchedule,
+                    loginSchedule: this.form.login_schedule
+                };
+
+                axios.put('/admin/user/' + this.form.public_id + '/schedule', data)
+                    .then((res) => {
+                        if (res.data.success) {
+                            location.href = res.data.redirect;
+                        }
+                    })
+                    .catch((err) => {
+                        if (err.response.status === 403 || err.response.status === 405) {
+                            location.href = '/';
+                        }
+                        this.loading = false;
+                        console.log(err);
+                    })
+                ;
+            },
+
+            addSchedule: function (weekday) {
+                this.configuredSchedule[weekday].push({
+                    timeStartHour: null,
+                    timeStartMinute: null,
+                    timeEndHour: null,
+                    timeEndMinute: null
+                });
+            },
+
+            removeSchedule: function (weekday, index) {
+                this.configuredSchedule[weekday].splice(index, 1);
+            },
+
+            changeScheduleStart: function (weekday, index) {
+                this.configuredSchedule[weekday][index].timeEndHour = null;
+                this.configuredSchedule[weekday][index].timeEndMinute = null;
             }
         }
     }
 </script>
+
+<style>
+    .select-time {
+        width: 50%;
+        float: left;
+    }
+    .space-schedule .btn-danger {
+        margin-top: 2rem;
+    }
+</style>

@@ -30,6 +30,8 @@ return [
     'user.update' => 'Usuario actualizado',
     'user.delete' => 'Usuario eliminado',
     'user.password' => 'Contraseña actualizada',
+    'user.schedule.update' => 'Horario actualizado',
+    'user.schedule.block' => 'No tiene autorización para ingresar al sistema en este horario',
 
     'callLog.create' => 'Registro de llamada registrado',
     'callLog.update' => 'Registro de llamada actualizado',
@@ -104,6 +106,16 @@ return [
     'September' => 'Septiembre',
     'October' => 'Octubre',
     'November' => 'Noviembre',
-    'December' => 'Diciembre'
+    'December' => 'Diciembre',
+
+    'weekDays' => [
+        'monday' => 'Lunes',
+        'tuesday' => 'Martes',
+        'wednesday' => 'Miercoles',
+        'thursday' => 'Jueves',
+        'friday' => 'Viernes',
+        'saturday' => 'Sabado',
+        'sunday' => 'Domingo'
+    ]
 
 ];

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Product;
 use App\User;
+use App\Weekday;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
@@ -119,13 +120,10 @@ class UserController extends Controller
      */
     public function edit($id)
     {
-        $user = User::where('public_id', $id)->first();
+        $user = User::with(['weekdays'])->where('public_id', $id)->firstOrFail();
+        $weekdays = Weekday::all();
 
-        if (! $user) {
-            abort(404);
-        }
-
-        return view('admin.user.edit', compact('user'));
+        return view('admin.user.edit', compact('user', 'weekdays'));
     }
 
     /**
@@ -257,6 +255,48 @@ class UserController extends Controller
         return new JsonResponse([
             'success' => true,
             'assistants' => $assistants
+        ]);
+    }
+
+    /**
+     * Actualiza la configuración de horario
+     *
+     * @param Request $request
+     * @param $id
+     * @return JsonResponse
+     */
+    public function schedule(Request $request, $id)
+    {
+        DB::beginTransaction();
+
+        $user = User::where('public_id', $id)->firstOrFail();
+        $user->login_schedule = $request->get('loginSchedule');
+        $user->save();
+
+        DB::table('login_schedules')->where('user_id', $user->id)->delete();
+
+        foreach ($request->get('configuredSchedule') as $day => $schedules) {
+            foreach ($schedules as $schedule) {
+
+                $weekday = Weekday::where('weekday', $day)->first();
+
+                $timeStart = $schedule['timeStartHour'] . ':' . $schedule['timeStartMinute'];
+                $timeEnd = $schedule['timeEndHour'] . ':' . $schedule['timeEndMinute'];
+
+                $user->weekdays()->attach($weekday->id, [
+                    'time_start' => new \DateTime('now ' . $timeStart),
+                    'time_end' => new \DateTime('now ' . $timeEnd)
+                ]);
+            }
+        }
+
+        DB::commit();
+
+        $this->sessionMessage('message.user.schedule.update');
+
+        return new JsonResponse([
+            'success' => true,
+            'redirect' => route('user.edit', ['user' => $id])
         ]);
     }
 }

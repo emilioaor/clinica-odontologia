@@ -35,7 +35,8 @@ class User extends Authenticatable
         'email',
         'address',
         'phone',
-        'level'
+        'level',
+        'login_schedule'
     ];
 
     /**
@@ -229,6 +230,18 @@ class User extends Authenticatable
     public function callLogs()
     {
         return $this->hasMany(CallLog::class, 'user_id');
+    }
+
+    /**
+     * Todos los horarios permitidos configurados para este usuario
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function weekdays()
+    {
+        return $this->belongsToMany(Weekday::class, 'login_schedules', 'user_id', 'weekday_id')
+            ->withPivot(['time_start', 'time_end'])
+            ;
     }
 
     /**

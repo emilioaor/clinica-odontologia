@@ -22,7 +22,6 @@ class CreateTableLoginSchedule extends Migration
         \Illuminate\Support\Facades\DB::statement("ALTER TABLE email_attaches ENGINE = InnoDB");
         \Illuminate\Support\Facades\DB::statement("ALTER TABLE email_spooler ENGINE = InnoDB");
         \Illuminate\Support\Facades\DB::statement("ALTER TABLE expenses ENGINE = InnoDB");
-        \Illuminate\Support\Facades\DB::statement("ALTER TABLE login_schedules ENGINE = InnoDB");
         \Illuminate\Support\Facades\DB::statement("ALTER TABLE migrations ENGINE = InnoDB");
         \Illuminate\Support\Facades\DB::statement("ALTER TABLE notes ENGINE = InnoDB");
         \Illuminate\Support\Facades\DB::statement("ALTER TABLE notifications ENGINE = InnoDB");

@@ -11,11 +11,16 @@
                                 id="status"
                                 class="form-control"
                                 v-model="form.status"
+                                @focus="hasCancelAppointment()"
                                 v-validate
                                 data-vv-rules="required"
                                 :class="{'input-error': errors.has('status')}"
                             >
-                            <option value="2">
+                            <option
+                                    value="2"
+                                    :disabled="disabledAppointment"
+                                    :class="{'bg-danger': disabledAppointment}"
+                                    >
                                 Con cita
                             </option>
                             <option value="3">
@@ -96,7 +101,8 @@
                     note: '',
                     status: null,
                     date_again: null
-                }
+                },
+                disabledAppointment: false
             }
         },
 
@@ -147,6 +153,10 @@
 
                 this.form.date_again = year + '-' + month + '-' + day;
             },
+
+            hasCancelAppointment: function () {
+                this.disabledAppointment = (window.cancelAppointment === 1);
+            }
         }
     }
 </script>

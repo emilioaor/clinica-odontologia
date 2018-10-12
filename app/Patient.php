@@ -16,7 +16,8 @@ class Patient extends Model
         'name',
         'phone',
         'email',
-        'patient_reference_id'
+        'patient_reference_id',
+        'cancel_appointment'
 
     ];
 

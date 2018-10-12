@@ -45,7 +45,7 @@ class CallLogController extends Controller
             ->whereDate('call_date', '<=', new \DateTime())
             ->where('status', '<>', CallLog::STATUS_NOT_INTERESTED)
             ->where('status', '<>', CallLog::STATUS_SCHEDULED)
-            ->with('statusHistory')
+            ->with(['statusHistory', 'patient'])
         ;
 
         if (! Auth::user()->isAdmin()) {

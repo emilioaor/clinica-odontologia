@@ -292,7 +292,11 @@
                                     </thead>
 
                                     <tbody v-if="! modal.loading">
-                                    <tr v-for="p in modal.data" v-if="!patient || patient.id !== p.id">
+                                    <tr
+                                            v-for="p in modal.data"
+                                            v-if="!patient || patient.id !== p.id"
+                                            :class="{'lock-patient': p.cancel_appointment}"
+                                            >
                                         <td>{{ p.phone }}</td>
                                         <td>{{ p.name }}</td>
                                         <td>
@@ -300,9 +304,14 @@
                                                     class="btn btn-primary"
                                                     @click="selectPatient(p)"
                                                     data-dismiss="modal"
+                                                    v-if="! p.cancel_appointment"
                                                     >
                                                 <i class="glyphicon glyphicon-ok"></i>
                                             </button>
+
+                                            <p class="text-center" v-if="p.cancel_appointment">
+                                                <i class="glyphicon glyphicon-ban-circle"></i>
+                                            </p>
                                         </td>
                                     </tr>
                                     </tbody>
@@ -560,3 +569,13 @@
         }
     }
 </script>
+
+<style scoped>
+    .lock-patient {
+        background-color: #f2dede !important;
+        color: rgba(0,0,0,.5);
+    }
+    .lock-patient p {
+        margin: .3rem 0 .1rem;
+    }
+</style>

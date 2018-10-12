@@ -47,7 +47,7 @@
                                                     class="btn btn-primary"
                                                     data-toggle="modal"
                                                     data-target="#callModal"
-                                                    onclick="window.callLogPublicId = '{{ $call->public_id }}'"
+                                                    onclick="eventCallLogModal('{{ $call->public_id }}', {{ $call->patient->cancel_appointment }})"
                                                 >
                                                 <i class="glyphicon glyphicon-phone-alt"></i>
                                             </button>
@@ -139,4 +139,14 @@
         <change-status-call></change-status-call>
 
     </div>
+@endsection
+
+@section('js')
+    <script>
+        function eventCallLogModal(publicId, cancelAppointment)
+        {
+            window.callLogPublicId = publicId;
+            window.cancelAppointment = cancelAppointment;
+        }
+    </script>
 @endsection

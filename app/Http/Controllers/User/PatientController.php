@@ -127,6 +127,7 @@ class PatientController extends Controller
         $patient->name = $request->name;
         $patient->email = $request->email;
         $patient->patient_reference_id = $request->patient_reference_id;
+        $patient->cancel_appointment = $request->cancel_appointment;
         $patient->save();
 
         $this->sessionMessage('message.patient.update');

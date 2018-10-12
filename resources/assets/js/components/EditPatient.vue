@@ -114,6 +114,21 @@
                                             </select>
                                         </div>
                                     </div>
+
+                                    <div class="col-sm-4">
+                                        <div class="form-group">
+                                            <label for="cancel_appointment">Bloquear citas</label>
+
+                                            <p>
+                                                <input
+                                                        type="checkbox"
+                                                        name="cancel_appointment"
+                                                        id="cancel_appointment"
+                                                        v-model="form.cancel_appointment"
+                                                        >
+                                            </p>
+                                        </div>
+                                    </div>
                                 </div>
 
                                 <div class="row">

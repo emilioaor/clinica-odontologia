@@ -57,7 +57,7 @@ class LoginController extends Controller
             $this->sessionMessage('message.user.schedule.block', self::ALERT_DANGER);
 
             return redirect()->route('login');
-        };
+        }
 
         $this->validateLogin($request);
 
@@ -97,7 +97,7 @@ class LoginController extends Controller
 
         $user = User::with(['weekdays'])->where($this->username(), $request->get($this->username()))->first();
 
-        if (! $user->login_schedule) {
+        if (! $user || ! $user->login_schedule) {
             return true;
         }
 

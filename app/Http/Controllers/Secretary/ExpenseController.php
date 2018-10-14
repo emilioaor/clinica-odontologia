@@ -32,7 +32,9 @@ class ExpenseController extends Controller
      */
     public function index()
     {
-        return view('secretary.expense.index');
+        $suppliers = Supplier::orderBy('name')->get();
+
+        return view('secretary.expense.index', compact('suppliers'));
     }
 
     /**

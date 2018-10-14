@@ -143,26 +143,104 @@
                                                 <th>Gasto</th>
                                                 <th>Monto</th>
                                                 <th width="5%"></th>
+                                                <th width="5%"></th>
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <tr v-for="expense in data.expenses">
-                                                <td>{{ dateFormat(expense.date) }}</td>
-                                                <td>{{ expense.supplier.name }}</td>
+                                            <tr v-for="(expense, i) in data.expenses">
+                                                <td>
+                                                    <span v-if="editExpense !== i">
+                                                        {{ dateFormat(expense.date) }}
+                                                    </span>
+                                                    <span v-else>
+
+                                                        <datepicker
+                                                                :name = "'dateExpense' + i"
+                                                                :id = "'dateExpense' + i"
+                                                                language="es"
+                                                                input-class = "form-control"
+                                                                format = "MM/dd/yyyy"
+                                                                v-model="expense.datePicker"
+                                                                @input="changeDateExpense($event, i)"
+                                                                ></datepicker>
+                                                    </span>
+                                                </td>
+                                                <td>
+                                                    <span v-if="editExpense !== i">
+                                                        {{ expense.supplier.name }}
+                                                    </span>
+                                                    <span v-else>
+
+                                                        <select
+                                                                :name="'supplier' + i"
+                                                                :id="'supplier' + i"
+                                                                class="form-control"
+                                                                v-model="expense.supplier_id"
+                                                                @change="changeSupplier(i)"
+                                                                >
+                                                            <option
+                                                                    v-for="supplier in suppliers"
+                                                                    :value="supplier.id"
+                                                                    >
+                                                                {{ supplier.name }}
+                                                            </option>
+                                                        </select>
+
+                                                    </span>
+                                                </td>
                                                 <td>{{ expense.patient_history ? expense.patient_history.public_id : ''  }}</td>
                                                 <td>{{ expense.description }}</td>
                                                 <td>{{ '$ ' + expense.amount  }}</td>
                                                 <td>
+
+                                                    <!-- Editar -->
+                                                    <button
+                                                            type="button"
+                                                            class="btn btn-warning"
+                                                            @click="editExpense = i"
+                                                            v-if="editExpense !== i && editLoading !== i"
+                                                            :disabled="editExpense !== i && editExpense !== null"
+                                                            >
+                                                        <i class="glyphicon glyphicon-edit"></i>
+                                                    </button>
+
+                                                    <!-- Cancelar -->
+                                                    <button
+                                                            type="button"
+                                                            class="btn btn-warning"
+                                                            @click="editExpense = null"
+                                                            v-if="editExpense === i && editLoading !== i"
+                                                            >
+                                                        <i class="glyphicon glyphicon-remove-sign"></i>
+                                                    </button>
+                                                </td>
+                                                <td>
+
+                                                    <!-- Guardar -->
+                                                    <button
+                                                            type="button"
+                                                            class="btn btn-success"
+                                                            v-if="editExpense === i && editLoading !== i"
+                                                            @click="saveExpense(i)"
+                                                            >
+                                                        <i class="glyphicon glyphicon-check"></i>
+                                                    </button>
+
+                                                    <!-- Eliminar -->
                                                     <button
                                                             type="button"
                                                             class="btn btn-danger"
                                                             data-toggle="modal"
                                                             data-target="#deleteModal"
-                                                            v-if="authUser.level === 1"
+                                                            v-if="authUser.level === 1 && editExpense !== i && editLoading !== i"
+                                                            :disabled="editExpense !== i && editExpense !== null"
                                                             @click="deleteExpense = expense.id"
                                                             >
                                                         <i class="glyphicon glyphicon-remove"></i>
                                                     </button>
+
+                                                    <!-- Loading -->
+                                                    <img src="/img/loading.gif" v-if="editLoading === i">
                                                 </td>
                                             </tr>
                                         </tbody>
@@ -291,7 +369,7 @@
             Datepicker,
             RegisterExpenseModal
         },
-        props: ['user'],
+        props: ['user', 'suppliers'],
         data: function () {
           return {
               loading: false,
@@ -310,6 +388,8 @@
               },
               authUser: JSON.parse(this.user),
               deleteExpense: null,
+              editExpense: null,
+              editLoading: null
           }
         },
         mounted: function () {
@@ -362,6 +442,14 @@
                 this.data.end = year + '-' + month + '-' + day;
             },
 
+            changeDateExpense: function (date, index) {
+                let day = (date.getDate() < 10) ? '0' + date.getDate() : date.getDate();
+                let month = ((date.getMonth() + 1) < 10) ? '0' + (date.getMonth() + 1) : (date.getMonth() + 1);
+                let year = date.getFullYear();
+
+                this.data.expenses[index].date = year + '-' + month + '-' + day;
+            },
+
             search: function () {
                 this.loading = true;
 
@@ -371,6 +459,10 @@
 
                         if (res.data.success) {
                             this.data.expenses = res.data.expenses;
+
+                            for (let i in this.data.expenses) {
+                                this.data.expenses[i].datePicker = new Date(this.data.expenses[i].date);
+                            }
                         }
                     })
                     .catch((err) => {
@@ -406,6 +498,31 @@
                             location.href = '/';
                         }
                         this.loading = false;
+                        console.log(err);
+                    })
+            },
+
+            changeSupplier: function (index) {
+                const supplierId = this.data.expenses[index].supplier_id;
+
+                for (let i in this.suppliers) {
+                    if (this.suppliers[i].id === supplierId) {
+                        this.data.expenses[index].supplier = this.suppliers[i];
+                    }
+                }
+            },
+
+            saveExpense: function (index) {
+                this.editLoading = index;
+                const expense = this.data.expenses[index];
+
+                axios.put('/user/expense/' + expense.id, expense)
+                    .then((res) => {
+                        this.editExpense = null;
+                        this.editLoading = null;
+                    })
+                    .catch((err) => {
+                        this.editLoading = null;
                         console.log(err);
                     })
             }

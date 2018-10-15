@@ -261,25 +261,47 @@
                                     </thead>
 
                                     <tbody v-if="! modal.loading">
-                                    <tr v-for="d in modal.data">
-                                        <td>{{ d.phone }}</td>
-                                        <td>{{ d.name }}</td>
-                                        <td>{{ d.email }}</td>
-                                        <td>
-                                            <button
-                                                    class="btn btn-primary"
-                                                    @click="selectDoctor(d)"
-                                                    data-dismiss="modal"
-                                                    >
-                                                <i class="glyphicon glyphicon-ok"></i>
-                                            </button>
-                                        </td>
-                                    </tr>
+                                        <tr
+                                                v-for="(d, i) in modal.data"
+                                                v-if="! pagination.current || (i >= pagination.current.start && i <= pagination.current.end)"
+                                            >
+                                            <td>{{ d.phone }}</td>
+                                            <td>{{ d.name }}</td>
+                                            <td>{{ d.email }}</td>
+                                            <td>
+                                                <button
+                                                        class="btn btn-primary"
+                                                        @click="selectDoctor(d)"
+                                                        data-dismiss="modal"
+                                                        >
+                                                    <i class="glyphicon glyphicon-ok"></i>
+                                                </button>
+                                            </td>
+                                        </tr>
                                     </tbody>
                                 </table>
 
                             </div>
                         </div>
+
+                        <div class="row" v-if="pagination.build.length > 0">
+                            <div class="col-xs-12 text-center">
+                                <!-- Pagination -->
+                                <nav aria-label="...">
+                                    <ul class="pagination">
+                                        <li
+                                                v-for="build in pagination.build"
+                                                :class="{active: build.page === pagination.current.page}"
+                                                >
+                                            <a @click="pagination.current = build">
+                                                {{ build.page }}
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </nav>
+                            </div>
+                        </div>
+
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
@@ -364,7 +386,13 @@
                   loading: false,
                   search: ''
               },
-              commission: null
+              commission: null,
+
+              pagination: {
+                  perPage: 10,
+                  build: [],
+                  current: null
+              }
           }
         },
         mounted: function () {
@@ -381,11 +409,13 @@
                 this.modal.data = [];
                 this.modal.loading = true;
 
-                axios.get('/admin/user/search?level=2&search=' + this.modal.search)
+                axios.get('/admin/user/search?level=2&limit=9999&search=' + this.modal.search)
                     .then((res) => {
                         this.modal.loading = false;
 
                         this.modal.data = res.data.users;
+
+                        this.buildPagination();
                     })
                     .catch((err) => {
                         if (err.response.status === 403 || err.response.status === 405) {
@@ -586,8 +616,43 @@
                         this.loading = false;
                         console.log(err);
                     })
+            },
+
+            buildPagination: function () {
+
+                this.pagination.build = [];
+                this.pagination.current = null;
+
+                if (this.modal.data.length <= this.pagination.perPage) {
+                    return;
+                }
+
+                let page = 1;
+                let start = 0;
+                let end = this.pagination.perPage - 1;
+
+                while (start <= this.modal.data.length) {
+
+                    this.pagination.build.push({
+                        start: start,
+                        end: end,
+                        page: page
+                    });
+
+                    start += this.pagination.perPage;
+                    end = start + (this.pagination.perPage - 1);
+                    page++;
+                }
+
+                this.pagination.current = this.pagination.build[0];
             }
 
         }
     }
 </script>
+
+<style scoped>
+    .pagination a {
+        cursor: pointer;
+    }
+</style>

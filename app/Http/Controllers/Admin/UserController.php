@@ -219,7 +219,7 @@ class UserController extends Controller
         $users = User::orderBy('id', 'DESC')
             ->orderBy('name')
             ->with('commissionProducts')
-            ->limit(10);
+            ->limit(isset($request->limit) ? $request->limit : 10);
 
         if (! empty($request->level)) {
             $users->where([

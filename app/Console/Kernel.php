@@ -3,6 +3,7 @@
 namespace App\Console;
 
 use App\Console\Commands\SendEmailSpooler;
+use App\Console\Commands\ImageStorage;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 
@@ -14,7 +15,8 @@ class Kernel extends ConsoleKernel
      * @var array
      */
     protected $commands = [
-        SendEmailSpooler::class
+        SendEmailSpooler::class,
+        ImageStorage::class
     ];
 
     /**

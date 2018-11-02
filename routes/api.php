@@ -13,4 +13,9 @@ use Illuminate\Http\Request;
 |
 */
 
+Route::get('/email/send', function () {
+    Artisan::call('email:send');
+
+    return new \Illuminate\Http\JsonResponse(['ok' => true]);
+});
 

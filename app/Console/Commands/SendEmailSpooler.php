@@ -40,6 +40,12 @@ class SendEmailSpooler extends Command
      */
     public function handle()
     {
+        //$this->sendEmail();
+        $this->imageStorage();
+    }
+
+    private function sendEmail()
+    {
         $emailSpooler = EmailSpooler::where('status', EmailSpooler::STATUS_PENDING)->get();
 
         foreach ($emailSpooler as $email) {
@@ -56,8 +62,6 @@ class SendEmailSpooler extends Command
             $email->status = EmailSpooler::STATUS_COMPLETE;
             $email->save();
         }
-
-        $this->imageStorage();
     }
 
     private function imageStorage()

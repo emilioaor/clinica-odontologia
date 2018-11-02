@@ -202,20 +202,19 @@ class PatientHistoryController extends Controller
 
             $filename = uniqid() . $extension;
             $url = 'uploads/ray-x/' . Auth::user()->id . '/' . $filename;
-//            $path = public_path('uploads/ray-x') . '/' . Auth::user()->id;
-//
-//            if (! is_dir($path)) {
-//                mkdir($path);
-//            }
-//
-//            $path .= '/' . $filename;
-//
-//            file_put_contents($path, $upload);
+            $path = public_path('uploads/ray-x') . '/' . Auth::user()->id;
+
+            if (! is_dir($path)) {
+                mkdir($path);
+            }
+
+            $path .= '/' . $filename;
+
+            file_put_contents($path, $upload);
 
             $rayX = new RayX();
             $rayX->patient_id = $patient->id;
             $rayX->url = $url;
-            $rayX->base64 = $base64[1];
             $rayX->save();
         }
 

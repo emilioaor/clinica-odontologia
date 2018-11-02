@@ -92,7 +92,7 @@
                                         name="service"
                                         placeholder="Servicio"
                                         readonly
-                                        v-model="patientHistory.public_id"
+                                        v-model="patientHistory.description"
                                         v-validate
                                         data-vv-rules="required"
                                         :class="{'input-error': errors.has('service')}"
@@ -360,7 +360,8 @@
                     public_id: null
                 },
                 patientHistory: {
-                    public_id: null
+                    public_id: null,
+                    description: null
                 },
                 searchPatient: false,
                 searchService: false,
@@ -487,6 +488,7 @@
 
             selectService: function (service) {
                 this.patientHistory.public_id = service.public_id;
+                this.patientHistory.description = service.product.name;
                 this.searchService = false;
                 this.data.patient_history_id = service.id;
             },

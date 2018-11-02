@@ -15,8 +15,7 @@ class Kernel extends ConsoleKernel
      * @var array
      */
     protected $commands = [
-        SendEmailSpooler::class,
-        ImageStorage::class
+        SendEmailSpooler::class
     ];
 
     /**

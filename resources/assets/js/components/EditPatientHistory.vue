@@ -420,7 +420,12 @@
 
                         <div class="row">
                             <div class="col-xs-12">
-                                <h3>Imagenes y radiografias</h3>
+                                <h3>
+                                    Imagenes y radiografias
+                                    <a :href="'/user/service/' + this.data.public_id + '/uploadImage'" target="_blank">
+                                        ¿Carga lenta? prueba la carga basica
+                                    </a>
+                                </h3>
                             </div>
                         </div>
 

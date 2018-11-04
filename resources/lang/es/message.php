@@ -16,6 +16,7 @@ return [
 
     'service.update' => 'Servicios actualizados',
     'service.delete' => 'Servicio eliminado',
+    'service.upload' => 'Imagenes cargadas',
 
     'config.changePassword.current' => 'Contraseña actual es incorrecta',
     'config.changePassword.confirmation' => 'Contraseña no coinciden',

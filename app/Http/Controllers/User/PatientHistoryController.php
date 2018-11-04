@@ -16,6 +16,7 @@ use App\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Notification;
@@ -410,5 +411,55 @@ class PatientHistoryController extends Controller
         $patientHistory->save();
 
         return new JsonResponse(['success' => true]);
+    }
+
+    /**
+     * Vista para cargar imagenes por form html
+     *
+     * @param $id
+     * @return \Illuminate\View\View
+     */
+    public function uploadImage($id)
+    {
+        $patient = Patient::where('public_id', $id)->firstOrFail();
+
+        return view('user.patientHistory.upload', compact('patient'));
+    }
+
+    /**
+     * Carga la imagen
+     *
+     * @param Request $request
+     * @param $id
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function storeImage(Request $request, $id)
+    {
+        $patient = Patient::where('public_id', $id)->firstOrFail();
+
+        /** @var UploadedFile $image */
+        foreach ($request->files as $image) {
+
+            $extension = '.' . $image->guessExtension();
+
+            $filename = uniqid() . $extension;
+            $url = 'uploads/ray-x/' . Auth::user()->id . '/' . $filename;
+            $path = public_path('uploads/ray-x') . '/' . Auth::user()->id;
+
+            if (! is_dir($path)) {
+                mkdir($path);
+            }
+
+            $image->move($path, $filename);
+
+            $rayX = new RayX();
+            $rayX->patient_id = $patient->id;
+            $rayX->url = $url;
+            $rayX->save();
+        }
+
+        $this->sessionMessage('message.service.upload');
+
+        return redirect()->route('service.upload', $id);
     }
 }

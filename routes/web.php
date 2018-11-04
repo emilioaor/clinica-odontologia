@@ -87,10 +87,6 @@ Route::group(['prefix' => 'user', 'middleware' => 'auth'], function() {
     // Notificaciones
     Route::get('notification', 'NotificationController@sendLabNotifications');
     Route::put('notification', 'NotificationController@markAsRead');
-
-    // Prueba storage
-    Route::get('test/image', 'Controller@testImage')->name('test.image');
-    Route::post('test/image', 'Controller@uploadImage');
 });
 
 // Administrador

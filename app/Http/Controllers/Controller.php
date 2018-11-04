@@ -8,7 +8,6 @@ use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Support\Facades\Lang;
 use Illuminate\Support\Facades\Session;
-use Illuminate\Http\Request;
 
 class Controller extends BaseController
 {
@@ -27,22 +26,5 @@ class Controller extends BaseController
     {
         Session::flash('alert-type', $alertType);
         Session::flash('alert-message', Lang::trans($message));
-    }
-
-    public function testImage()
-    {
-        return view('test.index');
-    }
-
-    public function uploadImage(Request $request)
-    {
-        $path = public_path('uploads');
-        $file = 'test' . time();
-        $request->file('image')->move($path, $file);
-
-        dd(
-            'Busca tu imagen en el siguiente directorio',
-            $path . '/' . $file
-        );
     }
 }

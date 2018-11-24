@@ -422,7 +422,11 @@
                             <div class="col-xs-12">
                                 <h3>
                                     Imagenes y radiografias
-                                    <a :href="'/user/service/' + this.data.public_id + '/uploadImage'" target="_blank">
+                                    <a 
+                                        :href="'/user/service/' + this.data.public_id + '/uploadImage'" 
+                                        target="_blank"
+                                        v-if="authUser.upload_alternative"
+                                        >
                                         ¿Carga lenta? prueba la carga basica
                                     </a>
                                 </h3>

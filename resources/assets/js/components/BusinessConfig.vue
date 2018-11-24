@@ -119,6 +119,20 @@
                                     <div class="row">
                                         <div class="col-sm-6">
                                             <div class="form-group">
+                                                <label for="upload_alternative">Carga de imagen alternativa</label>
+                                                <input 
+                                                    type="checkbox" 
+                                                    id="upload_alternative"
+                                                    name="upload_alternative"
+                                                    v-model="form.upload_alternative"
+                                                    >
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col-sm-6">
+                                            <div class="form-group">
                                                 <img src="/img/loading.gif" v-if="loading">
                                                 <button class="btn btn-warning" v-if="!loading">
                                                     <i class="glyphicon glyphicon-saved"></i>
@@ -167,6 +181,7 @@
             this.form.phone = json.phone;
             this.form.email = json.email;
             this.form.address = json.address;
+            this.form.upload_alternative = json.upload_alternative;
         },
 
         methods: {

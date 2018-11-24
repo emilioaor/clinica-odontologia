@@ -110,6 +110,7 @@ class ConfigController extends Controller
             $user->address = $request->address;
             $user->email = $request->email;
             $user->phone = $request->phone;
+            $user->upload_alternative = $request->upload_alternative;
             $user->save();
         }
 

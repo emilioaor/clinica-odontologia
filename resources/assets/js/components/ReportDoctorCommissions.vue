@@ -145,7 +145,7 @@
                                 </div>
                             </div>
 
-                            <div class="row" v-for="p in data.report">
+                            <div class="row" v-for="(p, pi) in data.report" :key="pi">
                                 <div class="col-xs-12">
 
                                     <div class="alert alert-info">
@@ -164,9 +164,10 @@
                                                 <th>Monto</th>
                                             </tr>
                                         </thead>
-                                        <tbody v-for="d in p.data">
+                                        <tbody v-for="(d, di) in p.data" :key="di">
                                             <tr
-                                                    v-for="line in d.services"
+                                                    v-for="(line, li) in d.services" 
+                                                    :key="li"
                                             >
                                                 <td>{{ dateFormat(line.date) }}</td>
                                                 <td>{{ line.classification }}</td>
@@ -248,7 +249,7 @@
 
                         <div class="row">
 
-                            <div class="col-xs-12">
+                            <div class="col-xs-12 space-table">
 
                                 <table class="table table-responsive table-striped">
                                     <thead>
@@ -263,6 +264,7 @@
                                     <tbody v-if="! modal.loading">
                                         <tr
                                                 v-for="(d, i) in modal.data"
+                                                :key="i"
                                                 v-if="! pagination.current || (i >= pagination.current.start && i <= pagination.current.end)"
                                             >
                                             <td>{{ d.phone }}</td>
@@ -290,7 +292,8 @@
                                 <nav aria-label="...">
                                     <ul class="pagination">
                                         <li
-                                                v-for="build in pagination.build"
+                                                v-for="(build, i) in pagination.build"
+                                                :key="i"
                                                 :class="{active: build.page === pagination.current.page}"
                                                 >
                                             <a @click="pagination.current = build">
@@ -389,7 +392,7 @@
               commission: null,
 
               pagination: {
-                  perPage: 10,
+                  perPage: 999999,
                   build: [],
                   current: null
               }
@@ -654,5 +657,9 @@
 <style scoped>
     .pagination a {
         cursor: pointer;
+    }
+    #doctorModal .space-table {
+        max-height: 480px;
+        overflow: auto;
     }
 </style>

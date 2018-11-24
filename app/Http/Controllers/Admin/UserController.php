@@ -216,11 +216,11 @@ class UserController extends Controller
      */
     public function search(Request $request)
     {
-        $users = User::orderBy('id', 'DESC')
-            ->orderBy('name')
+        $users = User::orderBy('name')
+            ->orderBy('id', 'DESC')
             ->with('commissionProducts')
             ->limit(isset($request->limit) ? $request->limit : 10);
-
+        
         if (! empty($request->level)) {
             $users->where([
                 ['level', '=', $request->level]

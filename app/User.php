@@ -314,6 +314,15 @@ class User extends Authenticatable
             return true;
         }
 
+        if ($this->management_inventory && in_array($permission, [
+            'supply.inventoryType',
+            'supply.inventoryBrand',
+            'supply.inventoryIn',
+            'supply.inventoryOut'
+        ])) {
+            return true;
+        }
+
         return false;
     }
 }

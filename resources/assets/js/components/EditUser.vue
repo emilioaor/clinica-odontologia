@@ -92,9 +92,18 @@
                                 <div class="row">
                                     <div class="col-sm-4" v-if="form.level == 2">
                                         <div class="form-group">
-                                            <label for="password">¿Externo?</label>
+                                            <label for="external">¿Externo?</label>
                                             <div>
-                                                <input type="checkbox" v-model="form.external">
+                                                <input type="checkbox" v-model="form.external" id="external">
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-sm-4">
+                                        <div class="form-group">
+                                            <label for="management_inventory">¿Maneja inventario?</label>
+                                            <div>
+                                                <input type="checkbox" v-model="form.management_inventory" id="management_inventory">
                                             </div>
                                         </div>
                                     </div>
@@ -245,7 +254,7 @@
                                 </div>
 
                                 <div class="row" v-if="form.login_schedule">
-                                    <div class="col-xs-12" v-for="(weekday, day) in configuredSchedule">
+                                    <div class="col-xs-12" v-for="(weekday, day) in configuredSchedule" :key="day">
                                         <div class="form-group">
                                             <p>
                                                 <strong>
@@ -253,7 +262,7 @@
                                                 </strong>
                                             </p>
 
-                                            <div class="row" v-for="(range, i) in weekday" v-if="weekday.length">
+                                            <div class="row" v-for="(range, i) in weekday" v-if="weekday.length" :key="i">
                                                 <div class="col-xs-5">
                                                     <div class="select-time">
                                                         <small>
@@ -271,6 +280,7 @@
                                                                 >
                                                             <option
                                                                     v-for="i in 24"
+                                                                    :key="i"
                                                                     :value="(i - 1) >= 10 ? (i - 1) : '0' + (i - 1)"
                                                                     >
                                                                 {{ (i - 1) >= 10 ? (i - 1) : '0' + (i - 1) }}
@@ -297,6 +307,7 @@
                                                                 >
                                                             <option
                                                                     v-for="i in 60"
+                                                                    :key="i"
                                                                     :value="(i - 1) >= 10 ? (i - 1) : '0' + (i - 1)"
                                                                     >
                                                                 {{ (i - 1) >= 10 ? (i - 1) : '0' + (i - 1) }}
@@ -325,6 +336,7 @@
                                                                 >
                                                             <option
                                                                     v-for="i in 24"
+                                                                    :key="i"
                                                                     :value="(i - 1) >= 10 ? (i - 1) : '0' + (i - 1)"
                                                                     v-if="(i - 1) > range.timeStartHour"
                                                                     >
@@ -352,6 +364,7 @@
                                                                 >
                                                             <option
                                                                     v-for="i in 60"
+                                                                    :key="i"
                                                                     :value="(i - 1) >= 10 ? (i - 1) : '0' + (i - 1)"
                                                                     >
                                                                 {{ (i - 1) >= 10 ? (i - 1) : '0' + (i - 1) }}

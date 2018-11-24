@@ -302,6 +302,38 @@
                                         </a>
                                     </li>
                                 @endif
+                                @if(Auth::user()->hasPermission('supply.inventoryType'))
+                                    <li>
+                                        <a href="">
+                                            <i class="glyphicon glyphicon-list-alt"></i>
+                                            Tipos de insumos
+                                        </a>
+                                    </li>
+                                @endif
+                                @if(Auth::user()->hasPermission('supply.inventoryBrand'))
+                                    <li>
+                                        <a href="">
+                                            <i class="glyphicon glyphicon-list-alt"></i>
+                                            Marcas de insumos
+                                        </a>
+                                    </li>
+                                @endif
+                                @if(Auth::user()->hasPermission('supply.inventoryIn'))
+                                    <li>
+                                        <a href="">
+                                            <i class="glyphicon glyphicon-log-in"></i>
+                                            Entrada de insumos
+                                        </a>
+                                    </li>
+                                @endif
+                                @if(Auth::user()->hasPermission('supply.inventoryOut'))
+                                    <li>
+                                        <a href="">
+                                            <i class="glyphicon glyphicon-log-out"></i>
+                                            Salida de insumos
+                                        </a>
+                                    </li>
+                                @endif
                             </ul>
                         </li>
                     @endif

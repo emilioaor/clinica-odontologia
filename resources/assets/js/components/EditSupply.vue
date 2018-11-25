@@ -10,14 +10,14 @@
             </div>
         </div>
         <div class="row">
-            <div class="col-sm-8">
+            <div class="col-sm-10">
                 <div class="panel panel-default">
                     <div class="panel-body">
 
                         <form v-on:submit.prevent="validateForm()">
 
                             <div class="row">
-                                <div class="col-sm-8">
+                                <div class="col-sm-4">
                                     <div class="form-group" v-bind:class="{'has-error': errors.has('name')}">
                                         <label for="name">Nombre del insumo</label>
                                         <input
@@ -35,6 +35,102 @@
                                                 >
                                         <p class="error" v-if="errors.firstByRule('name', 'required')">
                                             Este campo es requerido
+                                        </p>
+                                    </div>
+                                </div>
+
+                                <div class="col-sm-4">
+                                    <div class="form-group" v-bind:class="{'has-error': errors.has('brand')}">
+                                        <label for="brand">Marca</label>
+                                        <select 
+                                            name="brand" 
+                                            id="brand"
+                                            class="form-control"
+                                            :class="{'input-error': errors.has('brand')}"
+                                            :disabled="loading"
+                                            v-validate
+                                            data-vv-rules="required"
+                                            v-model="form.supply_brand_id"
+                                            >
+                                                <option 
+                                                    v-for="brand in supplyBrands"
+                                                    :key="brand.id"
+                                                    :value="brand.id">
+                                                    {{ brand.name }}
+                                                </option>
+                                        </select>
+                                        <p class="error" v-if="errors.firstByRule('brand', 'required')">
+                                            Requerido
+                                        </p>
+                                    </div>
+                                </div>
+
+                                <div class="col-sm-4">
+                                    <div class="form-group" v-bind:class="{'has-error': errors.has('type')}">
+                                        <label for="type">Tipo</label>
+                                        <select 
+                                            name="type" 
+                                            id="type"
+                                            class="form-control"
+                                            :class="{'input-error': errors.has('type')}"
+                                            :disabled="loading"
+                                            v-validate
+                                            data-vv-rules="required"
+                                            v-model="form.supply_type_id"
+                                            >
+                                                <option 
+                                                    v-for="type in supplyTypes"
+                                                    :key="type.id"
+                                                    :value="type.id">
+                                                    {{ type.name }}
+                                                </option>
+                                        </select>
+                                        <p class="error" v-if="errors.firstByRule('type', 'required')">
+                                            Requerido
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-sm-4">
+                                    <div class="form-group" v-bind:class="{'has-error': errors.has('height')}">
+                                        <label for="height">Alto</label>
+                                        <input
+                                                type="number"
+                                                class="form-control"
+                                                id="height"
+                                                name="height"
+                                                placeholder="Alto"
+                                                v-model="form.height"
+                                                v-validate
+                                                data-vv-rules="required"
+                                                v-bind:disabled="loading"
+                                                v-bind:class="{'input-error': errors.has('height')}"
+                                                >
+                                        <p class="error" v-if="errors.firstByRule('height', 'required')">
+                                            Requerido
+                                        </p>
+                                    </div>
+                                </div>
+
+                                <div class="col-sm-4">
+                                    <div class="form-group" v-bind:class="{'has-error': errors.has('width')}">
+                                        <label for="width">Ancho</label>
+                                        <input
+                                                type="number"
+                                                class="form-control"
+                                                id="width"
+                                                name="width"
+                                                placeholder="Ancho"
+                                                v-model="form.width"
+                                                v-validate
+                                                data-vv-rules="required"
+                                                v-bind:disabled="loading"
+                                                v-bind:class="{'input-error': errors.has('width')}"
+                                                >
+                                        <p class="error" v-if="errors.firstByRule('width', 'required')">
+                                            Requerido
                                         </p>
                                     </div>
                                 </div>
@@ -100,13 +196,30 @@
 
 <script>
     export default {
-        props: ['viewData', 'user'],
+        props: {
+            viewData: {
+                type: Object,
+                required: true
+            },
+            user: {
+                type: Object,
+                required: true
+            },
+            supplyBrands: {
+                type: Array,
+                required: true
+            },
+            supplyTypes: {
+                type: Array,
+                required: true
+            }
+        },
 
         data: function () {
             return {
                 loading: false,
-                form: JSON.parse(this.viewData),
-                authUser: JSON.parse(this.user)
+                form: this.viewData,
+                authUser: this.user
             }
         },
 

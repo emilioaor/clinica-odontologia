@@ -6,6 +6,8 @@ use App\Supply;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use App\SupplyType;
+use App\SupplyBrand;
 
 class SupplyController extends Controller
 {
@@ -34,7 +36,10 @@ class SupplyController extends Controller
      */
     public function create()
     {
-        return view('assistant.supply.create');
+        $supplyBrands = SupplyBrand::orderBy('name')->get();
+        $supplyTypes = SupplyType::orderBy('name')->get();
+
+        return view('assistant.supply.create', compact('supplyBrands', 'supplyTypes'));
     }
 
     /**
@@ -48,6 +53,10 @@ class SupplyController extends Controller
         $supply = new Supply();
         $supply->name = $request->name;
         $supply->public_id = 'SUP' . time();
+        $supply->supply_brand_id = $request->supply_brand_id;
+        $supply->supply_type_id = $request->supply_type_id;
+        $supply->width = $request->width;
+        $supply->height = $request->height;
         $supply->save();
 
         $this->sessionMessage('message.supply.create');
@@ -74,13 +83,11 @@ class SupplyController extends Controller
      */
     public function edit($id)
     {
-        $supply = Supply::where('public_id', $id)->first();
+        $supply = Supply::where('public_id', $id)->firstOrFail();
+        $supplyBrands = SupplyBrand::orderBy('name')->get();
+        $supplyTypes = SupplyType::orderBy('name')->get();
 
-        if (! $supply) {
-            abort(404);
-        }
-
-        return view('assistant.supply.edit', compact('supply'));
+        return view('assistant.supply.edit', compact('supply', 'supplyBrands', 'supplyTypes'));
     }
 
     /**
@@ -94,6 +101,10 @@ class SupplyController extends Controller
     {
         $supply = Supply::where('public_id', $id)->firstOrFail();
         $supply->name = $request->name;
+        $supply->supply_brand_id = $request->supply_brand_id;
+        $supply->supply_type_id = $request->supply_type_id;
+        $supply->width = $request->width;
+        $supply->height = $request->height;
         $supply->save();
 
         $this->sessionMessage('message.supply.update');

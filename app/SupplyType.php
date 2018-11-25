@@ -22,4 +22,14 @@ class SupplyType extends Model
     {
         $this->public_id = 'S-T00' . (self::withTrashed()->count() + 1);
     }
+
+    /**
+     * Todos los insumos con este tipo
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function supplies()
+    {
+        return $this->hasMany(Supply::class, 'supply_type_id');
+    }
 }

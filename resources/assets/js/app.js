@@ -66,6 +66,7 @@ Vue.component('report-services-diagnostics', require('./components/ReportService
 Vue.component('report-services-send-lab', require('./components/ReportServicesSendLab.vue'));
 Vue.component('edit-supply-type', require('./components/EditSupplyType.vue'));
 Vue.component('edit-supply-brand', require('./components/EditSupplyBrand.vue'));
+Vue.component('supply-inventory-movement-in', require('./components/RegisterSupplyInventoryMovementIn.vue'));
 Vue.component('send-lab-notification', require('./components/SendLabNotification.vue'));
 
 const app = new Vue({

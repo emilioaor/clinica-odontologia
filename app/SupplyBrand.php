@@ -22,4 +22,14 @@ class SupplyBrand extends Model
     {
         $this->public_id = 'S-B00' . (self::withTrashed()->count() + 1);
     }
+
+    /**
+     * Todos los insumos con esta marca
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function supplies()
+    {
+        return $this->hasMany(Supply::class, 'supply_brand_id');
+    }
 }

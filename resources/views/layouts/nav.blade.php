@@ -320,7 +320,7 @@
                                 @endif
                                 @if(Auth::user()->hasPermission('supply.inventoryIn'))
                                     <li>
-                                        <a href="">
+                                        <a href="{{ route('supplyInventoryMovement.createIn') }}">
                                             <i class="glyphicon glyphicon-log-in"></i>
                                             Entrada de insumos
                                         </a>
@@ -328,7 +328,7 @@
                                 @endif
                                 @if(Auth::user()->hasPermission('supply.inventoryOut'))
                                     <li>
-                                        <a href="">
+                                        <a href="{{ route('supplyInventoryMovement.createOut') }}">
                                             <i class="glyphicon glyphicon-log-out"></i>
                                             Salida de insumos
                                         </a>

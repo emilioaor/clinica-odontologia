@@ -19,6 +19,26 @@ class Supply extends Model
     protected $dates = ['deleted_at'];
 
     /**
+     * Marca del insumo
+     * 
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function supplyBrand()
+    {
+        return $this->belongsTo(SupplyBrand::class, 'supply_brand_id')->withTrashed();
+    }
+
+    /**
+     * Tipo del insumo
+     * 
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function supplyType()
+    {
+        return $this->belongsTo(SupplyType::class, 'supply_type_id')->withTrashed();
+    }
+
+    /**
      * Todos los detalles de solicitud de insumo que piden este insumo
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
@@ -26,5 +46,15 @@ class Supply extends Model
     public function supplyRequestDetails()
     {
         return $this->hasMany(SupplyRequestDetail::class, 'supply_id');
+    }
+
+    /**
+     * Todos los movimientos de inventario asociados al insumo
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function supplyInventoryMovements()
+    {
+        return $this->hasMany(SupplyInventoryMovement::class, 'supply_id');
     }
 }

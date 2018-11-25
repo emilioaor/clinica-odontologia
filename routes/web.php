@@ -63,6 +63,12 @@ Route::group(['prefix' => 'user', 'middleware' => 'auth'], function() {
     Route::get('supplyBrand', 'User\SupplyBrandController@index')->name('supplyBrand.index');
     Route::put('supplyBrand', 'User\SupplyBrandController@update')->name('supplyBrand.update');
 
+    // Movimientos de inventario de insumos
+    Route::get('supplyInventoryMovement/in', 'User\SupplyInventoryMovementController@createIn')->name('supplyInventoryMovement.createIn');
+    Route::post('supplyInventoryMovement/in', 'User\SupplyInventoryMovementController@storeIn')->name('supplyInventoryMovement.storeIn');
+    Route::get('supplyInventoryMovement/out', 'User\SupplyInventoryMovementController@createOut')->name('supplyInventoryMovement.createOut');
+    Route::post('supplyInventoryMovement/out', 'User\SupplyInventoryMovementController@storeOut')->name('supplyInventoryMovement.storeOut');
+
     // Pagos
     Route::get('payment/{patient}/search', 'Secretary\PaymentController@search');
     Route::resource('payment', 'Secretary\PaymentController');

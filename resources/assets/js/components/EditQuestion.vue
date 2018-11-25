@@ -57,7 +57,7 @@
                                     <label>Documentos adjuntos en la pregunta</label>
                                 </div>
 
-                                <div class="col-sm-3" v-for="(attach, index) in form.question_attaches" v-if="attach.type === 1">
+                                <div class="col-sm-3" v-for="(attach, index) in form.question_attaches" :key="index" v-if="attach.type === 1">
                                     <div class="form-group">
                                         <a :href="'/' + attach.url" download="">
                                             {{ attach.filename.length <= 15 ? attach.filename : attach.filename.substring(attach.filename.length - 15) }}
@@ -99,7 +99,7 @@
 
                             <!-- Adjuntar en respuesta -->
                             <div class="row" v-if="hasAnswerAttach() && ! form.answered">
-                                <div class="col-sm-3" v-for="(attach, index) in form.question_attaches" v-if="attach.type === 2">
+                                <div class="col-sm-3" v-for="(attach, index) in form.question_attaches" :key="index" v-if="attach.type === 2">
                                     <div class="form-group">
                                         <a @click="removeAttach(index)" class="text-danger">X</a>
                                         {{ attach.filename.length <= 15 ? attach.filename : attach.filename.substring(attach.filename.length - 15) }}
@@ -113,7 +113,7 @@
                                     <label>Documentos adjuntos en la respuesta</label>
                                 </div>
 
-                                <div class="col-sm-3" v-for="(attach, index) in form.question_attaches" v-if="attach.type === 2">
+                                <div class="col-sm-3" v-for="(attach, index) in form.question_attaches" :key="index" v-if="attach.type === 2">
                                     <div class="form-group">
                                         <a :href="'/' + attach.url" download="">
                                             {{ attach.filename.length <= 15 ? attach.filename : attach.filename.substring(attach.filename.length - 15) }}

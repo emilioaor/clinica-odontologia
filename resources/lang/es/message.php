@@ -57,6 +57,10 @@ return [
     'supplyRequest.status.approved' => 'Aprobado',
     'supplyRequest.status.cancel' => 'Cancelado',
 
+    'supplyType.update' => 'Tipo de insumo actualizado',
+
+    'supplyBrand.update' => 'Marca de insumo actualizado',
+
     'payment.create' => 'Pago registrado',
     'payment.update' => 'Pago actualizado',
     'payment.delete' => 'Pago eliminado',

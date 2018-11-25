@@ -55,6 +55,14 @@ Route::group(['prefix' => 'user', 'middleware' => 'auth'], function() {
     Route::get('supplyRequest/search/report', 'Assistant\SupplyRequestController@searchSupplyRequest');
     Route::resource('supplyRequest', 'Assistant\SupplyRequestController');
 
+    // Tipos de insumos
+    Route::get('supplyType', 'User\SupplyTypeController@index')->name('supplyType.index');
+    Route::put('supplyType', 'User\SupplyTypeController@update')->name('supplyType.update');
+
+    // Marcas de insumos
+    Route::get('supplyBrand', 'User\SupplyBrandController@index')->name('supplyBrand.index');
+    Route::put('supplyBrand', 'User\SupplyBrandController@update')->name('supplyBrand.update');
+
     // Pagos
     Route::get('payment/{patient}/search', 'Secretary\PaymentController@search');
     Route::resource('payment', 'Secretary\PaymentController');

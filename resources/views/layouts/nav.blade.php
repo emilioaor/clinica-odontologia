@@ -304,7 +304,7 @@
                                 @endif
                                 @if(Auth::user()->hasPermission('supply.inventoryType'))
                                     <li>
-                                        <a href="">
+                                        <a href="{{ route('supplyType.index') }}">
                                             <i class="glyphicon glyphicon-list-alt"></i>
                                             Tipos de insumos
                                         </a>
@@ -312,7 +312,7 @@
                                 @endif
                                 @if(Auth::user()->hasPermission('supply.inventoryBrand'))
                                     <li>
-                                        <a href="">
+                                        <a href="{{ route('supplyBrand.index') }}">
                                             <i class="glyphicon glyphicon-list-alt"></i>
                                             Marcas de insumos
                                         </a>

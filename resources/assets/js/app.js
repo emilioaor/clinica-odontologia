@@ -18,7 +18,7 @@ Vue.use(VeeValidate);
  * or customize the JavaScript scaffolding to fit your unique needs.
  */
 
-/* Vue.component('register-product', require('./components/RegisterProduct.vue'));
+Vue.component('register-product', require('./components/RegisterProduct.vue'));
 Vue.component('edit-product', require('./components/EditProduct.vue'));
 Vue.component('register-budget', require('./components/RegisterBudget.vue'));
 Vue.component('edit-budget', require('./components/EditBudget.vue'));
@@ -63,7 +63,7 @@ Vue.component('edit-appointment', require('./components/EditAppointment.vue'));
 Vue.component('register-patient-reference', require('./components/RegisterPatientReference.vue'));
 Vue.component('report-services-payments-expenses', require('./components/ReportServicesPaymentsAndExpenses.vue'));
 Vue.component('report-services-diagnostics', require('./components/ReportServicesDiagnostics.vue'));
-Vue.component('report-services-send-lab', require('./components/ReportServicesSendLab.vue')); */
+Vue.component('report-services-send-lab', require('./components/ReportServicesSendLab.vue'));
 Vue.component('edit-supply-type', require('./components/EditSupplyType.vue'));
 Vue.component('edit-supply-brand', require('./components/EditSupplyBrand.vue'));
 Vue.component('send-lab-notification', require('./components/SendLabNotification.vue'));

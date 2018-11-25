@@ -3,7 +3,7 @@
         <div class="row">
             <div class="col-xs-12">
                 <h1>
-                    <i class="glyphicon glyphicon-th-list" v-if="! loading"></i>
+                    <i class="glyphicon glyphicon-log-in" v-if="! loading"></i>
                     <img src="/img/loading.gif" v-if="loading">
                     Entrada de insumos
                 </h1>

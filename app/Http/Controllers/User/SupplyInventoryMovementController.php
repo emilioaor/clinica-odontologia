@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Supply;
 use Illuminate\Http\JsonResponse;
 use App\SupplyInventoryMovement;
+use App\InventoryMovement;
 use Illuminate\Support\Facades\DB;
 
 class SupplyInventoryMovementController extends Controller
@@ -35,8 +36,13 @@ class SupplyInventoryMovementController extends Controller
 
         $inventoryMovements = $request->inventoryMovements;
 
+        $inventoryMovement = new InventoryMovement();
+        $inventoryMovement->type = InventoryMovement::TYPE_IN;
+        $inventoryMovement->save();
+
         foreach ($inventoryMovements as $movement) {
             $supplyInventoryMovement = new SupplyInventoryMovement();
+            $supplyInventoryMovement->inventory_movement_id = $inventoryMovement->id;
             $supplyInventoryMovement->supply_id = $movement['supply_id'];
             $supplyInventoryMovement->qty = $movement['qty'];
             $supplyInventoryMovement->description = 'Entrada de insumo';

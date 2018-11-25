@@ -11,6 +11,16 @@ class SupplyInventoryMovement extends Model
     protected $fillable = ['description'];
 
     /**
+     * Movimiento de inventario padre
+     * 
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function inventoryMovement()
+    {
+        return $this->belongsTo(InventoryMovement::class, 'inventory_movement_id');
+    }
+
+    /**
      * Insumo
      * 
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo

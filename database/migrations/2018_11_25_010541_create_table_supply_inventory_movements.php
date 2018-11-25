@@ -15,6 +15,8 @@ class CreateTableSupplyInventoryMovements extends Migration
     {
         Schema::create('supply_inventory_movements', function (Blueprint $table) {
             $table->increments('id');
+            $table->integer('inventory_movement_id')->unsigned();
+            $table->foreign('inventory_movement_id')->references('id')->on('inventory_movements');
             $table->integer('supply_id')->unsigned();
             $table->foreign('supply_id')->references('id')->on('supplies');
             $table->float('qty');

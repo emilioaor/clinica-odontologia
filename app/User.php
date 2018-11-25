@@ -245,6 +245,17 @@ class User extends Authenticatable
     }
 
     /**
+     * Todos los movimientos de inventario que han sido
+     * entregados a este usuario
+     * 
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function inventoryMovements()
+    {
+        return $this->hasMany(User::class, 'user_id');
+    }
+
+    /**
      * Genera el id publico en base al nivel
      */
     public function generatePublicId()

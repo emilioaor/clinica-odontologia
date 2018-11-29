@@ -67,6 +67,8 @@ Vue.component('report-services-send-lab', require('./components/ReportServicesSe
 Vue.component('edit-supply-type', require('./components/EditSupplyType.vue'));
 Vue.component('edit-supply-brand', require('./components/EditSupplyBrand.vue'));
 Vue.component('supply-inventory-movement-in', require('./components/RegisterSupplyInventoryMovementIn.vue'));
+Vue.component('supply-inventory-movement-out', require('./components/RegisterSupplyInventoryMovementOut.vue'));
+Vue.component('draw-confirmation', require('./components/DrawConfirmation.vue'));
 Vue.component('send-lab-notification', require('./components/SendLabNotification.vue'));
 
 const app = new Vue({

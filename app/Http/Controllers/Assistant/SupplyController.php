@@ -20,13 +20,35 @@ class SupplyController extends Controller
     /**
      * Display a listing of the resource.
      *
+     * @param Request $request
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $supplies = Supply::orderBy('id', 'DESC')->paginate();
+        $supplies = Supply::orderBy('id', 'DESC')
+            ->with(['supplyType', 'supplyBrand']);
 
-        return view('assistant.supply.index', compact('supplies'));
+        if ($request->has('brand')) {
+            $supplies->where('supply_brand_id', $request->get('brand'));
+        }
+
+        if ($request->has('type')) {
+            $supplies->where('supply_type_id', $request->get('type'));
+        }
+
+        $supplies = $supplies->paginate();
+        $supplyBrands = SupplyBrand::orderBy('name')->get();
+        $supplyTypes = SupplyType::orderBy('name')->get();
+
+        if ($request->has('brand')) {
+            $supplies->appends('brand', $request->get('brand'));
+        }
+
+        if ($request->has('type')) {
+            $supplies->appends('type', $request->get('type'));
+        }
+
+        return view('assistant.supply.index', compact('supplies', 'supplyBrands', 'supplyTypes'));
     }
 
     /**
@@ -46,7 +68,7 @@ class SupplyController extends Controller
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @return JsonResponse
      */
     public function store(Request $request)
     {
@@ -95,7 +117,7 @@ class SupplyController extends Controller
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @return JsonResponse
      */
     public function update(Request $request, $id)
     {
@@ -119,7 +141,7 @@ class SupplyController extends Controller
      * Remove the specified resource from storage.
      *
      * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @return JsonResponse
      */
     public function destroy($id)
     {

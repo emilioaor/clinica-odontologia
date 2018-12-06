@@ -142,4 +142,6 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function () {
     Route::get('report/servicesDiagnosticsData', 'Admin\ReportController@servicesDiagnosticsData');
     Route::get('report/servicesSendLab', 'Admin\ReportController@servicesSendLab')->name('report.servicesSendLab');
     Route::get('report/servicesSendLabData', 'Admin\ReportController@servicesSendLabData');
+    Route::get('report/inventorySupply', 'Admin\ReportController@inventorySupply')->name('report.inventorySupply');
+    Route::get('report/inventorySupplyData', 'Admin\ReportController@inventorySupplyData');
 });

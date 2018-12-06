@@ -27,6 +27,6 @@ class SupplyInventoryMovement extends Model
      */
     public function supply()
     {
-        return $this->belongTo(Supply::class, 'supply_id');
+        return $this->belongsTo(Supply::class, 'supply_id');
     }
 }

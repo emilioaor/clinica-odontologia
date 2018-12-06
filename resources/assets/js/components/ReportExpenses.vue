@@ -136,7 +136,7 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <tr v-for="(e, i) in data.expenses">
+                                            <tr v-for="(e, i) in data.expenses" :key="i">
                                                 <td>
                                                     <!-- Date -->
                                                     <div v-if="editExpense === i">
@@ -169,6 +169,7 @@
                                                             <option
                                                                     v-for="supplier in suppliers"
                                                                     :value="supplier.id"
+                                                                    :key="supplier.id"
                                                                     >
                                                                 {{ supplier.name }}
                                                             </option>
@@ -424,7 +425,7 @@
                                     </thead>
 
                                     <tbody v-if="! modal.loading">
-                                    <tr v-for="p in modal.data">
+                                    <tr v-for="p in modal.data" :key="p.id">
                                         <td>{{ p.phone }}</td>
                                         <td>{{ p.name }}</td>
                                         <td>
@@ -493,7 +494,7 @@
                                     </thead>
 
                                     <tbody v-if="! modalService.loading">
-                                    <tr v-for="s in modalService.data">
+                                    <tr v-for="s in modalService.data" :key="s.id">
                                         <td>{{ s.public_id }}</td>
                                         <td>{{ s.product.name }}</td>
                                         <td>{{ '$' + s.price }}</td>

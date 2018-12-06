@@ -11,6 +11,9 @@ use App\PatientHistory;
 use App\Product;
 use App\Supplier;
 use App\User;
+use App\SupplyBrand;
+use App\SupplyType;
+use App\SupplyInventoryMovement;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -741,5 +744,61 @@ class ReportController extends Controller
             'success' => true,
             'services' => $services
         ]);
+    }
+
+    /**
+     * Reporte de inventario de insumos
+     * 
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function inventorySupply()
+    {
+        $supplyBrands = SupplyBrand::all();
+        $supplyTypes = SupplyType::all();
+
+        return view('admin.report.inventorySupply', compact('supplyBrands', 'supplyTypes'));
+    }
+
+    /**
+     * Reporte de inventario de insumos
+     * 
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function inventorySupplyData(Request $request)
+    {
+        $inventory = SupplyInventoryMovement::with([
+                'supply',
+                'supply.supplyBrand',
+                'supply.supplyType'
+            ])
+            ->get();
+                
+        $response = [];
+        $supplyBrand = (int) $request->brand;
+        $supplyType = (int) $request->type;
+        
+        foreach ($inventory as $movement) {
+            
+            if ($supplyBrand !== 0 && $movement->supply->supplyBrand->id !== $supplyBrand) {
+                continue;
+            }
+
+            if ($supplyType !== 0 && $movement->supply->supplyType->id !== $supplyType) {
+                continue;
+            }
+
+            if (! isset($response[$movement->supply->id])) {
+                
+                $response[$movement->supply->id] = [
+                    'supply' => $movement->supply,
+                    'qty' => 0
+                ];
+            }
+            
+            $response[$movement->supply->id]['qty'] += $movement->qty;
+        }
+
+        return new JsonResponse(['success' => true, 'inventory' => $response]);
     }
 }

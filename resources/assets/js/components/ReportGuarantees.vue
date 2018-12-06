@@ -60,6 +60,7 @@
                                             <option
                                                     v-for="product in products"
                                                     :value="product.id"
+                                                    :key="product.id"
                                                     >
                                                 {{ product.name }}
                                             </option>
@@ -82,6 +83,7 @@
                                             <option
                                                     v-for="doctor in doctors"
                                                     :value="doctor.id"
+                                                    :key="doctor.id"
                                                     >
                                                 {{ doctor.name }}
                                             </option>
@@ -125,7 +127,7 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <tr v-for="guarantee in data.guarantees">
+                                            <tr v-for="guarantee in data.guarantees" :key="guarantee.id">
                                                 <td>{{ dateFormat(guarantee.created_at) }}</td>
                                                 <td>{{ guarantee.patient.name }}</td>
                                                 <td>{{ guarantee.product.name }}</td>

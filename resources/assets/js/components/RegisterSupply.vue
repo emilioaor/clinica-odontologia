@@ -97,7 +97,7 @@
                                     <div class="form-group" v-bind:class="{'has-error': errors.has('height')}">
                                         <label for="height">Alto</label>
                                         <input
-                                                type="number"
+                                                type="text"
                                                 class="form-control"
                                                 id="height"
                                                 name="height"
@@ -107,6 +107,7 @@
                                                 data-vv-rules="required"
                                                 v-bind:disabled="loading"
                                                 v-bind:class="{'input-error': errors.has('height')}"
+                                                v-money="mask"
                                                 >
                                         <p class="error" v-if="errors.firstByRule('height', 'required')">
                                             Requerido
@@ -118,7 +119,7 @@
                                     <div class="form-group" v-bind:class="{'has-error': errors.has('width')}">
                                         <label for="width">Ancho</label>
                                         <input
-                                                type="number"
+                                                type="text"
                                                 class="form-control"
                                                 id="width"
                                                 name="width"
@@ -128,6 +129,7 @@
                                                 data-vv-rules="required"
                                                 v-bind:disabled="loading"
                                                 v-bind:class="{'input-error': errors.has('width')}"
+                                                v-money="mask"
                                                 >
                                         <p class="error" v-if="errors.firstByRule('width', 'required')">
                                             Requerido
@@ -174,7 +176,12 @@
 </template>
 
 <script>
+    import {VMoney} from 'v-money';
+
     export default {
+        directives: {
+            VMoney
+        },
         props: {
             supplyBrands: {
                 type: Array,
@@ -196,6 +203,13 @@
                     width: null,
                     height: null,
                     loan_policy: null
+                },
+                mask: {
+                    decimal: ',',
+                    thousands: '.',
+                    prefix: '',
+                    suffix: '',
+                    precision: 2
                 }
             }
         },

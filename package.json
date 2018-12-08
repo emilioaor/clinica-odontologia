@@ -21,6 +21,7 @@
     "vuejs-datepicker": "^0.9.29"
   },
   "dependencies": {
-    "node-sass": "^4.9.3"
+    "node-sass": "^4.9.3",
+    "v-money": "^0.8.1"
   }
 }

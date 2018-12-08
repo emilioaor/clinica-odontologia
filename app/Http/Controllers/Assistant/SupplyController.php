@@ -72,13 +72,18 @@ class SupplyController extends Controller
      */
     public function store(Request $request)
     {
+        $width = str_replace('.', '', $request->width);
+        $width = str_replace(',', '.', $width);
+        $height = str_replace('.', '', $request->height);
+        $height = str_replace(',', '.', $height);
+
         $supply = new Supply();
         $supply->name = $request->name;
         $supply->public_id = 'SUP' . time();
         $supply->supply_brand_id = $request->supply_brand_id;
         $supply->supply_type_id = $request->supply_type_id;
-        $supply->width = $request->width;
-        $supply->height = $request->height;
+        $supply->width = $width;
+        $supply->height = $height;
         $supply->loan_policy = $request->loan_policy;
         $supply->save();
 
@@ -122,12 +127,17 @@ class SupplyController extends Controller
      */
     public function update(Request $request, $id)
     {
+        $width = str_replace('.', '', $request->width);
+        $width = str_replace(',', '.', $width);
+        $height = str_replace('.', '', $request->height);
+        $height = str_replace(',', '.', $height);
+
         $supply = Supply::where('public_id', $id)->firstOrFail();
         $supply->name = $request->name;
         $supply->supply_brand_id = $request->supply_brand_id;
         $supply->supply_type_id = $request->supply_type_id;
-        $supply->width = $request->width;
-        $supply->height = $request->height;
+        $supply->width = $width;
+        $supply->height = $height;
         $supply->loan_policy = $request->loan_policy;
         $supply->save();
 

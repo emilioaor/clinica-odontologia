@@ -134,9 +134,7 @@
                                             </p>
                                         </div>
                                     </div>
-                                </div>
 
-                                <div class="row">
                                     <div class="col-sm-4" v-if="form.level == 2">
                                         <div class="form-group">
                                             <label for="password">¿Externo?</label>
@@ -145,12 +143,23 @@
                                             </div>
                                         </div>
                                     </div>
+                                </div>
 
+                                <div class="row">
                                     <div class="col-sm-4">
                                         <div class="form-group">
                                             <label for="management_inventory">¿Maneja inventario?</label>
                                             <div>
-                                                <input type="checkbox" v-model="form.management_inventory" id="management_inventory">
+                                                <input type="checkbox" v-model="form.management_supply" id="management_inventory">
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-sm-4">
+                                        <div class="form-group">
+                                            <label for="management_inventory">¿Maneja insumo?</label>
+                                            <div>
+                                                <input type="checkbox" v-model="form.management_supply" id="management_supply">
                                             </div>
                                         </div>
                                     </div>
@@ -190,7 +199,9 @@
                     level: 2,
                     password: '',
                     password_confirmation: '',
-                    external: false
+                    external: false,
+                    management_inventory: false,
+                    management_supply: false
                 }
             }
         },

@@ -84,6 +84,7 @@ class UserController extends Controller
         $user->generatePublicId();
         $user->external = $request->level == User::LEVEL_DOCTOR ? $request->external : false;
         $user->management_inventory = $request->management_inventory;
+        $user->management_supply = $request->management_supply;
         $user->save();
 
         $products = Product::all();
@@ -142,6 +143,7 @@ class UserController extends Controller
         $user->level = $request->level;
         $user->external = $request->level == User::LEVEL_DOCTOR ? $request->external : false;
         $user->management_inventory = $request->management_inventory;
+        $user->management_supply = $request->management_supply;
         $user->save();
 
         $this->sessionMessage('message.user.update');

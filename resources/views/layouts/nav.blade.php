@@ -252,7 +252,7 @@
                     @endif
 
                     <!-- Supply -->
-                    @if(Auth::user()->hasPermission('supply.search') || Auth::user()->hasPermission('supply.index') ||
+                    @if(Auth::user()->hasPermission('supply.create') || Auth::user()->hasPermission('supply.index') ||
                         Auth::user()->hasPermission('supplyRequest.create') || Auth::user()->hasPermission('supplyRequest.index') ||
                         Auth::user()->hasPermission('supplyRequest.search') || Auth::user()->hasPermission('supply.inventoryType') ||
                         Auth::user()->hasPermission('supply.inventoryBrand') || Auth::user()->hasPermission('supply.inventoryIn') ||
@@ -264,7 +264,7 @@
                             </a>
 
                             <ul class="dropdown-menu" role="menu">
-                                @if(Auth::user()->hasPermission('supply.search'))
+                                @if(Auth::user()->hasPermission('supply.create'))
                                     <li>
                                         <a href="{{ route('supply.create') }}">
                                             <i class="glyphicon glyphicon-plus"></i>

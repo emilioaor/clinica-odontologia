@@ -334,6 +334,13 @@ class User extends Authenticatable
             return true;
         }
 
+        if ($this->management_supply && in_array($permission, [
+                'supply.create',
+                'supply.index'
+            ])) {
+            return true;
+        }
+
         return false;
     }
 }

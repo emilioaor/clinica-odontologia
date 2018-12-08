@@ -107,6 +107,15 @@
                                             </div>
                                         </div>
                                     </div>
+
+                                    <div class="col-sm-4">
+                                        <div class="form-group">
+                                            <label for="management_inventory">¿Maneja insumo?</label>
+                                            <div>
+                                                <input type="checkbox" v-model="form.management_supply" id="management_supply">
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
 
                                 <div class="row">

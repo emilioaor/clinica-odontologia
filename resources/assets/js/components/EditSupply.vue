@@ -139,7 +139,7 @@
 
                                 <div class="col-sm-4">
                                     <div class="form-group" v-bind:class="{'has-error': errors.has('loan_policy')}">
-                                        <label for="loan_policy">Policita de prestamo</label>
+                                        <label for="loan_policy">Politica de prestamo</label>
                                         <select
                                                 name="loan_policy"
                                                 id="loan_policy"
@@ -155,6 +155,20 @@
                                         <p class="error" v-if="errors.firstByRule('loan_policy', 'required')">
                                             Requerido
                                         </p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-sm-4">
+                                    <div class="form-group">
+                                        <label for="loan_default">¿Permite prestamo?</label>
+                                        <input
+                                                type="checkbox"
+                                                id="loan_default"
+                                                name="loan_default"
+                                                v-model="form.loan_default"
+                                        >
                                     </div>
                                 </div>
                             </div>

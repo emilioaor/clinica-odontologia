@@ -10,7 +10,7 @@
             </div>
         </div>
         <div class="row">
-            <div class="col-sm-10">
+            <div class="col-xs-12">
                 <div class="panel panel-default">
                     <div class="panel-body">
 
@@ -46,10 +46,11 @@
                         <table class="table table-responsive">
                             <thead>
                                 <tr>
-                                    <th width="31%">Insumo</th>
-                                    <th width="22%">Marca</th>
-                                    <th width="22%">Tipo</th>
-                                    <th width="20%">Qty</th>
+                                    <th width="25%">Insumo</th>
+                                    <th width="20%">Marca</th>
+                                    <th width="20%">Tipo</th>
+                                    <th width="15%">Qty</th>
+                                    <th width="15%" class="text-center">Prestamo</th>
                                     <th width="5%"></th>
                                 </tr>
                             </thead>
@@ -100,6 +101,23 @@
                                             Requerido
                                         </p>
                                     </td>
+                                    <td class="text-center">
+                                        <label
+                                                v-if="current.supply"
+                                                :class="{
+                                                    'text-success': current.supply.loan_default,
+                                                    'text-danger': !current.supply.loan_default
+                                                }"
+                                        >
+                                            {{ current.supply.loan_default ? 'SI' : 'NO' }}
+                                        </label>
+
+                                        <input
+                                                type="checkbox"
+                                                v-model="current.supply.loan_default"
+                                                v-if="current.supply"
+                                        >
+                                    </td>
                                     <td>
                                         <button class="btn btn-danger" @click="removeMovement(i)">
                                             <i class="glyphicon glyphicon-remove"></i>
@@ -109,7 +127,7 @@
                             </tbody>
                             <tfoot>
                                 <tr>
-                                    <td colspan="5">
+                                    <td colspan="6">
                                         <button class="btn btn-success" @click="addMovement" v-if="data.movements.length < supplies.length">
                                             <i class="glyphicon glyphicon-plus"></i>
                                             Agregar

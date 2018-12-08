@@ -29,4 +29,26 @@ class SupplyInventoryMovement extends Model
     {
         return $this->belongsTo(Supply::class, 'supply_id');
     }
+
+    /**
+     * Prestamo, se tiene este objeto en caso que se genere por la salida
+     * en este movimiento
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
+    public function loanIn()
+    {
+        return $this->hasOne(Loan::class, 'in_id');
+    }
+
+    /**
+     * Prestamo, se tiene este objeto en caso que se salde por la entrada
+     * en este movimiento
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
+    public function loanOut()
+    {
+        return $this->hasOne(Loan::class, 'out_id');
+    }
 }

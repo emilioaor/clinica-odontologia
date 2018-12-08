@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\User;
 
+use App\Loan;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Supply;
@@ -100,6 +101,12 @@ class SupplyInventoryMovementController extends Controller
             $supplyInventoryMovement->qty = $movement['qty'] * -1;
             $supplyInventoryMovement->description = 'Salida de insumo';
             $supplyInventoryMovement->save();
+
+            if ((bool) $movement['supply']['loan_default']) {
+                $loan = new Loan();
+                $loan->out_id = $supplyInventoryMovement->id;
+                $loan->save();
+            }
         }
 
         DB::commit();

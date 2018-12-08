@@ -9,6 +9,7 @@
                     id="canvas"
                     style="border: 1px solid black;"
                     @mousemove="move"
+                    @touchmove="move"
             ></canvas>
 
             <div class="text-center">
@@ -65,8 +66,8 @@
                 this.prevX = this.currX;
                 this.prevY = this.currY;
 
-                this.currX = event.offsetX;
-                this.currY = event.offsetY;
+                this.currX = event.offsetX ? event.offsetX : event.touches[0].pageX - event.touches[0].target.offsetLeft;
+                this.currY = event.offsetY ? event.offsetY : event.touches[0].pageY - event.touches[0].target.offsetTop;
 
                 if (this.drawing) {
                     this.ctx.lineTo(this.currX, this.currY);
@@ -100,7 +101,7 @@
         justify-content: center;
         align-items: center;
         height: 100%;
-        div {
+        > div {
             background-color: #fff;
             padding: 15px;
         }

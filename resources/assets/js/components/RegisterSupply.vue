@@ -134,6 +134,26 @@
                                         </p>
                                     </div>
                                 </div>
+
+                                <div class="col-sm-4">
+                                    <div class="form-group" v-bind:class="{'has-error': errors.has('loan_policy')}">
+                                        <label for="loan_policy">Policita de prestamo</label>
+                                        <select
+                                                name="loan_policy"
+                                                id="loan_policy"
+                                                class="form-control"
+                                                v-model="form.loan_policy"
+                                                v-validate
+                                                data-vv-rules="required"
+                                        >
+                                            <option :value="0">Flexible</option>
+                                            <option :value="1">Entrega diaria</option>
+                                        </select>
+                                        <p class="error" v-if="errors.firstByRule('loan_policy', 'required')">
+                                            Requerido
+                                        </p>
+                                    </div>
+                                </div>
                             </div>
 
                             <div class="row">
@@ -174,7 +194,8 @@
                     supply_type_id: null,
                     supply_brand_id: null,
                     width: null,
-                    height: null
+                    height: null,
+                    loan_policy: null
                 }
             }
         },

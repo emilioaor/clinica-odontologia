@@ -7,6 +7,10 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Supply extends Model
 {
+    /** Policitas de prestamo */
+    const LOAN_POLICY_FLEX = 0;
+    const LOAN_POLICY_TODAY = 1;
+
     use SoftDeletes;
 
     protected $table = 'supplies';

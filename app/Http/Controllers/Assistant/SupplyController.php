@@ -79,6 +79,7 @@ class SupplyController extends Controller
         $supply->supply_type_id = $request->supply_type_id;
         $supply->width = $request->width;
         $supply->height = $request->height;
+        $supply->loan_policy = $request->loan_policy;
         $supply->save();
 
         $this->sessionMessage('message.supply.create');
@@ -127,6 +128,7 @@ class SupplyController extends Controller
         $supply->supply_type_id = $request->supply_type_id;
         $supply->width = $request->width;
         $supply->height = $request->height;
+        $supply->loan_policy = $request->loan_policy;
         $supply->save();
 
         $this->sessionMessage('message.supply.update');

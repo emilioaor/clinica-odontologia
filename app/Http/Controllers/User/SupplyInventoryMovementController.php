@@ -23,8 +23,15 @@ class SupplyInventoryMovementController extends Controller
     public function createIn()
     {
         $supplies = Supply::orderBy('name')->with(['supplyBrand', 'supplyType'])->get();
+        $loans = Loan::with([
+            'supplyInventoryMovementOut.supply.supplyBrand',
+            'supplyInventoryMovementOut.supply.supplyType',
+            'supplyInventoryMovementOut.InventoryMovement.user',
+        ])
+            ->whereNull('in_id')
+            ->get();
 
-        return view('user.supplyInventoryMovement.in.create', compact('supplies'));
+        return view('user.supplyInventoryMovement.in.create', compact('supplies', 'loans'));
     }
 
     /**
@@ -50,6 +57,12 @@ class SupplyInventoryMovementController extends Controller
             $supplyInventoryMovement->qty = $movement['qty'];
             $supplyInventoryMovement->description = 'Entrada de insumo';
             $supplyInventoryMovement->save();
+
+            if ((bool) $movement['isLoan']) {
+                $loan = Loan::find($movement['loan']['id']);
+                $loan->in_id = $supplyInventoryMovement->id;
+                $loan->save();
+            }
         }
 
         DB::commit();

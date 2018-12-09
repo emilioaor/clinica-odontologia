@@ -61,7 +61,7 @@ return [
 
     'supplyBrand.update' => 'Marca de insumo actualizado',
 
-    'supplyInventoryMovement.in' => 'Entrade de insumo registrada',
+    'supplyInventoryMovement.in' => 'Entrada de insumo registrada',
     'supplyInventoryMovement.out' => 'Salida de insumo registrada',
 
     'payment.create' => 'Pago registrado',

@@ -133,23 +133,24 @@ class PatientHistoryController extends Controller
      */
     public function update(Request $request, $id)
     {
+        $data = json_decode(base64_decode($request->data), true);
         $patient = Patient::where('public_id', $id)->firstOrFail();
 
         DB::beginTransaction();
 
-        $date = new \DateTime(empty($request->date) ? 'now' : $request->date);
+        $date = new \DateTime(empty($data['date']) ? 'now' : $data['date']);
         $start = clone $date;
         $start->setTime(00, 00, 00);
         $end = clone $date;
         $end->setTime(23, 59, 59);
 
-        foreach ($request->services as $serviceArray) {
+        foreach ($data['services'] as $serviceArray) {
             $service = new PatientHistory($serviceArray);
             $service->nextPublicId();
             $service->patient_id = $patient->id;
             $service->created_at = $date;
             $service->price = $service->unit_price * $service->qty;
-            $service->diagnostic_id = $request->diagnostic;
+            $service->diagnostic_id = $data['diagnostic'];
 
             if ($service->product->required_lab) {
                 // Si el servicio requiere laboratiro, guardo los datos de envio
@@ -182,7 +183,7 @@ class PatientHistoryController extends Controller
             }
         }
 
-        foreach ($request->notes as $newNote) {
+        foreach ($data['notes'] as $newNote) {
 
             if (! empty($newNote['content'])) {
                 $note = new Note();
@@ -194,7 +195,7 @@ class PatientHistoryController extends Controller
             }
         }
 
-        foreach ($request->images as $image) {
+        foreach ($data['images'] as $image) {
 
             $base64 = explode(',', $image);
 
@@ -233,17 +234,13 @@ class PatientHistoryController extends Controller
             $appointment->save();
         }
 
-
         DB::commit();
 
         $this->sessionMessage('message.service.update');
 
-        return new JsonResponse([
-            'success' => true,
-            'redirect' => route('service.edit', [
-                'service' => $id,
-                'date' => $date->format('Y-m-d')
-            ])
+        return redirect()->route('service.edit', [
+            'service' => $id,
+            'date' => $date->format('Y-m-d')
         ]);
     }
 

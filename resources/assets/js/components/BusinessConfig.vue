@@ -116,7 +116,7 @@
                                         </div>
                                     </div>
 
-                                    <div class="row">
+                                    <div class="row" v-if="false">
                                         <div class="col-sm-6">
                                             <div class="form-group">
                                                 <label for="upload_alternative">Carga de imagen alternativa</label>

@@ -425,7 +425,7 @@
                                     <a 
                                         :href="'/user/service/' + this.data.public_id + '/uploadImage'" 
                                         target="_blank"
-                                        v-if="authUser.upload_alternative"
+                                        v-if="authUser.upload_alternative && false"
                                         >
                                         ¿Carga lenta? prueba la carga basica
                                     </a>
@@ -471,6 +471,12 @@
                                 </p>
                             </div>
                         </div>
+
+                        <form id="alternativeForm"  method="post" :action="'/user/service/' + data.public_id" v-show="false">
+                            <input type="hidden" name="_method" value="PUT">
+                            <input type="hidden" name="_token" :value="token">
+                            <input type="hidden" name="data" :value="dataAlternative">
+                        </form>
 
                         <div class="row">
                             <div class="col-xs-12 text-center">
@@ -598,7 +604,9 @@
                     loading: false,
                     search: ''
                 },
-                disabledDates: {}
+                disabledDates: {},
+                dataAlternative: {},
+                token: null
             }
         },
         mounted: function () {
@@ -618,7 +626,9 @@
 
             const today = new Date();
             const yesterday = new Date(today.getTime() - 24*60*60*1000);
-            this.disabledDates = this.user.level === 1 ? {} : {to: yesterday}
+            this.disabledDates = this.user.level === 1 ? {} : {to: yesterday};
+
+            this.token = document.head.querySelector('meta[name="csrf-token"]').content;
         },
 
         methods: {
@@ -659,7 +669,21 @@
             validateForm: function () {
                 this.$validator.validateAll().then((res) => {
                     if (res) {
-                        this.sendForm();
+                        //this.sendForm();
+
+                        // Envio formulario sin ajax por problemas en la carga de imagenes
+                        this.loading = true;
+                        this.dataAlternative = btoa(JSON.stringify({
+                            services: this.services,
+                            date: this.date,
+                            notes: this.notes,
+                            images: this.images,
+                            diagnostic: this.diagnostic
+                        }));
+
+                        window.setTimeout(function () {
+                            $('#alternativeForm').submit();
+                        }, 500)
                     }
                 });
             },

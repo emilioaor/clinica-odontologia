@@ -602,7 +602,8 @@
                 this.loading = true;
 
                 const expense = {
-                    amount: this.commission
+                    amount: this.commission,
+                    public_id: this.doctor.public_id
                 };
 
                 axios.post('/user/expense/expenseCommission', expense)

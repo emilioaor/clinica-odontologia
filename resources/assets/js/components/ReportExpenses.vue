@@ -111,6 +111,7 @@
                                         <register-expense-modal
                                             modal-id = "registerExpenseModal"
                                             @register="search()"
+                                            :user="user"
                                         ></register-expense-modal>
 
                                         <img src="/img/loading.gif" v-if="loading">
@@ -130,6 +131,7 @@
                                                 <th>Descripci&oacute;n</th>
                                                 <th>Paciente</th>
                                                 <th>Servicio</th>
+                                                <th>Doctor</th>
                                                 <th>Monto</th>
                                                 <th width="5%"></th>
                                                 <th width="5%"></th>
@@ -297,6 +299,16 @@
                                                                 e.expense.patient_history.product.name :
                                                                 ''
                                                         }}
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <!-- Doctor -->
+                                                    <div v-if="editExpense === i">
+                                                        {{ e.doctor.name }}
+                                                    </div>
+
+                                                    <div v-else>
+                                                        {{ e.doctor.name }}
                                                     </div>
                                                 </td>
                                                 <td>
@@ -572,6 +584,10 @@
             suppliers: {
                 type: Array,
                 required: true
+            },
+            user: {
+                type: Object,
+                required: true
             }
         },
 
@@ -688,9 +704,20 @@
                                 datePicker = new Date();
                                 datePicker.setFullYear(date[0], parseInt(date[1]) - 1, date[2]);
 
+                                let doctor = {};
+
+                                if (expense.doctor_commission) {
+                                    doctor = expense.doctor_commission;
+                                }
+
+                                if (expense.patient_history) {
+                                    doctor = expense.patient_history.doctor;
+                                }
+
                                 this.data.expenses.push({
                                     expense: expense,
                                     patient: expense.patient_history ? expense.patient_history.patient : {},
+                                    doctor: doctor,
                                     supplier: expense.supplier,
                                     datePicker: datePicker
                                 });

@@ -256,6 +256,17 @@ class User extends Authenticatable
     }
 
     /**
+     * Todos los gastos que han balanceado las comisiones de este doctor,
+     * explicacion mas detallada en la clase Expense metodo doctorCommission()
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function doctorCommissionExpenses()
+    {
+        return $this->hasMany(Expense::class, 'doctor_commission_id');
+    }
+
+    /**
      * Genera el id publico en base al nivel
      */
     public function generatePublicId()

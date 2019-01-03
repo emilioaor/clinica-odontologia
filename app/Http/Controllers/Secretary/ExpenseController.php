@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Secretary;
 use App\Expense;
 use App\Patient;
 use App\Supplier;
+use App\User;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
@@ -182,12 +183,14 @@ class ExpenseController extends Controller
     public function expenseCommission(Request $request)
     {
         $supplier = Supplier::where('doctor_commission', true)->first();
+        $doctor = User::where('public_id', $request->public_id)->first();
 
         $expense = new Expense();
         $expense->amount = $request->amount;
         $expense->date = new \DateTime();
         $expense->description = trans('message.expense.doctor.commission');
         $expense->supplier_id = $supplier->id;
+        $expense->doctor_commission_id = $doctor->id;
         $expense->save();
 
         $this->sessionMessage('message.expense.create');

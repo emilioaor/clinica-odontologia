@@ -40,4 +40,16 @@ class Expense extends Model
     {
         return $this->belongsTo(PatientHistory::class, 'patient_history_id')->withTrashed();
     }
+
+    /**
+     * Doctor cuya comision se pago con este gasto. Al obtener un reporte de comision
+     * de doctores se da la opcion de registra un gasto por el monto de la comission
+     * este campo es para guardar que doctor gano la comision
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function doctorCommission()
+    {
+        return $this->belongsTo(User::class, 'doctor_commission_id');
+    }
 }

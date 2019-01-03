@@ -315,7 +315,9 @@ class ReportController extends Controller
                 'supplier',
                 'patientHistory',
                 'patientHistory.patient',
-                'patientHistory.product'
+                'patientHistory.product',
+                'patientHistory.doctor',
+                'doctorCommission'
             ])
             ->orderBy('date')
             ->get();

@@ -196,7 +196,7 @@ class PatientHistoryController extends Controller
         }
 
         foreach ($data['images'] as $image) {
-            set_time_limit(0);
+
             $base64 = explode(',', $image);
 
             $upload = base64_decode($base64[1]);

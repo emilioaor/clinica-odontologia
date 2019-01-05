@@ -375,7 +375,8 @@
                         Auth::user()->hasPermission('report.servicesAndPaymentsPerPatient') || Auth::user()->hasPermission('report.guarantees') ||
                         Auth::user()->hasPermission('report.patientsAndPatientsWithServices') || Auth::user()->hasPermission('report.budgets') ||
                         Auth::user()->hasPermission('report.servicesPaymentsAndExpenses') || Auth::user()->hasPermission('report.servicesDiagnostics') ||
-                        Auth::user()->hasPermission('report.servicesSendLab') || Auth::user()->hasPermission('report.inventorySupply'))
+                        Auth::user()->hasPermission('report.servicesSendLab') || Auth::user()->hasPermission('report.inventorySupply') ||
+                        Auth::user()->hasPermission('report.inventorySupplyMovement'))
 
                         <li class="dropdown">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
@@ -476,6 +477,14 @@
                                         <a href="{{ route('report.inventorySupply') }}">
                                             <i class="glyphicon glyphicon-file"></i>
                                             Inventario de insumos
+                                        </a>
+                                    </li>
+                                @endif
+                                @if(Auth::user()->hasPermission('report.inventorySupplyMovement'))
+                                    <li>
+                                        <a href="{{ route('report.inventorySupplyMovement') }}">
+                                            <i class="glyphicon glyphicon-file"></i>
+                                            Movimientos de insumos
                                         </a>
                                     </li>
                                 @endif

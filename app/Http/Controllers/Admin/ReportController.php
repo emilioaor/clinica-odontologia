@@ -803,4 +803,58 @@ class ReportController extends Controller
 
         return new JsonResponse(['success' => true, 'inventory' => $response]);
     }
+
+    /**
+     * Reporte de movimientos de inventario de insumos
+     *
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function inventorySupplyMovement()
+    {
+        $supplyBrands = SupplyBrand::all();
+        $supplyTypes = SupplyType::all();
+
+        return view('admin.report.inventorySupplyMovement', compact('supplyBrands', 'supplyTypes'));
+    }
+
+    /**
+     * Reporte de movimientos de inventario de insumos
+     *
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function inventorySupplyMovementData(Request $request)
+    {
+        $start = new \DateTime("{$request->start} 00:00:00");
+        $end = new \DateTime("{$request->end} 00:00:00");
+
+        $inventory = SupplyInventoryMovement::with([
+            'supply',
+            'supply.supplyBrand',
+            'supply.supplyType'
+        ])
+            ->whereBetween('created_at', [$start, $end])
+            ->get();
+
+        $response = [];
+        $supplyBrand = (int) $request->brand;
+        $supplyType = (int) $request->type;
+
+        foreach ($inventory as $movement) {
+
+            if ($supplyBrand !== 0 && $movement->supply->supplyBrand->id !== $supplyBrand) {
+                continue;
+            }
+
+            if ($supplyType !== 0 && $movement->supply->supplyType->id !== $supplyType) {
+                continue;
+            }
+
+            $movement->date = $movement->created_at->format('m/d/Y');
+
+            $response[] = $movement;
+        }
+
+        return new JsonResponse(['success' => true, 'inventory' => $response]);
+    }
 }

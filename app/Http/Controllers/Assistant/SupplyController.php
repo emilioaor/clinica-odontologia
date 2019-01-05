@@ -169,4 +169,26 @@ class SupplyController extends Controller
             'redirect' => route('supply.index')
         ]);
     }
+
+    /**
+     * Actualiza insumos desde el listado
+     *
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function updateList(Request $request, $id)
+    {
+        $supply = Supply::where('public_id', $id)->firstOrFail();
+        $supply->name = $request->name;
+        $supply->supply_brand_id = $request->supply_brand_id;
+        $supply->supply_type_id = $request->supply_type_id;
+        $supply->save();
+
+        $this->sessionMessage('message.supply.update');
+
+        return new JsonResponse([
+            'success' => true,
+            'redirect' => route('supply.index')
+        ]);
+    }
 }

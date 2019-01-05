@@ -48,6 +48,7 @@ Route::group(['prefix' => 'user', 'middleware' => 'auth'], function() {
     Route::resource('callLog', 'Secretary\CallLogController');
 
     // Insumos
+    Route::put('supply/list/{supply}', 'Assistant\SupplyController@updateList');
     Route::resource('supply', 'Assistant\SupplyController');
 
     // Solicitud de insumos

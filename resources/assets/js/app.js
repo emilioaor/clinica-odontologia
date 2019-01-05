@@ -71,6 +71,7 @@ Vue.component('supply-inventory-movement-out', require('./components/RegisterSup
 Vue.component('draw-confirmation', require('./components/DrawConfirmation.vue'));
 Vue.component('report-inventory-supply', require('./components/ReportInventorySupply.vue'));
 Vue.component('report-inventory-supply-movement', require('./components/ReportInventorySupplyMovement.vue'));
+Vue.component('list-supply', require('./components/ListSupply.vue'));
 Vue.component('send-lab-notification', require('./components/SendLabNotification.vue'));
 
 const app = new Vue({

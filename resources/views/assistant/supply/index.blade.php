@@ -45,39 +45,11 @@
                             </div>
                         </div>
                         <br>
-                        <table class="table table-responsive table-striped">
-                            <thead>
-                                <tr>
-                                    <th>Código</th>
-                                    <th>Insumo</th>
-                                    <th>Marca</th>
-                                    <th>Tipo</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @if(count($supplies))
-                                    @foreach($supplies as $supply)
-                                        <tr>
-                                            <td>
-                                                <a href="{{ route('supply.edit', ['supply' => $supply->public_id]) }}">
-                                                    {{ $supply->public_id }}
-                                                </a>
-                                            </td>
-                                            <td>{{ $supply->name }}</td>
-                                            <td>{{ $supply->supplyBrand->name }}</td>
-                                            <td>{{ $supply->supplyType->name }}</td>
-                                        </tr>
-                                    @endforeach
-                                @else
-                                    <tr>
-                                        <td colspan="4">
-                                            No hay insumos registrados.
-                                            <a href="{{ route('supply.create') }}">Registrar insumo</a>
-                                        </td>
-                                    </tr>
-                                @endif
-                            </tbody>
-                        </table>
+                        <list-supply
+                            :supplies = "{{ json_encode($supplies->items()) }}"
+                            :supply-brands = "{{ json_encode($supplyBrands) }}"
+                            :supply-types = "{{ json_encode($supplyTypes) }}"
+                        ></list-supply>
                     </div>
                 </div>
             </div>

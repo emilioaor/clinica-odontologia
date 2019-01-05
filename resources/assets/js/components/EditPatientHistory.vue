@@ -445,23 +445,38 @@
 
                             <div class="col-sm-4">
                                 <!-- Cargar imagen -->
-                                <input
-                                        type="file"
-                                        name="image"
-                                        id="image"
-                                        class="form-control hide"
-                                        placeholder="Imagen"
-                                        @change="setCapture()"
-                                        v-validate
-                                        data-vv-rules="mimes:image/jpeg,image/png|size:5120"
-                                        >
+
+                                <form
+                                        id="alternativeForm"
+                                        enctype="multipart/form-data"
+                                        method="post"
+                                        :action="'/user/service/' + data.public_id"
+                                        v-show="false"
+                                >
+                                    <input type="hidden" name="_method" value="PUT">
+                                    <input type="hidden" name="_token" :value="token">
+                                    <input type="hidden" name="data" :value="dataAlternative">
+
+                                    <input
+                                            v-for="i in (images.length + 1)"
+                                            :key="i"
+                                            type="file"
+                                            name="image[]"
+                                            :id="'image' + i"
+                                            class="form-control"
+                                            placeholder="Imagen"
+                                            @change="setCapture()"
+                                            v-validate
+                                            data-vv-rules="mimes:image/jpeg,image/png|size:5120"
+                                    >
+                                </form>
 
                                 <img
                                         id="selectImage"
                                         src="/img/camera.png"
                                         alt="Agregar imagen"
                                         class="img-responsive"
-                                        onclick="$('#image').click();">
+                                        @click="loadImage">
 
                                 <p class="error" v-if="errors.firstByRule('image', 'size')">
                                     Maximo 5 mb
@@ -471,12 +486,6 @@
                                 </p>
                             </div>
                         </div>
-
-                        <form id="alternativeForm"  method="post" :action="'/user/service/' + data.public_id" v-show="false">
-                            <input type="hidden" name="_method" value="PUT">
-                            <input type="hidden" name="_token" :value="token">
-                            <input type="hidden" name="data" :value="dataAlternative">
-                        </form>
 
                         <div class="row">
                             <div class="col-xs-12 text-center">
@@ -673,13 +682,13 @@
 
                         // Envio formulario sin ajax por problemas en la carga de imagenes
                         this.loading = true;
-                        this.dataAlternative = btoa(JSON.stringify({
+                        this.dataAlternative = JSON.stringify({
                             services: this.services,
                             date: this.date,
                             notes: this.notes,
-                            images: this.images,
+                            //images: this.images,
                             diagnostic: this.diagnostic
-                        }));
+                        });
 
                         window.setTimeout(function () {
                             $('#alternativeForm').submit();
@@ -769,7 +778,7 @@
             },
 
             setCapture: function() {
-                const file = $('#image')[0].files[0];
+                const file = $('#image' + (this.images.length + 1))[0].files[0];
 
                 if (file.type !== 'image/png' && file.type !== 'image/jpeg') {
                     return false;
@@ -819,6 +828,10 @@
                 let year = date.getFullYear();
 
                 return year + '-' + month + '-' + day;
+            },
+
+            loadImage() {
+                $('#image' + (this.images.length + 1)).click();
             }
         }
     }

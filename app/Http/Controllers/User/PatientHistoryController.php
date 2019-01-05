@@ -133,7 +133,7 @@ class PatientHistoryController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $data = json_decode(base64_decode($request->data), true);
+        $data = json_decode($request->data, true);
         $patient = Patient::where('public_id', $id)->firstOrFail();
 
         DB::beginTransaction();
@@ -195,12 +195,10 @@ class PatientHistoryController extends Controller
             }
         }
 
-        foreach ($data['images'] as $image) {
+        $images = $request->image ?? [];
+        foreach ($images as $image) {
 
-            $base64 = explode(',', $image);
-
-            $upload = base64_decode($base64[1]);
-            $extension = str_replace('image/png', '', $base64[0]) !== $base64[0] ? '.png' : '.jpg';
+            $extension = '.' . $image->guessClientExtension();
 
             $filename = uniqid() . $extension;
             $url = 'uploads/ray-x/' . Auth::user()->id . '/' . $filename;
@@ -210,9 +208,7 @@ class PatientHistoryController extends Controller
                 mkdir($path);
             }
 
-            $path .= '/' . $filename;
-
-            file_put_contents($path, $upload);
+            $image->move($path, $filename);
 
             $rayX = new RayX();
             $rayX->patient_id = $patient->id;

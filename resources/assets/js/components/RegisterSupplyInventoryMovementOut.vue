@@ -47,9 +47,10 @@
                             <thead>
                                 <tr>
                                     <th width="25%">Insumo</th>
-                                    <th width="20%">Marca</th>
-                                    <th width="20%">Tipo</th>
-                                    <th width="15%">Qty</th>
+                                    <th width="15%">Marca</th>
+                                    <th width="15%">Tipo</th>
+                                    <th width="15%">Dimensi&oacute;n</th>
+                                    <th width="10%">Qty</th>
                                     <th width="15%" class="text-center">Prestamo</th>
                                     <th width="5%"></th>
                                 </tr>
@@ -85,6 +86,9 @@
                                     </td>
                                     <td>
                                         {{ current.supply ? current.supply.supply_type.name : '-' }}
+                                    </td>
+                                    <td>
+                                        {{ current.supply ? current.supply.width + 'x' + current.supply.height : '-' }}
                                     </td>
                                     <td>
                                         <input

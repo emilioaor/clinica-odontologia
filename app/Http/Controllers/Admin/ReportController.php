@@ -781,7 +781,11 @@ class ReportController extends Controller
         $supplyType = (int) $request->type;
         
         foreach ($inventory as $movement) {
-            
+
+            if ($movement->supply->trashed()) {
+                continue;
+            }
+
             if ($supplyBrand !== 0 && $movement->supply->supplyBrand->id !== $supplyBrand) {
                 continue;
             }

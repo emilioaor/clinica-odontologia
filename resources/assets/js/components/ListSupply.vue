@@ -7,13 +7,18 @@
                     <th>Insumo</th>
                     <th>Marca</th>
                     <th>Tipo</th>
+                    <th>Dimensi&oacute;n</th>
                     <th width="5%"></th>
                     <td width="5%"></td>
                 </tr>
             </thead>
             <tbody>
                 <tr v-for="(supply, i) in supplies" :key="supply.id">
-                    <td>{{ supply.public_id }}</td>
+                    <td>
+                        <a :href="'/user/supply/' + supply.public_id + '/edit'">
+                            {{ supply.public_id }}
+                        </a>
+                    </td>
                     <td>
                         <span v-if="supplyEditing === i">
 
@@ -77,6 +82,9 @@
                         <span v-else>
                             {{ supply.supply_type.name }}
                         </span>
+                    </td>
+                    <td>
+                        {{ supply.width + 'x' + supply.height }}
                     </td>
                     <td>
                         <!-- Guardar -->

@@ -779,7 +779,14 @@ class ReportController extends Controller
         $response = [];
         $supplyBrand = (int) $request->brand;
         $supplyType = (int) $request->type;
-        
+        $width = str_replace('.', '', $request->width);
+        $width = str_replace(',', '.', $width);
+        $width = (float) $width;
+        $height = str_replace('.', '', $request->height);
+        $height = str_replace(',', '.', $height);
+        $height = (float) $height;
+
+
         foreach ($inventory as $movement) {
 
             if ($movement->supply->trashed()) {
@@ -791,6 +798,14 @@ class ReportController extends Controller
             }
 
             if ($supplyType !== 0 && $movement->supply->supplyType->id !== $supplyType) {
+                continue;
+            }
+
+            if ($width > 0 && $width !== $movement->supply->width) {
+                continue;
+            }
+
+            if ($height > 0 && $height !== $movement->supply->height) {
                 continue;
             }
 

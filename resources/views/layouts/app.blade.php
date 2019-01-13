@@ -34,7 +34,7 @@
     </div>
 
     <!-- Scripts -->
-    <script src="{{ asset('js/app.js') }}?v=1.69.0"></script>
+    <script src="{{ asset('js/app.js') }}?v=1.70.0"></script>
     @yield('js')
 </body>
 </html>

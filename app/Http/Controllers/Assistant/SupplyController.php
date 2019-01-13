@@ -86,6 +86,7 @@ class SupplyController extends Controller
         $supply->height = $height;
         $supply->loan_policy = $request->loan_policy;
         $supply->loan_default = $request->loan_default;
+        $supply->price = $request->price;
         $supply->save();
 
         $this->sessionMessage('message.supply.create');
@@ -141,6 +142,7 @@ class SupplyController extends Controller
         $supply->height = $height;
         $supply->loan_policy = $request->loan_policy;
         $supply->loan_default = $request->loan_default;
+        $supply->price = $request->price;
         $supply->save();
 
         $this->sessionMessage('message.supply.update');

@@ -56,6 +56,31 @@
                                     </select>
                                 </div>
                             </div>
+
+                            <div class="col-sm-4">
+                                <div class="form-group">
+                                    <label for="">Dimensi&oacute;n</label>
+                                    <div class="d-flex">
+                                        <div class="w-40">
+                                            <input
+                                                type="text"
+                                                class="form-control"
+                                                v-model="data.width"
+                                                v-money="mask"
+                                            >
+                                        </div>
+                                        <div class="w-20 text-center">X</div>
+                                        <div class="w-40">
+                                            <input
+                                                type="text"
+                                                class="form-control"
+                                                v-model="data.height"
+                                                v-money="mask"
+                                            >
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
 
                         <div class="row">
@@ -83,8 +108,7 @@
                                             <th>Insumo</th>
                                             <th>Marca</th>
                                             <th>Tipo</th>
-                                            <th>Ancho</th>
-                                            <th>Alto</th>
+                                            <th>Dimensi&oacute;n</th>
                                             <th width="20%" class="text-center">Disponible</th>
                                         </tr>
                                     </thead>
@@ -93,8 +117,7 @@
                                             <td>{{ inventory.supply.name }}</td>
                                             <td>{{ inventory.supply.supply_brand.name }}</td>
                                             <td>{{ inventory.supply.supply_type.name }}</td>
-                                            <td>{{ inventory.supply.width }}</td>
-                                            <td>{{ inventory.supply.height }}</td>
+                                            <td>{{ inventory.supply.width + 'x' + inventory.supply.height }}</td>
                                             <td class="text-center">{{ inventory.qty }}</td>
                                         </tr>
                                     </tbody>
@@ -132,11 +155,20 @@
                 data: {
                     brand: 0,
                     type: 0,
+                    width: '',
+                    height: '',
                     results: []
                 },
+                mask: {
+                    decimal: ',',
+                    thousands: '.',
+                    prefix: '',
+                    suffix: '',
+                    precision: 2
+                }
            }
         },
-       
+
        methods: {
         
             search: function () {
@@ -145,7 +177,9 @@
                 axios.get(
                         '/admin/report/inventorySupplyData' +
                         '?type=' + this.data.type +
-                        '&brand=' + this.data.brand
+                        '&brand=' + this.data.brand +
+                        '&width=' + this.data.width +
+                        '&height=' + this.data.height
                 )
                     .then((res) => {
                         this.loading = false;
@@ -168,3 +202,15 @@
        }
     }
 </script>
+
+<style>
+    .d-flex {
+        display: flex;
+    }
+    .w-40 {
+        min-width: 40%;
+    }
+    .w-20 {
+        min-width: 20%;
+    }
+</style>

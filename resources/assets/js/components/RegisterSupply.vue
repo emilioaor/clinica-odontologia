@@ -138,6 +138,29 @@
                                 </div>
 
                                 <div class="col-sm-4">
+                                    <div class="form-group" v-bind:class="{'has-error': errors.has('price')}">
+                                        <label for="loan_policy">Precio</label>
+                                        <input
+                                                type="number"
+                                                class="form-control"
+                                                id="price"
+                                                name="price"
+                                                placeholder="Precio"
+                                                v-model="form.price"
+                                                v-validate
+                                                data-vv-rules="required"
+                                                v-bind:disabled="loading"
+                                                v-bind:class="{'input-error': errors.has('price')}"
+                                        >
+                                        <p class="error" v-if="errors.firstByRule('price', 'required')">
+                                            Requerido
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-sm-4">
                                     <div class="form-group" v-bind:class="{'has-error': errors.has('loan_policy')}">
                                         <label for="loan_policy">Politica de prestamo</label>
                                         <select
@@ -156,9 +179,7 @@
                                         </p>
                                     </div>
                                 </div>
-                            </div>
 
-                            <div class="row">
                                 <div class="col-sm-4">
                                     <div class="form-group">
                                         <label for="loan_default">¿Permite prestamo?</label>
@@ -217,7 +238,8 @@
                     width: null,
                     height: null,
                     loan_policy: null,
-                    loan_default: false
+                    loan_default: false,
+                    price: null
                 },
                 mask: {
                     decimal: ',',

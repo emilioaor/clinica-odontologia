@@ -133,10 +133,14 @@
 
 <script>
     import Datepicker from 'vuejs-datepicker';
+    import {VMoney} from 'v-money';
 
     export default {
         components: {
             Datepicker
+        },
+        directives: {
+            VMoney
         },
         props: {
             supplyBrands: {

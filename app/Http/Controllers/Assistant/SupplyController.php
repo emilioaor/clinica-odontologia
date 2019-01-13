@@ -36,19 +36,55 @@ class SupplyController extends Controller
             $supplies->where('supply_type_id', $request->get('type'));
         }
 
+        if ($request->has('width')) {
+
+            $width = str_replace('.', '', $request->width);
+            $width = str_replace(',', '.', $width);
+            $width = (float) $width;
+
+            $supplies->where('width', $width);
+        }
+
+        if ($request->has('height')) {
+
+            $height = str_replace('.', '', $request->height);
+            $height = str_replace(',', '.', $height);
+            $height = (float) $height;
+
+            $supplies->where('height', $height);
+        }
+
         $supplies = $supplies->paginate();
         $supplyBrands = SupplyBrand::orderBy('name')->get();
         $supplyTypes = SupplyType::orderBy('name')->get();
+        $filters = [
+            'brand' => 0,
+            'type' => 0,
+            'width' => '0,00',
+            'height' => '0,00'
+        ];
 
         if ($request->has('brand')) {
             $supplies->appends('brand', $request->get('brand'));
+            $filters['brand'] = $request->get('brand');
         }
 
         if ($request->has('type')) {
             $supplies->appends('type', $request->get('type'));
+            $filters['type'] = $request->get('type');
         }
 
-        return view('assistant.supply.index', compact('supplies', 'supplyBrands', 'supplyTypes'));
+        if ($request->has('width')) {
+            $supplies->appends('width', $request->get('width'));
+            $filters['width'] = $request->get('width');
+        }
+
+        if ($request->has('height')) {
+            $supplies->appends('height', $request->get('height'));
+            $filters['height'] = $request->get('height');
+        }
+
+        return view('assistant.supply.index', compact('supplies', 'supplyBrands', 'supplyTypes', 'filters'));
     }
 
     /**

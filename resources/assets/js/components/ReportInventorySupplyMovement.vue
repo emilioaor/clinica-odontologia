@@ -70,7 +70,7 @@
                         <div class="row">
                             <div class="col-sm-4">
                                 <div class="form-group">
-                                    <label for="brand">Tipo</label>
+                                    <label for="type">Tipo</label>
                                     <select
                                             name="type"
                                             id="type"
@@ -85,6 +85,22 @@
                                         >
                                             {{ supplyType.name }}
                                         </option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="col-sm-4">
+                                <div class="form-group">
+                                    <label for="movement_type">Tipo de movimiento</label>
+                                    <select
+                                            name="movement_type"
+                                            id="movement_type"
+                                            class="form-control"
+                                            v-model="data.movement_type"
+                                    >
+                                        <option :value="0">- Todos</option>
+                                        <option :value="1">Entrada</option>
+                                        <option :value="2">Salida</option>
                                     </select>
                                 </div>
                             </div>
@@ -168,6 +184,7 @@
                     type: 0,
                     start: null,
                     end: null,
+                    movement_type: 0,
                     results: []
                 },
            }
@@ -193,7 +210,8 @@
                         '?type=' + this.data.type +
                         '&brand=' + this.data.brand +
                         '&start=' + this.data.start +
-                        '&end=' + this.data.end
+                        '&end=' + this.data.end +
+                        '&movement_type=' + this.data.movement_type
                 )
                     .then((res) => {
                         this.loading = false;

@@ -173,6 +173,7 @@ class ReportController extends Controller
         $end = new \DateTime($request->end);
         $end->setTime(23, 59, 59);
         $response = [];
+        $paymentType = (int) $request->payment_type;
 
         // Obtengo el ID de todos los servicios registrados o con un pago
         // registrado en el rango de fechas
@@ -257,12 +258,18 @@ class ReportController extends Controller
 
             foreach ($payments as $payment) {
 
+                if ($paymentType > 0 && $payment->type !== $paymentType) {
+                    // Filtro por tipo de pago
+                    continue;
+                }
+
                 $type = $payment->isDiscount() ? 'discount' : 'payment';
 
                 $response[$patient->id]['data'][$history->id]['services'][] = [
                     'date' => $payment->date->format('Y-m-d H:i:s'),
                     'classification' => trans('message.report.classification.' . $type),
                     'description' => trans('message.report.classification.' . $type),
+                    'paymentType' => $payment->type,
                     'amount' => $payment->amount
                 ];
             }
@@ -858,6 +865,7 @@ class ReportController extends Controller
         $response = [];
         $supplyBrand = (int) $request->brand;
         $supplyType = (int) $request->type;
+        $movementType = (int) $request->movement_type;
 
         foreach ($inventory as $movement) {
 
@@ -866,6 +874,14 @@ class ReportController extends Controller
             }
 
             if ($supplyType !== 0 && $movement->supply->supplyType->id !== $supplyType) {
+                continue;
+            }
+
+            if ($movementType === 1 && $movement->qty < 0) {
+                continue;
+            }
+
+            if ($movementType === 2 && $movement->qty > 0) {
                 continue;
             }
 

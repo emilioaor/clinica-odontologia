@@ -113,6 +113,25 @@
 
                                 <div class="col-sm-4">
                                     <div class="form-group">
+                                        <label for="payment_type">Tipo de pago</label>
+                                        <select
+                                                name="payment_type"
+                                                id="payment_type"
+                                                class="form-control"
+                                                v-model="data.payment_type"
+                                        >
+                                            <option :value="0">- Todos</option>
+                                            <option :value="1">Tarjeta de credito</option>
+                                            <option :value="2">Efectivo</option>
+                                            <option :value="3">Cheque</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-sm-4">
+                                    <div class="form-group">
                                         <label for="">Total en comisiones</label>
                                         <p>
                                             $ {{ totalAllCommission() }}
@@ -170,7 +189,18 @@
                                                     :key="li"
                                             >
                                                 <td>{{ dateFormat(line.date) }}</td>
-                                                <td>{{ line.classification }}</td>
+                                                <td>
+                                                    {{ line.classification }}
+                                                    <span v-if="line.paymentType && line.paymentType === 1">
+                                                        (Tarjeta de credito)
+                                                    </span>
+                                                    <span v-else-if="line.paymentType && line.paymentType === 2">
+                                                        (Efectivo)
+                                                    </span>
+                                                    <span v-else-if="line.paymentType && line.paymentType === 3">
+                                                        (Cheque)
+                                                    </span>
+                                                </td>
                                                 <td>{{ line.description }}</td>
                                                 <td>{{ line.amount }}</td>
                                             </tr>
@@ -382,6 +412,7 @@
               data: {
                   start: null,
                   end: null,
+                  payment_type: 0,
                   report: []
               },
               modal: {
@@ -440,7 +471,8 @@
                         '/admin/report/doctorCommissionsData?doctor=' + this.doctor.public_id +
                         '&start=' + this.data.start +
                         '&end=' + this.data.end +
-                        '&balance=' + this.balanceZero
+                        '&balance=' + this.balanceZero +
+                        '&payment_type=' + this.data.payment_type
                 )
                     .then((res) => {
 

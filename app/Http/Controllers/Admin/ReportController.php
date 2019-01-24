@@ -852,14 +852,16 @@ class ReportController extends Controller
     public function inventorySupplyMovementData(Request $request)
     {
         $start = new \DateTime("{$request->start} 00:00:00");
-        $end = new \DateTime("{$request->end} 00:00:00");
+        $end = new \DateTime("{$request->end} 23:59:59");
 
-        $inventory = SupplyInventoryMovement::with([
-            'supply',
-            'supply.supplyBrand',
-            'supply.supplyType'
-        ])
-            ->whereBetween('created_at', [$start, $end])
+        $inventory = SupplyInventoryMovement::query()
+            ->with([
+                'supply',
+                'supply.supplyBrand',
+                'supply.supplyType'
+            ])
+            ->where('created_at', '>=', $start)
+            ->where('created_at', '<=', $end)
             ->get();
 
         $response = [];

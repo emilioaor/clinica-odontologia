@@ -12,6 +12,7 @@
                         <th>Doctor</th>
                         <th>Asistente</th>
                         <th>Responsable</th>
+                        <th>Paciente</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -21,6 +22,7 @@
                         <td>{{ notification.data.doctor ? notification.data.doctor.name : '' }}</td>
                         <td>{{ notification.data.assistant ? notification.data.assistant.name : '' }}</td>
                         <td>{{ notification.data.responsible ? notification.data.responsible.name : '' }}</td>
+                        <td>{{ notification.data.patient ? notification.data.patient.name : '' }}</td>
                     </tr>
                 </tbody>
             </table>

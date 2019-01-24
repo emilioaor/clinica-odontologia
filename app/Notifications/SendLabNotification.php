@@ -77,6 +77,7 @@ class SendLabNotification extends Notification
             'assistant' => $this->patientHistory->assistant,
             'responsible' => $this->patientHistory->responsible,
             'supplier' => $this->patientHistory->supplier,
+            'patient' => $this->patientHistory->patient,
             'hours' => $this->hours
         ];
     }

@@ -34,7 +34,7 @@
                                                     v-validate
                                                     data-vv-rules="required|regex:^[0-9]{10}$"
                                                     maxlength="10"
-                                                    @keyup="phoneError = false"
+                                                    @keyup="verifyPhone()"
                                                     :class="{'input-error': errors.has('phone') || phoneError}"
                                                     >
                                             <p class="error" v-if="errors.firstByRule('phone', 'required')">
@@ -44,7 +44,7 @@
                                                 Formato invalido
                                             </p>
                                             <p class="error" v-if="! errors.has('phone') && phoneError">
-                                                Este telefono ya esta registrado
+                                                Este paciente ya esta registrado
                                             </p>
                                         </div>
                                     </div>
@@ -62,6 +62,7 @@
                                                     v-validate
                                                     data-vv-rules="required"
                                                     :class="{'input-error': errors.has('name')}"
+                                                    :disabled="phoneError"
                                                     >
                                             <p class="error" v-if="errors.firstByRule('name', 'required')">
                                                 Campo requerido
@@ -82,6 +83,7 @@
                                                     v-validate
                                                     data-vv-rules="required|email"
                                                     :class="{'input-error': errors.has('email')}"
+                                                    :disabled="phoneError"
                                                     >
                                             <p class="error" v-if="errors.firstByRule('email', 'required')">
                                                 Campo requerido
@@ -93,7 +95,7 @@
                                     </div>
                                 </div>
 
-                                <div class="row">
+                                <div class="row" v-if="! phoneError">
                                     <div class="col-sm-4">
                                         <div class="form-group">
                                             <label for="name">Referencia</label>
@@ -132,11 +134,19 @@
                                 </div>
 
                                 <div class="row">
-                                    <div class="col-xs-12">
+                                    <div class="col-xs-12" v-if="! phoneError">
                                         <button class="btn btn-success" v-bind:disabled="loading">
                                             <i class="glyphicon glyphicon-saved"></i>
                                             Registar paciente
                                         </button>
+                                    </div>
+
+                                    <div class="col-xs-12" v-if="phoneError">
+                                        <a class="btn btn-primary"
+                                            :href="'/user/service/' + patient.public_id + '/edit'">
+                                            <i class="glyphicon glyphicon-plus"></i>
+                                            Registrar servicio
+                                        </a>
                                     </div>
                                 </div>
 
@@ -169,7 +179,8 @@
                     email: '',
                     patient_reference_id: null,
                     cancel_appointment: false
-                }
+                },
+                patient: null
             }
         },
 
@@ -177,33 +188,44 @@
             validateForm: function () {
                 this.$validator.validateAll().then((res) => {
                     if (res) {
-                        this.verifyPhone();
+                        this.loading = true;
+                        this.verifyPhone(true)
                     }
                 });
             },
 
-            verifyPhone: function () {
-                this.loading = true;
+            verifyPhone: function (sendForm = false) {
+                if (this.form.phone.length < 5) {
+                    return false
+                }
 
                 axios.get('/user/patient/phone/' + this.form.phone)
                     .then((res) => {
                         if (res.data.success) {
 
                             if (res.data.valid) {
-                                this.sendForm();
+                                this.phoneError = false;
 
-                                return res
+                                if (sendForm) {
+                                    this.sendForm()
+                                }
+
+                                return
                             }
 
                             this.loading = false;
                             this.phoneError = true;
+                            this.patient = res.data.patient;
+                            this.form.name = res.data.patient.name;
+                            this.form.email = res.data.patient.email;
                         }
                     })
                     .catch((err) => {
-    if (err.response.status === 403 || err.response.status === 405) {
-        location.href = '/';
-    }
+                        if (err.response.status === 403 || err.response.status === 405) {
+                            location.href = '/';
+                        }
                         this.loading = false;
+                        this.phoneError = false;
                     })
                 ;
             },
@@ -219,9 +241,9 @@
                         }
                     })
                     .catch((err) => {
-    if (err.response.status === 403 || err.response.status === 405) {
-        location.href = '/';
-    }
+                        if (err.response.status === 403 || err.response.status === 405) {
+                            location.href = '/';
+                        }
 
                         this.loading = false;
                     })

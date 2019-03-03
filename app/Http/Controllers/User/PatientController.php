@@ -174,7 +174,8 @@ class PatientController extends Controller
 
         return new JsonResponse([
             'success' => true,
-            'valid' => $patient->first() ? false : true
+            'valid' => ($p = $patient->first()) ? false : true,
+            'patient' => $p
         ]);
     }
 

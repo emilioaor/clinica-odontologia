@@ -44,6 +44,7 @@ return [
     'callLog.status.callAgain' => 'Volver a llamar',
 
     'callLog.note.budget' => 'Cotización #:public_id',
+    'callLog.note.newPatient' => 'Llamada para nuevo paciente',
 
     'supply.create' => 'Insumo registrado',
     'supply.update' => 'Insumo actualizado',

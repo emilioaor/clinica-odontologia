@@ -2,11 +2,14 @@
 
 namespace App\Http\Controllers\User;
 
+use App\CallLog;
 use App\Patient;
 use App\PatientReference;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class PatientController extends Controller
 {
@@ -16,7 +19,18 @@ class PatientController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('doctor')->except([
+        $this->middleware(function ($request, $next) {
+
+            if (! Auth::user()->isDoctor() && ! Auth::user()->isSellManager()) {
+                if ($request->ajax()) {
+                    return new JsonResponse(null, 403);
+                }
+
+                return redirect()->route('home');
+            }
+
+            return $next($request);
+        })->except([
             'index',
             'search'
         ]);
@@ -38,10 +52,17 @@ class PatientController extends Controller
     {
         $patients = Patient::orderBy('id', 'DESC');
 
+        if (Auth::user()->isSellManager()) {
+            $patients->where('sell_manager_id', Auth::user()->id);
+        }
+
         if (! empty($request->search)) {
             $patients = $patients
-                ->where('phone', 'LIKE', "%$request->search%")
-                ->orWhere('name', 'LIKE', "%$request->search%")
+                ->where(function ($query) use ($request) {
+                    $query
+                        ->where('phone', 'LIKE', "%$request->search%")
+                        ->orWhere('name', 'LIKE', "%$request->search%");
+                })
                 ->limit(15)
             ;
         }
@@ -67,20 +88,38 @@ class PatientController extends Controller
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @return JsonResponse
      */
     public function store(Request $request)
     {
+        DB::beginTransaction();
+
         $patient = new Patient($request->all());
         $patient->nextPublicId();
+
+        if (Auth::user()->isSellManager()) {
+            $patient->sell_manager_id = Auth::user()->id;
+        }
+
         $patient->save();
+
+        if (Auth::user()->isSellManager() && (bool) $request->register_call) {
+            // Registra una llamada pendiente para este paciente
+            $callLog = new CallLog();
+            $callLog->public_id = 'CALL' . time();
+            $callLog->description = trans('message.callLog.note.newPatient');
+            $callLog->patient_id = $patient->id;
+            $callLog->call_date = new \DateTime('+1 day');
+            $callLog->status = CallLog::STATUS_PENDING;
+            $callLog->user_id = Auth::user()->id;
+            $callLog->save();
+        }
+
+        DB::commit();
 
         $this->sessionMessage('message.patient.create');
 
-        return new JsonResponse([
-            'success' => true,
-            'redirect' => route('patient.index')
-        ]);
+        return new JsonResponse(['success' => true, 'redirect' => route('patient.index')]);
     }
 
     /**
@@ -174,8 +213,7 @@ class PatientController extends Controller
 
         return new JsonResponse([
             'success' => true,
-            'valid' => ($p = $patient->first()) ? false : true,
-            'patient' => $p
+            'valid' => $patient->first() ? false : true
         ]);
     }
 

@@ -16,6 +16,7 @@ class User extends Authenticatable
     const LEVEL_DOCTOR = 2;
     const LEVEL_SECRETARY = 3;
     const LEVEL_ASSISTANT = 4;
+    const LEVEL_SELL_MANAGER = 5;
 
     /** Comision por defecto de ganancia por servicio */
     const DEFAULT_PRODUCT_COMMISSION = 30;
@@ -88,6 +89,16 @@ class User extends Authenticatable
     public function isAssistant()
     {
         return $this->level === self::LEVEL_ASSISTANT;
+    }
+
+    /**
+     * Indica si el usuario es gerente de ventas
+     *
+     * @return bool
+     */
+    public function isSellManager()
+    {
+        return $this->level === self::LEVEL_SELL_MANAGER;
     }
 
     /**
@@ -267,6 +278,16 @@ class User extends Authenticatable
     }
 
     /**
+     * Pacientes registrados por un gerente de ventas
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function sellManagerPatients()
+    {
+        return $this->hasMany(Patient::class, 'sell_manager_id');
+    }
+
+    /**
      * Genera el id publico en base al nivel
      */
     public function generatePublicId()
@@ -279,6 +300,8 @@ class User extends Authenticatable
             $this->public_id = 'SEC' . time();
         } elseif ($this->isAssistant()) {
             $this->public_id = 'ASS' . time();
+        } elseif ($this->isSellManager()) {
+            $this->public_id = 'SMA' . time();
         }
     }
 
@@ -332,6 +355,14 @@ class User extends Authenticatable
                 'supplier.index',
                 'appointment.create',
                 'appointment.index'
+            ])) {
+            return true;
+        }
+
+        if ($this->level === self::LEVEL_SELL_MANAGER && in_array($permission, [
+                'patient.index',
+                'patient.create',
+                'callLog.index'
             ])) {
             return true;
         }

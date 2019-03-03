@@ -100,4 +100,14 @@ class Patient extends Model
     {
         return $this->belongsTo(PatientReference::class, 'patient_reference_id')->withTrashed();
     }
+
+    /**
+     * Gerente de venta que registro a este paciente
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function sellManager()
+    {
+        return $this->belongsTo(User::class, 'sell_manager_id')->withTrashed();
+    }
 }

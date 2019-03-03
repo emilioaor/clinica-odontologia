@@ -20,7 +20,15 @@ class CallLogController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('secretary');
+        $this->middleware(function ($request, $next) {
+            if (! Auth::user()->isSellManager() && ! Auth::user()->isSecretary()) {
+                return redirect()->route('home');
+            }
+
+            return $next($request);
+        })->only(['index', 'update']);
+
+        $this->middleware('secretary')->except(['index', 'update']);
 
         $this->middleware('doctor')->except([
             'index',
@@ -42,7 +50,7 @@ class CallLogController extends Controller
     public function index()
     {
         $callLogs = CallLog::orderByDesc('call_date')
-            ->whereDate('call_date', '<=', new \DateTime())
+            ->whereDate('call_date', '<=', new \DateTime('now 23:59:59'))
             ->where('status', '<>', CallLog::STATUS_NOT_INTERESTED)
             ->where('status', '<>', CallLog::STATUS_SCHEDULED)
             ->with(['statusHistory', 'patient'])

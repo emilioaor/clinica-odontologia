@@ -131,6 +131,21 @@
                                             </p>
                                         </div>
                                     </div>
+
+                                    <div class="col-sm-4" v-if="user.level === LEVEL_SELL_MANAGER">
+                                        <div class="form-group">
+                                            <label for="cancel_appointment">Registrar llamada</label>
+
+                                            <p>
+                                                <input
+                                                        type="checkbox"
+                                                        name="register_call"
+                                                        id="register_call"
+                                                        v-model="form.register_call"
+                                                >
+                                            </p>
+                                        </div>
+                                    </div>
                                 </div>
 
                                 <div class="row">
@@ -166,11 +181,16 @@
             patientReferences: {
                 type: Array,
                 required: true
+            },
+            user: {
+                type: Object,
+                required: true
             }
         },
 
         data: function () {
             return {
+                LEVEL_SELL_MANAGER: 5,
                 loading: false,
                 phoneError: false,
                 form: {
@@ -178,7 +198,8 @@
                     phone: '',
                     email: '',
                     patient_reference_id: null,
-                    cancel_appointment: false
+                    cancel_appointment: false,
+                    register_call: false
                 },
                 patient: null
             }

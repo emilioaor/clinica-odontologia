@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Secretary;
 
+use App\Appointment;
 use App\CallLog;
 use App\CallStatusHistory;
 use App\Patient;
@@ -21,7 +22,11 @@ class CallLogController extends Controller
     public function __construct()
     {
         $this->middleware(function ($request, $next) {
-            if (! Auth::user()->isSellManager() && ! Auth::user()->isSecretary()) {
+            if (! Auth::user()->isAdmin() && ! Auth::user()->isSellManager() && ! Auth::user()->isSecretary()) {
+                if ($request->ajax()) {
+                    return new JsonResponse(null, 403);
+                }
+
                 return redirect()->route('home');
             }
 
@@ -155,6 +160,13 @@ class CallLogController extends Controller
         } elseif ($callLog->status == CallLog::STATUS_SCHEDULED) {
             // Si tiene cita guardo la fecha
             $callLog->appointment_date = $request->date_again;
+            // Genero la cita
+            $appointment = new Appointment();
+            $appointment->date = new \DateTime($request->date_again);
+            $appointment->patient_id = $callLog->patient_id;
+            $appointment->user_id = Auth::user()->id;
+            $appointment->status = Appointment::STATUS_PENDING;
+            $appointment->save();
         }
 
         $callLog->save();

@@ -4,6 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\Auth;
 
 class Appointment extends Model
 {
@@ -143,5 +144,12 @@ class Appointment extends Model
         }
 
         return '';
+    }
+
+    public function scopePerUser($query)
+    {
+        if (Auth::check() && ! Auth::user()->isAdmin()) {
+            $query->where('user_id', Auth::user()->id);
+        }
     }
 }

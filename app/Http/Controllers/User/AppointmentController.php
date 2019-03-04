@@ -20,7 +20,17 @@ class AppointmentController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('secretary');
+        $this->middleware(function ($request, $next) {
+            if (! Auth::user()->isAdmin() && ! Auth::user()->isSecretary() && ! Auth::user()->isSellManager()) {
+                if ($request->ajax()) {
+                    return new JsonResponse(null, 403);
+                }
+
+                return redirect()->route('home');
+            }
+
+            return $next($request);
+        });
     }
 
     /**
@@ -60,13 +70,13 @@ class AppointmentController extends Controller
                 $end
             ])
             ->orderBy('date')
+            ->perUser()
             ->with([
                 'patient',
                 'user',
                 'doctor',
                 'appointmentDetails.product'
-            ])
-            ->get();
+            ])->get();
 
         $response = [
             'sunday' => [], // Domingo

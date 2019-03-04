@@ -145,7 +145,7 @@
                                                     placeholder="Doctor"
                                                     :value="!doctor ? '': doctor.name"
                                                     v-validate
-                                                    data-vv-rules="required"
+                                                    data-vv-rules=""
                                                     :class="{'input-error': errors.has('doctor')}"
                                                     readonly
                                                     >
@@ -421,9 +421,7 @@
                     doctor_id: null,
                     hour: null,
                     minute: null,
-                    details: [{
-                        product_id: null
-                    }]
+                    details: []
                 },
                 modal: {
                     data: [],

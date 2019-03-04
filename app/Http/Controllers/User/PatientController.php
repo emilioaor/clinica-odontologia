@@ -21,7 +21,7 @@ class PatientController extends Controller
     {
         $this->middleware(function ($request, $next) {
 
-            if (! Auth::user()->isDoctor() && ! Auth::user()->isSellManager()) {
+            if (! Auth::user()->isAdmin() && ! Auth::user()->isDoctor() && ! Auth::user()->isSellManager()) {
                 if ($request->ajax()) {
                     return new JsonResponse(null, 403);
                 }

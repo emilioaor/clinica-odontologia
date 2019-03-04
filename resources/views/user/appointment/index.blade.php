@@ -47,13 +47,15 @@
                             </div>
 
                             <div class="col-xs-3">
-                                <a
-                                        class="btn btn-success pull-right"
-                                        href="{{ route('appointment.create') }}"
-                                        >
-                                    <i class="glyphicon glyphicon-plus"></i>
-                                    Registrar cita
-                                </a>
+                                @if(Auth::user()->hasPermission('appointment.create'))
+                                    <a
+                                            class="btn btn-success pull-right"
+                                            href="{{ route('appointment.create') }}"
+                                    >
+                                        <i class="glyphicon glyphicon-plus"></i>
+                                        Registrar cita
+                                    </a>
+                                @endif
                             </div>
                         </div>
 
@@ -291,7 +293,7 @@
                                         <div class="form-group">
                                             <label for="">Doctor</label>
                                             <p>
-                                                {{ $appointment->doctor->name }}
+                                                {{ $appointment->doctor ? $appointment->doctor->name : '' }}
                                             </p>
                                         </div>
                                     </div>

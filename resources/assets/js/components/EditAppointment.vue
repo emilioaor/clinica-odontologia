@@ -145,7 +145,7 @@
                                                     placeholder="Doctor"
                                                     :value="!doctor ? '': doctor.name"
                                                     v-validate
-                                                    data-vv-rules="required"
+                                                    data-vv-rules=""
                                                     :class="{'input-error': errors.has('doctor')}"
                                                     readonly
                                                     >

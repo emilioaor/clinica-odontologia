@@ -362,7 +362,9 @@ class User extends Authenticatable
         if ($this->level === self::LEVEL_SELL_MANAGER && in_array($permission, [
                 'patient.index',
                 'patient.create',
-                'callLog.index'
+                'callLog.index',
+                'appointment.index',
+                'appointment.create'
             ])) {
             return true;
         }

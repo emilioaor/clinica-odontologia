@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Appointment;
 use App\Budget;
 use App\Expense;
 use App\Patient;
@@ -16,10 +17,31 @@ use App\SupplyType;
 use App\SupplyInventoryMovement;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
 class ReportController extends Controller
 {
+
+    /**
+     *
+     */
+    public function __construct()
+    {
+        $this->middleware(function ($request, $next) {
+            if (! Auth::user()->isAdmin() && ! Auth::user()->isSellManager()) {
+                if ($request->ajax()) {
+                    return new JsonResponse(null, 403);
+                }
+
+                return redirect()->route('home');
+            }
+
+            return $next($request);
+
+        })->only(['sellManagerPatients', 'sellManagerPatientsData']);
+    }
+
     /**
      * Carga la vista para el reporte de servicios y pagos
      *
@@ -893,5 +915,74 @@ class ReportController extends Controller
         }
 
         return new JsonResponse(['success' => true, 'inventory' => $response]);
+    }
+
+    /**
+     * Reporte de pacientes registrados por un Agente de ventas
+     *
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function sellManagerPatients()
+    {
+        $sellManagers = User::query()->sellManagers()->get();
+
+        return view('admin.report.sellManagerPatients', compact('sellManagers'));
+    }
+
+    /**
+     * Reporte de pacientes registrados por un Agente de ventas
+     *
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function sellManagerPatientsData(Request $request)
+    {
+        $start = new \DateTime("{$request->start} 00:00:00");
+        $end = new \DateTime("{$request->end} 23:59:59");
+        $sellManager = $request->sell_manager;
+        $appointment = (int) $request->appointment;
+        $service = (int) $request->service;
+
+        $patients = Patient::query()
+            ->perSellManager($sellManager)
+            ->whereBetween('created_at', [$start, $end])
+            ->with(['sellManager'])
+            ->get()
+        ;
+
+        $results = [];
+        foreach ($patients as $patient) {
+            // Agrupo por Agente de ventas
+
+            // ¿Tiene cita?
+            $patient->count_appointments = Appointment::query()->where('patient_id', $patient->id)->count();
+
+            if ($appointment === 1 && $patient->count_appointments === 0) {
+                // Solo permito pacientes con cita
+                continue;
+            } else if ($appointment === 2 && $patient->count_appointments > 0) {
+                // Solo permito pacientes sin cita
+                continue;
+            }
+
+            // ¿Se presento en la clinica?
+            $patient->count_services = PatientHistory::query()->where('patient_id', $patient->id)->count();
+
+            if ($service === 1 && $patient->count_services === 0) {
+                // Solo permito pacientes con servicio
+                continue;
+            } else if ($service === 2 && $patient->count_services > 0) {
+                // Solo permito pacientes sin servicio
+                continue;
+            }
+
+            // ¿Monto gastado?
+            $patient->services_amount = (float) PatientHistory::serviceAmount($patient->id)->first()->amount;
+
+            $results[$patient->sell_manager_id]['name'] = $patient->sellManager->name;
+            $results[$patient->sell_manager_id]['patients'][] = $patient;
+        }
+
+        return new JsonResponse(['success' => true, 'results' => $results]);
     }
 }

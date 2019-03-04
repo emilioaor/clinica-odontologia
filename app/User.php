@@ -2,9 +2,11 @@
 
 namespace App;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Support\Facades\Auth;
 
 class User extends Authenticatable
 {
@@ -92,7 +94,7 @@ class User extends Authenticatable
     }
 
     /**
-     * Indica si el usuario es gerente de ventas
+     * Indica si el usuario es Agente de ventas
      *
      * @return bool
      */
@@ -278,13 +280,27 @@ class User extends Authenticatable
     }
 
     /**
-     * Pacientes registrados por un gerente de ventas
+     * Pacientes registrados por un Agente de ventas
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
     public function sellManagerPatients()
     {
         return $this->hasMany(Patient::class, 'sell_manager_id');
+    }
+
+    /**
+     * Listado de agentes de venta
+     *
+     * @param Builder $query
+     */
+    public function scopeSellManagers(Builder $query)
+    {
+        $query->where('level', self::LEVEL_SELL_MANAGER);
+
+        if (! Auth::user()->isAdmin()) {
+            $query->where('id', Auth::user()->id);
+        }
     }
 
     /**
@@ -364,7 +380,8 @@ class User extends Authenticatable
                 'patient.create',
                 'callLog.index',
                 'appointment.index',
-                'appointment.create'
+                'appointment.create',
+                'report.sellManagerPatients'
             ])) {
             return true;
         }

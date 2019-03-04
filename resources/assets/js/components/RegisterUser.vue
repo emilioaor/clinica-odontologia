@@ -84,7 +84,7 @@
                                                 <option value="2">Doctor</option>
                                                 <option value="3">Secretaria</option>
                                                 <option value="4">Asistente</option>
-                                                <option value="5">Gerente de ventas</option>
+                                                <option value="5">Agente de ventas</option>
                                             </select>
                                         </div>
                                     </div>

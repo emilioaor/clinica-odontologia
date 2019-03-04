@@ -102,12 +102,30 @@ class Patient extends Model
     }
 
     /**
-     * Gerente de venta que registro a este paciente
+     * Agente de venta que registro a este paciente
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function sellManager()
     {
         return $this->belongsTo(User::class, 'sell_manager_id')->withTrashed();
+    }
+
+    /**
+     * Filtra por Agente de venta
+     *
+     * @param $query
+     * @param $sellManagerId
+     */
+    public function scopePerSellManager($query, $sellManagerId)
+    {
+        if ((int) $sellManagerId) {
+            // Consulta a los pacientes para ese Agente de ventas
+            $query->where('sell_manager_id', $sellManagerId);
+        } else {
+            // Consulta todos los pacientes que pertenezcan a un Agente de ventas
+            // indistintamente quien sea
+            $query->whereNotNull('sell_manager_id');
+        }
     }
 }

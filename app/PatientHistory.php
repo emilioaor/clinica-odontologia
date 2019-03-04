@@ -2,6 +2,7 @@
 
 namespace App;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -241,5 +242,19 @@ class PatientHistory extends Model
         }
 
         return false;
+    }
+
+    /**
+     * Calcula el monto gastado por un paciente
+     *
+     * @param Builder $query
+     * @param $patientId
+     */
+    public function scopeServiceAmount($query, $patientId)
+    {
+        $query
+            ->selectRaw('SUM(price) as amount')
+            ->where('patient_id', $patientId)
+        ;
     }
 }

@@ -135,7 +135,7 @@ class SupplierController extends Controller
      */
     public function supplierList()
     {
-        $suppliers = Supplier::where('type', '<>', Supplier::TYPE_DOCTOR_COMMISSION)->get();
+        $suppliers = Supplier::orderBy('name')->where('type', '<>', Supplier::TYPE_DOCTOR_COMMISSION)->get();
 
         return new JsonResponse([
             'success' => true,

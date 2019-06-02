@@ -520,6 +520,43 @@
                             </ul>
                         </li>
                     @endif
+
+                    <!-- venta -->
+                    @if(Auth::user()->hasPermission('callBudgetSource.index') || Auth::user()->hasPermission('callBudget.index'))
+
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+                                Venta <span class="caret"></span>
+                            </a>
+
+                            <ul class="dropdown-menu" role="menu">
+                                @if(Auth::user()->hasPermission('callBudget.create'))
+                                    <li>
+                                        <a href="{{ route('callBudget.create') }}">
+                                            <i class="glyphicon glyphicon-plus"></i>
+                                            Registrar envío de presupuesto
+                                        </a>
+                                    </li>
+                                @endif
+                                @if(Auth::user()->hasPermission('callBudget.index'))
+                                    <li>
+                                        <a href="{{ route('callBudget.index') }}">
+                                            <i class="glyphicon glyphicon-send"></i>
+                                            Presupuestos enviados
+                                        </a>
+                                    </li>
+                                @endif
+                                @if(Auth::user()->hasPermission('callBudgetSource.index'))
+                                    <li>
+                                        <a href="{{ route('callBudgetSource.index') }}">
+                                            <i class="glyphicon glyphicon-list-alt"></i>
+                                            Fuentes de presupuesto
+                                        </a>
+                                    </li>
+                                @endif
+                            </ul>
+                        </li>
+                    @endif
                 </ul>
             @endif
 

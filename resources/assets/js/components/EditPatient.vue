@@ -350,7 +350,7 @@
                             }
 
                             this.loading = false;
-                            this.phoneError = true;
+                            this.phoneError = res.data.phoneError;
                             this.patient = res.data.patient;
                             this.form.name = res.data.patient.name;
                             this.form.email = res.data.patient.email;

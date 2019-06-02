@@ -97,6 +97,7 @@
                                             <option
                                                     v-for="i in 24"
                                                     :value="(i - 1) >= 10 ? (i - 1) : '0' + (i - 1)"
+                                                    :key="i"
                                                     >
                                                 {{ (i - 1) >= 10 ? (i - 1) : '0' + (i - 1) }}
                                             </option>
@@ -123,6 +124,7 @@
                                             <option
                                                     v-for="i in 60"
                                                     :value="(i - 1) >= 10 ? (i - 1) : '0' + (i - 1)"
+                                                    :key="i"
                                                     >
                                                 {{ (i - 1) >= 10 ? (i - 1) : '0' + (i - 1) }}
                                             </option>
@@ -178,7 +180,7 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <tr v-for="(detail, index) in form.details">
+                                            <tr v-for="(detail, index) in form.details" :key="index">
                                                 <td>
                                                     <select
                                                             :name="'product' + index"
@@ -191,6 +193,7 @@
                                                             >
                                                         <option
                                                                 v-for="product in products"
+                                                                :key="product.id"
                                                                 :value="product.id"
                                                                 v-show="! hasSelectedProduct(product.id)"
                                                                 >
@@ -294,6 +297,7 @@
                                     <tbody v-if="! modal.loading">
                                     <tr
                                             v-for="p in modal.data"
+                                            :key="p.id"
                                             v-if="!patient || patient.id !== p.id"
                                             :class="{'lock-patient': p.cancel_appointment}"
                                             >
@@ -367,7 +371,7 @@
                                     </thead>
 
                                     <tbody v-if="! modal.loading">
-                                    <tr v-for="d in modal.data" v-if="!doctor || doctor.id !== d.id">
+                                    <tr v-for="d in modal.data" :key="d.id" v-if="!doctor || doctor.id !== d.id">
                                         <td>{{ d.phone }}</td>
                                         <td>{{ d.name }}</td>
                                         <td>{{ d.email }}</td>

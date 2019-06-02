@@ -5,6 +5,7 @@ namespace App\Http\Controllers\User;
 use App\CallLog;
 use App\Patient;
 use App\PatientReference;
+use App\CallBudget;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -206,14 +207,32 @@ class PatientController extends Controller
     public function verifyPhone($phone, $public_id = null)
     {
         $patient = Patient::where('phone', $phone);
+        $phoneError = true;
 
         if (! is_null($public_id)) {
             $patient->where('public_id', '<>', $public_id);
         }
 
+        $patient = $patient->first();
+
+        if (! $patient) {
+            // Si no existe el paciente, lo busco en la tabla de presupuestos enviados
+            $callBudget = CallBudget::where('phone', $phone)->orderBy('id', 'DESC')->first();
+            $phoneError = false;
+            
+            if ($callBudget) {
+                $patient = [
+                    'name' => $callBudget->name,
+                    'email' => $callBudget->email
+                ];
+            }
+        }
+
         return new JsonResponse([
             'success' => true,
-            'valid' => $patient->first() ? false : true
+            'valid' => $patient ? false : true,
+            'patient' => $patient,
+            'phoneError' => $phoneError
         ]);
     }
 

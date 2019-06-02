@@ -82,6 +82,7 @@
                                                     >
                                                 <option
                                                         v-for="user in users"
+                                                        :key="user.id"
                                                         :value="user.id"
                                                         >
                                                     {{ user.name }}
@@ -181,7 +182,7 @@
                                     </thead>
 
                                     <tbody v-if="! modal.loading">
-                                    <tr v-for="p in modal.data" v-if="!patient || patient.id !== p.id">
+                                    <tr v-for="p in modal.data" :key="p.id" v-if="!patient || patient.id !== p.id">
                                         <td>{{ p.phone }}</td>
                                         <td>{{ p.name }}</td>
                                         <td>
@@ -279,9 +280,9 @@
                         }
                     })
                     .catch((err) => {
-    if (err.response.status === 403 || err.response.status === 405) {
-        location.href = '/';
-    }
+                        if (err.response.status === 403 || err.response.status === 405) {
+                            location.href = '/';
+                        }
                         this.loading = false;
                     })
             }

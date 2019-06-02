@@ -101,6 +101,12 @@ Route::group(['prefix' => 'user', 'middleware' => 'auth'], function() {
     // Referencia de pacientes
     Route::resource('patientReference', 'User\PatientReferenceController');
 
+    // Fuente de presupuesto telefonicos
+    Route::resource('callBudgetSource', 'User\CallBudgetSourceController');
+
+    // Presupuestos telefonicos
+    Route::resource('callBudget', 'User\CallBudgetController');
+
     // Notificaciones
     Route::get('notification', 'NotificationController@sendLabNotifications');
     Route::put('notification', 'NotificationController@markAsRead');

@@ -4,7 +4,7 @@
             <div class="col-xs-12">
                 <h1>
                     <i class="glyphicon glyphicon-list-alt"></i>
-                    Referencia de pacientes
+                    Fuentes de presupuesto
                 </h1>
             </div>
         </div>
@@ -18,7 +18,7 @@
                                 <table class="table table-responsive">
                                     <thead>
                                     <tr>
-                                        <th>Referencia</th>
+                                        <th>Fuente</th>
                                         <th width="5%"></th>
                                     </tr>
                                     </thead>
@@ -28,12 +28,12 @@
                                             <input
                                                     type="text"
                                                     class="form-control"
-                                                    placeholder="Referencia"
+                                                    placeholder="Fuente"
                                                     :name="'reference' + i"
                                                     :id="'reference' + i"
                                                     v-validate
                                                     data-vv-rules="required"
-                                                    v-model="reference.description"
+                                                    v-model="reference.name"
                                                     :class="{'input-error': errors.has('reference' + i)}"
                                                     >
 
@@ -83,7 +83,7 @@
 <script>
     export default {
         props: {
-            patientReferences: {
+            callBudgetSources: {
                 type: Array,
                 required: true
             }
@@ -98,7 +98,7 @@
         },
 
         mounted: function () {
-            this.form.references = this.patientReferences;
+            this.form.references = this.callBudgetSources;
         },
 
         methods: {
@@ -114,7 +114,7 @@
 
                 this.loading = true;
 
-                axios.post('/user/patientReference', this.form)
+                axios.post('/user/callBudgetSource', this.form)
                         .then((res) => {
                             if (res.data.success) {
                                 location.href = res.data.redirect;

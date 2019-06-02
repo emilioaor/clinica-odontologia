@@ -104,6 +104,10 @@ return [
 
     'patientReference.update' => 'Referencias actualizadas',
 
+    'callBudgetSource.update' => 'Fuentes actualizadas',
+
+    'callBudget.create' => 'Envío de presupuesto registrado',
+
     'January' => 'Enero',
     'February' => 'Febrero',
     'March' => 'Marzo',

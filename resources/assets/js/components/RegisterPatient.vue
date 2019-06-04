@@ -109,6 +109,7 @@
                                                 <option :value="null">Ninguno</option>
                                                 <option
                                                         v-for="reference in patientReferences"
+                                                        :key="reference.id"
                                                         :value="reference.id"
                                                         >
                                                     {{ reference.description }}
@@ -168,6 +169,36 @@
                             </form>
 
                         </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <a data-toggle="modal" id="patientModalButton" data-target="#patientModal" class="hidden"></a>
+        <!-- Modal -->
+        <div class="modal fade" id="patientModal" tabindex="-1" role="dialog" aria-labelledby="patientModal" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-body">
+                        <div class="alert alert-success">
+                            <p>
+                                <strong>ATENCIÓN:</strong> El paciente <strong>{{ form.name }}</strong> ya se encuentra
+                                registrado. Puede indicar los servicios prestados sin necesidad de repetir este paso
+                            </p>
+                            <p>
+                                ¿Desea registrar servicios a este paciente?
+                            </p>
+                        </div>
+
+                        <a 
+                            class="btn btn-success"
+                            v-if="patient"
+                            :href="'/user/service/' + patient.public_id + '/edit'"
+                        >
+                            <i class="glyphicon glyphicon-plus"></i>
+                            SI
+                        </a>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">NO</button>
                     </div>
                 </div>
             </div>
@@ -239,6 +270,10 @@
                             this.patient = res.data.patient;
                             this.form.name = res.data.patient.name;
                             this.form.email = res.data.patient.email;
+
+                            if (this.phoneError) {
+                                $('#patientModalButton').click();
+                            }
                         }
                     })
                     .catch((err) => {
@@ -273,3 +308,9 @@
         }
     }
 </script>
+
+<style scoped>
+    .patientModal {
+        font-size: 25px;
+    }
+</style>

@@ -10,6 +10,11 @@ class CallBudget extends Model
     const STATUS_APPOINTMENT = 1;
     const STATUS_INTERESTED = 2;
     const STATUS_NOT_INTERESTED = 3;
+    const STATUS_TRANSFERED = 4;
+
+    /** Forma de contacto */
+    const CONTACT_TYPE_PHONE = 1;
+    const CONTACT_TYPE_EMAIL = 2;
 
     protected $table = 'call_budgets';
 
@@ -24,7 +29,8 @@ class CallBudget extends Model
         'next_call',
         'status',
         'call_budget_source_id',
-        'notes'
+        'notes',
+        'contact_type'
     ];
 
     protected $dates = [
@@ -39,5 +45,13 @@ class CallBudget extends Model
     public function callBudgetSource()
     {
         return $this->belongsTo(CallBudgetSource::class, 'call_budget_source_id')->withTrashed();
+    }
+
+    /**
+     * Historial de estatus
+     */
+    public function histories()
+    {
+        return $this->hasMany(CallBudgetHistory::class, 'call_budget_id');
     }
 }

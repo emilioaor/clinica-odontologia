@@ -187,8 +187,55 @@
                                         <option :value="1">Hizo cita</option>
                                         <option :value="2">Interesado</option>
                                         <option :value="3">No interesado</option>
+                                        <option :value="4">Transferido</option>
                                     </select>
                                     <span class="error" v-if="errors.firstByRule('status', 'required')">
+                                        Requerido
+                                    </span>
+                                </div>
+                            </div>
+
+                            <div class="col-sm-4" v-if="form.status === 2">
+                                <div class="form-group">
+                                    <label for="contact_repeat">¿Días para volver a contactar?</label>
+                                    <input 
+                                        type="number" 
+                                        class="form-control"
+                                        placeholder="Días"
+                                        name="contact_repeat"
+                                        id="contact_repeat"
+                                        v-validate
+                                        data-vv-rules="required|regex:^[0-9]+$"
+                                        :class="{'input-error': errors.has('contact_repeat')}"
+                                        v-model="form.contact_repeat"
+                                    >
+                                    <span class="error" v-if="errors.firstByRule('contact_repeat', 'required')">
+                                        Requerido
+                                    </span>
+                                    <span class="error" v-if="errors.firstByRule('contact_repeat', 'regex')">
+                                        Formato invalido
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-sm-4" v-if="form.status === 2">
+                                <div class="form-group">
+                                    <label for="contact_type">Forma de contacto</label>
+                                    <select
+                                        class="form-control"
+                                        name="contact_type"
+                                        id="contact_type"
+                                        v-validate
+                                        data-vv-rules="required"
+                                        :class="{'input-error': errors.has('contact_type')}"
+                                        v-model="form.contact_type"
+                                    >
+                                        <option :value="1">Teléfono</option>
+                                        <option :value="2">Email</option>
+                                    </select>
+                                    <span class="error" v-if="errors.firstByRule('contact_type', 'required')">
                                         Requerido
                                     </span>
                                 </div>
@@ -255,7 +302,9 @@
                     date: null,
                     notes: null,
                     call_budget_source_id: null,
-                    status: null
+                    status: null,
+                    contact_repeat: null,
+                    contact_type: null
                 }
             }
         },

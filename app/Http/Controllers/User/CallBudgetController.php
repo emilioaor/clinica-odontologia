@@ -6,7 +6,9 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\CallBudget;
 use App\CallBudgetSource;
+use App\CallBudgetHistory;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use DB;
 
 class CallBudgetController extends Controller
 {
@@ -42,8 +44,26 @@ class CallBudgetController extends Controller
      */
     public function store(Request $request)
     {
+        DB::beginTransaction();
+
         $callBudget = new CallBudget($request->all());
+
+        if ($request->has('contact_repeat')) {
+            // Calculo la siguiente fecha de contacto
+            $days = $request->get('contact_repeat');
+            $contactRepeat = new \DateTime($request->get('last_call'));
+
+            $callBudget->next_call = $contactRepeat->modify("+{$days} days");
+        }
+
         $callBudget->save();
+
+        $history = new CallBudgetHistory();
+        $history->call_budget_id = $callBudget->id;
+        $history->status = $callBudget->status;
+        $history->save();
+
+        DB::commit();
 
         $this->sessionMessage('message.callBudget.create');
 
@@ -84,7 +104,37 @@ class CallBudgetController extends Controller
      */
     public function update(Request $request, $id)
     {
-        abort(404);
+        DB::beginTransaction();
+
+        $callBudget = CallBudget::with(['callBudgetSource'])->where('id', $id)->firstOrFail();
+        
+        if ($request->status !== $callBudget->status) {
+
+            $callBudget->status = $request->status;
+
+            if ($request->has('contact_repeat')) {
+                // Calculo la siguiente fecha de contacto
+                $days = $request->get('contact_repeat');
+                $contactRepeat = new \DateTime($request->get('last_call'));
+
+                $callBudget->next_call = $contactRepeat->modify("+{$days} days");
+                $callBudget->contact_type = $request->contact_type;
+            }
+
+            $callBudget->save();
+
+            $history = new CallBudgetHistory();
+            $history->call_budget_id = $callBudget->id;
+            $history->status = $callBudget->status;
+            $history->save();
+        }
+
+        DB::commit();
+
+        return new JsonResponse([
+            'success' => true,
+            'call_budget' => $callBudget
+        ]);
     }
 
     /**

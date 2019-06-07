@@ -72,7 +72,7 @@
                                                 <td>
                                                     <div
                                                             class="input-group"
-                                                            v-if="expense.supplier && (expense.supplier.type === 8 || expense.supplier.type === 9 || expense.supplier.type === 6)"
+                                                            v-if="expense.supplier && (expense.supplier.type === 7 || expense.supplier.type === 8 || expense.supplier.type === 9 || expense.supplier.type === 6)"
                                                         >
                                                         <input  type="text"
                                                                 class="form-control"

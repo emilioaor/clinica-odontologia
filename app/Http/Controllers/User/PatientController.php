@@ -208,6 +208,7 @@ class PatientController extends Controller
     {
         $patient = Patient::where('phone', $phone);
         $phoneError = true;
+        $isPatient = true;
 
         if (! is_null($public_id)) {
             $patient->where('public_id', '<>', $public_id);
@@ -221,6 +222,8 @@ class PatientController extends Controller
             $phoneError = false;
             
             if ($callBudget) {
+                $isPatient = false;
+
                 $patient = [
                     'name' => $callBudget->name,
                     'email' => $callBudget->email
@@ -232,7 +235,8 @@ class PatientController extends Controller
             'success' => true,
             'valid' => $patient ? false : true,
             'patient' => $patient,
-            'phoneError' => $phoneError
+            'phoneError' => $phoneError,
+            'isPatient' => $isPatient
         ]);
     }
 

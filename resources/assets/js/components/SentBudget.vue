@@ -14,6 +14,82 @@
                     <div class="panel-body">
 
                         <div class="row">
+                            <div class="col-sm-3">
+                                <div class="form-group">
+                                    <label for="start">Desde</label>
+                                    <datepicker
+                                            name = "start"
+                                            id = "start"
+                                            language="es"
+                                            input-class = "form-control datepicker"
+                                            format = "MM/dd/yyyy"
+                                            @input="form.start = changeDate($event)"
+                                            v-model="initStart"
+                                    ></datepicker>
+                                </div>
+                            </div>
+
+                            <div class="col-sm-3">
+                                <div class="form-group">
+                                    <label for="end">Hasta</label>
+                                    <datepicker
+                                            name = "end"
+                                            id = "end"
+                                            language="es"
+                                            input-class = "form-control datepicker"
+                                            format = "MM/dd/yyyy"
+                                            @input="form.end = changeDate($event)"
+                                            v-model="initEnd"
+                                    ></datepicker>
+                                </div>
+                            </div>
+
+                            <div class="col-sm-4">
+                                <div class="form-group">
+                                    <label for="filter">Filtro (teléfono, email o nombre)</label>
+                                    <input
+                                            type="text"
+                                            class="form-control"
+                                            name="filter"
+                                            id="filter"
+                                            v-model="form.filter"
+                                            placeholder="Filtro"
+                                    >
+                                </div>
+                            </div>
+
+                            <div class="col-sm-2">
+                                <div class="form-group text-center">
+                                    <label>¿Con servicio?</label>
+                                    <div>
+                                        <div
+                                                class="with-service"
+                                                @click="form.with_service = ! form.with_service"
+                                                :class="{
+                                                    'bg-secondary': !form.with_service,
+                                                    'bg-success text-success': form.with_service
+                                                }"
+                                        >
+                                            <span v-if="form.with_service">SI</span>
+                                            <span v-if="! form.with_service">NO</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-xs-12">
+                                <button class="btn btn-primary" @click="search()" v-if="! searchLoading">
+                                    <i class="glyphicon glyphicon-search"></i>
+                                    Buscar
+                                </button>
+                                <img src="/img/loading.gif" v-if="searchLoading">
+                                <hr>
+                            </div>
+                        </div>
+
+                        <div class="row">
                             <div class="col-xs-12">
                                 <div class="call-budgets" v-for="(callBudget, i) in callBudgetData" :key="i">
 
@@ -228,25 +304,34 @@
 </template>
 
 <script>
+    import Datepicker from 'vuejs-datepicker';
+
     export default {
+        components: {
+          Datepicker
+        },
        props: {
-           callBudgets: {
-               type: Array,
-               required: true
-           }
        },
        data () {
            return {
                loading: false,
+               searchLoading: false,
+               initStart: new Date(),
+               initEnd: new Date(),
                callBudgetData: [],
-               callBudgetSelected: null
+               callBudgetSelected: null,
+               form: {
+                   start: null,
+                   end: null,
+                   filter: '',
+                   with_service: false
+               }
            }
        },
 
         mounted () {
-            this.callBudgetData = this.callBudgets.map(cb => {
-                return { ...cb }
-            })
+            this.form.start = this.changeDate(new Date())
+            this.form.end = this.changeDate(new Date())
         },
 
        methods: {
@@ -260,6 +345,14 @@
 
                 return format[1] + '/' + format[2] + '/' + format[0];
             },
+
+           changeDate(date) {
+               let day = (date.getDate() < 10) ? '0' + date.getDate() : date.getDate();
+               let month = ((date.getMonth() + 1) < 10) ? '0' + (date.getMonth() + 1) : (date.getMonth() + 1);
+               let year = date.getFullYear();
+
+               return year + '-' + month + '-' + day;
+           },
 
             editCallBudget (callBudget) {
                 this.callBudgetSelected = { ...callBudget }
@@ -292,7 +385,36 @@
                         }
                         this.loading = false;
                     })
-            }
+            },
+
+           search () {
+               this.searchLoading = true
+
+               axios.get(
+                   '/user/callBudget/search' +
+                   '?start=' + this.form.start +
+                   '&end=' + this.form.end +
+                   '&filter=' + this.form.filter +
+                   '&with_service=' + this.form.with_service
+               )
+                   .then(res => {
+
+                       if (res.data.success) {
+                           this.callBudgetData = res.data.callBudgets
+                       } else {
+                           this.callBudgetData = []
+                       }
+
+                       this.searchLoading = false
+                   })
+                   .catch(err => {
+                       if (err.response.status === 403 || err.response.status === 405) {
+                           location.href = '/';
+                       }
+                       this.callBudgetData = []
+                       this.searchLoading = false;
+                   })
+           }
        }
     }
 </script>
@@ -314,6 +436,20 @@
     hr {
         margin-top: 7px;
         margin-bottom: 7px;
+    }
+    .with-service {
+        display: inline-block;
+        border: solid 1px;
+        border-radius: 4px;
+        font-weight: bold;
+        width: 30px;
+        height: 30px;
+        text-align: center;
+        padding-top: 4px;
+        cursor: pointer;
+    }
+    .bg-secondary {
+        background-color: #ccc;
     }
 </style>
 

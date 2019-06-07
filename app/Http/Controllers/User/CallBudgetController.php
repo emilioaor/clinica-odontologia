@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\User;
 
+use App\Patient;
+use App\PatientHistory;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\CallBudget;
@@ -19,8 +21,6 @@ class CallBudgetController extends Controller
      */
     public function index()
     {
-        $callBudgets = CallBudget::with(['callBudgetSource'])->get();
-
         return view('user.callBudget.index', compact('callBudgets'));
     }
 
@@ -146,5 +146,65 @@ class CallBudgetController extends Controller
     public function destroy($id)
     {
         abort(404);
+    }
+
+    /**
+     * Busqueda
+     *
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function search(Request $request)
+    {
+        $start = (new \DateTime($request->start))->setTime(0, 0, 0);
+        $end = (new \DateTime($request->end))->setTime(23, 59, 59);
+
+        $callBudgets = CallBudget::query()
+            ->whereBetween('last_call', [$start, $end])
+            ->with(['callBudgetSource'])
+        ;
+
+        if (! empty($filter = $request->filter)) {
+            // Filtro por telefono || nombre || email
+            $callBudgets->where(function ($query) use ($filter) {
+                $query
+                    ->where('name', $filter)
+                    ->orWhere('phone', $filter)
+                    ->orWhere('email', $filter)
+                ;
+            });
+        }
+
+        $callBudgets = $callBudgets->get();
+
+        if ($request->with_service === 'true') {
+            // Filtro los presupuestos que no tuvieron conversion a servicio
+
+            $callBudgets = $callBudgets->filter(function ($callBudget) use ($start, $end) {
+
+                $patient = Patient::query()->where('phone', $callBudget->phone)->first();
+
+                if (! $patient) {
+                    return false;
+                }
+
+                $patientHistories = PatientHistory::query()
+                    ->whereBetween('created_at', [$start, $end])
+                    ->where('patient_id', $patient->id)
+                    ->count()
+                ;
+
+                if ($patientHistories === 0) {
+                    return false;
+                }
+
+                return true;
+            });
+        }
+
+        return new JsonResponse([
+            'success' => true,
+            'callBudgets' => $callBudgets
+        ]);
     }
 }

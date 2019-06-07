@@ -105,6 +105,7 @@ Route::group(['prefix' => 'user', 'middleware' => 'auth'], function() {
     Route::resource('callBudgetSource', 'User\CallBudgetSourceController');
 
     // Presupuestos telefonicos
+    Route::get('callBudget/search', 'User\CallBudgetController@search');
     Route::resource('callBudget', 'User\CallBudgetController');
 
     // Notificaciones

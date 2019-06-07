@@ -255,14 +255,16 @@
                     .then((res) => {
                         if (res.data.success) {
 
-                            if (res.data.valid) {
+                            if (! res.data.phoneError) {
                                 this.phoneError = false;
 
                                 if (sendForm) {
                                     this.sendForm()
                                 }
 
-                                return
+                                if (res.data.isPatient) {
+                                    return
+                                }
                             }
 
                             this.loading = false;

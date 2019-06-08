@@ -87,15 +87,15 @@
                                                                 :class="{'input-error': errors.has('patient' + id)}"
                                                             >
 
-                                                            <input  v-if="expense.supplier.type === 7"
-                                                                    type="text"
-                                                                    class="form-control"
-                                                                    :id="'patient' + id"
-                                                                    :name="'patient' + id"
-                                                                    placeholder="Paciente"
-                                                                    readonly
-                                                                    v-model="expense.patient.name"
-                                                            >
+                                                        <input  v-else
+                                                                type="text"
+                                                                class="form-control"
+                                                                :id="'patient' + id"
+                                                                :name="'patient' + id"
+                                                                placeholder="Paciente"
+                                                                readonly
+                                                                v-model="expense.patient.name"
+                                                        >
                                                         <span class="input-group-btn">
                                                             <button
                                                                     class="btn btn-info"

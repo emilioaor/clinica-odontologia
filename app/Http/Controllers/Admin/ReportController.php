@@ -240,6 +240,10 @@ class ReportController extends Controller
 
             $patient = $history->patient;
 
+            if ($patient->trashed()) {
+                continue;
+            }
+
             if (! isset($response[$patient->id])) {
                 $response[$patient->id] = [
                     'patient' => $patient,

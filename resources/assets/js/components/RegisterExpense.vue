@@ -72,9 +72,10 @@
                                                 <td>
                                                     <div
                                                             class="input-group"
-                                                            v-if="expense.supplier && (expense.supplier.type === 8 || expense.supplier.type === 9 || expense.supplier.type === 6)"
+                                                            v-if="expense.supplier && (expense.supplier.type === 7 || expense.supplier.type === 8 || expense.supplier.type === 9 || expense.supplier.type === 6)"
                                                         >
-                                                        <input  type="text"
+                                                        <input  v-if="expense.supplier.type !== 7"
+                                                                type="text"
                                                                 class="form-control"
                                                                 :id="'patient' + id"
                                                                 :name="'patient' + id"
@@ -84,6 +85,16 @@
                                                                 v-validate
                                                                 data-vv-rules="required"
                                                                 :class="{'input-error': errors.has('patient' + id)}"
+                                                            >
+
+                                                            <input  v-if="expense.supplier.type === 7"
+                                                                    type="text"
+                                                                    class="form-control"
+                                                                    :id="'patient' + id"
+                                                                    :name="'patient' + id"
+                                                                    placeholder="Paciente"
+                                                                    readonly
+                                                                    v-model="expense.patient.name"
                                                             >
                                                         <span class="input-group-btn">
                                                             <button

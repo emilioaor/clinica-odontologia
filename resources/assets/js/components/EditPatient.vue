@@ -310,8 +310,7 @@
                     total: null,
                     per_page: null
                 },
-                authUser: this.user,
-                patient: null
+                authUser: this.user
             }
         },
 
@@ -325,7 +324,7 @@
                 this.$validator.validateAll().then((res) => {
                     if (res) {
                         this.loading = true;
-                        this.verifyPhone();
+                        this.verifyPhone(true);
                     }
                 });
             },
@@ -339,21 +338,23 @@
                     .then((res) => {
                         if (res.data.success) {
 
-                            if (res.data.valid) {
+                            if (! res.data.phoneError) {
                                 this.phoneError = false;
 
                                 if (sendForm) {
                                     this.sendForm()
                                 }
 
-                                return
+                                if (res.data.isPatient) {
+                                    return
+                                }
                             }
 
                             this.loading = false;
                             this.phoneError = res.data.phoneError;
-                            this.patient = res.data.patient;
+                            /*this.patient = res.data.patient;
                             this.form.name = res.data.patient.name;
-                            this.form.email = res.data.patient.email;
+                            this.form.email = res.data.patient.email;*/
                         }
                     })
                     .catch((err) => {

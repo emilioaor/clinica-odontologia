@@ -183,6 +183,22 @@ class PatientHistoryController extends Controller
             }
         }
 
+        if (count($data['services'])) {
+            // Verifico si el paciente es recurrente
+            $treeWeeksAfter = (clone $date)->modify('+3 weeks');
+            $treeWeeksBefore = (clone $date)->modify('-3 weeks');
+            $isRecurrent = $patient->patientHistory()
+                ->where('created_at', '<=', $treeWeeksBefore)
+                ->orWhere('created_at', '>=', $treeWeeksAfter)
+                ->count()
+            ;
+
+            if ($isRecurrent) {
+                $patient->recurrent = true;
+                $patient->save();
+            }
+        }
+
         foreach ($data['notes'] as $newNote) {
 
             if (! empty($newNote['content'])) {

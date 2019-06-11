@@ -48,6 +48,46 @@
                             <div class="row">
                                 <div class="col-sm-4">
                                     <div class="form-group">
+                                        <label for="">Pacientes nuevos</label>
+                                        <p>
+                                            {{ '$ ' + getTotalAllServicesNew() }}
+                                        </p>
+                                    </div>
+                                </div>
+
+                                <div class="col-sm-4">
+                                    <div class="form-group">
+                                        <label for="">Pacientes recurrentes</label>
+                                        <p>
+                                            {{ '$ ' + getTotalAllServicesRecurrent() }}
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-sm-4">
+                                    <div class="form-group">
+                                        <label for="">Cant. Pacientes nuevos</label>
+                                        <p>
+                                            {{ qtyPatientNew() }}
+                                        </p>
+                                    </div>
+                                </div>
+
+                                <div class="col-sm-4">
+                                    <div class="form-group">
+                                        <label for="">Cant. Pacientes recurrentes</label>
+                                        <p>
+                                            {{ qtyPatientRecurrent() }}
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-sm-4">
+                                    <div class="form-group">
                                         <label for="filter">¿Solo servicios sin pagos asociados?</label>
                                         <input
                                                 type="checkbox"
@@ -308,6 +348,30 @@
                 return total;
             },
 
+            getTotalServicesNew: function (services) {
+                let total = 0;
+
+                for (let i in services) {
+                    if (! services[i].patient.recurrent) {
+                        total += parseInt(services[i].price);
+                    }
+                }
+
+                return total;
+            },
+
+            getTotalServicesRecurrent: function (services) {
+                let total = 0;
+
+                for (let i in services) {
+                    if (services[i].patient.recurrent) {
+                        total += parseInt(services[i].price);
+                    }
+                }
+
+                return total;
+            },
+
             getTotalPayments: function (payments) {
                 let total = 0;
 
@@ -328,11 +392,55 @@
                 return total;
             },
 
+            getTotalAllServicesNew: function () {
+                let total = 0;
+
+                Object.values(this.data.services).forEach((servicePerPatient) => {
+                    total += this.getTotalServicesNew(servicePerPatient);
+                });
+
+                return total;
+            },
+
+            getTotalAllServicesRecurrent: function () {
+                let total = 0;
+
+                Object.values(this.data.services).forEach((servicePerPatient) => {
+                    total += this.getTotalServicesRecurrent(servicePerPatient);
+                });
+
+                return total;
+            },
+
             getTotalAllPayments: function () {
                 let total = 0;
 
                 Object.values(this.data.payments).forEach((paymentPerPatient) => {
                     total += this.getTotalPayments(paymentPerPatient);
+                });
+
+                return total;
+            },
+
+            qtyPatientNew: function () {
+                let total = 0;
+
+                Object.values(this.data.services).forEach((servicePerPatient) => {
+                    if (! servicePerPatient[0].patient.recurrent) {
+                        total++;
+                    }
+                });
+
+                return total;
+            },
+
+            qtyPatientRecurrent: function () {
+                let total = 0;
+
+                Object.values(this.data.services).forEach((servicePerPatient) => {
+                    if (servicePerPatient[0].patient.recurrent) {
+                        total++;
+                    }
                 });
 
                 return total;

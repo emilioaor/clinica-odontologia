@@ -154,6 +154,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function () {
     Route::get('report/inventorySupplyData', 'Admin\ReportController@inventorySupplyData');
     Route::get('report/inventorySupplyMovement', 'Admin\ReportController@inventorySupplyMovement')->name('report.inventorySupplyMovement');
     Route::get('report/inventorySupplyMovementData', 'Admin\ReportController@inventorySupplyMovementData');
+    Route::get('report/newAndRecurrent', 'Admin\ReportController@newAndRecurrent')->name('report.newAndRecurrent');
 });
 
 Route::get('admin/report/sellManagerPatients', 'Admin\ReportController@sellManagerPatients')->name('report.sellManagerPatients');

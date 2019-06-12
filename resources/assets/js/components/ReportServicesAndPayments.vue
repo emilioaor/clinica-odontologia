@@ -48,53 +48,13 @@
                             <div class="row">
                                 <div class="col-sm-4">
                                     <div class="form-group">
-                                        <label for="">Pacientes nuevos</label>
-                                        <p>
-                                            {{ '$ ' + getTotalAllServicesNew() }}
-                                        </p>
-                                    </div>
-                                </div>
-
-                                <div class="col-sm-4">
-                                    <div class="form-group">
-                                        <label for="">Pacientes recurrentes</label>
-                                        <p>
-                                            {{ '$ ' + getTotalAllServicesRecurrent() }}
-                                        </p>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="row">
-                                <div class="col-sm-4">
-                                    <div class="form-group">
-                                        <label for="">Cant. Pacientes nuevos</label>
-                                        <p>
-                                            {{ qtyPatientNew() }}
-                                        </p>
-                                    </div>
-                                </div>
-
-                                <div class="col-sm-4">
-                                    <div class="form-group">
-                                        <label for="">Cant. Pacientes recurrentes</label>
-                                        <p>
-                                            {{ qtyPatientRecurrent() }}
-                                        </p>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="row">
-                                <div class="col-sm-4">
-                                    <div class="form-group">
                                         <label for="filter">¿Solo servicios sin pagos asociados?</label>
                                         <input
                                                 type="checkbox"
                                                 v-model="data.filter"
                                                 id="filter"
                                                 name="filter"
-                                                >
+                                        >
                                     </div>
                                 </div>
                             </div>
@@ -111,7 +71,7 @@
                                                 format = "MM/dd/yyyy"
                                                 @input="changeStart($event)"
                                                 v-model="initStart"
-                                                ></datepicker>
+                                        ></datepicker>
                                     </div>
                                 </div>
 
@@ -126,7 +86,7 @@
                                                 format = "MM/dd/yyyy"
                                                 @input="changeEnd($event)"
                                                 v-model="initEnd"
-                                                ></datepicker>
+                                        ></datepicker>
                                     </div>
                                 </div>
                             </div>
@@ -138,7 +98,7 @@
                                                 class="btn btn-primary"
                                                 @click="search()"
                                                 v-if="!loading"
-                                                >
+                                        >
                                             <i class="glyphicon glyphicon-search"></i>
                                             Buscar
                                         </button>
@@ -157,43 +117,43 @@
                                     <!-- Services -->
                                     <table class="table table-responsive">
                                         <thead>
-                                            <tr>
-                                                <th width="12%">Fecha</th>
-                                                <th width="20%">Paciente</th>
-                                                <th>Servicio</th>
-                                                <th>Diente</th>
-                                                <th>Doctor</th>
-                                                <th>Asistente</th>
-                                                <th>Precio</th>
-                                                <th>Qty</th>
-                                                <th>Total</th>
-                                            </tr>
+                                        <tr>
+                                            <th width="12%">Fecha</th>
+                                            <th width="20%">Paciente</th>
+                                            <th>Servicio</th>
+                                            <th>Diente</th>
+                                            <th>Doctor</th>
+                                            <th>Asistente</th>
+                                            <th>Precio</th>
+                                            <th>Qty</th>
+                                            <th>Total</th>
+                                        </tr>
                                         </thead>
                                         <tbody>
-                                            <tr v-for="service in servicesPerPatient">
-                                                <td>{{ dateFormat(service.created_at) }}</td>
-                                                <td>{{ service.patient.name }}</td>
-                                                <td>{{ service.product.name }}</td>
-                                                <td>{{ service.tooth }}</td>
-                                                <td>{{ service.doctor.name }}</td>
-                                                <td>{{ service.assistant.name }}</td>
-                                                <td>{{ '$' + service.unit_price }}</td>
-                                                <td>{{ service.qty }}</td>
-                                                <td>{{ '$' + service.price }}</td>
-                                            </tr>
+                                        <tr v-for="service in servicesPerPatient">
+                                            <td>{{ dateFormat(service.created_at) }}</td>
+                                            <td>{{ service.patient.name }}</td>
+                                            <td>{{ service.product.name }}</td>
+                                            <td>{{ service.tooth }}</td>
+                                            <td>{{ service.doctor.name }}</td>
+                                            <td>{{ service.assistant.name }}</td>
+                                            <td>{{ '$' + service.unit_price }}</td>
+                                            <td>{{ service.qty }}</td>
+                                            <td>{{ '$' + service.price }}</td>
+                                        </tr>
                                         </tbody>
                                         <tfoot>
-                                            <tr>
-                                                <th>Total</th>
-                                                <td></td>
-                                                <td></td>
-                                                <td></td>
-                                                <td></td>
-                                                <td></td>
-                                                <td></td>
-                                                <td></td>
-                                                <td>{{ '$' + getTotalServices(servicesPerPatient) }}</td>
-                                            </tr>
+                                        <tr>
+                                            <th>Total</th>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td>{{ '$' + getTotalServices(servicesPerPatient) }}</td>
+                                        </tr>
                                         </tfoot>
                                     </table>
 
@@ -265,16 +225,16 @@
         },
         data: function () {
             return {
-              loading: false,
-              initStart: new Date(),
-              initEnd: new Date(),
-              data: {
-                  start: '',
-                  end: '',
-                  filter: false,
-                  services: [],
-                  payments: []
-              }
+                loading: false,
+                initStart: new Date(),
+                initEnd: new Date(),
+                data: {
+                    start: '',
+                    end: '',
+                    filter: false,
+                    services: [],
+                    payments: []
+                }
             }
         },
         mounted: function () {
@@ -307,10 +267,10 @@
                 this.loading = true;
 
                 axios.get(
-                        '/admin/report/servicesAndPaymentsData'
-                        + '?start=' + this.data.start
-                        + '&end=' + this.data.end
-                        + '&filter=' + this.data.filter
+                    '/admin/report/servicesAndPaymentsData'
+                    + '?start=' + this.data.start
+                    + '&end=' + this.data.end
+                    + '&filter=' + this.data.filter
                 )
                     .then((res) => {
                         this.loading = false;
@@ -348,30 +308,6 @@
                 return total;
             },
 
-            getTotalServicesNew: function (services) {
-                let total = 0;
-
-                for (let i in services) {
-                    if (! services[i].patient.recurrent) {
-                        total += parseInt(services[i].price);
-                    }
-                }
-
-                return total;
-            },
-
-            getTotalServicesRecurrent: function (services) {
-                let total = 0;
-
-                for (let i in services) {
-                    if (services[i].patient.recurrent) {
-                        total += parseInt(services[i].price);
-                    }
-                }
-
-                return total;
-            },
-
             getTotalPayments: function (payments) {
                 let total = 0;
 
@@ -392,55 +328,11 @@
                 return total;
             },
 
-            getTotalAllServicesNew: function () {
-                let total = 0;
-
-                Object.values(this.data.services).forEach((servicePerPatient) => {
-                    total += this.getTotalServicesNew(servicePerPatient);
-                });
-
-                return total;
-            },
-
-            getTotalAllServicesRecurrent: function () {
-                let total = 0;
-
-                Object.values(this.data.services).forEach((servicePerPatient) => {
-                    total += this.getTotalServicesRecurrent(servicePerPatient);
-                });
-
-                return total;
-            },
-
             getTotalAllPayments: function () {
                 let total = 0;
 
                 Object.values(this.data.payments).forEach((paymentPerPatient) => {
                     total += this.getTotalPayments(paymentPerPatient);
-                });
-
-                return total;
-            },
-
-            qtyPatientNew: function () {
-                let total = 0;
-
-                Object.values(this.data.services).forEach((servicePerPatient) => {
-                    if (! servicePerPatient[0].patient.recurrent) {
-                        total++;
-                    }
-                });
-
-                return total;
-            },
-
-            qtyPatientRecurrent: function () {
-                let total = 0;
-
-                Object.values(this.data.services).forEach((servicePerPatient) => {
-                    if (servicePerPatient[0].patient.recurrent) {
-                        total++;
-                    }
                 });
 
                 return total;

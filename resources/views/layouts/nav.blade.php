@@ -496,6 +496,14 @@
                                         </a>
                                     </li>
                                 @endif
+                                @if(Auth::user()->hasPermission('report.newAndRecurrent'))
+                                    <li>
+                                        <a href="{{ route('report.newAndRecurrent') }}">
+                                            <i class="glyphicon glyphicon-file"></i>
+                                            Pacientes nuevos / recurrentes
+                                        </a>
+                                    </li>
+                                @endif
                             </ul>
                         </li>
                     @endif

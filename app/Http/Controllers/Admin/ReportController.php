@@ -989,4 +989,14 @@ class ReportController extends Controller
 
         return new JsonResponse(['success' => true, 'results' => $results]);
     }
+
+    /**
+     * Pacientes nuevos y recurrentes
+     *
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function newAndRecurrent()
+    {
+        return view('admin.report.newAndRecurrent');
+    }
 }

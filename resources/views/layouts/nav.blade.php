@@ -530,7 +530,8 @@
                     @endif
 
                     <!-- venta -->
-                    @if(Auth::user()->hasPermission('callBudgetSource.index') || Auth::user()->hasPermission('callBudget.index'))
+                    @if(Auth::user()->hasPermission('callBudgetSource.index') || Auth::user()->hasPermission('callBudget.index') ||
+                        Auth::user()->hasPermission('callBudget.create'))
 
                         <li class="dropdown">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">

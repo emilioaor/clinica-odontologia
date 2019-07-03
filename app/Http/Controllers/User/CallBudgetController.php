@@ -21,7 +21,17 @@ class CallBudgetController extends Controller
      */
     public function index()
     {
-        return view('user.callBudget.index', compact('callBudgets'));
+        return view('user.callBudget.index');
+    }
+
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function indexTable()
+    {
+        return view('user.callBudget.indexTable');
     }
 
     /**

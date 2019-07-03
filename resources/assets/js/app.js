@@ -76,6 +76,7 @@ Vue.component('report-sell-manager-patients', require('./components/ReportSellMa
 Vue.component('list-supply', require('./components/ListSupply.vue'));
 Vue.component('register-call-budget-source', require('./components/RegisterCallBudgetSource.vue'));
 Vue.component('sent-budget', require('./components/SentBudget.vue'));
+Vue.component('sent-budget-table', require('./components/SentBudgetTable.vue'));
 Vue.component('register-call-budget', require('./components/RegisterCallBudget.vue'));
 Vue.component('send-lab-notification', require('./components/SendLabNotification.vue'));
 

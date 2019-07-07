@@ -102,7 +102,10 @@ class CallBudgetController extends Controller
      */
     public function edit($id)
     {
-        abort(404);
+        $callBudget = CallBudget::find($id);
+        $callBudgetSources = CallBudgetSource::all();
+
+        return view('user.callBudget.edit', compact('callBudget', 'callBudgetSources'));
     }
 
     /**
@@ -110,13 +113,21 @@ class CallBudgetController extends Controller
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @return JsonResponse
      */
     public function update(Request $request, $id)
     {
         DB::beginTransaction();
 
         $callBudget = CallBudget::with(['callBudgetSource'])->where('id', $id)->firstOrFail();
+        $callBudget->phone = $request->phone;
+        $callBudget->email = $request->email;
+        $callBudget->name = $request->name;
+        $callBudget->service = $request->service;
+        $callBudget->amount = $request->amount;
+        $callBudget->last_call = $request->last_call;
+        $callBudget->call_budget_source_id = $request->call_budget_source_id;
+        $callBudget->save();
         
         if ($request->status !== $callBudget->status) {
 
@@ -143,7 +154,8 @@ class CallBudgetController extends Controller
 
         return new JsonResponse([
             'success' => true,
-            'call_budget' => $callBudget
+            'call_budget' => $callBudget,
+            'redirect' => route('callBudget.edit', ['callBudget' => $id])
         ]);
     }
 
@@ -151,11 +163,14 @@ class CallBudgetController extends Controller
      * Remove the specified resource from storage.
      *
      * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @return JsonResponse
      */
     public function destroy($id)
     {
-        abort(404);
+        $callBudget = CallBudget::findOrFail($id);
+        $callBudget->delete();
+
+        return new JsonResponse(['success' => true]);
     }
 
     /**

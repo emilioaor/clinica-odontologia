@@ -3,9 +3,12 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class CallBudget extends Model
 {
+    use SoftDeletes;
+
     /** Estatus */
     const STATUS_APPOINTMENT = 1;
     const STATUS_INTERESTED = 2;

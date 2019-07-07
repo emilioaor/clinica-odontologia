@@ -127,14 +127,22 @@
 
                                                 <div class="form-group" v-if="loading !== i">
                                                     <!-- Editar -->
-                                                    <button
+                                                    <!--<button
                                                             class="btn btn-warning"
                                                             @click="editCallBudget(callBudget)"
                                                             v-if="! callBudgetSelected || callBudgetSelected.id !== callBudget.id"
                                                             :disabled="callBudgetSelected"
                                                     >
                                                         <i class="glyphicon glyphicon-edit"></i>
-                                                    </button>
+                                                    </button>-->
+                                                    <a
+                                                            :href="'/user/callBudget/' + callBudget.id + '/edit'"
+                                                            class="btn btn-warning"
+                                                            v-if="! callBudgetSelected || callBudgetSelected.id !== callBudget.id"
+                                                            :disabled="callBudgetSelected"
+                                                    >
+                                                        <i class="glyphicon glyphicon-edit"></i>
+                                                    </a>
 
                                                     <!-- Cancelar -->
                                                     <button
@@ -157,16 +165,16 @@
                                                     </button>
 
                                                     <!-- Eliminar -->
-                                                    <!--
                                                     <button
                                                             class="btn btn-danger"
+                                                            data-toggle="modal"
+                                                            data-target="#deleteModal"
                                                             v-if="! callBudgetSelected || callBudgetSelected.id !== callBudget.id"
                                                             :disabled="callBudgetSelected"
-                                                            @click="validateCallBudget(i)"
+                                                            @click="callBudgetToDelete = callBudget.id"
                                                     >
                                                         <i class="glyphicon glyphicon-remove"></i>
                                                     </button>
-                                                    -->
                                                 </div>
                                             </td>
 
@@ -288,6 +296,36 @@
                 </div>
             </div>
         </div>
+
+        <!-- Modal -->
+        <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-body">
+                        <h4>¿Esta seguro de eliminar este presupuesto?</h4>
+                    </div>
+                    <div class="modal-footer">
+                        <button
+                                type="button"
+                                id="closeModal"
+                                class="btn btn-secondary"
+                                data-dismiss="modal"
+                                v-show="! loading">
+                            NO
+                        </button>
+                        <button
+                                type="button"
+                                class="btn btn-danger"
+                                @click="sendDelete()"
+                                v-show="! loading">
+                            SI
+                        </button>
+
+                        <img src="/img/loading.gif" v-if="loading">
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </template>
 
@@ -308,6 +346,7 @@
                initEnd: new Date(),
                callBudgetData: [],
                callBudgetSelected: null,
+               callBudgetToDelete: null,
                form: {
                    start: null,
                    end: null,
@@ -401,6 +440,26 @@
                        }
                        this.callBudgetData = []
                        this.searchLoading = false;
+                   })
+           },
+
+           sendDelete() {
+               this.loading = true;
+
+               axios.delete('/user/callBudget/' + this.callBudgetToDelete)
+                   .then((res) => {
+
+                       if (res.data.success) {
+                           $('#closeModal').click();
+                           this.search()
+                       }
+                   })
+                   .catch((err) => {
+                       if (err.response.status === 403 || err.response.status === 405) {
+                           location.href = '/';
+                       }
+                       this.loading = false;
+                       console.log(err);
                    })
            }
        }

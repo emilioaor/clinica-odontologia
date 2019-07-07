@@ -80,6 +80,7 @@ Vue.component('sent-budget-table', require('./components/SentBudgetTable.vue'));
 Vue.component('register-call-budget', require('./components/RegisterCallBudget.vue'));
 Vue.component('edit-call-budget', require('./components/EditCallBudget.vue'));
 Vue.component('send-lab-notification', require('./components/SendLabNotification.vue'));
+Vue.component('call-budget-notification', require('./components/CallBudgetNotification.vue'));
 
 const app = new Vue({
     el: '#app'

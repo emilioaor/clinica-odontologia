@@ -30,7 +30,18 @@
 
         @if(Auth::check())
             <send-lab-notification></send-lab-notification>
+
+            @if(Auth::user()->isSellManager() && Session::has('callBudgets'))
+                <call-budget-notification
+                    :call-budgets = "{{ json_encode(Session::get('callBudgets')) }}"
+                ></call-budget-notification>
+
+                @php
+                    Session::forget('callBudgets')
+                @endphp
+            @endif
         @endif
+
     </div>
 
     <!-- Scripts -->

@@ -127,6 +127,7 @@ class CallBudgetController extends Controller
         $callBudget->amount = $request->amount;
         $callBudget->last_call = $request->last_call;
         $callBudget->call_budget_source_id = $request->call_budget_source_id;
+        $callBudget->notes = $request->notes;
         $callBudget->save();
         
         if ($request->status !== $callBudget->status) {

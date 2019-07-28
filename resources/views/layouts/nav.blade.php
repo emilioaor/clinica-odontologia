@@ -376,7 +376,8 @@
                         Auth::user()->hasPermission('report.patientsAndPatientsWithServices') || Auth::user()->hasPermission('report.budgets') ||
                         Auth::user()->hasPermission('report.servicesPaymentsAndExpenses') || Auth::user()->hasPermission('report.servicesDiagnostics') ||
                         Auth::user()->hasPermission('report.servicesSendLab') || Auth::user()->hasPermission('report.inventorySupply') ||
-                        Auth::user()->hasPermission('report.inventorySupplyMovement') || Auth::user()->hasPermission('report.sellManagerPatients'))
+                        Auth::user()->hasPermission('report.inventorySupplyMovement') || Auth::user()->hasPermission('report.sellManagerPatients') ||
+                        Auth::user()->hasPermission('report.callLog'))
 
                         <li class="dropdown">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
@@ -501,6 +502,14 @@
                                         <a href="{{ route('report.newAndRecurrent') }}">
                                             <i class="glyphicon glyphicon-file"></i>
                                             Pacientes nuevos / recurrentes
+                                        </a>
+                                    </li>
+                                @endif
+                                @if(Auth::user()->hasPermission('report.callLog'))
+                                    <li>
+                                        <a href="{{ route('report.callLog') }}">
+                                            <i class="glyphicon glyphicon-file"></i>
+                                            Llamadas
                                         </a>
                                     </li>
                                 @endif

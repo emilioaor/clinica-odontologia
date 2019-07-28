@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Appointment;
 use App\Budget;
+use App\CallLog;
 use App\Expense;
 use App\Patient;
 use App\PatientReference;
@@ -17,7 +18,9 @@ use App\SupplyType;
 use App\SupplyInventoryMovement;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
+use View;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
 class ReportController extends Controller
@@ -998,5 +1001,54 @@ class ReportController extends Controller
     public function newAndRecurrent()
     {
         return view('admin.report.newAndRecurrent');
+    }
+
+    /**
+     * Reporte de llamadas
+     *
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function callLog()
+    {
+        return view('admin.report.callLog');
+    }
+
+    /**
+     * Reporte de llamadas
+     *
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function callLogData(Request $request)
+    {
+        $start = new \DateTime("{$request->start} 00:00:00");
+        $end = new \DateTime("{$request->end} 23:59:59");
+
+        $callLogs = CallLog::query()
+            ->with(['to', 'patient', 'statusHistory'])
+            ->whereBetween('call_date', [$start, $end])
+            ->get()
+        ;
+
+        return new JsonResponse(['success' => true, 'callLogs' => $callLogs]);
+    }
+
+    /**
+     * Reporte de llamadas
+     *
+     * @param Request $request
+     * @return Response
+     */
+    public function callLogExport(Request $request)
+    {
+        $response = $this->callLogData($request);
+        $data = json_decode($response->getContent(), true);
+        $content = View::make('admin.report.callLogExport', ['callLogs' => $data['callLogs']]);
+        $filename = 'reporte-de-llamadas.xlsx';
+
+        return new Response($content, 200, array(
+            'Content-Type' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+            'Content-Disposition' =>  'attachment; filename="'.$filename.'"'
+        ));
     }
 }

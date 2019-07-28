@@ -156,6 +156,9 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function () {
     Route::get('report/inventorySupplyMovement', 'Admin\ReportController@inventorySupplyMovement')->name('report.inventorySupplyMovement');
     Route::get('report/inventorySupplyMovementData', 'Admin\ReportController@inventorySupplyMovementData');
     Route::get('report/newAndRecurrent', 'Admin\ReportController@newAndRecurrent')->name('report.newAndRecurrent');
+    Route::get('report/callLog', 'Admin\ReportController@callLog')->name('report.callLog');
+    Route::get('report/callLogData', 'Admin\ReportController@callLogData');
+    Route::get('report/callLogExport', 'Admin\ReportController@callLogExport');
 });
 
 Route::get('admin/report/sellManagerPatients', 'Admin\ReportController@sellManagerPatients')->name('report.sellManagerPatients');

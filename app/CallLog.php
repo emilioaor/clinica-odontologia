@@ -31,6 +31,8 @@ class CallLog extends Model
 
     protected $dates = ['deleted_at'];
 
+    protected $appends = ['statusText'];
+
     /**
      * Paciente al que se debe llamar
      *
@@ -129,6 +131,16 @@ class CallLog extends Model
         }
 
         return '-';
+    }
+
+    /**
+     * Status text accessor
+     *
+     * @return string
+     */
+    public function getStatusTextAttribute()
+    {
+        return $this->statusText();
     }
 
     /**

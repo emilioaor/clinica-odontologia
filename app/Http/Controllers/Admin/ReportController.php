@@ -1023,12 +1023,17 @@ class ReportController extends Controller
     {
         $start = new \DateTime("{$request->start} 00:00:00");
         $end = new \DateTime("{$request->end} 23:59:59");
+        $status = (int) $request->get('status');
 
         $callLogs = CallLog::query()
             ->with(['to', 'patient', 'statusHistory'])
-            ->whereBetween('call_date', [$start, $end])
-            ->get()
-        ;
+            ->whereBetween('call_date', [$start, $end]);
+
+        if ($status) {
+            $callLogs->where('status', $status);
+        }
+
+        $callLogs = $callLogs->get();
 
         return new JsonResponse(['success' => true, 'callLogs' => $callLogs]);
     }

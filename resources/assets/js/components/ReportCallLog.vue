@@ -46,6 +46,25 @@
                                                 ></datepicker>
                                     </div>
                                 </div>
+
+                                <div class="col-sm-4">
+                                    <div class="form-group">
+                                        <label for="end">Estatus</label>
+                                        <select
+                                                name="status"
+                                                id="status"
+                                                class="form-control"
+                                                v-model="data.status"
+                                        >
+                                            <option :value="0">- Todos -</option>
+                                            <option :value="1">Pendiente</option>
+                                            <option :value="2">Citado</option>
+                                            <option :value="3">No interesado</option>
+                                            <option :value="4">No contesto</option>
+                                            <option :value="5">Volver a llamar</option>
+                                        </select>
+                                    </div>
+                                </div>
                             </div>
 
                             <div class="row">
@@ -63,7 +82,7 @@
                                         <a
                                                 class="btn btn-success"
                                                 v-if="!loading"
-                                                :href="'/admin/report/callLogExport?start=' + data.start + '&end=' + data.end"
+                                                :href="'/admin/report/callLogExport?start=' + data.start + '&end=' + data.end + '&status=' + data.status"
                                                 target="_blank"
                                         >
                                             <i class="glyphicon glyphicon-download-alt"></i>
@@ -128,6 +147,7 @@
               data: {
                   start: '',
                   end: '',
+                  status: 0,
                   callLogs: []
               },
             }
@@ -164,7 +184,8 @@
                 axios.get(
                         '/admin/report/callLogData' +
                         '?start=' + this.data.start +
-                        '&end=' + this.data.end
+                        '&end=' + this.data.end +
+                        '&status=' + this.data.status
                 )
                     .then((res) => {
                         this.loading = false;

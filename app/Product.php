@@ -7,6 +7,11 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Product extends Model
 {
+    /** Requerimientos */
+    const REQUIRE_NOTHING = 0;
+    const REQUIRE_LAB = 1;
+    const REQUIRE_EXPENSE = 2;
+
     use SoftDeletes;
 
     protected $table = 'products';
@@ -20,6 +25,8 @@ class Product extends Model
     ];
 
     protected $dates = ['deleted_at'];
+
+    protected $appends = ['what_require'];
 
     /**
      * Precio formateado
@@ -112,5 +119,23 @@ class Product extends Model
     public function appointmentDetails()
     {
         return $this->hasMany(AppointmentDetail::class, 'product_id');
+    }
+
+    /**
+     * Indica que requiere
+     *
+     * @return int
+     */
+    public function getWhatRequireAttribute()
+    {
+        if ($this->required_lab) {
+            return self::REQUIRE_LAB;
+        }
+
+        if ($this->required_expense) {
+            return self::REQUIRE_EXPENSE;
+        }
+
+        return self::REQUIRE_NOTHING;
     }
 }

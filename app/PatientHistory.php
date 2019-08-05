@@ -204,6 +204,11 @@ class PatientHistory extends Model
             return false;
         }
 
+        if ($this->product->required_expense && ! $this->hasExpenseToDate($topDate)) {
+            // Si el servicio requiere gastos y no los tiene esta incompleto
+            return false;
+        }
+
         return true;
     }
 
@@ -242,6 +247,20 @@ class PatientHistory extends Model
         }
 
         return false;
+    }
+
+    /**
+     * Indica si el servicio posee gastos asociados
+     * igual o anteriores a la fecha indicada
+     *
+     * @param $topDate
+     * @return bool
+     */
+    public function hasExpenseToDate($topDate)
+    {
+        $expenses = $this->expenses()->where('date', '<=', $topDate)->get();
+
+        return (bool) count($expenses);
     }
 
     /**

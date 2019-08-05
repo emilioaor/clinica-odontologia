@@ -88,14 +88,20 @@
                             </div>
 
                             <div class="row">
-                                <div class="col-xs-12">
+                                <div class="col-sm-4">
                                     <div class="form-group">
-                                        <label for="required_lab">¿Requiere laboratorio?</label>
-                                        <input
-                                                type="checkbox"
-                                                id="required_lab"
-                                                name="required_lab"
-                                                v-model="form.required_lab">
+                                        <label for="what_require">Requerido</label>
+                                        <select
+                                                name="what_require"
+                                                id="what_require"
+                                                v-model="form.what_require"
+                                                class="form-control"
+                                                v-bind:disabled="loading"
+                                        >
+                                            <option :value="0">Sin requerimiento</option>
+                                            <option :value="1">Laboratorio</option>
+                                            <option :value="2">Gasto</option>
+                                        </select>
                                     </div>
                                 </div>
                             </div>

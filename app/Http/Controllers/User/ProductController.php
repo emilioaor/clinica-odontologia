@@ -53,8 +53,17 @@ class ProductController extends Controller
     {
         DB::beginTransaction();
 
+        $whatRequire = (int) $request->get('what_require');
+
         $product = new Product($request->all());
         $product->public_id = 'PROD' . time();
+
+        if ($whatRequire === Product::REQUIRE_LAB) {
+            $product->required_lab = true;
+        } elseif ($whatRequire === Product::REQUIRE_EXPENSE) {
+            $product->required_expense = true;
+        }
+
         $product->save();
 
         $users = User::all();
@@ -110,11 +119,24 @@ class ProductController extends Controller
      */
     public function update(Request $request, $id)
     {
+        $whatRequire = (int) $request->get('what_require');
+
         $product = Product::where('public_id', $id)->firstOrFail();
         $product->public_id = $request->public_id;
         $product->name = $request->name;
         $product->price = $request->price;
-        $product->required_lab = $request->required_lab;
+
+        if ($whatRequire === Product::REQUIRE_LAB) {
+            $product->required_lab = true;
+            $product->required_expense = false;
+        } elseif ($whatRequire === Product::REQUIRE_EXPENSE) {
+            $product->required_expense = true;
+            $product->required_lab = false;
+        } elseif ($whatRequire === Product::REQUIRE_NOTHING) {
+            $product->required_lab = false;
+            $product->required_expense = false;
+        }
+
         $product->save();
 
         $this->sessionMessage('message.product.update');

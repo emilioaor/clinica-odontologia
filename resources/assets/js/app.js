@@ -20,7 +20,7 @@ Vue.use(VeeValidate);
 
 Vue.component('register-product', require('./components/RegisterProduct.vue'));
 Vue.component('edit-product', require('./components/EditProduct.vue'));
-/*Vue.component('register-budget', require('./components/RegisterBudget.vue'));
+Vue.component('register-budget', require('./components/RegisterBudget.vue'));
 Vue.component('edit-budget', require('./components/EditBudget.vue'));
 Vue.component('change-password', require('./components/ChangePassword.vue'));
 Vue.component('business-config', require('./components/BusinessConfig.vue'));
@@ -79,7 +79,7 @@ Vue.component('sent-budget', require('./components/SentBudget.vue'));
 Vue.component('sent-budget-table', require('./components/SentBudgetTable.vue'));
 Vue.component('register-call-budget', require('./components/RegisterCallBudget.vue'));
 Vue.component('edit-call-budget', require('./components/EditCallBudget.vue'));
-Vue.component('report-call-log', require('./components/ReportCallLog.vue'));*/
+Vue.component('report-call-log', require('./components/ReportCallLog.vue'));
 Vue.component('send-lab-notification', require('./components/SendLabNotification.vue'));
 Vue.component('call-budget-notification', require('./components/CallBudgetNotification.vue'));
 

@@ -13,13 +13,6 @@ class User extends Authenticatable
     use Notifiable;
     use SoftDeletes;
 
-    /** Niveles de los usuarios */
-    const LEVEL_ADMIN = 1;
-    const LEVEL_DOCTOR = 2;
-    const LEVEL_SECRETARY = 3;
-    const LEVEL_ASSISTANT = 4;
-    const LEVEL_SELL_MANAGER = 5;
-
     /** Comision por defecto de ganancia por servicio */
     const DEFAULT_PRODUCT_COMMISSION = 30;
 
@@ -38,7 +31,6 @@ class User extends Authenticatable
         'email',
         'address',
         'phone',
-        'level',
         'login_schedule'
     ];
 
@@ -60,7 +52,7 @@ class User extends Authenticatable
      */
     public function isAdmin()
     {
-        return $this->level === self::LEVEL_ADMIN;
+        return $this->hasRole('admin');
     }
 
     /**
@@ -70,7 +62,7 @@ class User extends Authenticatable
      */
     public function isDoctor()
     {
-        return $this->level === self::LEVEL_DOCTOR;
+        return $this->hasRole('doctor');
     }
 
     /**
@@ -80,7 +72,7 @@ class User extends Authenticatable
      */
     public function isSecretary()
     {
-        return $this->level === self::LEVEL_SECRETARY;
+        return $this->hasRole('secretary');
     }
 
     /**
@@ -90,7 +82,7 @@ class User extends Authenticatable
      */
     public function isAssistant()
     {
-        return $this->level === self::LEVEL_ASSISTANT;
+        return $this->hasRole('assistant');
     }
 
     /**
@@ -100,7 +92,24 @@ class User extends Authenticatable
      */
     public function isSellManager()
     {
-        return $this->level === self::LEVEL_SELL_MANAGER;
+        return $this->hasRole('sell_manager');
+    }
+
+    /**
+     * Indica si un usuario posee un role
+     *
+     * @param string $role
+     * @return bool
+     */
+    public function hasRole($role)
+    {
+        foreach ($this->roles as $r) {
+            if ($r->code === $role) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**
@@ -290,6 +299,16 @@ class User extends Authenticatable
     }
 
     /**
+     * Roles
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function roles()
+    {
+        return $this->belongsToMany(Role::class, 'user_role', 'user_id', 'role_id');
+    }
+
+    /**
      * Listado de agentes de venta
      *
      * @param Builder $query
@@ -329,11 +348,11 @@ class User extends Authenticatable
      */
     public function hasPermission($permission)
     {
-        if ($this->level === self::LEVEL_ADMIN) {
+        if ($this->isAdmin()) {
             return true;
         }
 
-        if ($this->level === self::LEVEL_DOCTOR && in_array($permission, [
+        if ($this->isDoctor() && in_array($permission, [
                 'product.create',
                 'product.index',
                 'patient.index',
@@ -348,7 +367,7 @@ class User extends Authenticatable
             return true;
         }
 
-        if ($this->level === self::LEVEL_ASSISTANT && in_array($permission, [
+        if ($this->isAssistant() && in_array($permission, [
                 'budget.index',
                 'service.search',
                 'supplyRequest.create',
@@ -357,7 +376,7 @@ class User extends Authenticatable
             return true;
         }
 
-        if ($this->level === self::LEVEL_SECRETARY && in_array($permission, [
+        if ($this->isSecretary() && in_array($permission, [
                 'product.index',
                 'patient.index',
                 'budget.index',
@@ -375,7 +394,7 @@ class User extends Authenticatable
             return true;
         }
 
-        if ($this->level === self::LEVEL_SELL_MANAGER && in_array($permission, [
+        if ($this->isSellManager() && in_array($permission, [
                 'callLog.index',
                 'report.sellManagerPatients',
                 'callBudgetSource.index',

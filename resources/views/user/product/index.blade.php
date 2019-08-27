@@ -15,6 +15,41 @@
                 <div class="panel panel-default">
                     <div class="panel-body">
 
+                        <form action="{{ route('product.index') }}">
+                            <div class="row">
+                                <div class="col-sm-5 col-xs-10">
+                                    <div class="form-group">
+                                        <input
+                                                type="text"
+                                                name="search"
+                                                class="form-control"
+                                                value="{{ Request::has('search') ? Request::get('search') : '' }}"
+                                                maxlength="30"
+                                                placeholder="Busqueda por producto..">
+                                    </div>
+                                </div>
+                                <div class="col-sm-1 col-xs-2">
+                                    <button class="btn btn-default">
+                                        <i class="glyphicon glyphicon-search"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+
+                        @if(Request::has('search') && ! empty(Request::get('search')))
+                            <div class="row">
+                                <div class="col-xs-12">
+                                    <p>
+                                        <a href="{{ route('product.index') }}" class="text-danger">
+                                            <i class="glyphicon glyphicon-remove"></i>
+                                        </a>
+                                        <strong>Filtrado por:</strong>
+                                        {{ Request::get('search') }}
+                                    </p>
+                                </div>
+                            </div>
+                        @endif
+
                         <table class="table table-responsive table-striped">
                             <thead>
                                 <tr>

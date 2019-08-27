@@ -24,11 +24,22 @@ class ProductController extends Controller
     /**
      * Display a listing of the resource.
      *
+     * @param Request $request
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $products = Product::orderByDesc('created_at')->paginate();
+        if (! empty($request->search)) {
+
+            $products = Product::query()
+                ->orderByDesc('created_at')
+                ->where('public_id', 'like', "%$request->search%")
+                ->orWhere('name', 'like', "%$request->search%")
+                ->paginate();
+
+        } else {
+            $products = Product::orderByDesc('created_at')->paginate();
+        }
 
         return view('user.product.index', compact('products'));
     }

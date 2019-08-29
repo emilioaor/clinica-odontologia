@@ -99,6 +99,7 @@
                                     <thead>
                                         <tr>
                                             <th><!-- Botones --></th>
+                                            <th>Vendedor</th>
                                             <th>Teléfono</th>
                                             <th>Email</th>
                                             <th>Nombre</th>
@@ -180,6 +181,7 @@
 
                                             <!-- SHOW -->
                                             <template v-if="! callBudgetSelected || callBudgetSelected.id !== callBudget.id">
+                                                <td>{{ callBudget.sell_manager ? callBudget.sell_manager.name : '' }}</td>
                                                 <td>{{ callBudget.phone }}</td>
                                                 <td>{{ callBudget.email }}</td>
                                                 <td>{{ callBudget.name }}</td>

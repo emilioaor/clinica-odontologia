@@ -33,7 +33,8 @@ class CallBudget extends Model
         'status',
         'call_budget_source_id',
         'notes',
-        'contact_type'
+        'contact_type',
+        'sell_manager_id'
     ];
 
     protected $dates = [
@@ -56,5 +57,13 @@ class CallBudget extends Model
     public function histories()
     {
         return $this->hasMany(CallBudgetHistory::class, 'call_budget_id');
+    }
+
+    /**
+     * Agente de venta
+     */
+    public function sellManager()
+    {
+        return $this->belongsTo(User::class, 'sell_manager_id');
     }
 }

@@ -195,19 +195,48 @@
                                 </div>
                             </div>
 
-                            <div class="col-sm-4" v-if="form.status === 2">
+                            <div class="col-sm-4">
+                                <div class="form-group">
+                                    <label for="sell_manager">Vendedor</label>
+                                    <select
+                                            class="form-control"
+                                            name="sell_manager"
+                                            id="sell_manager"
+                                            v-validate
+                                            data-vv-rules="required"
+                                            :class="{'input-error': errors.has('sell_manager')}"
+                                            v-model="form.sell_manager_id"
+                                    >
+                                        <option :value="0" v-if="user.hasRole.admin">- Todos -</option>
+                                        <option
+                                                v-for="sellManager in sellManagers"
+                                                :key="sellManager.id"
+                                                :value="sellManager.id"
+                                        >
+                                            {{ sellManager.name }}
+                                        </option>
+                                    </select>
+                                    <span class="error" v-if="errors.firstByRule('sell_manager', 'required')">
+                                        Requerido
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row" v-if="form.status === 2">
+                            <div class="col-sm-4">
                                 <div class="form-group">
                                     <label for="contact_repeat">¿Días para volver a contactar?</label>
-                                    <input 
-                                        type="number" 
-                                        class="form-control"
-                                        placeholder="Días"
-                                        name="contact_repeat"
-                                        id="contact_repeat"
-                                        v-validate
-                                        data-vv-rules="required|regex:^[0-9]+$"
-                                        :class="{'input-error': errors.has('contact_repeat')}"
-                                        v-model="form.contact_repeat"
+                                    <input
+                                            type="number"
+                                            class="form-control"
+                                            placeholder="Días"
+                                            name="contact_repeat"
+                                            id="contact_repeat"
+                                            v-validate
+                                            data-vv-rules="required|regex:^[0-9]+$"
+                                            :class="{'input-error': errors.has('contact_repeat')}"
+                                            v-model="form.contact_repeat"
                                     >
                                     <span class="error" v-if="errors.firstByRule('contact_repeat', 'required')">
                                         Requerido
@@ -217,10 +246,8 @@
                                     </span>
                                 </div>
                             </div>
-                        </div>
 
-                        <div class="row">
-                            <div class="col-sm-4" v-if="form.status === 2">
+                            <div class="col-sm-4">
                                 <div class="form-group">
                                     <label for="contact_type">Forma de contacto</label>
                                     <select
@@ -287,6 +314,16 @@
             callBudgetSources: {
                 type: Array,
                 required: true
+            },
+
+            sellManagers: {
+                type: Array,
+                required: true
+            },
+
+            user: {
+                type: Object,
+                required: true
             }
         },
         data() {
@@ -304,7 +341,8 @@
                     call_budget_source_id: null,
                     status: null,
                     contact_repeat: null,
-                    contact_type: null
+                    contact_type: null,
+                    sell_manager_id: null
                 }
             }
         },

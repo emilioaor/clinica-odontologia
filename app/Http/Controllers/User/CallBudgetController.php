@@ -4,11 +4,13 @@ namespace App\Http\Controllers\User;
 
 use App\Patient;
 use App\PatientHistory;
+use App\User;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\CallBudget;
 use App\CallBudgetSource;
 use App\CallBudgetHistory;
+use Illuminate\Support\Facades\Auth;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use DB;
 
@@ -42,21 +44,27 @@ class CallBudgetController extends Controller
     public function create()
     {
         $callBudgetSources = CallBudgetSource::all();
+        if (Auth::user()->isAdmin()) {
+            $sellManagers = User::query()->hasRole('sell_manager')->get();
+        } else {
+            $sellManagers = User::query()->where('id', Auth::user()->id)->get();
+        }
 
-        return view('user.callBudget.create', compact('callBudgetSources'));
+        return view('user.callBudget.create', compact('callBudgetSources', 'sellManagers'));
     }
 
     /**
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @return JsonResponse
      */
     public function store(Request $request)
     {
         DB::beginTransaction();
 
-        $callBudget = new CallBudget($request->all());
+        $callBudget = new CallBudget($request->except(['sell_manager_id']));
+        $callBudget->sell_manager_id = $request->sell_manager_id > 0 ? $request->sell_manager_id : null;
 
         if ($request->has('contact_repeat')) {
             // Calculo la siguiente fecha de contacto
@@ -104,8 +112,9 @@ class CallBudgetController extends Controller
     {
         $callBudget = CallBudget::find($id);
         $callBudgetSources = CallBudgetSource::all();
+        $sellManagers = User::query()->hasRole('sell_manager')->get();
 
-        return view('user.callBudget.edit', compact('callBudget', 'callBudgetSources'));
+        return view('user.callBudget.edit', compact('callBudget', 'callBudgetSources', 'sellManagers'));
     }
 
     /**
@@ -128,6 +137,7 @@ class CallBudgetController extends Controller
         $callBudget->last_call = $request->last_call;
         $callBudget->call_budget_source_id = $request->call_budget_source_id;
         $callBudget->notes = $request->notes;
+        $callBudget->sell_manager_id = $request->sell_manager_id > 0 ? $request->sell_manager_id : null;
         $callBudget->save();
         
         if ($request->status !== $callBudget->status) {
@@ -187,8 +197,17 @@ class CallBudgetController extends Controller
 
         $callBudgets = CallBudget::query()
             ->whereBetween('last_call', [$start, $end])
-            ->with(['callBudgetSource'])
+            ->with(['callBudgetSource', 'sellManager'])
         ;
+
+        if (! Auth::user()->isAdmin()) {
+            $callBudgets->where(function ($query) {
+                $query
+                    ->where('sell_manager_id', Auth::user()->id)
+                    ->orWhereNull('sell_manager_id')
+                ;
+            });
+        }
 
         if (! empty($filter = $request->filter)) {
             // Filtro por telefono || nombre || email

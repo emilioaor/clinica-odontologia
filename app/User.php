@@ -330,6 +330,16 @@ class User extends Authenticatable
     }
 
     /**
+     * Presupuestos enviados
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function callBudgets()
+    {
+        return $this->hasMany(CallBudget::class, 'sell_manager_id');
+    }
+
+    /**
      * Listado de agentes de venta
      *
      * @param Builder $query

@@ -327,17 +327,7 @@ class User extends Authenticatable
      */
     public function generatePublicId()
     {
-        if ($this->isAdmin()) {
-            $this->public_id = 'ADM' . time();
-        } elseif ($this->isDoctor()) {
-            $this->public_id = 'DOC' . time();
-        } elseif ($this->isSecretary()) {
-            $this->public_id = 'SEC' . time();
-        } elseif ($this->isAssistant()) {
-            $this->public_id = 'ASS' . time();
-        } elseif ($this->isSellManager()) {
-            $this->public_id = 'SMA' . time();
-        }
+        $this->public_id = 'USR' . time();
     }
 
     /**

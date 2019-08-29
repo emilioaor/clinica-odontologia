@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Product;
+use App\Role;
 use App\User;
 use App\Weekday;
 use Illuminate\Http\Request;
@@ -59,7 +60,9 @@ class UserController extends Controller
      */
     public function create()
     {
-        return view('admin.user.create');
+        $roles = Role::all();
+
+        return view('admin.user.create', compact('roles'));
     }
 
     /**
@@ -73,6 +76,13 @@ class UserController extends Controller
     {
         DB::beginTransaction();
 
+        $roleIds = [];
+        $roleCodes = [];
+        foreach ($request->roles as $role) {
+            $roleIds[] = $role['id'];
+            $roleCodes[] = $role['code'];
+        }
+
         $user = new User($request->all());
         $user->password = bcrypt($request->password);
         $user->logo = Auth::user()->logo;
@@ -80,12 +90,13 @@ class UserController extends Controller
         $user->email = Auth::user()->email;
         $user->address = Auth::user()->address;
         $user->phone = Auth::user()->phone;
-        $user->level = intval($request->level);
         $user->generatePublicId();
-        $user->external = $request->level == User::LEVEL_DOCTOR ? $request->external : false;
+        $user->external = in_array('doctor', $roleCodes) ? $request->external : false;
         $user->management_inventory = $request->management_inventory;
         $user->management_supply = $request->management_supply;
         $user->save();
+
+        $user->roles()->sync($roleIds);
 
         $products = Product::all();
 
@@ -122,10 +133,11 @@ class UserController extends Controller
      */
     public function edit($id)
     {
-        $user = User::with(['weekdays'])->where('public_id', $id)->firstOrFail();
+        $user = User::with(['weekdays', 'roles'])->where('public_id', $id)->firstOrFail();
         $weekdays = Weekday::all();
+        $roles = Role::all();
 
-        return view('admin.user.edit', compact('user', 'weekdays'));
+        return view('admin.user.edit', compact('user', 'weekdays', 'roles'));
     }
 
     /**
@@ -133,20 +145,32 @@ class UserController extends Controller
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @return JsonResponse
      */
     public function update(Request $request, $id)
     {
+        DB::beginTransaction();
+
+        $roleIds = [];
+        $roleCodes = [];
+        foreach ($request->roles as $role) {
+            $roleIds[] = $role['id'];
+            $roleCodes[] = $role['code'];
+        }
+
         $user = User::where('public_id', $id)->firstOrFail();
 
         $user->name = $request->name;
-        $user->level = $request->level;
-        $user->external = $request->level == User::LEVEL_DOCTOR ? $request->external : false;
+        $user->external = in_array('doctor', $roleCodes) ? $request->external : false;
         $user->management_inventory = $request->management_inventory;
         $user->management_supply = $request->management_supply;
         $user->save();
 
+        $user->roles()->sync($roleIds);
+
         $this->sessionMessage('message.user.update');
+
+        DB::commit();
 
         return new JsonResponse([
             'success' => true,

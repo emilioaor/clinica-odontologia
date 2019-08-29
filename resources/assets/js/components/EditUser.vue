@@ -70,22 +70,52 @@
                                             </p>
                                         </div>
                                     </div>
+                                </div>
 
-                                    <div class="col-sm-4">
+                                <div class="row">
+                                    <div class="col-xs-12">
                                         <div class="form-group">
-                                            <label for="username">Nivel de usuario</label>
-                                            <select
-                                                    name="level"
-                                                    id="level"
-                                                    class="form-control"
-                                                    v-model="form.level"
-                                                >
-                                                <option value="1">Administrador</option>
-                                                <option value="2">Doctor</option>
-                                                <option value="3">Secretaria</option>
-                                                <option value="4">Asistente</option>
-                                                <option value="5">Agente de ventas</option>
-                                            </select>
+                                            <label for="username">Roles</label>
+                                            <table class="table table-responsive">
+                                                <tr v-for="(role, i) in form.roles" :key="role.id">
+                                                    <td>
+                                                        {{ role.name }}
+                                                    </td>
+                                                    <td class="text-center" width="5%">
+                                                        <button type="button" class="btn btn-danger" @click="removeRole(i)">
+                                                            <i class="glyphicon glyphicon-remove"></i>
+                                                        </button>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        <select
+                                                                name="level"
+                                                                id="level"
+                                                                class="form-control"
+                                                                v-model="currentRole"
+                                                                :class="{'input-error': formSent && ! form.roles.length}"
+                                                        >
+                                                            <option
+                                                                    v-for="role in roles"
+                                                                    :value="role.id"
+                                                                    :key="role.id"
+                                                                    v-if="! hasRole(role.id)"
+                                                            >
+                                                                {{ role.name }}
+                                                            </option>
+                                                        </select>
+                                                        <p class="error" v-if="formSent && ! form.roles.length">
+                                                            Este campo es requerido
+                                                        </p>
+                                                    </td>
+                                                    <td class="text-center" width="5%">
+                                                        <button type="button" class="btn btn-success" @click="addRole()">
+                                                            <i class="glyphicon glyphicon-plus"></i>
+                                                        </button>
+                                                    </td>
+                                                </tr>
+                                            </table>
                                         </div>
                                     </div>
                                 </div>
@@ -440,6 +470,10 @@
             translations: {
                 type: Object,
                 required: true
+            },
+            roles: {
+                type: Array,
+                required: true
             }
         },
 
@@ -455,7 +489,10 @@
                     friday: [],
                     saturday: [],
                     sunday: []
-                }
+                },
+                doctorRole: null,
+                currentRole: null,
+                formSent: false
             }
         },
 
@@ -464,10 +501,32 @@
             this.initConfiguredSchedule();
         },
 
+        mounted () {
+            this.doctorRole = this.roles.find(role => role.code === 'doctor')
+            this.currentRole = this.doctorRole.id
+        },
+
         methods: {
+            removeRole (index) {
+                this.form.roles.splice(index, 1)
+            },
+
+            addRole () {
+                if (! this.form.roles.find(role => role.id === this.currentRole)) {
+                    this.form.roles.push(
+                        this.roles.find(role => role.id === this.currentRole)
+                    )
+                }
+            },
+
+            hasRole (id) {
+                return !! this.form.roles.find(role => role.id === id);
+            },
+
             validateForm: function () {
+                this.formSent = true;
                 this.$validator.validateAll('data').then((res) => {
-                    if (res) {
+                    if (res && this.form.roles.length) {
                         this.sendForm();
                     }
                 })

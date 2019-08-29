@@ -16,6 +16,7 @@ class CreateTableRoles extends Migration
         Schema::create('roles', function (Blueprint $table) {
             $table->increments('id');
             $table->string('code', 30);
+            $table->string('name', 100);
             $table->timestamps();
         });
 
@@ -27,11 +28,33 @@ class CreateTableRoles extends Migration
             $table->foreign('role_id')->references('id')->on('roles');
         });
 
-        $roles = ['admin', 'doctor', 'secretary', 'assistant', 'sell_manager'];
+        $roles = [
+            [
+                'code' => 'admin',
+                'name' => 'Administrador'
+            ],
+            [
+                'code' => 'doctor',
+                'name' => 'Doctor'
+            ],
+            [
+                'code' => 'secretary',
+                'name' => 'Secretaria'
+            ],
+            [
+                'code' => 'assistant',
+                'name' => 'Asistente'
+            ],
+            [
+                'code' => 'sell_manager',
+                'name' => 'Agente de ventas'
+            ]
+        ];
 
         foreach ($roles as $r) {
             $role = new \App\Role();
-            $role->code = $r;
+            $role->code = $r['code'];
+            $role->name = $r['name'];
             $role->save();
         }
 
@@ -61,7 +84,7 @@ class CreateTableRoles extends Migration
         }
 
         Schema::table('users', function (Blueprint $table) {
-            $table->dropColumn('level');
+            //$table->dropColumn('level');
         });
     }
 

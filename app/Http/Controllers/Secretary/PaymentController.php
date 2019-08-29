@@ -44,9 +44,9 @@ class PaymentController extends Controller
     public function create()
     {
         $products = Product::orderBy('name')->get();
-        $doctors = User::where('level', User::LEVEL_ADMIN)->orWhere('level', User::LEVEL_DOCTOR)->orderBy('name')->get();
-        $assistants = User::where('level', User::LEVEL_ASSISTANT)->get();
-        $secretaries = User::where('level', User::LEVEL_ADMIN)->orWhere('level', User::LEVEL_SECRETARY)->orderBy('name')->get();
+        $doctors = User::query()->hasRole(['admin', 'doctor'], 'or')->orderBy('name')->get();
+        $assistants = User::query()->hasRole('assistant')->get();
+        $secretaries = User::query()->hasRole(['admin', 'secretary'], 'or')->orderBy('name')->get();
 
         return view('secretary.payment.create', compact('products', 'doctors', 'assistants', 'secretaries'));
     }

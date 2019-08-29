@@ -546,7 +546,7 @@
                 this.modal.data = [];
                 this.modal.loading = true;
 
-                axios.get('/user/user/search?level=2&search=' + this.modal.search)
+                axios.get('/user/user/search?level=doctor&search=' + this.modal.search)
                         .then((res) => {
                     this.modal.loading = false;
 

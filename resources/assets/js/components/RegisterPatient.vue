@@ -133,7 +133,7 @@
                                         </div>
                                     </div>
 
-                                    <div class="col-sm-4" v-if="user.level === LEVEL_SELL_MANAGER">
+                                    <div class="col-sm-4" v-if="user.hasRole.sell_manager">
                                         <div class="form-group">
                                             <label for="cancel_appointment">Registrar llamada</label>
 
@@ -221,7 +221,6 @@
 
         data: function () {
             return {
-                LEVEL_SELL_MANAGER: 5,
                 loading: false,
                 phoneError: false,
                 form: {

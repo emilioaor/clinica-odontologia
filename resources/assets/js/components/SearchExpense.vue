@@ -232,7 +232,7 @@
                                                             class="btn btn-danger"
                                                             data-toggle="modal"
                                                             data-target="#deleteModal"
-                                                            v-if="authUser.level === 1 && editExpense !== i && editLoading !== i"
+                                                            v-if="authUser.hasRole.admin && editExpense !== i && editLoading !== i"
                                                             :disabled="editExpense !== i && editExpense !== null"
                                                             @click="deleteExpense = expense.id"
                                                             >

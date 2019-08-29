@@ -77,7 +77,7 @@ class CallLogController extends Controller
      */
     public function create()
     {
-        $users = User::where('level', User::LEVEL_SECRETARY)->orderBy('name')->get();
+        $users = User::query()->hasRole('secretary')->orderBy('name')->get();
 
         return view('secretary.callLog.create', compact('users'));
     }

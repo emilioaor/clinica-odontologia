@@ -218,16 +218,16 @@
                 this.modal.data = [];
                 this.modal.loading = true;
 
-                axios.get('/admin/user/search?level=2&search=' + this.modal.search)
+                axios.get('/admin/user/search?level=doctor&search=' + this.modal.search)
                     .then((res) => {
                         this.modal.loading = false;
 
                         this.modal.data = res.data.users;
                     })
                     .catch((err) => {
-    if (err.response.status === 403 || err.response.status === 405) {
-        location.href = '/';
-    }
+                        if (err.response.status === 403 || err.response.status === 405) {
+                            location.href = '/';
+                        }
                         this.modal.loading = false;
                     })
                 ;
@@ -256,9 +256,9 @@
                         }
                     })
                     .catch((err) => {
-    if (err.response.status === 403 || err.response.status === 405) {
-        location.href = '/';
-    }
+                        if (err.response.status === 403 || err.response.status === 405) {
+                            location.href = '/';
+                        }
                         console.log(err);
                         this.loading = false;
                     })

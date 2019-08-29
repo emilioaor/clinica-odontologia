@@ -121,7 +121,7 @@
                                 </div>
 
                                 <div class="row">
-                                    <div class="col-sm-4" v-if="form.level == 2">
+                                    <div class="col-sm-4" v-if="hasRole(doctorRole.id)">
                                         <div class="form-group">
                                             <label for="external">¿Externo?</label>
                                             <div>

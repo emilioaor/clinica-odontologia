@@ -90,7 +90,7 @@ class BudgetController extends Controller
         }
 
         $products = Product::orderBy('name')->get();
-        $users = User::where('level', User::LEVEL_SECRETARY)->orderBy('name')->get();
+        $users = User::query()->hasRole('secretary')->orderBy('name')->get();
 
         return view('user.budget.create', compact('products', 'users'));
     }

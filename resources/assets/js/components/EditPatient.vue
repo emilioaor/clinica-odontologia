@@ -144,7 +144,7 @@
                                                 data-toggle="modal"
                                                 data-target="#deleteModal"
                                                 v-bind:disabled="loading"
-                                                v-if="authUser.level === 1"
+                                                v-if="authUser.hasRole.admin === 1"
                                                 >
                                             <i class="glyphicon glyphicon-remove"></i>
                                             Eliminar paciente

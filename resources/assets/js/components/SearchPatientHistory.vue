@@ -136,7 +136,7 @@
                                         <thead>
                                             <tr>
                                                 <th>Fecha</th>
-                                                <th v-if="authUser.level == 1">Código</th>
+                                                <th v-if="authUser.hasRole.admin">Código</th>
                                                 <th>Servicio</th>
                                                 <th>Diente</th>
                                                 <th>Doctor</th>
@@ -147,7 +147,7 @@
                                         <tbody>
                                             <tr v-for="service in dataPerDate.services">
                                                 <td>{{ dateFormat(service.created_at) }}</td>
-                                                <td v-if="authUser.level == 1">{{ service.public_id }}</td>
+                                                <td v-if="authUser.hasRole.admin">{{ service.public_id }}</td>
                                                 <td>{{ service.product.name }}</td>
                                                 <td>{{ service.tooth }}</td>
                                                 <td>{{ service.doctor.name }}</td>
@@ -158,7 +158,7 @@
                                                             class="btn btn-danger"
                                                             data-toggle="modal"
                                                             data-target="#deleteModal"
-                                                            v-if="authUser.level === 1"
+                                                            v-if="authUser.hasRole.admin"
                                                             @click="deletePatientHistory = service.id"
                                                             >
                                                         <i class="glyphicon glyphicon-remove"></i>
@@ -186,7 +186,7 @@
                                                             class="btn btn-danger btn-xs"
                                                             data-toggle="modal"
                                                             data-target="#deleteNoteModal"
-                                                            v-if="authUser.level === 1"
+                                                            v-if="authUser.hasRole.admin"
                                                             @click="deleteNote = note.id"
                                                             >
                                                         <i class="glyphicon glyphicon-remove"></i>
@@ -226,7 +226,7 @@
                                             class="btn btn-danger btn-sm"
                                             data-toggle="modal"
                                             data-target="#deleteImageModal"
-                                            v-if="authUser.level === 1"
+                                            v-if="authUser.hasRole.admin"
                                             @click="deleteImage = image.id"
                                             >
                                         <i class="glyphicon glyphicon-remove"></i>

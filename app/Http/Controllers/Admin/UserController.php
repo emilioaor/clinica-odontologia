@@ -250,17 +250,15 @@ class UserController extends Controller
             ->limit(isset($request->limit) ? $request->limit : 10);
         
         if (! empty($request->level)) {
-            $users->where([
-                ['level', '=', $request->level]
-            ]);
+            $users->hasRole($request->level);
         }
 
         if (! empty($request->search)) {
             $users
                 ->where([
-                    ['name', 'LIKE', "%$request->search%", 'or'],
-                    ['email', 'LIKE', "%$request->search%", 'or'],
-                    ['phone', 'LIKE', "%$request->search%", 'or']
+                    ['users.name', 'LIKE', "%$request->search%", 'or'],
+                    ['users.email', 'LIKE', "%$request->search%", 'or'],
+                    ['users.phone', 'LIKE', "%$request->search%", 'or']
                 ])
             ;
         }
@@ -278,7 +276,7 @@ class UserController extends Controller
      */
     public function assistantList()
     {
-        $assistants = User::orderBy('name')->where('level', User::LEVEL_ASSISTANT)->get();
+        $assistants = User::orderBy('name')->hasRole('assistant')->get();
 
         return new JsonResponse([
             'success' => true,

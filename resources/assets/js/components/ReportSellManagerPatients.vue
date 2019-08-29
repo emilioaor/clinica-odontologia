@@ -55,7 +55,7 @@
                                                 id="sell_manager"
                                                 class="form-control"
                                                 v-model="data.sell_manager"
-                                                :disabled="user.level === LEVEL_SELL_MANAGER"
+                                                :disabled="user.hasRole.sell_manager"
                                                 >
                                             <option value="0">Todos</option>
                                             <option
@@ -231,7 +231,6 @@
                 loading: false,
                 initStart: new Date(),
                 initEnd: new Date(),
-                LEVEL_SELL_MANAGER: 5,
                 data: {
                     start: '',
                     end: '',
@@ -251,7 +250,7 @@
             this.data.start = year + '-' + month + '-' + day;
             this.data.end = year + '-' + month + '-' + day;
 
-            if (this.user.level === this.LEVEL_SELL_MANAGER) {
+            if (this.user.hasRole.sell_manager) {
                 // Inicializo el agente
                 this.data.sell_manager = this.user.id;
             }

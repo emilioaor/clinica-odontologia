@@ -110,9 +110,9 @@ class PatientHistoryController extends Controller
         $patient->patient_history = [];
         $patient->notes = [];
         $products = Product::orderBy('name')->get();
-        $assistants = User::where('level', User::LEVEL_ASSISTANT)->orderBy('name')->get();
+        $assistants = User::query()->hasRole('assistant')->orderBy('name')->get();
         $suppliers = Supplier::orderBy('name')->where('type', '<>', Supplier::TYPE_DOCTOR_COMMISSION)->get();
-        $doctors = User::where('level', User::LEVEL_DOCTOR)->orderBy('name')->get();
+        $doctors = User::query()->hasRole('doctor')->orderBy('name')->get();
 
         return view('user.patientHistory.edit', compact(
             'patient',

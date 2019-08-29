@@ -80,8 +80,9 @@ class SupplyInventoryMovementController extends Controller
     public function createOut()
     {
         $supplies = Supply::orderBy('name')->with(['supplyBrand', 'supplyType'])->get();
-        $users = User::where('level', '<>', User::LEVEL_ADMIN)
-            ->where('id', '<>', Auth::user()->id)
+        $users = User::query()
+            ->hasNotRole('admin')
+            ->where('users.id', '<>', Auth::user()->id)
             ->orderBy('name')
             ->get()
         ;

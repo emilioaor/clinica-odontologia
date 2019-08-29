@@ -54,10 +54,9 @@ class QuestionController extends Controller
      */
     public function create()
     {
-        $doctors = User::orderBy('name')
-            ->where('level', User::LEVEL_DOCTOR)
-            ->orWhere('level', User::LEVEL_ASSISTANT)
-            ->orWhere('level', User::LEVEL_SECRETARY)
+        $doctors = User::query()
+            ->hasRole(['doctor', 'assistant', 'secretary'], 'or')
+            ->orderBy('name')
             ->get();
 
         return view('user.question.create', compact('doctors'));

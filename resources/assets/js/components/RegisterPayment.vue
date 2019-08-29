@@ -183,8 +183,8 @@
                                                 <th>Doctor</th>
                                                 <th>Asistente</th>
                                                 <th>Precio</th>
-                                                <th width="5%" v-if="user.level === 1"></th>
-                                                <th width="5%" v-if="user.level === 1"></th>
+                                                <th width="5%" v-if="user.hasRole.admin"></th>
+                                                <th width="5%" v-if="user.hasRole.admin"></th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -313,7 +313,7 @@
                                                         {{ '$' + service.price }}
                                                     </span>
                                                 </td>
-                                                <td v-if="user.level === 1">
+                                                <td v-if="user.hasRole.admin">
                                                     <!-- Cancelar edicion de servicio -->
                                                     <button
                                                             class="btn btn-warning"
@@ -323,7 +323,7 @@
                                                         <i class="glyphicon glyphicon-remove-sign"></i>
                                                     </button>
                                                 </td>
-                                                <td v-if="user.level === 1">
+                                                <td v-if="user.hasRole.admin">
                                                     <!-- Editar servicio -->
                                                     <button
                                                             class="btn btn-warning"
@@ -367,8 +367,8 @@
                                             <th>Registrado por</th>
                                             <th>Tipo</th>
                                             <th>Monto</th>
-                                            <th width="5%" v-if="user.level === 1"></th>
-                                            <th width="5%" v-if="user.level === 1"></th>
+                                            <th width="5%" v-if="user.hasRole.admin"></th>
+                                            <th width="5%" v-if="user.hasRole.admin"></th>
                                         </tr>
                                         </thead>
                                         <tbody>
@@ -457,7 +457,7 @@
                                                     {{ '$' + payment.amount }}
                                                 </span>
                                             </td>
-                                            <td v-if="user.level === 1">
+                                            <td v-if="user.hasRole.admin">
                                                 <!-- Editar pago -->
                                                 <button
                                                         class="btn btn-warning"
@@ -477,7 +477,7 @@
                                                     <i class="glyphicon glyphicon-remove-sign"></i>
                                                 </button>
                                             </td>
-                                            <td v-if="user.level === 1">
+                                            <td v-if="user.hasRole.admin">
                                                 <!-- Guardar pago -->
                                                 <button
                                                         class="btn btn-success"
@@ -831,7 +831,7 @@
 
             const today = new Date();
             const yesterday = new Date(today.getTime() - 24*60*60*1000);
-            this.disabledDates = this.user.level === 1 ? {} : {to: yesterday}
+            this.disabledDates = this.user.hasRole.admin ? {} : {to: yesterday}
         },
         computed: {
             paymentModalService: function () {

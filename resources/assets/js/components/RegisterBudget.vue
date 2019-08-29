@@ -612,7 +612,7 @@
                                 </tr>
 
                                 <!-- Secretary notes -->
-                                <tr v-if="userData.level === 1">
+                                <tr v-if="userData.hasRole.admin">
                                     <td colspan="5" style="padding-top: 20px;">
                                         <p>
                                             Notas para la secretaria

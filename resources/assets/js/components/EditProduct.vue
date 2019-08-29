@@ -119,7 +119,7 @@
                                             data-toggle="modal"
                                             data-target="#deleteModal"
                                             v-bind:disabled="loading"
-                                            v-if="authUser.level === 1"
+                                            v-if="authUser.hasRole.admin"
                                         >
                                         <i class="glyphicon glyphicon-remove"></i>
                                         Eliminar producto

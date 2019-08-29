@@ -45,6 +45,8 @@ class User extends Authenticatable
 
     protected $dates = ['deleted_at'];
 
+    protected $appends = ['hasRole'];
+
     /**
      * Indica si un usuario es administrador
      *
@@ -83,6 +85,25 @@ class User extends Authenticatable
     public function isAssistant()
     {
         return $this->hasRole('assistant');
+    }
+
+    /**
+     * Build has role property
+     *
+     * @return array
+     */
+    public function getHasRoleAttribute()
+    {
+        $hasRole = [];
+        $roles = Role::all();
+        foreach ($roles as $role) {
+            $hasRole[$role->code] = false;
+        }
+        foreach ($this->roles as $role) {
+            $hasRole[$role->code] = true;
+        }
+
+        return $hasRole;
     }
 
     /**
@@ -315,10 +336,56 @@ class User extends Authenticatable
      */
     public function scopeSellManagers(Builder $query)
     {
-        $query->where('level', self::LEVEL_SELL_MANAGER);
+        $query->hasRole('sell_manager');
 
         if (! Auth::user()->isAdmin()) {
-            $query->where('id', Auth::user()->id);
+            $query->where('users.id', Auth::user()->id);
+        }
+    }
+
+    /**
+     * Filter by role
+     *
+     * @param Builder $query
+     * @param string $role
+     * @param string $boolean
+     */
+    public function scopeHasRole(Builder $query, $role, $boolean = 'and')
+    {
+        $roles = is_array($role) ? $role : [$role];
+
+        $query
+            ->select(['users.*'])
+            ->join('user_role', 'user_id', '=', 'users.id')
+            ->join('roles', 'role_id', '=', 'roles.id')
+            ->distinct()
+        ;
+
+        foreach ($roles as $role) {
+            $query->where('roles.code', '=', $role, $boolean);
+        }
+    }
+
+    /**
+     * Filter by role
+     *
+     * @param Builder $query
+     * @param string $role
+     * @param string $boolean
+     */
+    public function scopeHasNotRole(Builder $query, $role, $boolean = 'and')
+    {
+        $roles = is_array($role) ? $role : [$role];
+
+        $query
+            ->select(['users.*'])
+            ->join('user_role', 'user_id', '=', 'users.id')
+            ->join('roles', 'role_id', '=', 'roles.id')
+            ->distinct()
+        ;
+
+        foreach ($roles as $role) {
+            $query->where('roles.code', '<>', $role, $boolean);
         }
     }
 

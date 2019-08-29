@@ -138,7 +138,7 @@
                                                         data-vv-rules="required"
                                                         :class="{'input-error': errors.has('product' + id)}"
                                                         @change="changeProduct(service, id)"
-                                                        :disabled="user.level !== 1 && service.doctor_id !== user.id"
+                                                        :disabled="! user.hasRole.admin && service.doctor_id !== user.id"
                                                     >
                                                     <option
                                                             v-for="product in productList"
@@ -182,7 +182,7 @@
                                                         v-validate
                                                         data-vv-rules="required"
                                                         :class="{'input-error': errors.has('qty' + id)}"
-                                                        :disabled="!service.product_id || (user.level !== 1 && service.doctor_id !== user.id)"
+                                                        :disabled="!service.product_id || (! user.hasRole.admin && service.doctor_id !== user.id)"
                                                         >
                                                 <p class="error" v-if="errors.firstByRule('qty' + id, 'required')">
                                                     Campo requerido
@@ -195,7 +195,7 @@
                                                         :id="'tooth' + id"
                                                         class="form-control"
                                                         v-model="service.tooth"
-                                                        :disabled="user.level !== 1 && service.doctor_id !== user.id"
+                                                        :disabled="! user.hasRole.admin && service.doctor_id !== user.id"
                                                 >
                                             </td>
                                             <td>
@@ -208,7 +208,7 @@
                                                         v-validate
                                                         data-vv-rules="required"
                                                         :class="{'input-error': errors.has('price' + id)}"
-                                                        :disabled="!service.product_id || (user.level !== 1 && service.doctor_id !== user.id)"
+                                                        :disabled="!service.product_id || (! user.hasRole.admin && service.doctor_id !== user.id)"
                                                 >
                                                 <p class="error" v-if="errors.firstByRule('price' + id, 'required')">
                                                     Campo requerido
@@ -216,7 +216,7 @@
                                             </td>
                                             <td>{{ service.unit_price * service.qty }}</td>
                                             <td>
-                                                <a @click="removeService(id)" v-if="user.level === 1 || service.doctor_id === user.id">
+                                                <a @click="removeService(id)" v-if="user.hasRole.admin || service.doctor_id === user.id">
                                                     X
                                                 </a>
                                             </td>
@@ -276,7 +276,7 @@
                                                         :class="{'input-error': errors.has('supplier' + id)}"
                                                         v-model="service.supplier_id"
                                                         v-validate
-                                                        :data-vv-rules="authUser.level !== 1 ? 'required' : ''"
+                                                        :data-vv-rules="! authUser.hasRole.admin ? 'required' : ''"
                                                         >
                                                     <option
                                                             v-for="supplier in suppliers"
@@ -297,7 +297,7 @@
                                                         :class="{'input-error': errors.has('responsible' + id)}"
                                                         v-model="service.responsible_id"
                                                         v-validate
-                                                        :data-vv-rules="authUser.level !== 1 ? 'required' : ''"
+                                                        :data-vv-rules="! authUser.hasRole.admin ? 'required' : ''"
                                                         >
                                                     <option
                                                             v-for="assistant in assistantUsers"
@@ -329,7 +329,7 @@
                                                         class="form-control"
                                                         v-model="service.hour"
                                                         v-validate
-                                                        :data-vv-rules="authUser.level !== 1 ? 'required' : ''"
+                                                        :data-vv-rules="! authUser.hasRole.admin ? 'required' : ''"
                                                         :class="{'input-error': errors.has('hour' + id)}"
                                                         >
                                                     <option
@@ -351,7 +351,7 @@
                                                         class="form-control"
                                                         v-model="service.minute"
                                                         v-validate
-                                                        :data-vv-rules="authUser.level !== 1 ? 'required' : ''"
+                                                        :data-vv-rules="! authUser.hasRole.admin ? 'required' : ''"
                                                         :class="{'input-error': errors.has('minute' + id)}"
                                                         >
                                                     <option
@@ -635,7 +635,7 @@
 
             const today = new Date();
             const yesterday = new Date(today.getTime() - 24*60*60*1000);
-            this.disabledDates = this.user.level === 1 ? {} : {to: yesterday};
+            this.disabledDates = this.user.hasRole.admin ? {} : {to: yesterday};
 
             this.token = document.head.querySelector('meta[name="csrf-token"]').content;
         },

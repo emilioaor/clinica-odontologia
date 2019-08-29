@@ -415,7 +415,7 @@
 
             const today = new Date();
             const yesterday = new Date(today.getTime() - 24*60*60*1000);
-            this.disabledDates = this.user.level === 1 ? {} : {to: yesterday}
+            this.disabledDates = this.user.hasRole.admin ? {} : {to: yesterday}
         },
 
         methods: {

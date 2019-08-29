@@ -635,7 +635,7 @@
                                             class="btn btn-danger btn-lg"
                                             data-toggle="modal"
                                             data-target="#deleteModal"
-                                            v-if="authUser.level === 1 && ! loading"
+                                            v-if="authUser.hasRole.admin && ! loading"
                                             >
                                         <i class="glyphicon glyphicon-remove"></i>
                                         Eliminar cotización

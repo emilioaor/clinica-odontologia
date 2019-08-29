@@ -441,7 +441,11 @@ class ReportController extends Controller
     public function guarantees()
     {
         $products = Product::orderBy('name')->get();
-        $doctors = User::where('level', User::LEVEL_DOCTOR)->orderBy('name')->get();
+        $doctors = User::query()
+            ->hasRole('doctor')
+            ->orderBy('users.name')
+            ->get()
+        ;
 
         return view('admin.report.guarantees', compact('products', 'doctors'));
     }
@@ -682,7 +686,7 @@ class ReportController extends Controller
      */
     public function servicesDiagnostics()
     {
-        $doctors = User::where('level', User::LEVEL_DOCTOR)->orderBy('name')->get();
+        $doctors = User::query()->hasRole('doctor')->orderBy('name')->get();
 
         return view('admin.report.servicesDiagnostics', compact('doctors'));
     }

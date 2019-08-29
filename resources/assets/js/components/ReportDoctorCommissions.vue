@@ -443,7 +443,7 @@
                 this.modal.data = [];
                 this.modal.loading = true;
 
-                axios.get('/admin/user/search?level=2&limit=9999&search=' + this.modal.search)
+                axios.get('/admin/user/search?level=doctor&limit=9999&search=' + this.modal.search)
                     .then((res) => {
                         this.modal.loading = false;
 

@@ -155,16 +155,20 @@
                                                         <strong>Tratamiento:</strong> {{ callBudget.service }}
                                                     </div>
 
-                                                    <div class="col-sm-8">
-                                                        <strong>Notas:</strong> {{ callBudget.notes }}
-                                                    </div>
-                                                </div>
-
-                                                <div class="row info-call">
                                                     <div class="col-sm-4">
                                                         <strong>Tipo de contacto:</strong>
                                                         <span v-if="callBudget.contact_type === 1">Teléfono</span>
                                                         <span v-if="callBudget.contact_type === 2">Email</span>
+                                                    </div>
+
+                                                    <div class="col-sm-4">
+                                                        <strong>Vendedor:</strong> {{ callBudget.sell_manager ? callBudget.sell_manager.name : '' }}
+                                                    </div>
+                                                </div>
+
+                                                <div class="row info-call">
+                                                    <div class="col-sm-12">
+                                                        <strong>Notas:</strong> {{ callBudget.notes }}
                                                     </div>
                                                 </div>
                                             </section>

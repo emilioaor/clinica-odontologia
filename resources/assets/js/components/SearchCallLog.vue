@@ -136,7 +136,7 @@
                                                 <td>
                                                     <span v-html="call.description"></span>
                                                 </td>
-                                                <td>{{ call.patient.name }}</td>
+                                                <td>{{ call.patient ? call.patient.name : call.call_budget.name }}</td>
                                                 <td>{{ data.status[call.status].statusText }}</td>
                                             </tr>
 

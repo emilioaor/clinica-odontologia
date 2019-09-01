@@ -25,7 +25,8 @@ class CallLog extends Model
         'call_date',
         'status',
         'appointment_date',
-        'user_id'
+        'user_id',
+        'call_budget_id'
 
     ];
 
@@ -61,6 +62,16 @@ class CallLog extends Model
     public function to()
     {
         return $this->belongsTo(User::class, 'user_id')->withTrashed();
+    }
+
+    /**
+     * Envío de presupuesto que genero esta llamada
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function callBudget()
+    {
+        return $this->belongsTo(CallBudget::class, 'call_budget_id')->withTrashed();
     }
 
     /**

@@ -34,8 +34,8 @@
                                 @foreach($callLogs as $call)
                                     <tr>
                                         <td>{{ $call->callDateTime()->format('m/d/Y') }}</td>
-                                        <td>{{ $call->patient->name }}</td>
-                                        <td>{{ $call->patient->phone }}</td>
+                                        <td>{{ $call->patient ? $call->patient->name : $call->callBudget->name }}</td>
+                                        <td>{{ $call->patient ? $call->patient->phone : $call->callBudget->phone }}</td>
                                         <td>{!! str_replace("\n", '<br>', $call->description) !!}</td>
                                         <td>
                                             {{ $call->statusText() }}
@@ -47,7 +47,10 @@
                                                     class="btn btn-primary"
                                                     data-toggle="modal"
                                                     data-target="#callModal"
-                                                    onclick="eventCallLogModal('{{ $call->public_id }}', {{ $call->patient->cancel_appointment }})"
+                                                    onclick="eventCallLogModal(
+                                                        '{{ $call->public_id }}',
+                                                        {{ $call->patient ? $call->patient->cancel_appointment : false }}
+                                                    )"
                                                 >
                                                 <i class="glyphicon glyphicon-phone-alt"></i>
                                             </button>

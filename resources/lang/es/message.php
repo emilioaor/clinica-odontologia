@@ -45,6 +45,7 @@ return [
 
     'callLog.note.budget' => 'Cotización #:public_id',
     'callLog.note.newPatient' => 'Llamada para nuevo paciente',
+    'callLog.note.callBudget' => 'Llamada de seguimiento por presupuesto',
 
     'supply.create' => 'Insumo registrado',
     'supply.update' => 'Insumo actualizado',

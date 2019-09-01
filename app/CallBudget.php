@@ -66,4 +66,12 @@ class CallBudget extends Model
     {
         return $this->belongsTo(User::class, 'sell_manager_id');
     }
+
+    /**
+     * Llamada
+     */
+    public function callLog()
+    {
+        return $this->hasOne(CallLog::class, 'call_budget_id');
+    }
 }

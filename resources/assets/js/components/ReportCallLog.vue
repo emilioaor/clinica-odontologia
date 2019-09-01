@@ -112,10 +112,10 @@
                                             <tr v-for="callLog in data.callLogs" :key="callLog.id">
                                                 <td>{{ dateFormat(callLog.call_date) }}</td>
                                                 <td>{{ callLog.to.name }}</td>
-                                                <td>{{ callLog.patient.name }}</td>
+                                                <td>{{ callLog.patient ? callLog.patient.name : callLog.call_budget.name }}</td>
                                                 <td>{{ callLog.statusText }}</td>
                                                 <td>{{ callLog.status_history[callLog.status_history.length -1].note }}</td>
-                                                <td>{{ callLog.patient.phone }}</td>
+                                                <td>{{ callLog.patient ? callLog.patient.phone : callLog.call_budget.phone }}</td>
                                             </tr>
                                         </tbody>
                                     </table>

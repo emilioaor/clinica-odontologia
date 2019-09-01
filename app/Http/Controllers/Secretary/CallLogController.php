@@ -225,6 +225,7 @@ class CallLogController extends Controller
             ])
             ->with('patient')
             ->with('statusHistory')
+            ->with('callBudget')
         ;
 
         if ($request->status > 0) {

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\User;
 
+use App\CallLog;
 use App\Patient;
 use App\PatientHistory;
 use App\User;
@@ -80,6 +81,19 @@ class CallBudgetController extends Controller
         $history->call_budget_id = $callBudget->id;
         $history->status = $callBudget->status;
         $history->save();
+
+        if (Auth::user()->isAdmin() && $request->sell_manager_id > 0) {
+            // Es admin && Asigno un agente de ventas
+
+            $callLog = new CallLog();
+            $callLog->public_id = 'CALL' . time();
+            $callLog->description = trans('message.callLog.note.callBudget');
+            $callLog->call_date = new \DateTime();
+            $callLog->status = CallLog::STATUS_PENDING;
+            $callLog->user_id = $request->sell_manager_id;
+            $callLog->call_budget_id = $callBudget->id;
+            $callLog->save();
+        }
 
         DB::commit();
 

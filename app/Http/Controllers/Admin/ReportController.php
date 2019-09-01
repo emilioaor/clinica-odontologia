@@ -1030,7 +1030,7 @@ class ReportController extends Controller
         $status = (int) $request->get('status');
 
         $callLogs = CallLog::query()
-            ->with(['to', 'patient', 'statusHistory'])
+            ->with(['to', 'patient', 'statusHistory', 'callBudget'])
             ->whereBetween('call_date', [$start, $end]);
 
         if ($status) {

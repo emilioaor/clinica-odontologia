@@ -5,8 +5,8 @@
         <search-patient-history-admin
             :user = "{{ json_encode(Auth::user()) }}"
             :products = "{{ \App\Product::orderBy('name')->get() }}"
-            :doctors = "{{ \App\User::where('level', \App\User::LEVEL_ADMIN)->orWhere('level', \App\User::LEVEL_DOCTOR)->orderBy('name')->get() }}"
-            :assistants = "{{ \App\User::where('level', \App\User::LEVEL_ASSISTANT)->orderBy('name')->get() }}"
+            :doctors = "{{ \App\User::query()->hasRole(['admin', 'doctor'], 'or')->orderBy('name')->get() }}"
+            :assistants = "{{ \App\User::query()->hasRole('assistant')->orderBy('name')->get() }}"
         ></search-patient-history-admin>
     @else
         <search-patient-history

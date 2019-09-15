@@ -20,7 +20,7 @@
                                 <tr>
                                     <th>Fecha</th>
                                     <th>Nombre</th>
-                                    <th>Telefono</th>
+                                    <th>Telefono / Email</th>
                                     <th>Razón</th>
                                     <th>Estatus</th>
                                     <th width="5%"></th>
@@ -35,7 +35,15 @@
                                     <tr>
                                         <td>{{ $call->callDateTime()->format('m/d/Y') }}</td>
                                         <td>{{ $call->patient ? $call->patient->name : $call->callBudget->name }}</td>
-                                        <td>{{ $call->patient ? $call->patient->phone : $call->callBudget->phone }}</td>
+                                        <td>
+                                            {{ $call->patient ? $call->patient->phone :
+                                                (
+                                                    $call->callBudget->isContactTypeEmail() ?
+                                                        $call->callBudget->email :
+                                                        $call->callBudget->phone
+                                                )
+                                            }}
+                                        </td>
                                         <td>{!! str_replace("\n", '<br>', $call->description) !!}</td>
                                         <td>
                                             {{ $call->statusText() }}

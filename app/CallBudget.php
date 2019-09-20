@@ -74,4 +74,24 @@ class CallBudget extends Model
     {
         return $this->hasOne(CallLog::class, 'call_budget_id');
     }
+
+    /**
+     * Is contact type phone
+     *
+     * @return bool
+     */
+    public function isContactTypePhone()
+    {
+        return $this->contact_type === self::CONTACT_TYPE_PHONE;
+    }
+
+    /**
+     * Is contact type phone
+     *
+     * @return bool
+     */
+    public function isContactTypeEmail()
+    {
+        return $this->contact_type === self::CONTACT_TYPE_EMAIL;
+    }
 }

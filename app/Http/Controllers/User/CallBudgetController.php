@@ -87,7 +87,7 @@ class CallBudgetController extends Controller
 
             $callLog = new CallLog();
             $callLog->public_id = 'CALL' . time();
-            $callLog->description = trans('message.callLog.note.callBudget');
+            $callLog->description = $callBudget->notes;
             $callLog->call_date = new \DateTime();
             $callLog->status = CallLog::STATUS_PENDING;
             $callLog->user_id = $request->sell_manager_id;

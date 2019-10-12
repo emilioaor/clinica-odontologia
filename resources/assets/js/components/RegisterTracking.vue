@@ -111,30 +111,10 @@
                                     </div>
                                 </div>
 
-                                <div class="row">
+                                <div class="row" v-if="user.hasRole.admin">
                                     <div class="col-sm-4">
                                         <div class="form-group">
-                                            <label for="note">Nota</label>
-                                            <input
-                                                    type="text"
-                                                    class="form-control"
-                                                    placeholder="Nota"
-                                                    id="note"
-                                                    name="note"
-                                                    v-model="form.note"
-                                                    v-validate
-                                                    data-vv-rules="required"
-                                                    :class="{'input-error': errors.has('note')}"
-                                            >
-                                            <p class="error" v-if="errors.firstByRule('note', 'required')">
-                                                Campo requerido
-                                            </p>
-                                        </div>
-                                    </div>
-
-                                    <div class="col-sm-4" v-if="user.hasRole.admin">
-                                        <div class="form-group">
-                                            <label for="secretary">Secretaria</label>
+                                            <label for="secretary">Asignar a</label>
                                             <select
                                                     name="secretary"
                                                     id="secretary"
@@ -144,6 +124,7 @@
                                                     data-vv-rules="required"
                                                     :class="{'input-error': errors.has('secretary')}"
                                             >
+                                                <option :value="0">- Sin asignar</option>
                                                 <option
                                                         v-for="secretary in secretaries"
                                                         :key="secretary.id"
@@ -153,6 +134,29 @@
                                                 </option>
                                             </select>
                                             <p class="error" v-if="errors.firstByRule('secretary', 'required')">
+                                                Campo requerido
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-sm-12">
+                                        <div class="form-group">
+                                            <label for="note">Nota</label>
+                                            <textarea
+                                                    name="note"
+                                                    id="note"
+                                                    cols="30"
+                                                    rows="4"
+                                                    class="form-control"
+                                                    v-model="form.note"
+                                                    v-validate
+                                                    data-vv-rules="required"
+                                                    :class="{'input-error': errors.has('note')}"
+                                            ></textarea>
+
+                                            <p class="error" v-if="errors.firstByRule('note', 'required')">
                                                 Campo requerido
                                             </p>
                                         </div>
@@ -271,7 +275,7 @@
                     phone: '',
                     email: '',
                     note: '',
-                    secretary_id: null,
+                    secretary_id: 0,
                     patient_id: null
                 },
                 modal: {

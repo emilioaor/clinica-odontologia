@@ -79,6 +79,7 @@ return [
     'expense.doctor.commission' => 'Comisión de doctores',
 
     'tracking.create' => 'Seguimiento registrado',
+    'tracking.delete' => 'Seguimiento eliminado',
     'tracking.addedNote' => 'Nota cargada',
 
     'question.create' => 'Pregunta enviada',

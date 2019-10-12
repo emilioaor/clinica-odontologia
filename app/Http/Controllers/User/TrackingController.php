@@ -13,6 +13,16 @@ use Illuminate\Support\Facades\DB;
 
 class TrackingController extends Controller
 {
+
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->middleware('secretary');
+        $this->middleware('admin')->only(['destroy']);
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -33,8 +43,9 @@ class TrackingController extends Controller
         }
 
         $trackingList = $trackingList->get();
+        $secretaries = User::query()->hasRole(['secretary', 'admin'], 'or')->get();
 
-        return view('user.tracking.index', compact('trackingList'));
+        return view('user.tracking.index', compact('trackingList', 'secretaries'));
     }
 
     /**
@@ -44,7 +55,7 @@ class TrackingController extends Controller
      */
     public function create()
     {
-        $secretaries = User::query()->hasRole('secretary')->get();
+        $secretaries = User::query()->hasRole(['secretary', 'admin'], 'or')->get();
 
         return view('user.tracking.create', compact('secretaries'));
     }
@@ -59,6 +70,7 @@ class TrackingController extends Controller
     {
         $tracking = new Tracking($request->all());
         $tracking->status = Tracking::STATUS_PENDING;
+        $tracking->secretary_id = $request->secretary_id > 0 ? $request->secretary_id : null;
 
         if (! Auth::user()->isAdmin()) {
             $tracking->secretary_id = Auth::user()->id;
@@ -79,7 +91,7 @@ class TrackingController extends Controller
      */
     public function show($id)
     {
-        //
+        abort(404);
     }
 
     /**
@@ -90,7 +102,7 @@ class TrackingController extends Controller
      */
     public function edit($id)
     {
-        //
+        abort(404);
     }
 
     /**
@@ -102,18 +114,23 @@ class TrackingController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        abort(404);
     }
 
     /**
      * Remove the specified resource from storage.
      *
      * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @return JsonResponse
      */
     public function destroy($id)
     {
-        //
+        $tracking = Tracking::query()->find($id);
+        $tracking->delete();
+
+        $this->sessionMessage('message.tracking.delete');
+
+        return new JsonResponse(['success' => true, 'redirect' => route('tracking.index')]);
     }
 
     /**
@@ -128,6 +145,7 @@ class TrackingController extends Controller
 
         $tracking = Tracking::query()->find($request->tracking_id);
         $tracking->status = $request->status;
+        $tracking->secretary_id = $request->secretary_id ? $request->secretary_id : null;
         $tracking->save();
 
         if (! empty($request->note)) {

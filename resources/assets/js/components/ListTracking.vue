@@ -22,6 +22,7 @@
                                 <th>Nota</th>
                                 <th>Asignado a</th>
                                 <th width="5%"></th>
+                                <th width="5%"></th>
                             </tr>
                             </thead>
                             <tbody>
@@ -46,11 +47,23 @@
                                                 <i class="glyphicon glyphicon-edit"></i>
                                             </button>
                                         </td>
+                                        <td>
+                                            <button
+                                                    type="button"
+                                                    class="btn btn-danger"
+                                                    v-if="user.hasRole.admin"
+                                                    data-toggle="modal"
+                                                    data-target="#deleteTrackingModal"
+                                                    @click="trackingToDelete = tracking.id"
+                                            >
+                                                <i class="glyphicon glyphicon-remove"></i>
+                                            </button>
+                                        </td>
                                     </tr>
 
                                     <!-- Notes -->
                                     <tr v-if="tracking.tracking_notes.length">
-                                        <td colspan="6">
+                                        <td colspan="7">
                                             <div class="alert alert-info" v-for="trackingNote in tracking.tracking_notes" :key="trackingNote.id">
                                                 <p>
                                                     <strong>{{ trackingNote.user.name }}:</strong><br>
@@ -73,6 +86,28 @@
                 <div class="modal-content">
                     <div class="modal-body">
                         <div class="row">
+                            <div class="col-xs-12" v-if="user.hasRole.admin">
+                                <label for="status">Asignado a</label>
+                                <select
+                                        name="secretary"
+                                        id="secretary"
+                                        class="form-control"
+                                        v-model="form.secretary_id"
+                                        v-validate
+                                        data-vv-rules="required"
+                                        :class="{'input-error': errors.has('secretary')}"
+                                >
+                                    <option :value="0">- Sin asignar</option>
+                                    <option
+                                            v-for="secretary in secretaries"
+                                            :key="secretary.id"
+                                            :value="secretary.id"
+                                    >
+                                        {{ secretary.name }}
+                                    </option>
+                                </select>
+                            </div>
+
                             <div class="col-xs-12">
                                 <label for="status">Estatus</label>
                                 <select
@@ -116,6 +151,35 @@
                 </div>
             </div>
         </div>
+
+        <!-- Modal -->
+        <div class="modal fade" id="deleteTrackingModal" tabindex="-1" role="dialog" aria-labelledby="deleteTrackingModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-body">
+                        <h4>¿Esta seguro de eliminar este seguimiento?</h4>
+                    </div>
+                    <div class="modal-footer">
+                        <button
+                                type="button"
+                                class="btn btn-secondary"
+                                data-dismiss="modal"
+                                v-if="! loading">
+                            NO
+                        </button>
+                        <button
+                                type="button"
+                                class="btn btn-danger"
+                                @click="deleteTracking()"
+                                v-if="! loading">
+                            SI
+                        </button>
+
+                        <img src="/img/loading.gif" v-if="loading">
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </template>
 
@@ -124,6 +188,16 @@
         props: {
             trackingList: {
                 type: Array,
+                required: true
+            },
+
+            secretaries: {
+                type: Array,
+                required: true
+            },
+
+            user: {
+                type: Object,
                 required: true
             }
         },
@@ -134,8 +208,10 @@
                 form: {
                     note: null,
                     tracking_id: null,
-                    status: null
-                }
+                    status: null,
+                    secretary_id: 0
+                },
+                trackingToDelete: null
             }
         },
 
@@ -168,9 +244,30 @@
                 ;
             },
 
+            deleteTracking () {
+                this.loading = true;
+
+                axios.delete('/user/tracking/' + this.trackingToDelete)
+                    .then((res) => {
+
+                        if (res.data.success) {
+                            location.href = res.data.redirect;
+                        }
+                    })
+                    .catch((err) => {
+                        if (err.response.status === 403 || err.response.status === 405) {
+                            location.href = '/';
+                        }
+
+                        this.loading = false;
+                    })
+                ;
+            },
+
             selectTracking (tracking) {
                 this.form.tracking_id = tracking.id;
                 this.form.status = tracking.status;
+                this.form.secretary_id = tracking.secretary_id ? tracking.secretary_id : 0;
             }
         }
     }

@@ -3,9 +3,12 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Tracking extends Model
 {
+    use SoftDeletes;
+
     /** Status */
     const STATUS_PENDING = 0;
     const STATUS_RESOLVED = 1;

@@ -276,6 +276,16 @@ class User extends Authenticatable
     }
 
     /**
+     * Notas de seguimiento
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function trackingNotes()
+    {
+        return $this->hasMany(TrackingNote::class, 'user_id');
+    }
+
+    /**
      * Todos los horarios permitidos configurados para este usuario
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
@@ -456,7 +466,9 @@ class User extends Authenticatable
                 'supplier.create',
                 'supplier.index',
                 'appointment.create',
-                'appointment.index'
+                'appointment.index',
+                'tracking.index',
+                'tracking.create'
             ])) {
             return true;
         }

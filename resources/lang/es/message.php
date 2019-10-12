@@ -78,6 +78,9 @@ return [
     'expense.delete' => 'Gasto eliminado',
     'expense.doctor.commission' => 'Comisión de doctores',
 
+    'tracking.create' => 'Seguimiento registrado',
+    'tracking.addedNote' => 'Nota cargada',
+
     'question.create' => 'Pregunta enviada',
     'question.answered' => 'Respuesta enviada',
     'question.hide' => 'Respuesta se ha ocultado',

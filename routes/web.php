@@ -109,6 +109,10 @@ Route::group(['prefix' => 'user', 'middleware' => 'auth'], function() {
     Route::get('callBudget/table', 'User\CallBudgetController@indexTable')->name('callBudget.indexTable');
     Route::resource('callBudget', 'User\CallBudgetController');
 
+    // Seguimientos
+    Route::post('tracking/note', 'User\TrackingController@note');
+    Route::resource('tracking', 'User\TrackingController');
+
     // Notificaciones
     Route::get('notification', 'NotificationController@sendLabNotifications');
     Route::put('notification', 'NotificationController@markAsRead');

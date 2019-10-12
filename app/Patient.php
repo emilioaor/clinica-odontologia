@@ -62,6 +62,16 @@ class Patient extends Model
     }
 
     /**
+     * Seguimiento
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function tracking()
+    {
+        return $this->hasMany(Tracking::class, 'patient_id');
+    }
+
+    /**
      * Todos los reigstros en la lista de llamadas para este paciente
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany

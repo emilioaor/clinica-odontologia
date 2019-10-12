@@ -518,7 +518,8 @@
                     @endif
 
                     <!-- Post venta -->
-                    @if(Auth::user()->hasPermission('email.index'))
+                    @if(Auth::user()->hasPermission('email.index') || Auth::user()->hasPermission('tracking.create') ||
+                        Auth::user()->hasPermission('tracking.index'))
 
                         <li class="dropdown">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
@@ -531,6 +532,22 @@
                                         <a href="{{ route('email.index') }}">
                                             <i class="glyphicon glyphicon-envelope"></i>
                                             Correos
+                                        </a>
+                                    </li>
+                                @endif
+                                @if(Auth::user()->hasPermission('tracking.create'))
+                                    <li>
+                                        <a href="{{ route('tracking.create') }}">
+                                            <i class="glyphicon glyphicon-plus"></i>
+                                            Registrar seguimiento
+                                        </a>
+                                    </li>
+                                @endif
+                                @if(Auth::user()->hasPermission('tracking.index'))
+                                    <li>
+                                        <a href="{{ route('tracking.index') }}">
+                                            <i class="glyphicon glyphicon-list-alt"></i>
+                                            Lista de seguimientos
                                         </a>
                                     </li>
                                 @endif

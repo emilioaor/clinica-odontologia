@@ -113,6 +113,10 @@ Route::group(['prefix' => 'user', 'middleware' => 'auth'], function() {
     Route::post('tracking/note', 'User\TrackingController@note');
     Route::resource('tracking', 'User\TrackingController');
 
+    // Ticket de venta
+    Route::get('ticketOfSell/create', 'User\TicketOfSellController@create')->name('ticketOfSell.create');
+    Route::get('ticketOfSell/pdf', 'User\TicketOfSellController@generatePdf')->name('ticketOfSell.pdf');
+
     // Notificaciones
     Route::get('notification', 'NotificationController@sendLabNotifications');
     Route::put('notification', 'NotificationController@markAsRead');

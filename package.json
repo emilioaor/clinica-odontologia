@@ -18,10 +18,16 @@
     "lodash": "^4.17.4",
     "vee-validate": "~2.0.4",
     "vue": "^2.1.10",
-    "vuejs-datepicker": "^0.9.29"
+    "vuejs-datepicker": "^0.9.29",
+    "webpack-cli": "^3.3.10"
   },
   "dependencies": {
-    "node-sass": "^4.9.3",
-    "v-money": "^0.8.1"
+    "apexcharts": "^3.10.1",
+    "chart.js": "^2.9.1",
+    "gulp-sass": "^3.1.0",
+    "node-sass": "^4.13.0",
+    "v-money": "^0.8.1",
+    "vue-chartjs": "^3.4.2",
+    "webpack": "^3.11.0"
   }
 }

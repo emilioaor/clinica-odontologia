@@ -52,4 +52,28 @@ class Expense extends Model
     {
         return $this->belongsTo(User::class, 'doctor_commission_id');
     }
+
+    public function scopeGetTotalAmounExpense($query, $start, $end)
+    {   
+        return $query->selectRaw('sum(amount) as amount')
+            ->where([
+                    ['date', '>=', $start],
+                    ['date', '<=', $end]
+                ])
+            ->first()->amount;
+    }
+
+    public function scopeExpenseForType($query, $start, $end)
+    {   
+        return $query->selectRaw('supplier_id, sum(amount) as amount')
+            ->with('supplier')
+            ->where([
+                    ['date', '>=', $start],
+                    ['date', '<=', $end]
+                ])
+            ->groupBy('supplier_id')
+            ->orderBy('amount', 'desc')
+            ->get();
+    }
+
 }

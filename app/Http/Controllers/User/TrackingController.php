@@ -5,6 +5,7 @@ namespace App\Http\Controllers\User;
 use App\Tracking;
 use App\TrackingNote;
 use App\User;
+use App\CallLog;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -33,19 +34,85 @@ class TrackingController extends Controller
         $trackingList = Tracking::query()
             ->with([
                 'secretary',
-                'trackingNotes.user'
+                'trackingNotes'
             ])
-            ->where('status', Tracking::STATUS_PENDING)
-        ;
+            ->where('status', Tracking::STATUS_PENDING);
 
-        if (! Auth::user()->isAdmin()) {
+        if (!Auth::user()->isAdmin()) {
+            $trackingList->where('secretary_id', Auth::user()->id);
+        }
+
+        $title = false;
+        $trackingList = $trackingList->get();
+        $secretaries = User::query()->hasRole(['secretary', 'admin'], 'or')->get();
+
+        return view('user.tracking.index', compact('trackingList', 'secretaries', 'title'));
+    }
+    
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function resolved()
+    {
+        
+        $title = true;
+        $trackingList =[];
+        $secretaries =[];
+        return view('user.tracking.resolved', compact('trackingList', 'secretaries', 'title'));
+    }
+
+    public function search($dateStart, $dateEnd)
+    {   
+        $trackingList = Tracking::query()
+        ->with([
+            'secretary',
+            'trackingNotes'
+        ])
+        ->where('status', Tracking::STATUS_RESOLVED)
+        ->whereBetween('created_at', $this->getDateRange($dateStart, $dateEnd));
+        
+        if (!Auth::user()->isAdmin()) {
             $trackingList->where('secretary_id', Auth::user()->id);
         }
 
         $trackingList = $trackingList->get();
         $secretaries = User::query()->hasRole(['secretary', 'admin'], 'or')->get();
 
-        return view('user.tracking.index', compact('trackingList', 'secretaries'));
+        $status[CallLog::STATUS_PENDING] = ['statusText' => trans('message.callLog.status.pending')];
+        $status[CallLog::STATUS_SCHEDULED] = ['statusText' => trans('message.callLog.status.scheduled')];
+        $status[CallLog::STATUS_NOT_INTERESTED] = ['statusText' => trans('message.callLog.status.no')];
+        $status[CallLog::STATUS_NOT_ANSWER_CALL] = ['statusText' => trans('message.callLog.status.notAnswerCall')];
+        $status[CallLog::STATUS_CALL_AGAIN] = ['statusText' => trans('message.callLog.status.callAgain')];
+
+        return new JsonResponse([
+            'success' => 200,
+            'trackingList' => $trackingList,
+            'secretaries' => $secretaries,
+            'callLogs' => CallLog::with('statusHistory')->get(),
+            'callStatus' => $status
+        ]);
+    }
+
+    private function getDateRange($dateSatrt, $dateEnd)
+    {
+        $start = new \DateTime();
+        $start->setTime(00, 00, 00);
+        $end = new \DateTime();
+        $end->setTime(23, 59, 59);
+
+        if ($dateSatrt) {
+            $start = new \DateTime($dateSatrt);
+            $start->setTime(00, 00, 00);
+        }
+
+        if ($dateEnd) {
+            $end = new \DateTime($dateEnd);
+            $end->setTime(23, 59, 59);
+        }
+
+        return [$start, $end];
     }
 
     /**
@@ -72,7 +139,7 @@ class TrackingController extends Controller
         $tracking->status = Tracking::STATUS_PENDING;
         $tracking->secretary_id = $request->secretary_id > 0 ? $request->secretary_id : null;
 
-        if (! Auth::user()->isAdmin()) {
+        if (!Auth::user()->isAdmin()) {
             $tracking->secretary_id = Auth::user()->id;
         }
 
@@ -145,15 +212,13 @@ class TrackingController extends Controller
 
         $tracking = Tracking::query()->find($request->tracking_id);
         $tracking->status = $request->status;
-        $tracking->secretary_id = $request->secretary_id ? $request->secretary_id : null;
         $tracking->save();
 
-        if (! empty($request->note)) {
+        if (!empty($request->note)) {
             $trackingNote = new TrackingNote($request->all());
             $trackingNote->user_id = Auth::user()->id;
             $trackingNote->save();
         }
-
         DB::commit();
 
         $this->sessionMessage('message.tracking.addedNote');

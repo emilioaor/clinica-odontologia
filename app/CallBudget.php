@@ -34,7 +34,8 @@ class CallBudget extends Model
         'call_budget_source_id',
         'notes',
         'contact_type',
-        'sell_manager_id'
+        'sell_manager_id',
+        'secretary_id'
     ];
 
     protected $dates = [

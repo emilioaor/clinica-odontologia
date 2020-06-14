@@ -86,4 +86,48 @@ class Payment extends Model
     {
         return $this->type === self::TYPE_DISCOUNT;
     }
+
+    public function scopeGetTotalAmountForType($query, $dateRange, $type)
+    {
+        if ($type != 0) {
+            $query->where('type', $type);
+        }
+        if ($dateRange) {
+            $query->whereBetween('created_at', $dateRange);
+        }
+        return $query->selectRaw('*, sum(amount) as amount')
+            ->groupBy('type')
+            ->orderBy('type')
+            ->get();
+    }
+
+    public function scopeGetTotalAmounOfService($query, $dateRange)
+    {
+        if ($dateRange) {
+            $query->whereBetween('payments.created_at', $dateRange);
+        }
+        return $query->selectRaw('sum(payments.amount) as amount')
+            ->leftJoin('patient_history','patient_history.id','payments.patient_history_id')
+            ->leftJoin('products','products.id','patient_history.product_id')
+            ->get();
+    }
+
+    public function scopeGetTotalAmounPayment($query, $start, $end)
+    {   
+        return $query->selectRaw('sum(amount) as amount')
+            ->where([
+                    ['date', '>=', $start],
+                    ['date', '<=', $end]
+                ])
+            ->first()->amount;
+    }
+
+    public function scopeGetTotalPayments($query, $dateRange, $type)
+    {
+        
+        if ($dateRange) {
+            $query->whereBetween('created_at', $dateRange);
+        }
+        return $query->selectRaw('sum(amount) as total')->first();
+    }
 }

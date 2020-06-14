@@ -2,13 +2,21 @@
 
 // Usuarios sin autenticacion
 Auth::routes();
-Route::get('/', function() {
+Route::get('/', function () {
     return redirect()->route('login');
 });
 
+
 // Usuarios autenticados
-Route::group(['prefix' => 'user', 'middleware' => 'auth'], function() {
+Route::group(['prefix' => 'user', 'middleware' => 'auth'], function () {
     Route::get('/home', 'HomeController@index')->name('home');
+
+    Route::get('report/servicesPerPatientUser', 'Admin\ReportController@servicesPerPatient')
+    ->name('report.servicesPerPatientUser');
+    Route::get('report/servicesPerPatientDataUser', 'Admin\ReportController@servicesPerPatientData')
+        ->name('report.servicesPerPatientDataUser');
+    Route::get('servicesPerPatient/changeStatusFile/{id}/user', 'Admin\ReportController@changeStatusFile')
+    ->name('report.changeStatusFileUser');
 
     // Productos
     Route::get('product/validate/{product}/{id}', 'User\ProductController@validatePublicId');
@@ -26,10 +34,13 @@ Route::group(['prefix' => 'user', 'middleware' => 'auth'], function() {
     Route::delete('service/note/{note}', 'User\PatientHistoryController@deleteNote');
     Route::delete('service/image/{note}', 'User\PatientHistoryController@deleteImage');
     Route::put('service/{service}/updateService', 'User\PatientHistoryController@updatePatientHistory');
+    
     Route::post('service/register/patientHistory', 'User\PatientHistoryController@registerPatientHistory');
     Route::get('service/{service}/uploadImage', 'User\PatientHistoryController@uploadImage')->name('service.upload');
     Route::post('service/{service}/uploadImage', 'User\PatientHistoryController@storeImage');
     Route::resource('service', 'User\PatientHistoryController');
+
+    Route::put('service/{service}/updateServiceSecretary', 'Secretary\PatientHistorySecreatryController@updatePatientHistorySecretary');
 
     // Cotizacion
     Route::resource('budget', 'User\BudgetController');
@@ -45,11 +56,15 @@ Route::group(['prefix' => 'user', 'middleware' => 'auth'], function() {
     // Llamadas
     Route::get('callLog/search', 'Secretary\CallLogController@search')->name('callLog.search');
     Route::get('callLog/search/call', 'Secretary\CallLogController@searchCall');
+    Route::get('reactivateCall/{id}', 'Secretary\CallLogController@reactivateCall');
     Route::resource('callLog', 'Secretary\CallLogController');
 
     // Insumos
     Route::put('supply/list/{supply}', 'Assistant\SupplyController@updateList');
+    Route::get('supply/stock', 'Assistant\SupplyController@supplyStock')->name('supply.stock');
+    Route::post('report/stockData', 'Assistant\SupplyController@supplyStockData')->name('supply.stockData');
     Route::resource('supply', 'Assistant\SupplyController');
+    Route::get('patient/supply/{search}', 'Assistant\SupplyController@search');
 
     // Solicitud de insumos
     Route::get('supplyRequest/search', 'Assistant\SupplyRequestController@search')->name('supplyRequest.search');
@@ -106,11 +121,15 @@ Route::group(['prefix' => 'user', 'middleware' => 'auth'], function() {
 
     // Presupuestos telefonicos
     Route::get('callBudget/search', 'User\CallBudgetController@search');
+    Route::get('callBudget/searchGeneral', 'User\CallBudgetController@searchGeneral');
     Route::get('callBudget/table', 'User\CallBudgetController@indexTable')->name('callBudget.indexTable');
+    Route::get('callBudget/general', 'User\CallBudgetController@indexGeneral')->name('callBudget.indexGeneral');
     Route::resource('callBudget', 'User\CallBudgetController');
 
     // Seguimientos
     Route::post('tracking/note', 'User\TrackingController@note');
+    Route::get('tracking/resolved', 'User\TrackingController@resolved')->name('tracking.resolved');
+    Route::get('tracking/search/{dateStart}/{dateEnd}', 'User\TrackingController@search')->name('tracking.search');
     Route::resource('tracking', 'User\TrackingController');
 
     // Notificaciones
@@ -120,7 +139,8 @@ Route::group(['prefix' => 'user', 'middleware' => 'auth'], function() {
 
 // Administrador
 Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function () {
-
+    // Editar seguimientos
+    Route::get('/admin/seguimiento/{id}/edit', 'User\TrackingController@edit');
     // Usuarios
     Route::get('user/search', 'Admin\UserController@search');
     Route::resource('user', 'Admin\UserController');
@@ -135,8 +155,15 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function () {
     // Reportes
     Route::get('report/servicesAndPayments', 'Admin\ReportController@servicesAndPayments')->name('report.servicesAndPayments');
     Route::get('report/servicesAndPaymentsData', 'Admin\ReportController@servicesAndPaymentsData');
-    Route::get('report/servicesAndPaymentsPerPatient', 'Admin\ReportController@servicesAndPaymentsPerPatient')->name('report.servicesAndPaymentsPerPatient');
+    Route::get('report/servicesAndPaymentsPerPatient', 'Admin\ReportController@servicesAndPaymentsPerPatient')
+        ->name('report.servicesAndPaymentsPerPatient');
     Route::get('report/servicesAndPaymentsPerPatientData', 'Admin\ReportController@servicesAndPaymentsPerPatientData');
+    Route::get('report/servicesPerPatient', 'Admin\ReportController@servicesPerPatient')
+        ->name('report.servicesPerPatient');
+    Route::get('report/servicesPerPatientData', 'Admin\ReportController@servicesPerPatientData')
+        ->name('report.servicesPerPatientData');
+    Route::get('servicesPerPatient/changeStatusFile/{id}', 'Admin\ReportController@changeStatusFile')
+        ->name('report.changeStatusFile');
     Route::get('report/doctorCommissions', 'Admin\ReportController@doctorCommissions')->name('report.doctorCommissions');
     Route::get('report/doctorCommissionsData', 'Admin\ReportController@doctorCommissionsData');
     Route::get('report/expenses', 'Admin\ReportController@expenses')->name('report.expenses');
@@ -163,7 +190,26 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function () {
     Route::get('report/callLog', 'Admin\ReportController@callLog')->name('report.callLog');
     Route::get('report/callLogData', 'Admin\ReportController@callLogData');
     Route::get('report/callLogExport', 'Admin\ReportController@callLogExport');
+
+    // Graphics 
+    Route::get('/grafica/pagos', 'Admin\GraphicsController@paymentCharts')->name('grafiCapagos');
+    Route::get('/grafica/comicion_servicios/', 'Admin\GraphicsController@commmissionCharts')->name('graficaComicion');
+    Route::get(
+        'data/grafica/comicion_servicios/{dateStar?}/{dateEnd?}',
+        'Admin\GraphicsController@getCommmissionCharts'
+    );
+
+    Route::get(
+        'data/grafica/expenseForType/{dateStar?}/{dateEnd?}/{type?}',
+        'Admin\GraphicsController@getDataExpenseForType'
+    );
+
+    Route::get(
+        'datos/grafica/pagos/{dateStar?}/{dateEnd?}/{type?}',
+        'Admin\GraphicsController@getDataPaymentCharts'
+    );
 });
+
 
 Route::get('admin/report/sellManagerPatients', 'Admin\ReportController@sellManagerPatients')->name('report.sellManagerPatients');
 Route::get('admin/report/sellManagerPatientsData', 'Admin\ReportController@sellManagerPatientsData');

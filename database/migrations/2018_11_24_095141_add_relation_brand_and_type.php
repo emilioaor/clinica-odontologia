@@ -44,8 +44,8 @@ class AddRelationBrandAndType extends Migration
         }
 
         Schema::table('supplies', function (Blueprint $table) {
-            $table->integer('supply_type_id')->unsigned()->nullable(false)->change();
-            $table->integer('supply_brand_id')->unsigned()->nullable(false)->change();
+            $table->integer('supply_type_id')->unsigned()->change();
+            $table->integer('supply_brand_id')->unsigned()->change();
         });
     }
 

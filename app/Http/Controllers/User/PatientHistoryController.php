@@ -29,6 +29,9 @@ class PatientHistoryController extends Controller
      */
     public function __construct()
     {
+
+        //$this->middleware('assistant')->only('create');
+        /*
         $this->middleware('doctor')->except([
             'searchService',
             'search'
@@ -40,6 +43,7 @@ class PatientHistoryController extends Controller
             'deleteImage',
             'updatePatientHistory'
         ]);
+        */
     }
 
     /**
@@ -134,6 +138,7 @@ class PatientHistoryController extends Controller
     public function update(Request $request, $id)
     {
         $data = json_decode($request->data, true);
+        //return $data;
         $patient = Patient::where('public_id', $id)->firstOrFail();
 
         DB::beginTransaction();
@@ -145,12 +150,18 @@ class PatientHistoryController extends Controller
         $end->setTime(23, 59, 59);
 
         foreach ($data['services'] as $serviceArray) {
+
             $service = new PatientHistory($serviceArray);
             $service->nextPublicId();
             $service->patient_id = $patient->id;
             $service->created_at = $date;
             $service->price = $service->unit_price * $service->qty;
             $service->diagnostic_id = $data['diagnostic'];
+            $service->creator_user = Auth::user()->id;
+            if(!Auth::user()->isDoctor()) {
+                $service->doctor_id = $serviceArray['doctor_id'];
+                $service->assistant_id = $serviceArray['assistant_id'];
+            }
 
             if ($service->product->required_lab) {
                 // Si el servicio requiere laboratiro, guardo los datos de envio
@@ -210,7 +221,7 @@ class PatientHistoryController extends Controller
                 $note->save();
             }
         }
-
+            /****************************************************************************/
         $images = $request->image ?? [];
         foreach ($images as $image) {
 
@@ -231,7 +242,7 @@ class PatientHistoryController extends Controller
             $rayX->url = $url;
             $rayX->save();
         }
-
+        /****************************************************************************/
         // Si hay alguna cita asociada al paciente para ese dia se marca completa
         $appointments = Appointment::query()->whereBetween('date', [
                 $start,
@@ -312,6 +323,7 @@ class PatientHistoryController extends Controller
             ->with('doctor')
             ->with('product')
             ->with('assistant')
+            ->with('creator_user')
             ->get()
         ;
 

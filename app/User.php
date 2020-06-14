@@ -15,6 +15,10 @@ class User extends Authenticatable
 
     /** Comision por defecto de ganancia por servicio */
     const DEFAULT_PRODUCT_COMMISSION = 30;
+    const LEVEL_SECRETARY = 3;
+    const LEVEL_ADMIN = 1;
+    const LEVEL_DOCTOR = 2;
+    const LEVEL_ASSISTANT = 4;
 
     /**
      * The attributes that are mass assignable.

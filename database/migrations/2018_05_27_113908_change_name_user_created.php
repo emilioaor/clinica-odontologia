@@ -28,7 +28,7 @@ class ChangeNameUserCreated extends Migration
         Schema::table('payments', function (Blueprint $table) {
             $table->dropForeign('payments_user_created_foreign');
             $table->dropColumn('user_created');
-            $table->integer('user_created_id')->unsigned()->nullable(false)->change();
+            $table->integer('user_created_id')->unsigned()->change();
         });
     }
 

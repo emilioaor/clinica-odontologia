@@ -21,8 +21,8 @@ class PatientHistory extends Model
         'price',
         'qty',
         'unit_price',
-        'diagnostic_id'
-
+        'diagnostic_id',
+        'creator_user'
     ];
 
     protected $dates = ['deleted_at'];
@@ -117,6 +117,11 @@ class PatientHistory extends Model
     public function diagnostic()
     {
         return $this->belongsTo(User::class, 'diagnostic_id')->withTrashed();
+    }
+
+    public function creator_user()
+    {
+        return $this->belongsTo(User::class, 'creator_user')->withTrashed();
     }
 
     /**

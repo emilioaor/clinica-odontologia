@@ -6,6 +6,7 @@ use App\CallLog;
 use App\Patient;
 use App\PatientReference;
 use App\CallBudget;
+use App\PatientsImage;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -27,7 +28,7 @@ class PatientController extends Controller
                     return new JsonResponse(null, 403);
                 }
 
-                return redirect()->route('home');
+                //return redirect()->route('home');
             }
 
             return $next($request);
@@ -51,8 +52,7 @@ class PatientController extends Controller
      */
     public function index(Request $request)
     {
-        $patients = Patient::orderBy('id', 'DESC');
-
+        $patients = Patient::with('photo')->orderBy('id', 'DESC');
         if (Auth::user()->isSellManager()) {
             $patients->where('sell_manager_id', Auth::user()->id);
         }
@@ -92,9 +92,7 @@ class PatientController extends Controller
      * @return JsonResponse
      */
     public function store(Request $request)
-    {
-        DB::beginTransaction();
-
+    {   
         $patient = new Patient($request->all());
         $patient->nextPublicId();
 
@@ -103,7 +101,7 @@ class PatientController extends Controller
         }
 
         $patient->save();
-
+        /*
         if (Auth::user()->isSellManager() && (bool) $request->register_call) {
             // Registra una llamada pendiente para este paciente
             $callLog = new CallLog();
@@ -115,9 +113,26 @@ class PatientController extends Controller
             $callLog->user_id = Auth::user()->id;
             $callLog->save();
         }
+*/
+        if($request->image) {
+            $extension = '.' . $request->image->guessClientExtension();
 
-        DB::commit();
+            $filename = uniqid() . $extension;
+            $url = 'uploads/patient/' . $patient->public_id . '/' . $filename;
+            $path = public_path('uploads/patient') . '/' . $patient->public_id;
 
+            if (! is_dir($path)) {
+                mkdir($path,0777,true);
+            }
+
+            $request->image->move($path, $filename);
+
+            $patientsImage = new PatientsImage();
+            $patientsImage->patient_id = $patient->id;
+            $patientsImage->url = $url;
+            $patientsImage->save();
+        }
+        
         $this->sessionMessage('message.patient.create');
 
         return new JsonResponse(['success' => true, 'redirect' => route('patient.index')]);
@@ -144,13 +159,13 @@ class PatientController extends Controller
     {
         $patient = Patient::where('public_id', $id)->firstOrFail();
         $patientReferences = PatientReference::orderBy('description')->get();
-
+        $photo = asset($patient->photo->first()['url']);
         $patient->budgets = $patient->budgets()
             ->orderBy('id', 'DESC')
             ->paginate(12)
         ;
 
-        return view('user.patient.edit', compact('patient', 'patientReferences'));
+        return view('user.patient.edit', compact('patient', 'patientReferences', 'photo'));
     }
 
     /**
@@ -161,7 +176,7 @@ class PatientController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
-    {
+    {   
         $patient = Patient::where('public_id', $id)->firstOrFail();
         $patient->phone = $request->phone;
         $patient->name = $request->name;
@@ -169,6 +184,39 @@ class PatientController extends Controller
         $patient->patient_reference_id = $request->patient_reference_id;
         $patient->cancel_appointment = $request->cancel_appointment;
         $patient->save();
+        $patient->load('photo');
+        
+        if($request->image) {
+            /*
+            if($patient->photo){
+                return $patient->photo->first()->url;
+                unlink($patient->photo->first()->url);
+            }
+            */
+            $extension = '.' . $request->image->guessClientExtension();
+
+            $filename = uniqid() . $extension;
+            $url = 'uploads/patient/' . $patient->public_id . '/' . $filename;
+            $path = public_path('uploads/patient') . '/' . $patient->public_id;
+            
+            if (! is_dir($path)) {
+                mkdir($path,0777,true);
+            }
+
+            $request->image->move($path, $filename);
+
+            $patientsImage = PatientsImage::where('patient_id', $patient->id)->first();
+            if($patientsImage){
+                $patientsImage->url = $url;
+                $patientsImage->update();
+            }else{
+                $patientsImage = new PatientsImage;
+                $patientsImage->patient_id = $patient->id;
+                $patientsImage->url = $url;
+                $patientsImage->save();
+            }
+            
+        }
 
         $this->sessionMessage('message.patient.update');
 

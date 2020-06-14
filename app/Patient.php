@@ -122,6 +122,16 @@ class Patient extends Model
     }
 
     /**
+     * Foto del paciente
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function photo()
+    {
+        return $this->hasMany(PatientsImage::class, 'patient_id', 'id');
+    }
+
+    /**
      * Filtra por Agente de venta
      *
      * @param $query

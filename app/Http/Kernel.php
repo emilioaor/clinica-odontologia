@@ -60,6 +60,7 @@ class Kernel extends HttpKernel
         'doctor' =>  \App\Http\Middleware\DoctorMiddleware::class,
         'secretary' =>  \App\Http\Middleware\SecretaryMiddleware::class,
         'noAssistant' => \App\Http\Middleware\NoAssistantMiddleware::class,
+        'assistant' => \App\Http\Middleware\AssistantMiddleware::class,
         'question' => \App\Http\Middleware\QuestionMiddleware::class,
         'managementSupply' => \App\Http\Middleware\ManagementSupplyMiddleware::class
     ];

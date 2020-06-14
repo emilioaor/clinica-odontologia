@@ -175,6 +175,77 @@ class ReportController extends Controller
     }
 
     /**
+     * Carga la vista para el reporte de servicios por paciente
+     *
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function servicesPerPatient()
+    {
+        return view('admin.report.servicesPerPatient');
+    }
+
+     /**
+     * Consulta la data para el reporte de ultimos servicios por paciente
+     *
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function servicesPerPatientData(Request $request)
+    {
+        $start = new \DateTime($request->start);
+        $start->setTime(00, 00, 00);
+        $end = new \DateTime($request->end);
+        $end->setTime(23, 59, 59);
+        if($request->dead == "true") {
+            $services = PatientHistory::with([
+                'product',
+                'doctor',
+                'assistant',
+                'patient',
+            ])
+            ->where('patient_history.created_at', '>=', $start)
+            ->where('patient_history.created_at', '<=', $end)
+            ->where('patient_history.dead_file', 1)
+            ->groupBy('patient_history.patient_id')
+            ->get();
+        } 
+        if($request->dead == "false") {
+            $services = PatientHistory::with([
+                'product',
+                'doctor',
+                'assistant',
+                'patient',
+            ])
+            ->where('patient_history.created_at', '>=', $start)
+            ->where('patient_history.created_at', '<=', $end)
+            ->groupBy('patient_history.patient_id')
+            ->get();
+        }
+        
+
+
+        return new JsonResponse([
+            'success' => true,
+            'services' => $services->toArray()
+        ]);
+    }
+
+    public function changeStatusFile($id)
+    {
+        $services = PatientHistory::find($id);
+        if($services->dead_file) {
+            $services->dead_file = false;
+        }else {
+            $services->dead_file = true;
+        }
+
+        $services->save();
+        return new JsonResponse([
+            'success' => true
+        ]);
+    }
+
+    /**
      * Carga la vista para el reporte de comisiones de doctores
      *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
@@ -199,6 +270,15 @@ class ReportController extends Controller
         $end->setTime(23, 59, 59);
         $response = [];
         $paymentType = (int) $request->payment_type;
+        $paymentForCreditCard = 0;
+        $paymentForCash = 0;
+        $paymentForCheck = 0;
+        $paymentCount = [];
+        $totalExpenses = 0;
+        $totalPayments = 0;
+        $totalForCreditCard = 0;
+        $totalForCash = 0;
+        $totalForCheck = 0;
 
         // Obtengo el ID de todos los servicios registrados o con un pago
         // registrado en el rango de fechas
@@ -273,18 +353,24 @@ class ReportController extends Controller
                 ->where('expenses.date', '<=', $end)
                 ->get();
 
+            //gastos
             foreach ($expenses as $expense) {
 
-                $response[$patient->id]['data'][$history->id]['services'][] = [
-                    'date' => $expense->date->format('Y-m-d H:i:s'),
-                    'classification' => trans('message.report.classification.expense'),
-                    'description' => $expense->description,
-                    'amount' => $expense->amount
-                ];
+                if($history->price > 0) {
+                    $response[$patient->id]['data'][$history->id]['services'][] = [
+                        'date' => $expense->date->format('Y-m-d H:i:s'),
+                        'classification' => trans('message.report.classification.expense'),
+                        'description' => $expense->description,
+                        'amount' => $expense->amount
+                    ];
+                }
+                
             }
 
             $payments = $history->payments()->where('payments.date', '<=', $end)->get();
-
+            
+            //pagos 
+            
             foreach ($payments as $payment) {
 
                 if ($paymentType > 0 && $payment->type !== $paymentType) {
@@ -293,7 +379,7 @@ class ReportController extends Controller
                 }
 
                 $type = $payment->isDiscount() ? 'discount' : 'payment';
-
+                
                 $response[$patient->id]['data'][$history->id]['services'][] = [
                     'date' => $payment->date->format('Y-m-d H:i:s'),
                     'classification' => trans('message.report.classification.' . $type),
@@ -303,10 +389,72 @@ class ReportController extends Controller
                 ];
             }
         }
+/*
+        dd( [
+            'commission' => $commission,
+            'total expense' => $totalExpenses,
+            'totalForCreditCard' => $totalForCreditCard,
+            'totalForCash' => $totalForCash,
+            'totalForCheck' => $totalForCheck,
+            'comision total' => $commission / 100,
+            'total' => ($totalPayments - $totalExpenses) * ($commission / 100)
+            ]
+        );*/
+        $object = (object)$response;
+        //dd($object);
+        
+        foreach($object as $data) {
+            
+            foreach ($data['data'] as $data2) {
+                $gastos = 0;
+                foreach ($data2['services'] as $data3) {
+                    
 
+                    if ($data3['classification'] == 'Gasto') {
+                        $gastos = $data3['amount'];
+                    }
+
+                    if ($data3['classification'] == 'Pago' && $data3['paymentType'] == 1) {
+                        if ($gastos) {
+                            $totalForCreditCard += ($data3['amount'] - $gastos) * ( $data2['commission'] / 100);
+                        } else {
+                            $totalForCreditCard += $data3['amount'] * ( $data2['commission'] / 100);
+                        }
+                        
+                    }
+                    if ($data3['classification'] == 'Pago' && $data3['paymentType'] == 2) {
+                        if ($gastos) {
+                            $totalForCash += ($data3['amount'] - $gastos) * ( $data2['commission'] / 100);
+                        } else {
+                            $totalForCash += $data3['amount'] * ( $data2['commission'] / 100);
+                        }
+                        
+                    }
+                    if ($data3['classification'] == 'Pago' && $data3['paymentType'] == 3) {
+                        if ($gastos) {
+                            $totalForCheck += ($data3['amount'] - $gastos) * ( $data2['commission'] / 100);
+                        } else {
+                            $totalForCheck += $data3['amount'] * ( $data2['commission'] / 100);
+                        }
+                        
+                    }
+                }   
+            }
+        }/*
+        dd( [
+            'totalForCreditCard' => $totalForCreditCard,
+            'totalForCash' => $totalForCash,
+            'totalForCheck' => $totalForCheck
+            ]
+        );*/
+
+    
         return new JsonResponse([
             'success' => true,
-            'response' => $response
+            'response' => $response,
+            'paymentForCreditCard' => abs($totalForCreditCard ),
+            'paymentForCash' => abs($totalForCash  ),
+            'paymentForCheck' => abs($totalForCheck  )
         ]);
     }
 

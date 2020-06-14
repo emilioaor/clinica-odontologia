@@ -113,7 +113,7 @@
                         Auth::user()->hasPermission('budget.create') || Auth::user()->hasPermission('budget.index') ||
                         Auth::user()->hasPermission('expense.create') || Auth::user()->hasPermission('expense.index') ||
                         Auth::user()->hasPermission('payment.create') || Auth::user()->hasPermission('appointment.index') ||
-                        Auth::user()->hasPermission('appointment.create'))
+                        Auth::user()->hasPermission('appointment.create') || Auth::user()->hasPermission('ticketOfSell.create'))
 
                         <li class="dropdown">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
@@ -206,6 +206,14 @@
                                         <a href="{{ route('appointment.index') }}">
                                             <i class="glyphicon glyphicon-calendar"></i>
                                             Calendario de citas
+                                        </a>
+                                    </li>
+                                @endif
+                                @if(Auth::user()->hasPermission('ticketOfSell.create'))
+                                    <li>
+                                        <a href="{{ route('ticketOfSell.create') }}">
+                                            <i class="glyphicon glyphicon-file"></i>
+                                            Ticket de venta
                                         </a>
                                     </li>
                                 @endif

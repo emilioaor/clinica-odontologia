@@ -120,6 +120,7 @@
                         Auth::user()->hasPermission('payment.create') ||
                         Auth::user()->hasPermission('appointment.index') ||
                         Auth::user()->hasPermission('appointment.create') ||
+                        Auth::user()->hasPermission('ticketOfSell.create') ||
                         Auth::user()->edit_date_of_services
                     )
 
@@ -215,6 +216,14 @@
                                         <a href="{{ route('appointment.index') }}">
                                             <i class="glyphicon glyphicon-calendar"></i>
                                             Calendario de citas
+                                        </a>
+                                    </li>
+                                @endif
+                                @if(Auth::user()->hasPermission('ticketOfSell.create'))
+                                    <li>
+                                        <a href="{{ route('ticketOfSell.create') }}">
+                                            <i class="glyphicon glyphicon-file"></i>
+                                            Ticket de venta
                                         </a>
                                     </li>
                                 @endif

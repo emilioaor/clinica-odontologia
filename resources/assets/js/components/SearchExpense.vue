@@ -115,15 +115,19 @@
                                                 class="btn btn-success"
                                                 data-toggle="modal"
                                                 data-target="#registerExpenseModal"
+                                                @click="data.search = false"
                                                 >
                                             Registrar gasto
                                         </button>
-
-                                        <register-expense-modal
+                                        <section v-if="! data.search">
+                                            <register-expense-modal
                                                modal-id = "registerExpenseModal"
                                                :user = "authUser"
                                                @register="search()"
-                                        ></register-expense-modal>
+                                               search = ''
+                                            ></register-expense-modal>
+                                        </section>
+                                        
 
                                         <img src="/img/loading.gif" v-if="loading">
                                     </div>
@@ -170,7 +174,6 @@
                                                         {{ expense.supplier.name }}
                                                     </span>
                                                     <span v-else>
-
                                                         <select
                                                                 :name="'supplier' + i"
                                                                 :id="'supplier' + i"
@@ -185,12 +188,27 @@
                                                                 {{ supplier.name }}
                                                             </option>
                                                         </select>
-
                                                     </span>
                                                 </td>
-                                                <td>{{ expense.patient_history ? expense.patient_history.public_id : ''  }}</td>
-                                                <td>{{ expense.description }}</td>
-                                                <td>{{ '$ ' + expense.amount  }}</td>
+                                                <td>
+                                                    {{ expense.patient_history ? expense.patient_history.public_id : ''  }}
+                                                </td>
+                                                <td>
+                                                    <span v-if="editExpense !== i">
+                                                        {{ expense.description }}
+                                                    </span>
+                                                    <span v-else>
+                                                        <input type="text" v-model="expense.description" :name="description">
+                                                    </span>
+                                                </td>
+                                                <td>
+                                                    <span v-if="editExpense !== i">
+                                                        {{ expense.amount }}
+                                                    </span>
+                                                    <span v-else>
+                                                        <input type="text" v-model="expense.amount" :name="amount">
+                                                    </span>
+                                                </td>
                                                 <td>
 
                                                     <!-- Editar -->
@@ -379,7 +397,8 @@
               data: {
                   start: '',
                   end: '',
-                  expenses: []
+                  expenses: [],
+                  search: true 
               },
               modal: {
                   data: [],
@@ -452,11 +471,11 @@
 
             search: function () {
                 this.loading = true;
-
+                this.data.search = true
                 axios.get('/user/expense/' + this.patient.public_id + '/search?start=' + this.data.start + '&end=' + this.data.end)
                     .then((res) => {
                         this.loading = false;
-
+                        console.log(res.data)
                         if (res.data.success) {
                             this.data.expenses = res.data.expenses;
 

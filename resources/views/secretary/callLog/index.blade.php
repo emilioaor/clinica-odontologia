@@ -33,7 +33,7 @@
                             @if(count($callLogs))
                                 @foreach($callLogs as $call)
                                     <tr>
-                                        <td>{{ $call->callDateTime()->format('m/d/Y') }}</td>
+                                        <td>{{ \Carbon\Carbon::parse($call->call_date)->format('d/m/Y') }}</td>
                                         <td>{{ $call->patient ? $call->patient->name : $call->callBudget->name }}</td>
                                         <td>
                                             {{ $call->patient ? $call->patient->phone :
@@ -154,10 +154,10 @@
 
 @section('js')
     <script>
-        function eventCallLogModal(publicId, cancelAppointment)
-        {
-            window.callLogPublicId = publicId;
-            window.cancelAppointment = cancelAppointment;
-        }
+        function eventCallLogModal (publicId, cancelAppointment) {
+           sessionStorage.setItem('publicId', publicId);
+           sessionStorage.setItem('cancelAppointment', cancelAppointment);
+        };
+        
     </script>
 @endsection

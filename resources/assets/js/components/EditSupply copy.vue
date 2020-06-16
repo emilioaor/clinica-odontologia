@@ -107,6 +107,7 @@
                                                 data-vv-rules="required"
                                                 v-bind:disabled="loading"
                                                 v-bind:class="{'input-error': errors.has('height')}"
+                                                v-money="mask"
                                                 >
                                         <p class="error" v-if="errors.firstByRule('height', 'required')">
                                             Requerido
@@ -128,6 +129,7 @@
                                                 data-vv-rules="required"
                                                 v-bind:disabled="loading"
                                                 v-bind:class="{'input-error': errors.has('width')}"
+                                                v-money="mask"
                                                 >
                                         <p class="error" v-if="errors.firstByRule('width', 'required')">
                                             Requerido
@@ -251,12 +253,8 @@
 </template>
 
 <script>
-    import {VMoney} from 'v-money';
 
     export default {
-        directives: {
-            VMoney
-        },
         props: {
             viewData: {
                 type: Object,
@@ -291,6 +289,7 @@
             }
         },
         mounted() {
+            
             this.viewData.height = this.viewData.height.toFixed(2);
             this.viewData.width = this.viewData.width.toFixed(2);
 

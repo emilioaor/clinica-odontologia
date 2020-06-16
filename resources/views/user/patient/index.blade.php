@@ -54,6 +54,7 @@
                             <thead>
                                 <tr>
                                     <th>Código</th>
+                                    <th>Foto</th>
                                     <th>Telefono</th>
                                     <th>Nombre</th>
                                     <th>Creación</th>
@@ -73,6 +74,16 @@
                                                     </a>
                                                 @else
                                                     {{ $patient->public_id }}
+                                                @endif
+                                            </td>
+                                            <td style="width:15%;">
+                                                @if($patient->photo->first()['url'])
+                                                    <img 
+                                                        src="{{ asset($patient->photo->first()['url']) }}" 
+                                                        title="{{ $patient->name }}"
+                                                        style="border-radius: 50%; width: 70px; height: 70px; margin:auto"
+                                                    >
+                                                @else
                                                 @endif
                                             </td>
                                             <td>{{ $patient->phone }}</td>

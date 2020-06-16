@@ -6,7 +6,7 @@
                     <div class="row">
                         <div class="col-xs-6">
                             <div class="form-group">
-                                <label for="product">Servicio</label>
+                                <label for="product">Servicio s</label>
                                 <select
                                         name="product"
                                         id="product"

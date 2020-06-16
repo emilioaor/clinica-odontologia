@@ -118,7 +118,8 @@
                                     <thead>
                                         <tr>
                                             <th width="20%">Servicio</th>
-                                            <th width="20%">Asistente</th>
+                                            <th width="20%" v-if="!isDoctor">Doctor</th>
+                                            <th width="20%" >Asistente</th>
                                             <th width="10%">Qty</th>
                                             <th width="15%">Diente</th>
                                             <th width="15%">Precio</th>
@@ -138,7 +139,6 @@
                                                         data-vv-rules="required"
                                                         :class="{'input-error': errors.has('product' + id)}"
                                                         @change="changeProduct(service, id)"
-                                                        :disabled="! user.hasRole.admin && service.doctor_id !== user.id"
                                                     >
                                                     <option
                                                             v-for="product in productList"
@@ -151,7 +151,52 @@
                                                     Campo requerido
                                                 </p>
                                             </td>
-                                            <td>
+                                            <td v-if="!isDoctor">
+
+                                                <select
+                                                        :name="'doctor' + id"
+                                                        :id="'doctor' + id"
+                                                        class="form-control"
+                                                        :class="{'input-error': errors.has('doctor' + id)}"
+                                                        v-model="service.doctor_id"
+                                                        v-validate
+                                                        data-vv-rules="required"
+                                                        >
+                                                    <option
+                                                            v-for="doctor in doctors"
+                                                            :value="doctor.id"
+                                                            >
+                                                        {{ doctor.name }}
+                                                    </option>
+                                                </select>
+
+                                            </td>
+                                            <td v-if="!isDoctor">
+                                                <select
+                                                        :name="'assistant' + id"
+                                                        :id="'assistant' + id"
+                                                        class="form-control"
+                                                        :class="{'input-error': errors.has('assistant' + id)}"
+                                                        v-model="service.assistant_id"
+                                                        v-validate
+                                                        data-vv-rules="required"
+                                                    >
+                                                    <option
+                                                            v-for="assistant in assistantUsers"
+                                                            :value="assistant.id"
+                                                        >
+                                                        {{ assistant.name }}
+                                                    </option>
+                                                </select>
+                                                <p class="error" v-if="errors.firstByRule('assistant' + id, 'required')">
+                                                    Campo requerido <br>
+                                                    isAssistant = {{ isAssistant }}
+                                                    isAdmin = {{ isAdmin }}
+                                                    isDoctor = {{ isDoctor }}
+                                                </p>
+                                            </td>
+                                            <td v-if="isDoctor">
+
                                                 <select
                                                         :name="'assistant' + id"
                                                         :id="'assistant' + id"
@@ -182,7 +227,7 @@
                                                         v-validate
                                                         data-vv-rules="required"
                                                         :class="{'input-error': errors.has('qty' + id)}"
-                                                        :disabled="!service.product_id || (! user.hasRole.admin && service.doctor_id !== user.id)"
+                                                        :disabled="!service.product_id "
                                                         >
                                                 <p class="error" v-if="errors.firstByRule('qty' + id, 'required')">
                                                     Campo requerido
@@ -195,7 +240,6 @@
                                                         :id="'tooth' + id"
                                                         class="form-control"
                                                         v-model="service.tooth"
-                                                        :disabled="! user.hasRole.admin && service.doctor_id !== user.id"
                                                 >
                                             </td>
                                             <td>
@@ -208,7 +252,7 @@
                                                         v-validate
                                                         data-vv-rules="required"
                                                         :class="{'input-error': errors.has('price' + id)}"
-                                                        :disabled="!service.product_id || (! user.hasRole.admin && service.doctor_id !== user.id)"
+                                                        :disabled="!service.product_id"
                                                 >
                                                 <p class="error" v-if="errors.firstByRule('price' + id, 'required')">
                                                     Campo requerido
@@ -587,9 +631,13 @@
             'historyDate',
             'currentUser',
             'assistants',
+            'assistant',
             'suppliers',
             'authUser',
-            'doctors'
+            'doctors',
+            'isAssistant',
+            'isAdmin',
+            'isDoctor'
         ],
         components: {
             Datepicker
@@ -647,7 +695,7 @@
                 this.services.push({
                     tooth: null,
                     product_id: null,
-                    doctor_id: this.user.id,
+                    doctor_id: null,
                     assistant_id: null,
                     unit_price: null,
                     qty: null,

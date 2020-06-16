@@ -51,6 +51,7 @@ Vue.component('edit-question', require('./components/EditQuestion.vue'));
 Vue.component('config-commission', require('./components/ConfigCommission.vue'));
 Vue.component('report-services-and-payments', require('./components/ReportServicesAndPayments.vue'));
 Vue.component('report-services-and-payments-per-patient', require('./components/ReportServicesAndPaymentsPerPatient.vue'));
+Vue.component('report-services-per-patient', require('./components/ReportServicesPerPatient.vue'));
 Vue.component('report-new-and-recurrent', require('./components/ReportNewAndRecurrent.vue'));
 Vue.component('report-doctor-commissions', require('./components/ReportDoctorCommissions.vue'));
 Vue.component('report-expenses', require('./components/ReportExpenses.vue'));
@@ -71,21 +72,25 @@ Vue.component('supply-inventory-movement-in', require('./components/RegisterSupp
 Vue.component('supply-inventory-movement-out', require('./components/RegisterSupplyInventoryMovementOut.vue'));
 Vue.component('draw-confirmation', require('./components/DrawConfirmation.vue'));
 Vue.component('report-inventory-supply', require('./components/ReportInventorySupply.vue'));
+Vue.component('report-sotck-supply', require('./components/ReportStockSupply.vue'));
 Vue.component('report-inventory-supply-movement', require('./components/ReportInventorySupplyMovement.vue'));
 Vue.component('report-sell-manager-patients', require('./components/ReportSellManagerPatients.vue'));
 Vue.component('list-supply', require('./components/ListSupply.vue'));
 Vue.component('register-call-budget-source', require('./components/RegisterCallBudgetSource.vue'));
 Vue.component('sent-budget', require('./components/SentBudget.vue'));
 Vue.component('sent-budget-table', require('./components/SentBudgetTable.vue'));
+Vue.component('sent-budget-general', require('./components/SentBudgetGeneral.vue'));
 Vue.component('register-call-budget', require('./components/RegisterCallBudget.vue'));
 Vue.component('edit-call-budget', require('./components/EditCallBudget.vue'));
 Vue.component('report-call-log', require('./components/ReportCallLog.vue'));
 Vue.component('register-tracking', require('./components/RegisterTracking.vue'));
 Vue.component('list-tracking', require('./components/ListTracking.vue'));
-Vue.component('register-ticket-of-sell', require('./components/RegisterTicketOfSell.vue'));
 Vue.component('send-lab-notification', require('./components/SendLabNotification.vue'));
 Vue.component('call-budget-notification', require('./components/CallBudgetNotification.vue'));
-
+Vue.component('graphics-payment', require('./components/GraphicsPayment.vue'));
+Vue.component('graphics-commission', require('./components/GraphicsCommission.vue'));
+Vue.component('line-chart', require('./components/LineChart.vue'));
+Vue.component('line-chart-simple', require('./components/LineChartSimple.vue'));
 const app = new Vue({
     el: '#app'
 });

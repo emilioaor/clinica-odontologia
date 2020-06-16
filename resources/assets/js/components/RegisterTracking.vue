@@ -328,7 +328,7 @@
 
                 axios.post('/user/tracking', this.form)
                     .then((res) => {
-
+                        console.log(res);
                         if (res.data.success) {
                             location.href = res.data.redirect;
                         }

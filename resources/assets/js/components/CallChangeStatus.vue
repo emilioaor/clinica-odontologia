@@ -5,7 +5,7 @@
                 <div class="modal-body">
 
                     <div class="form-group">
-                        <label for="status">Estatus</label>
+                        <label for="status">Estatus </label>
                         <select
                                 name="status"
                                 id="status"
@@ -129,7 +129,7 @@
             sendForm: function () {
                 this.loading = true;
 
-                axios.put('/user/callLog/' + window.callLogPublicId, this.form)
+                axios.put('/user/callLog/' + sessionStorage.getItem('publicId'), this.form)
                     .then((res) => {
 
                         if (res.data.success) {
@@ -155,7 +155,7 @@
             },
 
             hasCancelAppointment: function () {
-                this.disabledAppointment = (window.cancelAppointment === 1);
+                this.disabledAppointment = (sessionStorage.getItem('cancelAppointment') === 1);
             }
         }
     }

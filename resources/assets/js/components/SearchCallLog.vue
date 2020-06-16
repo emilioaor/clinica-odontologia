@@ -128,6 +128,7 @@
                                             <th>Razón</th>
                                             <th>Paciente</th>
                                             <th>Estatus</th>
+                                            <th >Accion</th>
                                         </tr>
                                         </thead>
                                         <tbody v-for="call in data.calls">
@@ -138,6 +139,17 @@
                                                 </td>
                                                 <td>{{ call.patient ? call.patient.name : call.call_budget.name }}</td>
                                                 <td>{{ data.status[call.status].statusText }}</td>
+                                                <td
+                                                    v-if="call.status == 3"
+                                                >
+                                                    <a 
+                                                        class="btn btn-primary btn-sm"
+                                                        @click="activate(call.id)"
+                                                    >
+                                                        Reactivar
+                                                    </a>
+                                                </td>
+
                                             </tr>
 
                                             <!-- Status history -->
@@ -323,6 +335,22 @@
                         console.log(err);
                         this.loading = false;
                         this.data.calls = [];
+                    })
+            },
+
+            activate: function (callId) {
+                this.loading = true;
+                axios.get(`/user/reactivateCall/${callId}`)
+                    .then((res) => {
+                        this.loading = false;
+                        this.search()
+                    })
+                    .catch((err) => {
+                        if (err.response.status === 403 || err.response.status === 405) {
+                            location.href = '/';
+                        }
+                        console.log(err);
+                        this.loading = false;
                     })
             },
 

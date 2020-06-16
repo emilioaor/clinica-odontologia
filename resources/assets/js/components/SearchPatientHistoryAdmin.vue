@@ -5,7 +5,7 @@
                 <h1>
                     <i class="glyphicon glyphicon-search" v-if="! loading"></i>
                     <img src="/img/loading.gif" v-if="loading">
-                    Busqueda de servicios
+                    Busqueda de servicios 
                 </h1>
             </div>
         </div>
@@ -102,25 +102,24 @@
                                 <div class="col-xs-12">
                                     <div class="form-group">
                                         <button
-                                                class="btn btn-primary"
-                                                @click="searchPatientHistory()"
-                                                v-if="!loading"
-                                                >
+                                            class="btn btn-primary"
+                                            @click="searchPatientHistory()"
+                                            v-if="!loading"
+                                        >
                                             <i class="glyphicon glyphicon-search"></i>
                                             Buscar
                                         </button>
 
-                                        <button
+                                        <a
                                                 class="btn btn-success"
                                                 data-toggle="modal"
                                                 data-target="#registerServiceModal"
                                         >
                                             Registrar servicio
-                                        </button>
+                                        </a>
                                         <register-service-modal
                                             modal-id = "registerServiceModal"
                                             :patient-id = "patient.id"
-                                            @register-patient-history="searchPatientHistory()"
                                         ></register-service-modal>
 
                                         <img src="/img/loading.gif" v-if="loading">
@@ -136,6 +135,7 @@
                                         <thead>
                                             <tr>
                                                 <th>Fecha</th>
+                                                <th>Ingresado por</th>
                                                 <th>Código</th>
                                                 <th>Servicio</th>
                                                 <th>Diente</th>
@@ -163,6 +163,7 @@
                                                         {{ dateFormat(service.created_at) }}
                                                     </span>
                                                 </td>
+                                                <td>{{ (service.creator_user)? service.creator_user.name: '' }}</td>
                                                 <td>{{ service.public_id }}</td>
                                                 <td>
                                                     <select
@@ -170,7 +171,7 @@
                                                             :id="'product' + id"
                                                             class="form-control"
                                                             v-model="service.product_id"
-                                                            v-if="serviceEdit === service.id"
+                                                            v-if="serviceEdit === service.id && user.hasRole.admin"
                                                         >
                                                         <option
                                                                 v-for="product in products"
@@ -180,7 +181,7 @@
                                                         </option>
                                                     </select>
 
-                                                    <span v-if="serviceEdit !== service.id">
+                                                    <span v-if="serviceEdit !== service.id || user.edit_date_of_services">
                                                         {{ service.product.name }}
                                                     </span>
                                                 </td>
@@ -192,10 +193,10 @@
                                                             class="form-control"
                                                             placeholder="Diente"
                                                             v-model="service.tooth"
-                                                            v-if="serviceEdit === service.id"
+                                                            v-if="serviceEdit === service.id && user.hasRole.admin"
                                                         >
 
-                                                    <span v-if="serviceEdit !== service.id">
+                                                    <span v-if="serviceEdit !== service.id || user.edit_date_of_services">
                                                         {{ service.tooth }}
                                                     </span>
                                                 </td>
@@ -205,7 +206,7 @@
                                                             :id="'doctor' + id"
                                                             class="form-control"
                                                             v-model="service.doctor_id"
-                                                            v-if="serviceEdit === service.id"
+                                                            v-if="serviceEdit === service.id && user.hasRole.admin"
                                                         >
                                                         <option
                                                                 v-for="doctor in doctors"
@@ -215,7 +216,7 @@
                                                         </option>
                                                     </select>
 
-                                                    <span v-if="serviceEdit !== service.id">
+                                                    <span v-if="serviceEdit !== service.id || user.edit_date_of_services">
                                                         {{ service.doctor.name }}
                                                     </span>
                                                 </td>
@@ -225,7 +226,7 @@
                                                             :id="'assistant' + id"
                                                             class="form-control"
                                                             v-model="service.assistant_id"
-                                                            v-if="serviceEdit === service.id"
+                                                            v-if="serviceEdit === service.id && user.hasRole.admin"
                                                             >
                                                         <option
                                                                 v-for="assistant in assistants"
@@ -235,7 +236,7 @@
                                                         </option>
                                                     </select>
 
-                                                    <span v-if="serviceEdit !== service.id">
+                                                    <span v-if="serviceEdit !== service.id || user.edit_date_of_services">
                                                         {{ service.assistant.name }}
                                                     </span>
                                                 </td>
@@ -273,7 +274,7 @@
                                                             data-toggle="modal"
                                                             data-target="#deleteModal"
                                                             @click="deletePatientHistory = service.id"
-                                                            v-if="serviceEdit !== service.id"
+                                                            v-if="serviceEdit !== service.id && user.hasRole.admin"
                                                             >
                                                         <i class="glyphicon glyphicon-remove"></i>
                                                     </button>
@@ -735,7 +736,7 @@
                     })
                     .catch((err) => {
                         if (err.response.status === 403 || err.response.status === 405) {
-                            location.href = '/';
+                            console.log(err);
                         }
                         this.loading = false;
                         console.log(err);
@@ -755,7 +756,7 @@
                 })
                 .catch((err) => {
                     if (err.response.status === 403 || err.response.status === 405) {
-                        location.href = '/';
+                        console.log(err);
                     }
                     this.loading = false;
                     console.log(err);
@@ -764,8 +765,11 @@
 
             updatePatientHistory: function (service) {
                 this.serviceLoading = service.id;
-
-                axios.put('/user/service/' + service.public_id + '/updateService', service)
+                let url = '/user/service/' + service.public_id + '/updateService'
+                if (this.user.edit_date_of_services) {
+                    url = '/user/service/' + service.public_id + '/updateServiceSecretary'
+                }
+                axios.put(url, service)
                     .then((res) => {
 
                         this.updateRelation(service);
@@ -775,7 +779,7 @@
                     })
                     .catch((err) => {
                         if (err.response.status === 403 || err.response.status === 405) {
-                            location.href = '/';
+                            console.log(err);
                         }
                         console.log(err);
                     })

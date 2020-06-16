@@ -7,7 +7,7 @@
                     <div class="row">
                         <div class="col-xs-6">
                             <div class="form-group">
-                                <label for="date">Fecha</label>
+                                <label for="date">Fecha {{ search }}</label>
                                 <datepicker
                                         name = "date"
                                         id = "date"
@@ -328,6 +328,10 @@
             user: {
                 type: Object,
                 required: true
+            },
+            search: {
+                type: String,
+                required: false
             }
         },
 

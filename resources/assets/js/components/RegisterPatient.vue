@@ -14,12 +14,8 @@
                 <div class="col-sm-8">
                     <div class="panel panel-default">
                         <div class="panel-body">
-
                             <form
-                                    novalidate
-                                    @submit.prevent="validateForm()"
-                                    >
-
+                            >
                                 <div class="row">
                                     <div class="col-sm-4">
                                         <div class="form-group">
@@ -150,24 +146,79 @@
                                 </div>
 
                                 <div class="row">
+                                    <div class="col-xs-12">
+                                        <h3>
+                                            Fotografía del paciente
+                                        </h3>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+
+                                    <div class="col-sm-4 space-image" v-for="(image, id) in images">
+                                        <img :src="image" class="img-responsive images">
+
+                                        <button class="btn btn-danger btn-sm" @click="removeImage(id)">
+                                            <i class="glyphicon glyphicon-remove"></i>
+                                        </button>
+                                    </div>
+
+                                    <div class="col-sm-4">
+                                        <!-- Cargar imagen -->
+
+                                        
+                                            <input type="hidden" name="_method" value="PUT">
+                                            <input type="hidden" name="_token" :value="token">
+                                            <input type="hidden" name="data" :value="dataAlternative">
+
+                                            <input
+                                                    v-for="i in (images.length + 1)"
+                                                    :key="i"
+                                                    type="file"
+                                                    name="image[]"
+                                                    :id="'image' + i"
+                                                    class="form-control"
+                                                    placeholder="Imagen"
+                                                    @change="setCapture()"
+                                                    v-validate
+                                                    v-show="false"
+                                                    data-vv-rules="mimes:image/jpeg,image/png|size:5120"
+                                            >
+                                        
+
+                                        <img
+                                                id="selectImage"
+                                                src="/img/camera.png"
+                                                alt="Agregar imagen"
+                                                class="img-responsive"
+                                                @click="loadImage">
+
+                                        <p class="error" v-if="errors.firstByRule('image', 'size')">
+                                            Maximo 5 mb
+                                        </p>
+                                        <p class="error" v-if="errors.firstByRule('image', 'mimes')">
+                                            Imagen necesita ser formato .png o .jpg
+                                        </p>
+                                    </div>
+                                </div><br>
+
+                                <div class="row">
                                     <div class="col-xs-12" v-if="! phoneError">
-                                        <button class="btn btn-success" v-bind:disabled="loading">
+                                        <a class="btn btn-success" @click="sendForm()">
                                             <i class="glyphicon glyphicon-saved"></i>
                                             Registar paciente
-                                        </button>
+                                        </a>
                                     </div>
 
                                     <div class="col-xs-12" v-if="phoneError">
                                         <a class="btn btn-primary"
-                                            :href="'/user/service/' + patient.public_id + '/edit'">
+                                            :href="'/user/service/1/edit'">
                                             <i class="glyphicon glyphicon-plus"></i>
                                             Registrar servicio
                                         </a>
                                     </div>
                                 </div>
-
                             </form>
-
                         </div>
                     </div>
                 </div>
@@ -223,15 +274,19 @@
             return {
                 loading: false,
                 phoneError: false,
+                images: [],
                 form: {
                     name: '',
                     phone: '',
                     email: '',
                     patient_reference_id: null,
                     cancel_appointment: false,
-                    register_call: false
+                    register_call: false,
+                    patientImage: ''
                 },
-                patient: null
+                patient: null,
+                dataAlternative: {},
+                token: null
             }
         },
 
@@ -241,6 +296,11 @@
                     if (res) {
                         this.loading = true;
                         this.verifyPhone(true)
+                        this.loading = true;
+
+                        window.setTimeout(function () {
+                            $('#patientForm').submit();
+                        }, 500)
                     }
                 });
             },
@@ -258,7 +318,7 @@
                                 this.phoneError = false;
 
                                 if (sendForm) {
-                                    this.sendForm()
+                                    //this.sendForm()
                                 }
 
                                 if (res.data.isPatient) {
@@ -279,32 +339,63 @@
                     })
                     .catch((err) => {
                         if (err.response.status === 403 || err.response.status === 405) {
-                            location.href = '/';
+                           // location.href = '/';
                         }
                         this.loading = false;
                         this.phoneError = false;
+                        console.log(err)
                     })
                 ;
             },
 
             sendForm: function () {
                 this.loading = true;
+                let formData = new FormData()
+                formData.append('name', this.form.name)
+                formData.append('phone', this.form.phone)
+                formData.append('email', this.form.email)
+                formData.append('patient_reference_id', this.form.patient_reference_id)
+                formData.append('cancel_appointment', this.form.cancel_appointment)
+                formData.append('register_call', this.form.register_call)
+                formData.append('image', this.form.patientImage)
 
-                axios.post('/user/patient', this.form)
+                axios.post('/user/patient', formData)
                     .then((res) => {
 
                         if (res.data.success) {
                             location.href = res.data.redirect;
-                        }
+                        }console.log(res)
                     })
                     .catch((err) => {
                         if (err.response.status === 403 || err.response.status === 405) {
-                            location.href = '/';
+                            //location.href = '/';
                         }
-
+                        console.log(err.response.data)
                         this.loading = false;
                     })
                 ;
+            },
+            setCapture: function(e) {
+                const file = $('#image' + (this.images.length + 1))[0].files[0];
+                this.form.patientImage = file
+                if (file.type !== 'image/png' && file.type !== 'image/jpeg') {
+                    return false;
+                }
+
+                const reader = new FileReader();
+
+                reader.addEventListener('load', () => {
+                    this.images.push(reader.result);
+                });
+
+                reader.readAsDataURL(file);
+            },
+
+            removeImage: function (index) {
+                this.images.splice(index, 1);
+            },
+            loadImage() {
+                $('#image' + (this.images.length + 1)).click();
             }
         }
     }

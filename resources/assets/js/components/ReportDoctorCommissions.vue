@@ -130,12 +130,28 @@
                             </div>
 
                             <div class="row">
-                                <div class="col-sm-4">
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label>Tarjeta de Credito</label>
+                                        <p> $ {{ data.paymentForCreditCard }} </p>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label>Efectivo </label>
+                                        <p> $ {{ data.paymentForCash }} </p>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label>Cheque</label>
+                                        <p> $ {{ data.paymentForCheck }} </p>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
                                     <div class="form-group">
                                         <label for="">Total en comisiones</label>
-                                        <p>
-                                            $ {{ totalAllCommission() }}
-                                        </p>
+                                        <p> $ {{ totalAllCommission() }}</p>
                                     </div>
                                 </div>
                             </div>
@@ -403,31 +419,34 @@
             Datepicker
         },
         data: function () {
-          return {
-              loading: false,
-              doctor: null,
-              initStart: new Date(),
-              initEnd: new Date(),
-              balanceZero: false,
-              data: {
-                  start: null,
-                  end: null,
-                  payment_type: 0,
-                  report: []
-              },
-              modal: {
-                  data: [],
-                  loading: false,
-                  search: ''
-              },
-              commission: null,
+            return {
+                loading: false,
+                doctor: null,
+                initStart: new Date(),
+                initEnd: new Date(),
+                balanceZero: false,
+                data: {
+                    start: null,
+                    end: null,
+                    payment_type: 0,
+                    report: []
+                },
+                modal: {
+                    data: [],
+                    loading: false,
+                    search: ''
+                },
+                commission: null,
+                paymentForCreditCard: 0,
+                paymentForCash: 0,
+                paymentForCheck: 0,
 
-              pagination: {
-                  perPage: 999999,
-                  build: [],
-                  current: null
-              }
-          }
+                pagination: {
+                    perPage: 999999,
+                    build: [],
+                    current: null
+                }
+            }
         },
         mounted: function () {
             const date = new Date();
@@ -466,7 +485,13 @@
 
             search: function () {
                 this.loading = true;
-
+                console.log(
+                    '/admin/report/doctorCommissionsData?doctor=' + this.doctor.public_id +
+                        '&start=' + this.data.start +
+                        '&end=' + this.data.end +
+                        '&balance=' + this.balanceZero +
+                        '&payment_type=' + this.data.payment_type
+                )
                 axios.get(
                         '/admin/report/doctorCommissionsData?doctor=' + this.doctor.public_id +
                         '&start=' + this.data.start +
@@ -475,10 +500,13 @@
                         '&payment_type=' + this.data.payment_type
                 )
                     .then((res) => {
-
+                        console.log(res)
                         this.loading = false;
 
                         if (res.data.success) {
+                            this.data.paymentForCreditCard = res.data.paymentForCreditCard
+                            this.data.paymentForCash = res.data.paymentForCash
+                            this.data.paymentForCheck = res.data.paymentForCheck
                             this.data.report = res.data.response;
                             this.commission = this.totalAllCommission();
                         }
@@ -557,7 +585,7 @@
                 let total = 0;
 
                 services.forEach((service) => {
-                    if (service.classification === 'Descuento') {
+                    if (service.classification === 'Descuento' && service.amount != 0) {
                         total += service.amount;
                     }
                 });
@@ -569,7 +597,7 @@
                 let total = 0;
 
                 services.forEach((service) => {
-                    if (service.classification === 'Pago') {
+                    if (service.classification === 'Pago' && service.amount != 0) {
                         total += service.amount;
                     }
                 });
@@ -581,7 +609,7 @@
                 let total = 0;
 
                 services.forEach((service) => {
-                    if (service.classification === 'Gasto') {
+                    if (service.classification === 'Gasto' && service.amount != 0) {
                         total += service.amount;
                     }
                 });
@@ -590,25 +618,27 @@
             },
 
             totalCommission: function (data) {
+                
                 let total = 0;
                 let expenses;
                 let commission;
+                let commission2;
+                let services
                 //let discount;
                 let payments;
 
                 data =  Object.values(data);
 
                 data.forEach((item) => {
-
+                    commission2 = `${item.commission} / ${item.commission / 100}`
                     expenses = this.calculateExpenses(item.services);
                     //discount = this.calculateDiscount(item.services);
                     payments = this.calculatePayments(item.services);
 
                     commission = (payments - expenses) * (item.commission / 100);
-
                     total += commission;
                 });
-
+                console.log(total, commission, expenses, payments)
                 return total > 0 ? total : 0;
             },
 
@@ -681,6 +711,46 @@
                 }
 
                 this.pagination.current = this.pagination.build[0];
+            },
+
+            formatoMoneda: function (number) {
+                var number1 = number.toString(), result = '', estado = true;
+                if (parseInt(number1) < 0) {
+                    estado = false;
+                    number1 = parseInt(number1) * -1;
+                    number1 = number1.toString();
+                }
+                if (number1.indexOf('.') == -1) {
+                    while (number1.length > 3) {
+                        result = '.' + '' + number1.substr(number1.length - 3) + '' + result;
+                        number1 = number1.substring(0, number1.length - 3);
+                    }
+                    result = number1 + result;
+                    if (estado == false) {
+                        result = '-' + result;
+                    }
+                }
+                else {
+                    var pos = number1.indexOf('.');
+                    var numberInt = number1.substring(0, pos);
+                    var numberDec = number1.substring(pos, number1.length);
+                    
+                    if(numberDec.charAt(0) == '.'){
+                    var newnumber = number1.substring(pos+1, number1.length);
+                    newnumber = ','+newnumber;
+                    }
+                    
+                    while (numberInt.length > 3) {
+                        result = '.' + '' + numberInt.substr(numberInt.length - 3) + '' + result;
+                        numberInt = numberInt.substring(0, numberInt.length - 3);
+                    }
+                    //result = numberInt + result + numberDec;
+                    result = numberInt + result + newnumber;
+                    if (estado == false) {
+                        result = '-' + result;
+                    }
+                }
+                return result;
             }
 
         }

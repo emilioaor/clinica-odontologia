@@ -136,6 +136,7 @@
                                         <thead>
                                             <tr>
                                                 <th>Fecha</th>
+                                                <th>Ingresado por</th>
                                                 <th v-if="authUser.hasRole.admin">Código</th>
                                                 <th>Servicio</th>
                                                 <th>Diente</th>
@@ -147,6 +148,7 @@
                                         <tbody>
                                             <tr v-for="service in dataPerDate.services">
                                                 <td>{{ dateFormat(service.created_at) }}</td>
+                                                <td>{{ service.creator_user }}</td>
                                                 <td v-if="authUser.hasRole.admin">{{ service.public_id }}</td>
                                                 <td>{{ service.product.name }}</td>
                                                 <td>{{ service.tooth }}</td>

@@ -13,7 +13,7 @@
 
             <div class="row">
 
-                <div class="col-md-10">
+                <div class="col-md-12">
                     <div class="panel panel-default">
                         <div class="panel-body">
 
@@ -121,7 +121,7 @@
                                 </div>
 
                                 <div class="row">
-                                    <div class="col-sm-4" v-if="hasRole(doctorRole.id)">
+                                    <div class="col-sm-3" v-if="hasRole(doctorRole.id)">
                                         <div class="form-group">
                                             <label for="external">¿Externo?</label>
                                             <div>
@@ -130,7 +130,7 @@
                                         </div>
                                     </div>
 
-                                    <div class="col-sm-4">
+                                    <div class="col-sm-3">
                                         <div class="form-group">
                                             <label for="management_inventory">¿Maneja inventario?</label>
                                             <div>
@@ -139,12 +139,35 @@
                                         </div>
                                     </div>
 
-                                    <div class="col-sm-4">
+                                    <div class="col-sm-3">
                                         <div class="form-group">
                                             <label for="management_inventory">¿Maneja insumo?</label>
                                             <div>
-                                                <input type="checkbox" v-model="form.management_supply" id="management_supply">
+                                                <input 
+                                                type="checkbox" 
+                                                v-model="form.management_supply" 
+                                                id="management_supply">
                                             </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <div class="form-group">
+                                            <label for="edit_date_of_services">¿Modifica fecha de servicios?</label>
+                                            <div>
+                                                <input 
+                                                type="checkbox" 
+                                                v-model="form.edit_date_of_services" 
+                                                id="edit_date_of_services">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-sm-3">
+                                    <div class="form-group">
+                                        <label for="last_service">¿Ultimo servicio por paciente?</label>
+                                        <div>
+                                            <input type="checkbox" v-model="form.last_service" id="last_service">
                                         </div>
                                     </div>
                                 </div>

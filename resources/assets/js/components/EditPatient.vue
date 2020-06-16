@@ -133,6 +133,58 @@
 
                                 <div class="row">
                                     <div class="col-xs-12">
+                                        <h3>
+                                            Fotografía del paciente
+                                        </h3>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+
+                                    <div class="col-sm-4 space-image" v-for="(image, id) in images">
+                                        <img :src="image" class="img-responsive images">
+
+                                        <button class="btn btn-danger btn-sm" @click="removeImage(id)">
+                                            <i class="glyphicon glyphicon-remove"></i>
+                                        </button>
+                                    </div>
+
+                                    <div class="col-sm-4">
+                                        <!-- Cargar imagen -->
+
+                                            <input
+                                                    v-for="i in (images.length + 1)"
+                                                    :key="i"
+                                                    type="file"
+                                                    name="image[]"
+                                                    :id="'image' + i"
+                                                    class="form-control"
+                                                    placeholder="Imagen"
+                                                    @change="setCapture()"
+                                                    v-validate
+                                                    v-show="false"
+                                                    data-vv-rules="mimes:image/jpeg,image/png|size:5120"
+                                            >
+                                        
+
+                                        <img
+                                                id="selectImage"
+                                                src="/img/camera.png"
+                                                alt="Agregar imagen"
+                                                class="img-responsive"
+                                                @click="loadImage">
+
+                                        <p class="error" v-if="errors.firstByRule('image', 'size')">
+                                            Maximo 5 mb
+                                        </p>
+                                        <p class="error" v-if="errors.firstByRule('image', 'mimes')">
+                                            Imagen necesita ser formato .png o .jpg
+                                        </p>
+                                    </div>
+                                </div><br>
+
+                                <div class="row">
+                                    <div class="col-xs-12">
                                         <button class="btn btn-warning" v-bind:disabled="loading">
                                             <i class="glyphicon glyphicon-saved"></i>
                                             Actualizar paciente
@@ -290,6 +342,9 @@
                 type: Object,
                 required: true
             },
+            photo: {
+                required: true
+            },
             user: {
                 type: Object,
                 required: true
@@ -301,6 +356,7 @@
                 loading: false,
                 phoneError: false,
                 form: {},
+                images: [],
                 pagination: {
                     current: null,
                     from: null,
@@ -316,6 +372,7 @@
 
         beforeMount: function () {
             this.form = this.patient;
+            this.images.push( this.photo);
             this.generatePagination();
         },
 
@@ -368,11 +425,21 @@
             },
 
             sendForm: function () {
+                this.form.image = this.images
+                
                 this.loading = true;
-
-                axios.put('/user/patient/' + this.form.public_id, this.form)
+                let formData = new FormData()
+                formData.append('name', this.form.name)
+                formData.append('phone', this.form.phone)
+                formData.append('email', this.form.email)
+                formData.append('patient_reference_id', this.form.patient_reference_id)
+                formData.append('cancel_appointment', this.form.cancel_appointment)
+                formData.append('register_call', this.form.register_call)
+                formData.append('image', this.form.patientImage)
+                formData.append('_method', 'PUT');
+                axios.post('/user/patient/' + this.form.public_id, formData)
                     .then((res) => {
-
+                        console.log(res)
                         if (res.data.success) {
                             location.href = res.data.redirect;
                         }
@@ -381,7 +448,7 @@
                         if (err.response.status === 403 || err.response.status === 405) {
                             location.href = '/';
                         }
-
+                    console.log(err.response.data)
                         this.loading = false;
                     })
                 ;
@@ -424,6 +491,29 @@
                         this.loading = false;
                         console.log(err);
                     })
+            },
+            setCapture: function(e) {
+                this.images.splice(0, 1)
+                const file = $('#image' + (this.images.length + 1))[0].files[0];
+                this.form.patientImage = file
+                if (file.type !== 'image/png' && file.type !== 'image/jpeg') {
+                    return false;
+                }
+
+                const reader = new FileReader();
+
+                reader.addEventListener('load', () => {
+                    this.images.push(reader.result);
+                });
+
+                reader.readAsDataURL(file);
+            },
+
+            removeImage: function (index) {
+                this.images.splice(index, 1);
+            },
+            loadImage() {
+                $('#image' + (this.images.length + 1)).click();
             }
         },
         filters: {

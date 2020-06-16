@@ -168,7 +168,7 @@
                                 </div>
 
                                 <div class="row">
-                                    <div class="col-sm-4">
+                                    <div class="col-sm-3">
                                         <div class="form-group">
                                             <label for="management_inventory">¿Maneja inventario?</label>
                                             <div>
@@ -177,7 +177,7 @@
                                         </div>
                                     </div>
 
-                                    <div class="col-sm-4">
+                                    <div class="col-sm-3">
                                         <div class="form-group">
                                             <label for="management_inventory">¿Maneja insumo?</label>
                                             <div>
@@ -186,7 +186,25 @@
                                         </div>
                                     </div>
 
-                                    <div class="col-sm-4" v-if="doctorRole && hasRole(doctorRole.id)">
+                                    <div class="col-sm-3">
+                                        <div class="form-group">
+                                            <label for="edit_date_of_services">¿Modifica fecha de servicios?</label>
+                                            <div>
+                                                <input type="checkbox" v-model="form.edit_date_of_services" id="edit_date_of_services">
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-sm-3">
+                                        <div class="form-group">
+                                            <label for="last_service">¿Ultimo servicio por paciente?</label>
+                                            <div>
+                                                <input type="checkbox" v-model="form.last_service" id="last_service">
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-sm-3" v-if="doctorRole && hasRole(doctorRole.id)">
                                         <div class="form-group">
                                             <label for="password">¿Externo?</label>
                                             <div>
@@ -199,7 +217,10 @@
                                 <div class="row">
                                     <div class="col-xs-12">
                                         <img src="/img/loading.gif" v-if="loading">
-                                        <button class="btn btn-success" v-if="!loading">
+                                        <button 
+                                            class="btn btn-success" 
+                                            v-if="!loading"
+                                            >
                                             <i class="glyphicon glyphicon-saved"></i>
                                             Registrar usuario
                                         </button>
@@ -238,6 +259,8 @@
                     external: false,
                     management_inventory: false,
                     management_supply: false,
+                    edit_date_of_services: false,
+                    last_service: false,
                     roles: []
                 },
                 doctorRole: null,
@@ -289,7 +312,7 @@
                             location.href = '/';
                         }
                         this.loading = false;
-                        console.log(err);
+                        console.log(err.response.data);
                     })
                 ;
             },

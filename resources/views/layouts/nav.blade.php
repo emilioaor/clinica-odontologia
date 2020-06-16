@@ -108,12 +108,20 @@
                     @endif
 
                     <!-- Patient -->
-                    @if(Auth::user()->hasPermission('patient.create') || Auth::user()->hasPermission('patient.index') ||
-                        Auth::user()->hasPermission('service.create') || Auth::user()->hasPermission('service.search') ||
-                        Auth::user()->hasPermission('budget.create') || Auth::user()->hasPermission('budget.index') ||
-                        Auth::user()->hasPermission('expense.create') || Auth::user()->hasPermission('expense.index') ||
-                        Auth::user()->hasPermission('payment.create') || Auth::user()->hasPermission('appointment.index') ||
-                        Auth::user()->hasPermission('appointment.create') || Auth::user()->hasPermission('ticketOfSell.create'))
+                    @if(
+                        Auth::user()->hasPermission('patient.create') || 
+                        Auth::user()->hasPermission('patient.index') ||
+                        Auth::user()->hasPermission('service.create') || 
+                        Auth::user()->hasPermission('service.search') ||
+                        Auth::user()->hasPermission('budget.create') || 
+                        Auth::user()->hasPermission('budget.index') ||
+                        Auth::user()->hasPermission('expense.create') || 
+                        Auth::user()->hasPermission('expense.index') ||
+                        Auth::user()->hasPermission('payment.create') ||
+                        Auth::user()->hasPermission('appointment.index') ||
+                        Auth::user()->hasPermission('appointment.create') ||
+                        Auth::user()->edit_date_of_services
+                    )
 
                         <li class="dropdown">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
@@ -137,7 +145,8 @@
                                         </a>
                                     </li>
                                 @endif
-                                @if(Auth::user()->hasPermission('service.create'))
+                                @if(Auth::user()->hasPermission('service.create') || 
+                                Auth::user()->isAssistant())
                                     <li>
                                         <a href="{{ route('service.create') }}">
                                             <i class="glyphicon glyphicon-plus"></i>
@@ -145,7 +154,7 @@
                                         </a>
                                     </li>
                                 @endif
-                                @if(Auth::user()->hasPermission('service.search'))
+                                @if(Auth::user()->hasPermission('service.search') || Auth::user()->edit_date_of_services)
                                     <li>
                                         <a href="{{ route('service.search') }}">
                                             <i class="glyphicon glyphicon-search"></i>
@@ -206,14 +215,6 @@
                                         <a href="{{ route('appointment.index') }}">
                                             <i class="glyphicon glyphicon-calendar"></i>
                                             Calendario de citas
-                                        </a>
-                                    </li>
-                                @endif
-                                @if(Auth::user()->hasPermission('ticketOfSell.create'))
-                                    <li>
-                                        <a href="{{ route('ticketOfSell.create') }}">
-                                            <i class="glyphicon glyphicon-file"></i>
-                                            Ticket de venta
                                         </a>
                                     </li>
                                 @endif
@@ -285,6 +286,14 @@
                                         <a href="{{ route('supply.index') }}">
                                             <i class="glyphicon glyphicon-list-alt"></i>
                                             Lista de insumos
+                                        </a>
+                                    </li>
+                                @endif
+                                @if(Auth::user()->hasPermission('supply.index'))
+                                    <li>
+                                        <a href="{{ route('supply.stock') }}">
+                                            <i class="glyphicon glyphicon-list-alt"></i>
+                                            Stock de insumos
                                         </a>
                                     </li>
                                 @endif
@@ -378,14 +387,23 @@
                     @endif
 
                     <!-- Reportes -->
-                    @if(Auth::user()->hasPermission('report.servicesAndPayments') || Auth::user()->hasPermission('report.doctorCommissions') ||
-                        Auth::user()->hasPermission('report.expenses') || Auth::user()->hasPermission('report.payments') ||
-                        Auth::user()->hasPermission('report.servicesAndPaymentsPerPatient') || Auth::user()->hasPermission('report.guarantees') ||
-                        Auth::user()->hasPermission('report.patientsAndPatientsWithServices') || Auth::user()->hasPermission('report.budgets') ||
-                        Auth::user()->hasPermission('report.servicesPaymentsAndExpenses') || Auth::user()->hasPermission('report.servicesDiagnostics') ||
-                        Auth::user()->hasPermission('report.servicesSendLab') || Auth::user()->hasPermission('report.inventorySupply') ||
-                        Auth::user()->hasPermission('report.inventorySupplyMovement') || Auth::user()->hasPermission('report.sellManagerPatients') ||
-                        Auth::user()->hasPermission('report.callLog'))
+                    @if(Auth::user()->hasPermission('report.servicesAndPayments') || 
+                        Auth::user()->hasPermission('report.doctorCommissions') ||
+                        Auth::user()->hasPermission('report.expenses') || 
+                        Auth::user()->hasPermission('report.payments') ||
+                        Auth::user()->hasPermission('report.servicesAndPaymentsPerPatient') || 
+                        Auth::user()->hasPermission('report.guarantees') ||
+                        Auth::user()->hasPermission('report.patientsAndPatientsWithServices') || 
+                        Auth::user()->hasPermission('report.budgets') ||
+                        Auth::user()->hasPermission('report.servicesPaymentsAndExpenses') || 
+                        Auth::user()->hasPermission('report.servicesDiagnostics') ||
+                        Auth::user()->hasPermission('report.servicesSendLab') || 
+                        Auth::user()->hasPermission('report.inventorySupply') ||
+                        Auth::user()->hasPermission('report.inventorySupplyMovement') || 
+                        Auth::user()->hasPermission('report.sellManagerPatients') ||
+                        Auth::user()->hasPermission('report.callLog') || 
+                        Auth::user()->last_service
+                        )
 
                         <li class="dropdown">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
@@ -406,6 +424,22 @@
                                         <a href="{{ route('report.servicesAndPaymentsPerPatient') }}">
                                             <i class="glyphicon glyphicon-file"></i>
                                             Servicios y pagos por paciente
+                                        </a>
+                                    </li>
+                                @endif
+                                @if(Auth::user()->hasPermission('report.servicesAndPaymentsParPatient') )
+                                    <li>
+                                        <a href="{{ route('report.servicesPerPatient') }}">
+                                            <i class="glyphicon glyphicon-file"></i>
+                                            Último servicio por paciente
+                                        </a>
+                                    </li>
+                                @endif
+                                @if(Auth::user()->last_service)
+                                    <li>
+                                        <a href="{{ route('report.servicesPerPatientUser') }}">
+                                            <i class="glyphicon glyphicon-file"></i>
+                                            Último servicio por paciente
                                         </a>
                                     </li>
                                 @endif
@@ -525,6 +559,40 @@
                         </li>
                     @endif
 
+                    <!-- Reportes con graficas -->
+                    @if(Auth::user()->hasPermission('report.servicesAndPayments') || Auth::user()->hasPermission('report.doctorCommissions') ||
+                        Auth::user()->hasPermission('report.expenses') || Auth::user()->hasPermission('report.payments') ||
+                        Auth::user()->hasPermission('report.servicesAndPaymentsPerPatient') || Auth::user()->hasPermission('report.guarantees') ||
+                        Auth::user()->hasPermission('report.patientsAndPatientsWithServices') || Auth::user()->hasPermission('report.budgets') ||
+                        Auth::user()->hasPermission('report.servicesPaymentsAndExpenses') || Auth::user()->hasPermission('report.servicesDiagnostics') ||
+                        Auth::user()->hasPermission('report.servicesSendLab') || Auth::user()->hasPermission('report.inventorySupply') ||
+                        Auth::user()->hasPermission('report.inventorySupplyMovement') || Auth::user()->hasPermission('report.sellManagerPatients') ||
+                        Auth::user()->hasPermission('report.callLog'))
+
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+                                Graficas <span class="caret"></span>
+                            </a>
+
+                            <ul class="dropdown-menu" role="menu">
+                                @if(Auth::user()->hasPermission('report.payments'))
+                                    <li>
+                                        <a href="{{ route('grafiCapagos') }}">
+                                            <i class="glyphicon glyphicon-stats"></i>
+                                            Pagos por tipo
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="{{ route('graficaComicion') }}">
+                                            <i class="glyphicon glyphicon-stats"></i>
+                                            Pago vs Gastos
+                                        </a>
+                                    </li>
+                                @endif
+                            </ul>
+                        </li>
+                    @endif
+
                     <!-- Post venta -->
                     @if(Auth::user()->hasPermission('email.index') || Auth::user()->hasPermission('tracking.create') ||
                         Auth::user()->hasPermission('tracking.index'))
@@ -559,6 +627,14 @@
                                         </a>
                                     </li>
                                 @endif
+                                @if(Auth::user()->hasPermission('tracking.index'))
+                                    <li>
+                                        <a href="{{ route('tracking.resolved') }}">
+                                            <i class="glyphicon glyphicon-list-alt"></i>
+                                            Lista de seguimientos resueltos
+                                        </a>
+                                    </li>
+                                @endif
                             </ul>
                         </li>
                     @endif
@@ -583,9 +659,17 @@
                                 @endif
                                 @if(Auth::user()->hasPermission('callBudget.index'))
                                     <li>
-                                        <a href="{{ route('callBudget.index') }}">
+                                        <a href="{{ route('callBudget.indexGeneral') }}">
                                             <i class="glyphicon glyphicon-send"></i>
                                             Presupuestos enviados
+                                        </a>
+                                    </li>
+                                @endif
+                                @if(Auth::user()->hasPermission('callBudget.index'))
+                                    <li>
+                                        <a href="{{ route('callBudget.index') }}">
+                                            <i class="glyphicon glyphicon-send"></i>
+                                            Presupuestos enviados ( Interesado )
                                         </a>
                                     </li>
                                 @endif

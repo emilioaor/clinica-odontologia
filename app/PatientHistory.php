@@ -119,6 +119,16 @@ class PatientHistory extends Model
         return $this->belongsTo(User::class, 'diagnostic_id')->withTrashed();
     }
 
+    /**
+     * Detalle de ticket de venta
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function ticketOfSellDetails()
+    {
+        return $this->hasMany(TicketOfSellDetail::class, 'patient_history_id');
+    }
+
     public function creator_user()
     {
         return $this->belongsTo(User::class, 'creator_user')->withTrashed();

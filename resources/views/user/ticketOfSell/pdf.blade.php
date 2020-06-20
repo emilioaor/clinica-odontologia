@@ -29,13 +29,13 @@
                 <strong>Name:</strong>
             </td>
             <td style="border-bottom: solid 1px;">
-                <span style="color: #333">{{ $patient->name }}</span>
+                <span style="color: #333">{{ $ticketOfSell->patient->name }}</span>
             </td>
             <td style="width: 50px; padding-left: 10px;">
                 <strong>Date:</strong>
             </td>
             <td style="border-bottom: solid 1px;">
-                <span style="color: #333">{{ date('m/d/Y') }}</span>
+                <span style="color: #333">{{ $ticketOfSell->created_at->format('m/d/Y') }}</span>
             </td>
         </tr>
         <tr>
@@ -43,13 +43,13 @@
                 <strong>Cell Phone:</strong>
             </td>
             <td style="padding-top: 10px;border-bottom: solid 1px;">
-                <span style="color: #333">{{ $patient->phone }}</span>
+                <span style="color: #333">{{ $ticketOfSell->patient->phone }}</span>
             </td>
             <td style="padding-top: 10px; width: 50px; padding-left: 10px;">
                 <strong>Email:</strong>
             </td>
             <td style="padding-top: 10px;border-bottom: solid 1px;">
-                <span style="color: #333">{{ $patient->email }}</span>
+                <span style="color: #333">{{ $ticketOfSell->patient->email }}</span>
             </td>
         </tr>
     </table>
@@ -61,12 +61,12 @@
             <th style="width: 60%;">Treatment</th>
             <th style="width: 20%;">Price</th>
         </tr>
-        @foreach($services as $service)
+        @foreach($ticketOfSell->ticketOfSellDetails as $detail)
             <tr style="color: #333333;">
-                <td style="border: solid 1px #408b88;text-align: center;">{{ $service->tooth }}</td>
-                <td style="border: solid 1px #408b88;padding: 0 10px;">{{ $service->product->name }}</td>
+                <td style="border: solid 1px #408b88;text-align: center;">{{ $detail->patientHistory->tooth }}</td>
+                <td style="border: solid 1px #408b88;padding: 0 10px;">{{ $detail->patientHistory->product->name }}</td>
                 <td style="border: solid 1px #408b88;text-align: center">
-                    ${{ number_format($service->price, 2) }}
+                    ${{ number_format($detail->patientHistory->price, 2) }}
                 </td>
             </tr>
         @endforeach

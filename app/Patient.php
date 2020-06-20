@@ -34,6 +34,16 @@ class Patient extends Model
     }
 
     /**
+     * Tickets de venta registrados
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function ticketsOfSell()
+    {
+        return $this->hasMany(TicketOfSell::class, 'patient_id');
+    }
+
+    /**
      * Genera el siguiente public_id
      */
     public function nextPublicId()

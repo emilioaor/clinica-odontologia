@@ -133,8 +133,8 @@ Route::group(['prefix' => 'user', 'middleware' => 'auth'], function () {
     Route::resource('tracking', 'User\TrackingController');
 
     // Ticket de venta
-    Route::get('ticketOfSell/create', 'User\TicketOfSellController@create')->name('ticketOfSell.create');
-    Route::get('ticketOfSell/pdf', 'User\TicketOfSellController@generatePdf')->name('ticketOfSell.pdf');
+    Route::get('ticketOfSell/{ticketOfSell}/pdf', 'User\TicketOfSellController@generatePdf')->name('ticketOfSell.pdf');
+    Route::resource('ticketOfSell', 'User\TicketOfSellController');
 
     // Notificaciones
     Route::get('notification', 'NotificationController@sendLabNotifications');

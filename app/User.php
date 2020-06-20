@@ -148,6 +148,16 @@ class User extends Authenticatable
     }
 
     /**
+     * Tickets de venta registrados por el usuario
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function ticketsOfSell()
+    {
+        return $this->hasMany(TicketOfSell::class, 'user_id');
+    }
+
+    /**
      * Todos los servicios asistidos por este usuario
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany

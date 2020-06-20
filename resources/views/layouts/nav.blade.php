@@ -121,6 +121,7 @@
                         Auth::user()->hasPermission('appointment.index') ||
                         Auth::user()->hasPermission('appointment.create') ||
                         Auth::user()->hasPermission('ticketOfSell.create') ||
+                        Auth::user()->hasPermission('ticketOfSell.index') ||
                         Auth::user()->edit_date_of_services
                     )
 
@@ -222,8 +223,16 @@
                                 @if(Auth::user()->hasPermission('ticketOfSell.create'))
                                     <li>
                                         <a href="{{ route('ticketOfSell.create') }}">
-                                            <i class="glyphicon glyphicon-file"></i>
-                                            Ticket de venta
+                                            <i class="glyphicon glyphicon-plus"></i>
+                                            Registrar ticket de venta
+                                        </a>
+                                    </li>
+                                @endif
+                                @if(Auth::user()->hasPermission('ticketOfSell.index'))
+                                    <li>
+                                        <a href="{{ route('ticketOfSell.index') }}">
+                                            <i class="glyphicon glyphicon-list-alt"></i>
+                                            Lista de tickets de ventas
                                         </a>
                                     </li>
                                 @endif

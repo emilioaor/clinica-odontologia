@@ -113,6 +113,8 @@ return [
 
     'callBudget.create' => 'Envío de presupuesto registrado',
 
+    'ticketOfSell.create' => 'Ticket de venta registrado',
+
     'January' => 'Enero',
     'February' => 'Febrero',
     'March' => 'Marzo',

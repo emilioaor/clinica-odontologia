@@ -5,7 +5,7 @@
                 <h1>
                     <i class="glyphicon glyphicon-file" v-if="! loading"></i>
                     <img src="/img/loading.gif" v-if="loading">
-                    Ticket de venta
+                    Registrar ticket de venta
                 </h1>
             </div>
         </div>
@@ -110,15 +110,16 @@
                                             Buscar
                                         </button>
 
-                                        <a
-                                                :href="routePdf + '?services=' + serviceSelected"
-                                                target="_blank"
-                                                class="btn btn-success" :disabled="serviceSelected.length === 0"
+                                        <button
+                                                class="btn btn-success"
+                                                :disabled="serviceSelected.length === 0"
+                                                v-if="!loading"
+                                                @click="sendForm()"
                                         >
                                             <i class="glyphicon glyphicon-file"></i>
                                             Generar ticket de venta
                                             ({{ serviceSelected.length }})
-                                        </a>
+                                        </button>
 
                                         <img src="/img/loading.gif" v-if="loading">
                                     </div>
@@ -126,11 +127,12 @@
                             </div>
 
                             <div class="row" v-if="data.servicesAndNotes">
-                                <div class="col-xs-12" v-for="dataPerDate in data.servicesAndNotes">
+                                <div class="col-xs-12">
 
-                                    <!-- Services -->
-                                    <table class="table table-responsive" v-if="dataPerDate.services.length">
-                                        <thead>
+                                    <template v-for="dataPerDate in data.servicesAndNotes">
+                                        <!-- Services -->
+                                        <table class="table table-responsive" v-if="dataPerDate.services.length">
+                                            <thead>
                                             <tr>
                                                 <th>Fecha</th>
                                                 <th v-if="authUser.hasRole.admin">Código</th>
@@ -140,8 +142,8 @@
                                                 <th>Asistente</th>
                                                 <th width="5%"></th>
                                             </tr>
-                                        </thead>
-                                        <tbody>
+                                            </thead>
+                                            <tbody>
                                             <tr v-for="service in dataPerDate.services">
                                                 <td>{{ dateFormat(service.created_at) }}</td>
                                                 <td v-if="authUser.hasRole.admin">{{ service.public_id }}</td>
@@ -162,8 +164,9 @@
                                                     </button>
                                                 </td>
                                             </tr>
-                                        </tbody>
-                                    </table>
+                                            </tbody>
+                                        </table>
+                                    </template>
                                 </div>
                             </div>
                         </section>
@@ -293,6 +296,29 @@
             this.data.end = year + '-' + month + '-' + day;
         },
         methods: {
+            sendForm() {
+                if (this.serviceSelected.length) {
+                    this.loading = true;
+
+                    axios.post('/user/ticketOfSell', {
+                        patient: this.patient.id,
+                        services: this.serviceSelected
+                    })
+                        .then((res) => {
+                            if (res.data.success) {
+                                location.href = res.data.redirect;
+                            }
+                        })
+                        .catch((err) => {
+                            if (err.response.status === 403 || err.response.status === 405) {
+                                location.href = '/';
+                            }
+                            this.loading = false;
+                        })
+                    ;
+                }
+            },
+
             searchPatients: function () {
                 this.modal.data = [];
                 this.modal.loading = true;

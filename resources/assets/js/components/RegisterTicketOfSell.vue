@@ -262,9 +262,6 @@
         props: {
             user: {
                 required: true
-            },
-            routePdf: {
-                required: true
             }
         },
         data: function () {

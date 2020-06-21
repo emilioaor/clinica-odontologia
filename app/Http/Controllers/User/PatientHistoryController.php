@@ -317,15 +317,46 @@ class PatientHistoryController extends Controller
         }
 
         $services = $patient->patientHistory()
+            ->with([
+                'doctor',
+                'product',
+                'assistant',
+                'creator_user',
+                'payments.ticketOfSell'
+            ])
             ->where('patient_history.created_at', '>=', $start)
             ->where('patient_history.created_at', '<=', $end)
-            ->orderBy('created_at')
-            ->with('doctor')
-            ->with('product')
-            ->with('assistant')
-            ->with('creator_user')
-            ->get()
+            ->orderBy('patient_history.created_at')
         ;
+
+        if ($request->paymentsWithoutTicket) {
+            // Solo obtengo los servicios que tengas pagos pendientes por ticket de venta
+            $services
+                ->join('payments', 'payments.patient_history_id', '=', 'patient_history.id')
+                ->whereNull('payments.ticket_of_sell_id')
+                ->distinct()
+            ;
+        }
+
+        $services = $services->get(['patient_history.*'])
+            ->map(function ($service) {
+                // Calculo la informacion de pago
+                $servicePaid = 0;
+                $servicePaidWithoutTicket = 0;
+
+                foreach ($service->payments as $payment) {
+                    $servicePaid += $payment->amount;
+
+                    if (! $payment->ticket_of_sell_id) {
+                        $servicePaidWithoutTicket += $payment->amount;
+                    }
+                }
+
+                $service->paid = $servicePaid;
+                $service->paid_without_ticket = $servicePaidWithoutTicket;
+
+                return $service;
+            });
 
         $notes = $patient->notes()->orderBy('date')
             ->where('content', '<>', '')

@@ -80,9 +80,11 @@
                                             <th>Código</th>
                                         @endif
                                         <th>Servicio</th>
-                                        <th>Diente</th>
+                                        <th class="text-center">Diente</th>
                                         <th>Doctor</th>
-                                        <th>Asistente</th>
+                                        <th class="text-center">Precio</th>
+                                        <th class="text-center">Pagado</th>
+                                        <th class="text-center">Pendiente por ticket</th>
                                     </tr>
                                     @foreach($ticketOfSell->ticketOfSellDetails as $detail)
                                         <tr>
@@ -91,9 +93,11 @@
                                                 <td>{{ $detail->patientHistory->public_id }}</td>
                                             @endif
                                             <td>{{ $detail->patientHistory->product->name }}</td>
-                                            <td>{{ $detail->patientHistory->tooth }}</td>
+                                            <td class="text-center">{{ $detail->patientHistory->tooth }}</td>
                                             <td>{{ $detail->patientHistory->doctor->name }}</td>
-                                            <td>{{ $detail->patientHistory->assistant->name }}</td>
+                                            <td class="text-center">${{ number_format($detail->patientHistory->price, 2) }}</td>
+                                            <td class="text-center">${{ number_format($detail->patientHistory->paid, 2) }}</td>
+                                            <td class="text-center">${{ number_format($detail->patientHistory->paidWithoutTicket, 2) }}</td>
                                         </tr>
                                     @endforeach
                                 </table>

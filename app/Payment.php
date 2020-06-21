@@ -22,7 +22,8 @@ class Payment extends Model
         'amount',
         'type',
         'patient_history_id',
-        'date'
+        'date',
+        'ticket_of_sell_id'
     ];
 
     protected $dates = ['deleted_at', 'date'];
@@ -45,6 +46,16 @@ class Payment extends Model
     public function patientHistory()
     {
         return $this->belongsTo(PatientHistory::class, 'patient_history_id')->withTrashed();
+    }
+
+    /**
+     * Ticket de venta generado para este pago
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function ticketOfSell()
+    {
+        return $this->belongsTo(TicketOfSell::class, 'ticket_of_sell_id')->withTrashed();
     }
 
     /**
@@ -85,6 +96,16 @@ class Payment extends Model
     public function isDiscount()
     {
         return $this->type === self::TYPE_DISCOUNT;
+    }
+
+    /**
+     * Retorna el metodo de pago
+     *
+     * @string
+     */
+    public function paymentMethod()
+    {
+        return trans('message.paymentMethod.' . $this->type);
     }
 
     public function scopeGetTotalAmountForType($query, $dateRange, $type)

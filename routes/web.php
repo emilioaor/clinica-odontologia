@@ -11,12 +11,9 @@ Route::get('/', function () {
 Route::group(['prefix' => 'user', 'middleware' => 'auth'], function () {
     Route::get('/home', 'HomeController@index')->name('home');
 
-    Route::get('report/servicesPerPatientUser', 'Admin\ReportController@servicesPerPatient')
-    ->name('report.servicesPerPatientUser');
-    Route::get('report/servicesPerPatientDataUser', 'Admin\ReportController@servicesPerPatientData')
-        ->name('report.servicesPerPatientDataUser');
-    Route::get('servicesPerPatient/changeStatusFile/{id}/user', 'Admin\ReportController@changeStatusFile')
-    ->name('report.changeStatusFileUser');
+    Route::get('report/servicesPerPatientUser', 'Admin\ReportController@servicesPerPatient')->name('report.servicesPerPatientUser');
+    Route::get('report/servicesPerPatientDataUser', 'Admin\ReportController@servicesPerPatientData')->name('report.servicesPerPatientDataUser');
+    Route::get('servicesPerPatient/changeStatusFile/{id}/user', 'Admin\ReportController@changeStatusFile')->name('report.changeStatusFileUser');
 
     // Productos
     Route::get('product/validate/{product}/{id}', 'User\ProductController@validatePublicId');

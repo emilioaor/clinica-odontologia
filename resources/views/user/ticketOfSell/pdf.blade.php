@@ -83,6 +83,51 @@
         </tr>
     </table>
 
+    <table style="width: 100%;margin-top: 15px;">
+        <tr>
+            <td style="width: 80px;">
+                <strong>Payment:</strong>
+            </td>
+            <td style="border-bottom: solid 1px;">
+                <span style="color: #333">{{ implode(', ', $paymentMethods) }}</span>
+            </td>
+            <td style="width: 80px;padding-left: 20px;">
+
+            </td>
+            <td style="">
+
+            </td>
+        </tr>
+        <tr>
+            <td style="width: 80px;">
+                <strong>Cashier:</strong>
+            </td>
+            <td style="border-bottom: solid 1px;">
+                <span style="color: #333">{{ Auth::user()->name }}</span>
+            </td>
+            <td style="width: 80px;padding-left: 20px;">
+                <strong>Paid:</strong>
+            </td>
+            <td style="border-bottom: solid 1px;">
+                <span style="color: #333">${{ number_format($paid, 2) }}</span>
+            </td>
+        </tr>
+        <tr>
+            <td style="width: 80px;">
+                <strong>Date:</strong>
+            </td>
+            <td style="border-bottom: solid 1px;">
+                <span style="color: #333">{{ date('m/d/Y') }}</span>
+            </td>
+            <td style="width: 80px;padding-left: 20px;">
+                <strong>Balance:</strong>
+            </td>
+            <td style="border-bottom: solid 1px;">
+                <span style="color: #333">${{ number_format($balance, 2) }}</span>
+            </td>
+        </tr>
+    </table>
+
     <!-- WARRANTY -->
     <table style="width: 100%;margin-top: 50px;">
         <tr>

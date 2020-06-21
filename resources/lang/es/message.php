@@ -70,6 +70,11 @@ return [
     'payment.update' => 'Pago actualizado',
     'payment.delete' => 'Pago eliminado',
 
+    'paymentMethod.1' => 'Tarjeta de crédito',
+    'paymentMethod.2' => 'Efectivo',
+    'paymentMethod.3' => 'Cheque',
+    'paymentMethod.4' => 'Descuento',
+
     'supplier.create' => 'Proveedor registrado',
     'supplier.update' => 'Proveedor actualizado',
     'supplier.delete' => 'Proveedor eliminado',

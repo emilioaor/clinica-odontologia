@@ -135,22 +135,24 @@
                                             <thead>
                                             <tr>
                                                 <th>Fecha</th>
-                                                <th v-if="authUser.hasRole.admin">Código</th>
                                                 <th>Servicio</th>
-                                                <th>Diente</th>
+                                                <th class="text-center">Diente</th>
                                                 <th>Doctor</th>
-                                                <th>Asistente</th>
+                                                <th class="text-center">Precio</th>
+                                                <th class="text-center">Pagado</th>
+                                                <th class="text-center">Pendiente por ticket</th>
                                                 <th width="5%"></th>
                                             </tr>
                                             </thead>
                                             <tbody>
                                             <tr v-for="service in dataPerDate.services">
                                                 <td>{{ dateFormat(service.created_at) }}</td>
-                                                <td v-if="authUser.hasRole.admin">{{ service.public_id }}</td>
                                                 <td>{{ service.product.name }}</td>
-                                                <td>{{ service.tooth }}</td>
+                                                <td class="text-center">{{ service.tooth }}</td>
                                                 <td>{{ service.doctor.name }}</td>
-                                                <td>{{ service.assistant.name }}</td>
+                                                <td class="text-center">${{ service.price }}</td>
+                                                <td class="text-center">${{ service.paid }}</td>
+                                                <td class="text-center">${{ service.paid_without_ticket }}</td>
                                                 <td>
                                                     <button
                                                             class="btn"
@@ -360,7 +362,12 @@
             searchPatientHistory: function () {
                 this.loading = true;
 
-                axios.get('/user/service/' + this.patient.public_id + '/search?start=' + this.data.start + '&end=' + this.data.end)
+                axios.get(
+                        '/user/service/' + this.patient.public_id + '/search' +
+                        '?start=' +this.data.start +
+                        '&end=' + this.data.end +
+                        '&paymentsWithoutTicket=' + 1
+                )
                     .then((res) => {
                         this.loading = false;
 

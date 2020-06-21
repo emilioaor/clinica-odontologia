@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\User;
 
 use App\Patient;
-use App\PatientHistory;
+use App\Payment;
 use App\TicketOfSell;
 use App\TicketOfSellDetail;
 use Illuminate\Http\JsonResponse;
@@ -87,11 +87,21 @@ class TicketOfSellController extends Controller
             $ticketOfSellDetail->save();
         }
 
+        // Indico los pagos que fueron procesados en este ticket
+        Payment::query()
+            ->whereIn('patient_history_id', $request->services)
+            ->whereNull('ticket_of_sell_id')
+            ->update(['ticket_of_sell_id' => $ticketOfSell->id])
+        ;
+
         DB::commit();
 
         $this->sessionMessage('message.ticketOfSell.create');
 
-        return new JsonResponse(['success' => true, 'redirect' => route('ticketOfSell.index')]);
+        return new JsonResponse([
+            'success' => true,
+            'redirect' => route('ticketOfSell.edit', ['ticketOfSell' => $ticketOfSell->public_id])
+        ]);
     }
 
     /**
@@ -119,10 +129,27 @@ class TicketOfSellController extends Controller
                 'user',
                 'ticketOfSellDetails.patientHistory.product',
                 'ticketOfSellDetails.patientHistory.doctor',
-                'ticketOfSellDetails.patientHistory.assistant'
+                'ticketOfSellDetails.patientHistory.payments'
             ])
             ->where('public_id', $id)
             ->firstOrFail();
+
+        foreach ($ticketOfSell->ticketOfSellDetails as $detail) {
+            $servicePaid = 0;
+            $servicePaidWithoutTicket = 0;
+
+            foreach ($detail->patientHistory->payments as $payment) {
+
+                $servicePaid += $payment->amount;
+
+                if (! $payment->ticket_of_sell_id) {
+                    $servicePaidWithoutTicket += $payment->amount;
+                }
+            }
+
+            $detail->patientHistory->paid = $servicePaid;
+            $detail->patientHistory->paidWithoutTicket = $servicePaidWithoutTicket;
+        }
 
 
         return view('user.ticketOfSell.edit', compact('ticketOfSell'));
@@ -162,17 +189,30 @@ class TicketOfSellController extends Controller
         $ticketOfSell = TicketOfSell::query()
             ->with([
                 'ticketOfSellDetails.patientHistory.product',
+                'ticketOfSellDetails.patientHistory.payments',
                 'patient'
             ])
             ->where('public_id', $id)
             ->firstOrFail();
 
         $total = 0;
+        $paid = 0;
+        $paymentMethods = [];
         foreach ($ticketOfSell->ticketOfSellDetails as $detail) {
             $total += $detail->patientHistory->price;
+
+            foreach ($detail->patientHistory->payments as $payment) {
+                $paid += $payment->amount;
+
+                if (! $payment->isDiscount() && ! in_array($payment->paymentMethod(), $paymentMethods)) {
+                    $paymentMethods[] = $payment->paymentMethod();
+                }
+            }
         }
 
-        $pdf = PDF::loadView('user.ticketOfSell.pdf', compact('ticketOfSell', 'total'));
+        $balance = $total - $paid;
+
+        $pdf = PDF::loadView('user.ticketOfSell.pdf', compact('ticketOfSell', 'total', 'paymentMethods', 'paid', 'balance'));
 
         return $pdf->stream();
     }

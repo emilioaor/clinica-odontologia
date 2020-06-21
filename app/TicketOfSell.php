@@ -48,4 +48,12 @@ class TicketOfSell extends Model
     {
         return $this->hasMany(TicketOfSellDetail::class, 'ticket_of_sell_id');
     }
+
+    /**
+     * Pagos procesados con este ticket de venta
+     */
+    public function payments()
+    {
+        return $this->hasMany(Payment::class, 'ticket_of_sell_id');
+    }
 }

@@ -84,6 +84,7 @@
                                         <th>Doctor</th>
                                         <th class="text-center">Precio</th>
                                         <th class="text-center">Pagado</th>
+                                        <th class="text-center">Descuento</th>
                                         <th class="text-center">Pendiente por ticket</th>
                                     </tr>
                                     @foreach($ticketOfSell->ticketOfSellDetails as $detail)
@@ -97,6 +98,7 @@
                                             <td>{{ $detail->patientHistory->doctor->name }}</td>
                                             <td class="text-center">${{ number_format($detail->patientHistory->price, 2) }}</td>
                                             <td class="text-center">${{ number_format($detail->patientHistory->paid, 2) }}</td>
+                                            <td class="text-center">${{ number_format($detail->patientHistory->discount, 2) }}</td>
                                             <td class="text-center">${{ number_format($detail->patientHistory->paidWithoutTicket, 2) }}</td>
                                         </tr>
                                     @endforeach

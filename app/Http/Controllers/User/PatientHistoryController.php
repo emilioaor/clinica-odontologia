@@ -343,17 +343,23 @@ class PatientHistoryController extends Controller
                 // Calculo la informacion de pago
                 $servicePaid = 0;
                 $servicePaidWithoutTicket = 0;
+                $serviceDiscount = 0;
 
                 foreach ($service->payments as $payment) {
-                    $servicePaid += $payment->amount;
+                    if (! $payment->isDiscount()) {
+                        $servicePaid += $payment->amount;
 
-                    if (! $payment->ticket_of_sell_id) {
-                        $servicePaidWithoutTicket += $payment->amount;
+                        if (! $payment->ticket_of_sell_id) {
+                            $servicePaidWithoutTicket += $payment->amount;
+                        }
+                    } else {
+                        $serviceDiscount += $payment->amount;
                     }
                 }
 
                 $service->paid = $servicePaid;
                 $service->paid_without_ticket = $servicePaidWithoutTicket;
+                $service->discount = $serviceDiscount;
 
                 return $service;
             });

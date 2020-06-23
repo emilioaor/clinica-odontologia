@@ -137,18 +137,24 @@ class TicketOfSellController extends Controller
         foreach ($ticketOfSell->ticketOfSellDetails as $detail) {
             $servicePaid = 0;
             $servicePaidWithoutTicket = 0;
+            $serviceDiscount = 0;
 
             foreach ($detail->patientHistory->payments as $payment) {
+                if (! $payment->isDiscount()) {
 
-                $servicePaid += $payment->amount;
+                    $servicePaid += $payment->amount;
 
-                if (! $payment->ticket_of_sell_id) {
-                    $servicePaidWithoutTicket += $payment->amount;
+                    if (! $payment->ticket_of_sell_id) {
+                        $servicePaidWithoutTicket += $payment->amount;
+                    }
+                } else {
+                    $serviceDiscount += $payment->amount;
                 }
             }
 
             $detail->patientHistory->paid = $servicePaid;
             $detail->patientHistory->paidWithoutTicket = $servicePaidWithoutTicket;
+            $detail->patientHistory->discount = $serviceDiscount;
         }
 
 
@@ -195,24 +201,31 @@ class TicketOfSellController extends Controller
             ->where('public_id', $id)
             ->firstOrFail();
 
-        $total = 0;
+        $subtotal = 0;
         $paid = 0;
+        $discount = 0;
         $paymentMethods = [];
         foreach ($ticketOfSell->ticketOfSellDetails as $detail) {
-            $total += $detail->patientHistory->price;
+            $subtotal += $detail->patientHistory->price;
 
             foreach ($detail->patientHistory->payments as $payment) {
-                $paid += $payment->amount;
 
-                if (! $payment->isDiscount() && ! in_array($payment->paymentMethod(), $paymentMethods)) {
-                    $paymentMethods[] = $payment->paymentMethod();
+                if (! $payment->isDiscount()) {
+                    $paid += $payment->amount;
+
+                    if (! in_array($payment->paymentMethod(), $paymentMethods)) {
+                        $paymentMethods[] = $payment->paymentMethod();
+                    }
+                } else {
+                    $discount += $payment->amount;
                 }
             }
         }
 
+        $total = $subtotal - $discount;
         $balance = $total - $paid;
 
-        $pdf = PDF::loadView('user.ticketOfSell.pdf', compact('ticketOfSell', 'total', 'paymentMethods', 'paid', 'balance'));
+        $pdf = PDF::loadView('user.ticketOfSell.pdf', compact('ticketOfSell', 'subtotal', 'total', 'paymentMethods', 'paid', 'balance', 'discount'));
 
         return $pdf->stream();
     }

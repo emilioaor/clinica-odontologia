@@ -140,6 +140,7 @@
                                                 <th>Doctor</th>
                                                 <th class="text-center">Precio</th>
                                                 <th class="text-center">Pagado</th>
+                                                <th class="text-center">Descuento</th>
                                                 <th class="text-center">Pendiente por ticket</th>
                                                 <th width="5%"></th>
                                             </tr>
@@ -152,6 +153,7 @@
                                                 <td>{{ service.doctor.name }}</td>
                                                 <td class="text-center">${{ service.price }}</td>
                                                 <td class="text-center">${{ service.paid }}</td>
+                                                <td class="text-center">${{ service.discount }}</td>
                                                 <td class="text-center">${{ service.paid_without_ticket }}</td>
                                                 <td>
                                                     <button

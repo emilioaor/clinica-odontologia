@@ -73,6 +73,24 @@
     </table>
 
     <table style="width: 100%;margin-top: 15px;">
+        @if($discount > 0)
+            <tr>
+                <td style="width: 80%; text-align: right;">
+                    <strong>Subtotal U.S. $:</strong>
+                </td>
+                <td style="border-bottom: solid 1px; width: 20%;text-align: center;">
+                    <span style="color: #333">{{ number_format($subtotal, 2) }}</span>
+                </td>
+            </tr>
+            <tr>
+                <td style="width: 80%; text-align: right;">
+                    <strong>Discount U.S. $:</strong>
+                </td>
+                <td style="border-bottom: solid 1px; width: 20%;text-align: center;">
+                    <span style="color: #333">-{{ number_format($discount, 2) }}</span>
+                </td>
+            </tr>
+        @endif
         <tr>
             <td style="width: 80%; text-align: right;">
                 <strong>Total U.S. $:</strong>

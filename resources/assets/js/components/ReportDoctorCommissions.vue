@@ -20,7 +20,7 @@
                                         data-toggle="modal"
                                         data-target="#doctorModal"
                                         @click="searchDoctor()"
-                                        >
+                                >
                                     <i class="glyphicon glyphicon-search"></i>
 
                                     <span v-if="! doctor">
@@ -75,7 +75,7 @@
                                                 name="balance"
                                                 type="checkbox"
                                                 v-model="balanceZero"
-                                                >
+                                        >
                                     </div>
                                 </div>
                             </div>
@@ -92,7 +92,7 @@
                                                 format = "MM/dd/yyyy"
                                                 @input="changeStart($event)"
                                                 v-model="initStart"
-                                                ></datepicker>
+                                        ></datepicker>
                                     </div>
                                 </div>
 
@@ -107,7 +107,7 @@
                                                 format = "MM/dd/yyyy"
                                                 @input="changeEnd($event)"
                                                 v-model="initEnd"
-                                                ></datepicker>
+                                        ></datepicker>
                                     </div>
                                 </div>
 
@@ -133,25 +133,25 @@
                                 <div class="col-md-3">
                                     <div class="form-group">
                                         <label>Tarjeta de Credito</label>
-                                        <p> $ {{ data.paymentForCreditCard }} </p>
+                                        <p> $ {{ data.report.totalCommissionCreditCard }} </p>
                                     </div>
                                 </div>
                                 <div class="col-md-3">
                                     <div class="form-group">
                                         <label>Efectivo </label>
-                                        <p> $ {{ data.paymentForCash }} </p>
+                                        <p> $ {{ data.report.totalCommissionCash }} </p>
                                     </div>
                                 </div>
                                 <div class="col-md-3">
                                     <div class="form-group">
                                         <label>Cheque</label>
-                                        <p> $ {{ data.paymentForCheck }} </p>
+                                        <p> $ {{ data.report.totalCommissionCheck }} </p>
                                     </div>
                                 </div>
                                 <div class="col-md-3">
                                     <div class="form-group">
                                         <label for="">Total en comisiones</label>
-                                        <p> $ {{ totalAllCommission() }}</p>
+                                        <p> $ {{ data.report.totalCommission }}</p>
                                     </div>
                                 </div>
                             </div>
@@ -169,8 +169,8 @@
                                                 class="btn btn-success"
                                                 data-toggle="modal"
                                                 data-target="#registerExpenseModal"
-                                                v-if="!loading && totalAllCommission() > 0"
-                                                >
+                                                v-if="!loading && data.report.totalCommission > 0"
+                                        >
                                             <i class="glyphicon glyphicon-plus"></i>
                                             Registrar gasto por la comisi&oacute;n
                                         </button>
@@ -180,7 +180,7 @@
                                 </div>
                             </div>
 
-                            <div class="row" v-for="(p, pi) in data.report" :key="pi">
+                            <div class="row" v-for="(p, pi) in data.report.patients" :key="pi">
                                 <div class="col-xs-12">
 
                                     <div class="alert alert-info">
@@ -201,7 +201,7 @@
                                         </thead>
                                         <tbody v-for="(d, di) in p.data" :key="di">
                                             <tr
-                                                    v-for="(line, li) in d.services" 
+                                                    v-for="(line, li) in d.services"
                                                     :key="li"
                                             >
                                                 <td>{{ dateFormat(line.date) }}</td>
@@ -227,32 +227,32 @@
                                         <div class="col-sm-2 col-sm-offset-1">
                                             <h5 class="text-center">
                                                 <strong>Servicios:</strong>
-                                                {{ totalServices(p.data) }}
+                                                {{ p.totalServices }}
                                             </h5>
                                         </div>
                                         <div class="col-sm-2">
                                             <h5 class="text-center">
                                                 <strong>Pagos:</strong>
-                                                {{ totalPayments(p.data) }}
+                                                {{ p.totalPayments }}
                                             </h5>
                                         </div>
                                         <div class="col-sm-2">
                                             <h5 class="text-center">
                                                 <strong>Descuentos:</strong>
-                                                {{ totalDiscounts(p.data) }}
+                                                {{ p.totalDiscounts }}
                                             </h5>
                                         </div>
                                         <div class="col-sm-2">
                                             <h5 class="text-center">
                                                 <strong>Balance:</strong>
-                                                {{ totalServices(p.data) - (totalPayments(p.data) + totalDiscounts(p.data)) }}
+                                                {{ p.balance }}
                                             </h5>
                                         </div>
 
                                         <div class="col-sm-2">
                                             <h5 class="text-center">
                                                 <strong>Comisi&oacute;n:</strong>
-                                                {{ totalCommission(p.data) }}
+                                                {{ p.totalCommission }}
                                             </h5>
                                         </div>
                                     </div>
@@ -288,7 +288,7 @@
                                         placeholder="Buscador"
                                         v-model="modal.search"
                                         @keyup="searchDoctor()"
-                                        >
+                                >
                             </div>
                         </div>
                         <hr>
@@ -308,24 +308,24 @@
                                     </thead>
 
                                     <tbody v-if="! modal.loading">
-                                        <tr
-                                                v-for="(d, i) in modal.data"
-                                                :key="i"
-                                                v-if="! pagination.current || (i >= pagination.current.start && i <= pagination.current.end)"
+                                    <tr
+                                            v-for="(d, i) in modal.data"
+                                            :key="i"
+                                            v-if="! pagination.current || (i >= pagination.current.start && i <= pagination.current.end)"
+                                    >
+                                        <td>{{ d.phone }}</td>
+                                        <td>{{ d.name }}</td>
+                                        <td>{{ d.email }}</td>
+                                        <td>
+                                            <button
+                                                    class="btn btn-primary"
+                                                    @click="selectDoctor(d)"
+                                                    data-dismiss="modal"
                                             >
-                                            <td>{{ d.phone }}</td>
-                                            <td>{{ d.name }}</td>
-                                            <td>{{ d.email }}</td>
-                                            <td>
-                                                <button
-                                                        class="btn btn-primary"
-                                                        @click="selectDoctor(d)"
-                                                        data-dismiss="modal"
-                                                        >
-                                                    <i class="glyphicon glyphicon-ok"></i>
-                                                </button>
-                                            </td>
-                                        </tr>
+                                                <i class="glyphicon glyphicon-ok"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
                                     </tbody>
                                 </table>
 
@@ -341,7 +341,7 @@
                                                 v-for="(build, i) in pagination.build"
                                                 :key="i"
                                                 :class="{active: build.page === pagination.current.page}"
-                                                >
+                                        >
                                             <a @click="pagination.current = build">
                                                 {{ build.page }}
                                             </a>
@@ -375,7 +375,7 @@
                                         v-model="commission"
                                         v-validate
                                         data-vv-rules="required|regex:^([0-9]+)(\.[0-9]+)?$"
-                                        >
+                                >
                                 <p class="error" v-if="errors.firstByRule('commission', 'required')">
                                     Requerido
                                 </p>
@@ -391,7 +391,7 @@
                                 class="btn btn-secondary"
                                 data-dismiss="modal"
                                 v-show="! loading"
-                                >
+                        >
                             NO
                         </button>
                         <button
@@ -399,7 +399,7 @@
                                 class="btn btn-danger"
                                 v-show="! loading"
                                 @click="validateExpense()"
-                                >
+                        >
                             SI
                         </button>
 
@@ -437,9 +437,6 @@
                     search: ''
                 },
                 commission: null,
-                paymentForCreditCard: 0,
-                paymentForCash: 0,
-                paymentForCheck: 0,
 
                 pagination: {
                     perPage: 999999,
@@ -485,30 +482,20 @@
 
             search: function () {
                 this.loading = true;
-                console.log(
-                    '/admin/report/doctorCommissionsData?doctor=' + this.doctor.public_id +
-                        '&start=' + this.data.start +
-                        '&end=' + this.data.end +
-                        '&balance=' + this.balanceZero +
-                        '&payment_type=' + this.data.payment_type
-                )
+
                 axios.get(
-                        '/admin/report/doctorCommissionsData?doctor=' + this.doctor.public_id +
-                        '&start=' + this.data.start +
-                        '&end=' + this.data.end +
-                        '&balance=' + this.balanceZero +
-                        '&payment_type=' + this.data.payment_type
+                    '/admin/report/doctorCommissionsData?doctor=' + this.doctor.public_id +
+                    '&start=' + this.data.start +
+                    '&end=' + this.data.end +
+                    '&balance=' + this.balanceZero +
+                    '&payment_type=' + this.data.payment_type
                 )
                     .then((res) => {
-                        console.log(res)
+
                         this.loading = false;
 
                         if (res.data.success) {
-                            this.data.paymentForCreditCard = res.data.paymentForCreditCard
-                            this.data.paymentForCash = res.data.paymentForCash
-                            this.data.paymentForCheck = res.data.paymentForCheck
                             this.data.report = res.data.response;
-                            this.commission = this.totalAllCommission();
                         }
                     })
                     .catch((err) => {
@@ -542,114 +529,6 @@
                 format = format[0].split('-');
 
                 return format[1] + '/' + format[2] + '/' + format[0];
-            },
-
-            totalServices: function (data) {
-                let total = 0;
-                data =  Object.values(data);
-
-                data.forEach((item) => {
-                    item.services.forEach((service) => {
-                        if (service.classification === 'Servicio') {
-                            total += service.amount;
-                        }
-                    });
-                });
-
-                return total;
-            },
-
-            totalPayments: function (data) {
-                let total = 0;
-                data =  Object.values(data);
-
-                data.forEach((item) => {
-                    total += this.calculatePayments(item.services);
-                });
-
-                return total;
-            },
-
-            totalDiscounts: function (data) {
-                let total = 0;
-                data =  Object.values(data);
-
-                data.forEach((item) => {
-                    total += this.calculateDiscount(item.services);
-                });
-
-                return total;
-            },
-
-            calculateDiscount: function (services) {
-                let total = 0;
-
-                services.forEach((service) => {
-                    if (service.classification === 'Descuento' && service.amount != 0) {
-                        total += service.amount;
-                    }
-                });
-
-                return total;
-            },
-
-            calculatePayments: function (services) {
-                let total = 0;
-
-                services.forEach((service) => {
-                    if (service.classification === 'Pago' && service.amount != 0) {
-                        total += service.amount;
-                    }
-                });
-
-                return total;
-            },
-
-            calculateExpenses: function (services) {
-                let total = 0;
-
-                services.forEach((service) => {
-                    if (service.classification === 'Gasto' && service.amount != 0) {
-                        total += service.amount;
-                    }
-                });
-
-                return total;
-            },
-
-            totalCommission: function (data) {
-                
-                let total = 0;
-                let expenses;
-                let commission;
-                let commission2;
-                let services
-                //let discount;
-                let payments;
-
-                data =  Object.values(data);
-
-                data.forEach((item) => {
-                    commission2 = `${item.commission} / ${item.commission / 100}`
-                    expenses = this.calculateExpenses(item.services);
-                    //discount = this.calculateDiscount(item.services);
-                    payments = this.calculatePayments(item.services);
-
-                    commission = (payments - expenses) * (item.commission / 100);
-                    total += commission;
-                });
-                console.log(total, commission, expenses, payments)
-                return total > 0 ? total : 0;
-            },
-
-            totalAllCommission: function () {
-                let total = 0;
-
-                Object.values(this.data.report).forEach((patient) => {
-                    total += this.totalCommission(patient.data);
-                });
-
-                return total;
             },
 
             validateExpense: function () {
@@ -711,46 +590,6 @@
                 }
 
                 this.pagination.current = this.pagination.build[0];
-            },
-
-            formatoMoneda: function (number) {
-                var number1 = number.toString(), result = '', estado = true;
-                if (parseInt(number1) < 0) {
-                    estado = false;
-                    number1 = parseInt(number1) * -1;
-                    number1 = number1.toString();
-                }
-                if (number1.indexOf('.') == -1) {
-                    while (number1.length > 3) {
-                        result = '.' + '' + number1.substr(number1.length - 3) + '' + result;
-                        number1 = number1.substring(0, number1.length - 3);
-                    }
-                    result = number1 + result;
-                    if (estado == false) {
-                        result = '-' + result;
-                    }
-                }
-                else {
-                    var pos = number1.indexOf('.');
-                    var numberInt = number1.substring(0, pos);
-                    var numberDec = number1.substring(pos, number1.length);
-                    
-                    if(numberDec.charAt(0) == '.'){
-                    var newnumber = number1.substring(pos+1, number1.length);
-                    newnumber = ','+newnumber;
-                    }
-                    
-                    while (numberInt.length > 3) {
-                        result = '.' + '' + numberInt.substr(numberInt.length - 3) + '' + result;
-                        numberInt = numberInt.substring(0, numberInt.length - 3);
-                    }
-                    //result = numberInt + result + numberDec;
-                    result = numberInt + result + newnumber;
-                    if (estado == false) {
-                        result = '-' + result;
-                    }
-                }
-                return result;
             }
 
         }

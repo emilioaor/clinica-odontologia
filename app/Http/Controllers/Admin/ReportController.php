@@ -268,17 +268,7 @@ class ReportController extends Controller
         $start->setTime(00, 00, 00);
         $end = new \DateTime($request->end);
         $end->setTime(23, 59, 59);
-        $response = [];
         $paymentType = (int) $request->payment_type;
-        $paymentForCreditCard = 0;
-        $paymentForCash = 0;
-        $paymentForCheck = 0;
-        $paymentCount = [];
-        $totalExpenses = 0;
-        $totalPayments = 0;
-        $totalForCreditCard = 0;
-        $totalForCash = 0;
-        $totalForCheck = 0;
 
         // Obtengo el ID de todos los servicios registrados o con un pago
         // registrado en el rango de fechas
@@ -314,7 +304,22 @@ class ReportController extends Controller
             ])
             ->get();
 
+        $response = [
+            'patients' => [],
+            'totalPayments' => 0,
+            'totalPaymentsCreditCard' => 0,
+            'totalPaymentsCash' => 0,
+            'totalPaymentsCheck' => 0,
+            'totalCommission' => 0,
+            'totalCommissionCreditCard' => 0,
+            'totalCommissionCash' => 0,
+            'totalCommissionCheck' => 0
+        ];
+
         foreach ($patientHistory as $history) {
+
+            $patientPayments = 0;
+            $patientExpenses = 0;
 
             if ($request->balance === 'true' && ! $history->hasCompleteToDate($end)) {
                 // Si se pide solo balance 0 y este servicio tiene un monto pendiente, paso al siguiente
@@ -327,9 +332,15 @@ class ReportController extends Controller
                 continue;
             }
 
-            if (! isset($response[$patient->id])) {
-                $response[$patient->id] = [
+            if (! isset($response['patients'][$patient->id])) {
+                $response['patients'][$patient->id] = [
                     'patient' => $patient,
+                    'totalServices' => 0,
+                    'totalPayments' => 0,
+                    'totalDiscounts' => 0,
+                    'totalExpenses' => 0,
+                    'balance' => 0,
+                    'totalCommission' => 0,
                     'data' => [$history->id => []]
                 ];
             }
@@ -337,10 +348,12 @@ class ReportController extends Controller
             // Obtengo la comision configurada para este doctor y producto
             $commission = $doctor->commissionProducts()->where('product_id', $history->product->id)->first()->pivot->commission;
 
-            $response[$patient->id]['data'][$history->id]['commission'] = $commission;
-            $response[$patient->id]['data'][$history->id]['price'] = $history->price;
-            $response[$patient->id]['data'][$history->id]['pendingAmount'] = $history->pendingAmount();
-            $response[$patient->id]['data'][$history->id]['services'][] = [
+            $response['patients'][$patient->id]['totalServices'] += $history->price;
+
+            $response['patients'][$patient->id]['data'][$history->id]['commission'] = $commission;
+            $response['patients'][$patient->id]['data'][$history->id]['price'] = $history->price;
+            $response['patients'][$patient->id]['data'][$history->id]['pendingAmount'] = $history->pendingAmount();
+            $response['patients'][$patient->id]['data'][$history->id]['services'][] = [
                 'date' => $history->created_at->format('Y-m-d H:i:s'),
                 'classification' => trans('message.report.classification.service'),
                 'description' => $history->product->name,
@@ -357,20 +370,22 @@ class ReportController extends Controller
             foreach ($expenses as $expense) {
 
                 if($history->price > 0) {
-                    $response[$patient->id]['data'][$history->id]['services'][] = [
+                    $response['patients'][$patient->id]['data'][$history->id]['services'][] = [
                         'date' => $expense->date->format('Y-m-d H:i:s'),
                         'classification' => trans('message.report.classification.expense'),
                         'description' => $expense->description,
                         'amount' => $expense->amount
                     ];
+
+                    $response['patients'][$patient->id]['totalExpenses'] += $expense->amount;
+                    $patientExpenses += $expense->amount;
                 }
                 
             }
 
             $payments = $history->payments()->where('payments.date', '<=', $end)->get();
             
-            //pagos 
-            
+            // pagos
             foreach ($payments as $payment) {
 
                 if ($paymentType > 0 && $payment->type !== $paymentType) {
@@ -378,9 +393,26 @@ class ReportController extends Controller
                     continue;
                 }
 
-                $type = $payment->isDiscount() ? 'discount' : 'payment';
+                if ($payment->isDiscount()) {
+                    $type = 'discount';
+                    $response['patients'][$patient->id]['totalDiscounts'] += $payment->amount;
+                } else {
+                    $type = 'payment';
+                    $response['patients'][$patient->id]['totalPayments'] += $payment->amount;
+                    $patientPayments += $payment->amount;
+
+                    $response['totalPayments'] += $payment->amount;
+
+                    if ($payment->isCreditCard()) {
+                        $response['totalPaymentsCreditCard'] += $payment->amount;
+                    } elseif ($payment->isCash()) {
+                        $response['totalPaymentsCash'] += $payment->amount;
+                    } elseif ($payment->isCheck()) {
+                        $response['totalPaymentsCheck'] += $payment->amount;
+                    }
+                }
                 
-                $response[$patient->id]['data'][$history->id]['services'][] = [
+                $response['patients'][$patient->id]['data'][$history->id]['services'][] = [
                     'date' => $payment->date->format('Y-m-d H:i:s'),
                     'classification' => trans('message.report.classification.' . $type),
                     'description' => trans('message.report.classification.' . $type),
@@ -388,73 +420,32 @@ class ReportController extends Controller
                     'amount' => $payment->amount
                 ];
             }
+
+            $totalServices = $response['patients'][$patient->id]['totalServices'];
+            $totalPayments = $response['patients'][$patient->id]['totalPayments'];
+            $totalDiscounts = $response['patients'][$patient->id]['totalDiscounts'];
+
+            $response['patients'][$patient->id]['balance'] = $totalServices - ($totalPayments + $totalDiscounts);
+            $response['patients'][$patient->id]['totalCommission'] += ($patientPayments - $patientExpenses) * ($commission / 100);
+
+            $response['totalCommission'] += ($patientPayments - $patientExpenses) * ($commission / 100);
         }
-/*
-        dd( [
-            'commission' => $commission,
-            'total expense' => $totalExpenses,
-            'totalForCreditCard' => $totalForCreditCard,
-            'totalForCash' => $totalForCash,
-            'totalForCheck' => $totalForCheck,
-            'comision total' => $commission / 100,
-            'total' => ($totalPayments - $totalExpenses) * ($commission / 100)
-            ]
-        );*/
-        $object = (object)$response;
-        //dd($object);
-        
-        foreach($object as $data) {
-            
-            foreach ($data['data'] as $data2) {
-                $gastos = 0;
-                foreach ($data2['services'] as $data3) {
-                    
 
-                    if ($data3['classification'] == 'Gasto') {
-                        $gastos = $data3['amount'];
-                    }
+        if ($response['totalPayments'] > 0) {
 
-                    if ($data3['classification'] == 'Pago' && $data3['paymentType'] == 1) {
-                        if ($gastos) {
-                            $totalForCreditCard += ($data3['amount'] - $gastos) * ( $data2['commission'] / 100);
-                        } else {
-                            $totalForCreditCard += $data3['amount'] * ( $data2['commission'] / 100);
-                        }
-                        
-                    }
-                    if ($data3['classification'] == 'Pago' && $data3['paymentType'] == 2) {
-                        if ($gastos) {
-                            $totalForCash += ($data3['amount'] - $gastos) * ( $data2['commission'] / 100);
-                        } else {
-                            $totalForCash += $data3['amount'] * ( $data2['commission'] / 100);
-                        }
-                        
-                    }
-                    if ($data3['classification'] == 'Pago' && $data3['paymentType'] == 3) {
-                        if ($gastos) {
-                            $totalForCheck += ($data3['amount'] - $gastos) * ( $data2['commission'] / 100);
-                        } else {
-                            $totalForCheck += $data3['amount'] * ( $data2['commission'] / 100);
-                        }
-                        
-                    }
-                }   
-            }
-        }/*
-        dd( [
-            'totalForCreditCard' => $totalForCreditCard,
-            'totalForCash' => $totalForCash,
-            'totalForCheck' => $totalForCheck
-            ]
-        );*/
+            $percentage = ($response['totalPaymentsCreditCard'] * 100) / $response['totalPayments'];
+            $response['totalCommissionCreditCard'] = round($response['totalCommission'] * ($percentage / 100), 2);
 
-    
+            $percentage = ($response['totalPaymentsCash'] * 100) / $response['totalPayments'];
+            $response['totalCommissionCash'] = round($response['totalCommission'] * ($percentage / 100), 2);
+
+            $percentage = ($response['totalPaymentsCheck'] * 100) / $response['totalPayments'];
+            $response['totalCommissionCheck'] = round($response['totalCommission'] * ($percentage / 100), 2);
+        }
+
         return new JsonResponse([
             'success' => true,
-            'response' => $response,
-            'paymentForCreditCard' => abs($totalForCreditCard ),
-            'paymentForCash' => abs($totalForCash  ),
-            'paymentForCheck' => abs($totalForCheck  )
+            'response' => $response
         ]);
     }
 

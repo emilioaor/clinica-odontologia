@@ -330,9 +330,24 @@ class ReportController extends Controller
             }
 
             $patient = $history->patient;
+            $payments = $history->payments()->where('payments.date', '<=', $end)->get();
 
             if ($patient->trashed()) {
                 continue;
+            }
+
+            if ($paymentType > 0) {
+                $hasRequiredPaymentType = false;
+                foreach ($payments as $payment) {
+                    if ($payment->type === $paymentType) {
+                        $hasRequiredPaymentType = true;
+                        break;
+                    }
+                }
+
+                if (! $hasRequiredPaymentType) {
+                    continue;
+                }
             }
 
             if (! isset($response['patients'][$patient->id])) {
@@ -385,8 +400,6 @@ class ReportController extends Controller
                 }
                 
             }
-
-            $payments = $history->payments()->where('payments.date', '<=', $end)->get();
             
             // pagos
             foreach ($payments as $payment) {

@@ -319,6 +319,9 @@ class ReportController extends Controller
         foreach ($patientHistory as $history) {
 
             $patientPayments = 0;
+            $patientPaymentsCreditCard = 0;
+            $patientPaymentsCash = 0;
+            $patientPaymentsCheck = 0;
             $patientExpenses = 0;
 
             if ($request->balance === 'true' && ! $history->hasCompleteToDate($end)) {
@@ -405,10 +408,13 @@ class ReportController extends Controller
 
                     if ($payment->isCreditCard()) {
                         $response['totalPaymentsCreditCard'] += $payment->amount;
+                        $patientPaymentsCreditCard += $payment->amount;
                     } elseif ($payment->isCash()) {
                         $response['totalPaymentsCash'] += $payment->amount;
+                        $patientPaymentsCash += $payment->amount;
                     } elseif ($payment->isCheck()) {
                         $response['totalPaymentsCheck'] += $payment->amount;
+                        $patientPaymentsCheck += $payment->amount;
                     }
                 }
                 
@@ -429,18 +435,30 @@ class ReportController extends Controller
             $response['patients'][$patient->id]['totalCommission'] += ($patientPayments - $patientExpenses) * ($commission / 100);
 
             $response['totalCommission'] += ($patientPayments - $patientExpenses) * ($commission / 100);
+
+            if ($patientPayments > 0) {
+
+                $percentage = ($patientPaymentsCreditCard * 100) / $patientPayments;
+                $expenseToPercentage = $patientExpenses * ($percentage / 100);
+                $response['totalCommissionCreditCard'] += ($patientPaymentsCreditCard - $expenseToPercentage) * ($commission / 100);
+
+                $percentage = ($patientPaymentsCash * 100) / $patientPayments;
+                $expenseToPercentage = $patientExpenses * ($percentage / 100);
+                $response['totalCommissionCash'] += ($patientPaymentsCash - $expenseToPercentage) * ($commission / 100);
+
+                $percentage = ($patientPaymentsCheck * 100) / $patientPayments;
+                $expenseToPercentage = $patientExpenses * ($percentage / 100);
+                $response['totalCommissionCheck'] += ($patientPaymentsCheck - $expenseToPercentage) * ($commission / 100);
+            }
         }
 
-        if ($response['totalPayments'] > 0) {
+        $response['totalCommission'] = round($response['totalCommission'], 2);
+        $response['totalCommissionCreditCard'] = round($response['totalCommissionCreditCard'], 2);
+        $response['totalCommissionCash'] = round($response['totalCommissionCash'], 2);
+        $response['totalCommissionCheck'] = round($response['totalCommissionCheck'], 2);
 
-            $percentage = ($response['totalPaymentsCreditCard'] * 100) / $response['totalPayments'];
-            $response['totalCommissionCreditCard'] = round($response['totalCommission'] * ($percentage / 100), 2);
-
-            $percentage = ($response['totalPaymentsCash'] * 100) / $response['totalPayments'];
-            $response['totalCommissionCash'] = round($response['totalCommission'] * ($percentage / 100), 2);
-
-            $percentage = ($response['totalPaymentsCheck'] * 100) / $response['totalPayments'];
-            $response['totalCommissionCheck'] = round($response['totalCommission'] * ($percentage / 100), 2);
+        foreach ($response['patients'] as $i => $patient) {
+            $response['patients'][$i]['totalCommission'] = round($patient['totalCommission'], 2);
         }
 
         return new JsonResponse([

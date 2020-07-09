@@ -482,7 +482,9 @@ class User extends Authenticatable
                 'appointment.create',
                 'appointment.index',
                 'tracking.index',
-                'tracking.create'
+                'tracking.create',
+                'ticketOfSell.index',
+                'ticketOfSell.create'
             ])) {
             return true;
         }

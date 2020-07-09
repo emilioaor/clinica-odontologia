@@ -449,6 +449,10 @@
                 this.patient.name = patient.name;
                 this.patient.public_id = patient.public_id;
                 this.searchPatient = false;
+
+                this.patientHistory.public_id = null;
+                this.patientHistory.description = null;
+                this.data.patient_history_id = null;
             },
 
             searchServices: function () {

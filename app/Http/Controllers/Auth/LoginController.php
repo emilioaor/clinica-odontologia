@@ -4,7 +4,9 @@ namespace App\Http\Controllers\Auth;
 
 use App\CallBudget;
 use App\Http\Controllers\Controller;
+use App\LoginHistory;
 use App\User;
+use Carbon\Carbon;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -75,6 +77,8 @@ class LoginController extends Controller
 
         if ($this->attemptLogin($request)) {
 
+            $this->registerLoginHistory($request);
+
             if (Auth::user()->isSellManager()) {
                 $start = new \DateTime('now 00:00:00');
                 $end = new \DateTime('now 23:59:59');
@@ -86,6 +90,8 @@ class LoginController extends Controller
 
             return $this->sendLoginResponse($request);
         }
+
+        $this->registerLoginHistory($request);
 
         // If the login attempt was unsuccessful we will increment the number of attempts
         // to login and redirect the user back to the login form. Of course, when this
@@ -137,5 +143,21 @@ class LoginController extends Controller
         }
 
         return true;
+    }
+
+    /**
+     * Registra el intento de login
+     *
+     * @param Request $request
+     */
+    private function registerLoginHistory(Request $request)
+    {
+        $loginHistory = new LoginHistory();
+        $loginHistory->username = $request->username;
+        $loginHistory->date = Carbon::now();
+        $loginHistory->ip = $request->ip();
+        $loginHistory->user_id = User::query()->where('username', $request->username)->firstOrNew([])->id;
+        $loginHistory->success = Auth::check();
+        $loginHistory->save();
     }
 }

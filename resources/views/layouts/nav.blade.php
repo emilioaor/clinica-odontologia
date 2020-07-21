@@ -420,6 +420,7 @@
                         Auth::user()->hasPermission('report.inventorySupplyMovement') || 
                         Auth::user()->hasPermission('report.sellManagerPatients') ||
                         Auth::user()->hasPermission('report.callLog') || 
+                        Auth::user()->hasPermission('report.loginHistory') ||
                         Auth::user()->last_service
                         )
 
@@ -570,6 +571,14 @@
                                         <a href="{{ route('report.callLog') }}">
                                             <i class="glyphicon glyphicon-file"></i>
                                             Llamadas
+                                        </a>
+                                    </li>
+                                @endif
+                                @if(Auth::user()->hasPermission('report.loginHistory'))
+                                    <li>
+                                        <a href="{{ route('report.loginHistory') }}">
+                                            <i class="glyphicon glyphicon-file"></i>
+                                            Accesos
                                         </a>
                                     </li>
                                 @endif

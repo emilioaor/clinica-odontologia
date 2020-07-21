@@ -6,6 +6,7 @@ use App\Appointment;
 use App\Budget;
 use App\CallLog;
 use App\Expense;
+use App\LoginHistory;
 use App\Patient;
 use App\PatientReference;
 use App\Payment;
@@ -1229,5 +1230,39 @@ class ReportController extends Controller
             'Content-Type' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
             'Content-Disposition' =>  'attachment; filename="'.$filename.'"'
         ));
+    }
+
+    /**
+     * Reporte de accesos
+     *
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function loginHistory()
+    {
+        return view('admin.report.loginHistory');
+    }
+
+    /**
+     * Reporte de accesos
+     *
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function loginHistoryData(Request $request)
+    {
+        $start = new \DateTime("{$request->start} 00:00:00");
+        $end = new \DateTime("{$request->end} 23:59:59");
+        $histories = LoginHistory::query()
+            ->whereBetween('date', [$start, $end])
+            ->get()
+            ->map(function ($history) {
+                // Actualizo a la hora de Phoenix
+                $history->date = $history->date->setTimezone('america/phoenix');
+
+                return $history;
+            })
+        ;
+
+        return new JsonResponse(['success' => true, 'histories' => $histories]);
     }
 }

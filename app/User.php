@@ -148,6 +148,16 @@ class User extends Authenticatable
     }
 
     /**
+     * Historial de login
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function loginHistory()
+    {
+        return $this->hasMany(LoginHistory::class, 'user_id');
+    }
+
+    /**
      * Tickets de venta registrados por el usuario
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany

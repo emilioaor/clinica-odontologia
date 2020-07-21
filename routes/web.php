@@ -156,15 +156,11 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function () {
     // Reportes
     Route::get('report/servicesAndPayments', 'Admin\ReportController@servicesAndPayments')->name('report.servicesAndPayments');
     Route::get('report/servicesAndPaymentsData', 'Admin\ReportController@servicesAndPaymentsData');
-    Route::get('report/servicesAndPaymentsPerPatient', 'Admin\ReportController@servicesAndPaymentsPerPatient')
-        ->name('report.servicesAndPaymentsPerPatient');
+    Route::get('report/servicesAndPaymentsPerPatient', 'Admin\ReportController@servicesAndPaymentsPerPatient')->name('report.servicesAndPaymentsPerPatient');
     Route::get('report/servicesAndPaymentsPerPatientData', 'Admin\ReportController@servicesAndPaymentsPerPatientData');
-    Route::get('report/servicesPerPatient', 'Admin\ReportController@servicesPerPatient')
-        ->name('report.servicesPerPatient');
-    Route::get('report/servicesPerPatientData', 'Admin\ReportController@servicesPerPatientData')
-        ->name('report.servicesPerPatientData');
-    Route::get('servicesPerPatient/changeStatusFile/{id}', 'Admin\ReportController@changeStatusFile')
-        ->name('report.changeStatusFile');
+    Route::get('report/servicesPerPatient', 'Admin\ReportController@servicesPerPatient')->name('report.servicesPerPatient');
+    Route::get('report/servicesPerPatientData', 'Admin\ReportController@servicesPerPatientData')->name('report.servicesPerPatientData');
+    Route::get('servicesPerPatient/changeStatusFile/{id}', 'Admin\ReportController@changeStatusFile')->name('report.changeStatusFile');
     Route::get('report/doctorCommissions', 'Admin\ReportController@doctorCommissions')->name('report.doctorCommissions');
     Route::get('report/doctorCommissionsData', 'Admin\ReportController@doctorCommissionsData');
     Route::get('report/expenses', 'Admin\ReportController@expenses')->name('report.expenses');
@@ -191,6 +187,8 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function () {
     Route::get('report/callLog', 'Admin\ReportController@callLog')->name('report.callLog');
     Route::get('report/callLogData', 'Admin\ReportController@callLogData');
     Route::get('report/callLogExport', 'Admin\ReportController@callLogExport');
+    Route::get('report/loginHistory', 'Admin\ReportController@loginHistory')->name('report.loginHistory');
+    Route::get('report/loginHistoryData', 'Admin\ReportController@loginHistoryData');
 
     // Graphics 
     Route::get('/grafica/pagos', 'Admin\GraphicsController@paymentCharts')->name('grafiCapagos');

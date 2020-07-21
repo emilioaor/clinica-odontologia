@@ -42,13 +42,35 @@ class TicketOfSellController extends Controller
             ;
 
             $tickets = TicketOfSell::query()
+                ->with(['ticketOfSellDetails.patientHistory.payments'])
                 ->orderBy('id', 'DESC')
                 ->whereIn('patient_id', $patients)
                 ->limit(15)
                 ->paginate();
 
         } else {
-            $tickets = TicketOfSell::query()->orderBy('id', 'DESC')->paginate();
+            $tickets = TicketOfSell::query()
+                ->with(['ticketOfSellDetails.patientHistory.payments'])
+                ->orderBy('id', 'DESC')
+                ->paginate();
+        }
+
+        foreach ($tickets as $ticketOfSell) {
+            $subtotal = 0;
+            $discount = 0;
+
+            foreach ($ticketOfSell->ticketOfSellDetails as $detail) {
+                $subtotal += $detail->patientHistory->price;
+
+                foreach ($detail->patientHistory->payments as $payment) {
+
+                    if ($payment->isDiscount()) {
+                        $discount += $payment->amount;
+                    }
+                }
+            }
+
+            $ticketOfSell->total = $subtotal - $discount;
         }
 
         return view('user.ticketOfSell.index', compact('tickets'));

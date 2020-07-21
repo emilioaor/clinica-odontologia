@@ -73,7 +73,7 @@
                                             <td>{{ $ticket->patient->phone }}</td>
                                             <td>{{ $ticket->patient->name }}</td>
                                             <td>{{ $ticket->created_at->format('m/d/Y') }}</td>
-                                            <td>{{ '$' . number_format($ticket->total_head_value, 2) . ' USD' }}</td>
+                                            <td>{{ '$' . number_format($ticket->total, 2) . ' USD' }}</td>
                                             <td>{{ $ticket->user->name ?? '' }}</td>
                                         </tr>
                                     @endforeach

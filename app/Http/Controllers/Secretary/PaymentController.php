@@ -10,6 +10,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use Closure;
 
 class PaymentController extends Controller
 {
@@ -18,12 +19,24 @@ class PaymentController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('secretary');
+        $this->middleware(function ($request, Closure $next) {
+            if (
+                ! Auth::user()->isAdmin() &&
+                ! Auth::user()->isSecretary() &&
+                ! Auth::user()->edit_date_of_payments
+            ) {
 
-        $this->middleware('admin')->only([
-            'destroy',
-            'update'
-        ]);
+                if ($request->ajax()) {
+                    return new JsonResponse(null, 403);
+                }
+
+                return redirect()->route('home');
+            }
+
+            return $next($request);
+        });
+
+        $this->middleware('admin')->only(['destroy']);
     }
 
     /**

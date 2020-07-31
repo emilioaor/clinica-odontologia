@@ -93,6 +93,7 @@ class UserController extends Controller
         $user->management_inventory = $request->management_inventory;
         $user->management_supply = $request->management_supply;
         $user->edit_date_of_services = $request->edit_date_of_services;
+        $user->edit_date_of_payments = $request->edit_date_of_payments;
         $user->last_service = $request->last_service;
         $user->save();
 
@@ -165,6 +166,7 @@ class UserController extends Controller
         $user->management_inventory = $request->management_inventory;
         $user->management_supply = $request->management_supply;
         $user->edit_date_of_services = $request->edit_date_of_services;
+        $user->edit_date_of_payments = $request->edit_date_of_payments;
         $user->last_service = $request->last_service;
         $user->save();
 

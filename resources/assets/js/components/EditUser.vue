@@ -13,7 +13,7 @@
 
             <div class="row">
 
-                <div class="col-md-12">
+                <div class="col-md-10">
                     <div class="panel panel-default">
                         <div class="panel-body">
 
@@ -121,15 +121,6 @@
                                 </div>
 
                                 <div class="row">
-                                    <div class="col-sm-3" v-if="hasRole(doctorRole.id)">
-                                        <div class="form-group">
-                                            <label for="external">¿Externo?</label>
-                                            <div>
-                                                <input type="checkbox" v-model="form.external" id="external">
-                                            </div>
-                                        </div>
-                                    </div>
-
                                     <div class="col-sm-3">
                                         <div class="form-group">
                                             <label for="management_inventory">¿Maneja inventario?</label>
@@ -163,11 +154,34 @@
                                     </div>
                                 </div>
 
-                                <div class="col-sm-3">
-                                    <div class="form-group">
-                                        <label for="last_service">¿Ultimo servicio por paciente?</label>
-                                        <div>
-                                            <input type="checkbox" v-model="form.last_service" id="last_service">
+                                <div class="row">
+                                    <div class="col-sm-3">
+                                        <div class="form-group">
+                                            <label for="edit_date_of_payments">¿Modifica fecha de pagos?</label>
+                                            <div>
+                                                <input
+                                                        type="checkbox"
+                                                        v-model="form.edit_date_of_payments"
+                                                        id="edit_date_of_payments">
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-sm-3">
+                                        <div class="form-group">
+                                            <label for="last_service">¿Ultimo servicio por paciente?</label>
+                                            <div>
+                                                <input type="checkbox" v-model="form.last_service" id="last_service">
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-sm-3" v-if="hasRole(doctorRole.id)">
+                                        <div class="form-group">
+                                            <label for="external">¿Externo?</label>
+                                            <div>
+                                                <input type="checkbox" v-model="form.external" id="external">
+                                            </div>
                                         </div>
                                     </div>
                                 </div>

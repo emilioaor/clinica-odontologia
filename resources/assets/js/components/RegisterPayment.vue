@@ -367,8 +367,8 @@
                                             <th>Registrado por</th>
                                             <th>Tipo</th>
                                             <th>Monto</th>
-                                            <th width="5%" v-if="user.hasRole.admin"></th>
-                                            <th width="5%" v-if="user.hasRole.admin"></th>
+                                            <th width="5%" v-if="user.hasRole.admin || user.edit_date_of_payments"></th>
+                                            <th width="5%" v-if="user.hasRole.admin || user.edit_date_of_payments"></th>
                                         </tr>
                                         </thead>
                                         <tbody>
@@ -382,11 +382,11 @@
                                                         format = "MM/dd/yyyy"
                                                         @input="changeDatePayment($event, id)"
                                                         v-model="payment.datePicker"
-                                                        v-if="paymentEdit === payment.id"
+                                                        v-if="paymentEdit === payment.id && (user.hasRole.admin || user.edit_date_of_payments)"
                                                         :disabled="disabledDates"
                                                         ></datepicker>
 
-                                                <span v-if="paymentEdit !== payment.id">
+                                                <span v-else>
                                                     {{ dateFormat(payment.date) }}
                                                 </span>
                                             </td>
@@ -400,7 +400,7 @@
                                                         class="form-control"
                                                         placeholder="Secretaria"
                                                         v-model="payment.user_created_id"
-                                                        v-if="paymentEdit === payment.id"
+                                                        v-if="paymentEdit === payment.id && user.hasRole.admin"
                                                     >
                                                     <option
                                                             v-for="secretary in secretaries"
@@ -410,7 +410,7 @@
                                                     </option>
                                                 </select>
 
-                                                <span v-if="paymentEdit !== payment.id">
+                                                <span v-else>
                                                     {{ payment.user_created.name }}
                                                 </span>
                                             </td>
@@ -421,7 +421,7 @@
                                                         class="form-control"
                                                         placeholder="Tipo de pago"
                                                         v-model="payment.type"
-                                                        v-if="paymentEdit === payment.id"
+                                                        v-if="paymentEdit === payment.id && user.hasRole.admin"
                                                         >
                                                     <option value="1">Tarjeta de crédito</option>
                                                     <option value="2">Efectivo</option>
@@ -429,7 +429,7 @@
                                                     <option value="4">Descuento</option>
                                                 </select>
 
-                                                <span v-if="paymentEdit !== payment.id">
+                                                <span v-else>
                                                     <span v-if="payment.type === 1">Tarjeta de crédito</span>
                                                     <span v-if="payment.type === 2">Efectivo</span>
                                                     <span v-if="payment.type === 3">Cheque</span>
@@ -437,27 +437,28 @@
                                                 </span>
                                             </td>
                                             <td>
-                                                <input
-                                                        type="number"
-                                                        class="form-control"
-                                                        :id="'amount' + id"
-                                                        :name="'amount' + id"
-                                                        placeholder="Monto"
-                                                        v-model="payment.amount"
-                                                        v-validate
-                                                        data-vv-rules="required"
-                                                        :class="{'input-error': errors.has('amount' + id)}"
-                                                        v-if="paymentEdit === payment.id"
-                                                        >
-                                                <p class="error" v-if="errors.firstByRule('amount' + id, 'required')">
-                                                    Requerido
-                                                </p>
+                                                <div v-if="paymentEdit === payment.id && user.hasRole.admin">
+                                                    <input
+                                                            type="number"
+                                                            class="form-control"
+                                                            :id="'amount' + id"
+                                                            :name="'amount' + id"
+                                                            placeholder="Monto"
+                                                            v-model="payment.amount"
+                                                            v-validate
+                                                            data-vv-rules="required"
+                                                            :class="{'input-error': errors.has('amount' + id)}"
+                                                    >
+                                                    <p class="error" v-if="errors.firstByRule('amount' + id, 'required')">
+                                                        Requerido
+                                                    </p>
+                                                </div>
 
-                                                <span v-if="paymentEdit !== payment.id">
+                                                <span v-else>
                                                     {{ '$' + payment.amount }}
                                                 </span>
                                             </td>
-                                            <td v-if="user.hasRole.admin">
+                                            <td v-if="user.hasRole.admin || user.edit_date_of_payments">
                                                 <!-- Editar pago -->
                                                 <button
                                                         class="btn btn-warning"
@@ -477,7 +478,7 @@
                                                     <i class="glyphicon glyphicon-remove-sign"></i>
                                                 </button>
                                             </td>
-                                            <td v-if="user.hasRole.admin">
+                                            <td v-if="user.hasRole.admin || user.hasRole.admin || user.edit_date_of_payments">
                                                 <!-- Guardar pago -->
                                                 <button
                                                         class="btn btn-success"
@@ -494,7 +495,7 @@
                                                         class="btn btn-danger"
                                                         data-toggle="modal"
                                                         data-target="#deleteModal"
-                                                        v-if="paymentEdit !== payment.id"
+                                                        v-if="paymentEdit !== payment.id && user.hasRole.admin"
                                                         @click="deleteId = payment.id"
                                                         >
                                                     <i class="glyphicon glyphicon-remove"></i>
@@ -831,7 +832,7 @@
 
             const today = new Date();
             const yesterday = new Date(today.getTime() - 24*60*60*1000);
-            this.disabledDates = this.user.hasRole.admin ? {} : {to: yesterday}
+            this.disabledDates = this.user.hasRole.admin || this.user.edit_date_of_payments ? {} : {to: yesterday}
         },
         computed: {
             paymentModalService: function () {

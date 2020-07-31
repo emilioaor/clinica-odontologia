@@ -194,6 +194,17 @@
                                             </div>
                                         </div>
                                     </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-sm-3">
+                                        <div class="form-group">
+                                            <label for="edit_date_of_payments">¿Modifica fecha de pagos?</label>
+                                            <div>
+                                                <input type="checkbox" v-model="form.edit_date_of_payments" id="edit_date_of_payments">
+                                            </div>
+                                        </div>
+                                    </div>
 
                                     <div class="col-sm-3">
                                         <div class="form-group">
@@ -260,6 +271,7 @@
                     management_inventory: false,
                     management_supply: false,
                     edit_date_of_services: false,
+                    edit_date_of_payments: false,
                     last_service: false,
                     roles: []
                 },

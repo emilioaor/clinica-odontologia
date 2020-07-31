@@ -122,7 +122,8 @@
                         Auth::user()->hasPermission('appointment.create') ||
                         Auth::user()->hasPermission('ticketOfSell.create') ||
                         Auth::user()->hasPermission('ticketOfSell.index') ||
-                        Auth::user()->edit_date_of_services
+                        Auth::user()->edit_date_of_services ||
+                        Auth::user()->edit_date_of_payments
                     )
 
                         <li class="dropdown">
@@ -180,7 +181,7 @@
                                         </a>
                                     </li>
                                 @endif
-                                @if(Auth::user()->hasPermission('payment.create'))
+                                @if(Auth::user()->hasPermission('payment.create') || Auth::user()->edit_date_of_payments)
                                     <li>
                                         <a href="{{ route('payment.create') }}">
                                             <i class="glyphicon glyphicon-search"></i>

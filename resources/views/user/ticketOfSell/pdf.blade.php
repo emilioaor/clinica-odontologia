@@ -175,7 +175,7 @@
     </table>
 
     <!-- FOOTER -->
-    <table style="width: 100%;margin-top: 10px;">
+    <table style="width: 100%;margin-top: 10px;position: fixed;left: 0; bottom: 70px;">
         <tr>
             <td>
                 <br><br>
@@ -184,7 +184,7 @@
             <td style="text-align: right">
                 <br>
                 {{ Auth::user()->phone }} <br>
-                www.dentalsolutionstijuana.com
+                {{ str_replace('https://', '', str_replace('http://', '', Request::root()))  }}
             </td>
         </tr>
     </table>

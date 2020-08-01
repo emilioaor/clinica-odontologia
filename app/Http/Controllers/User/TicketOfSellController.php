@@ -247,7 +247,7 @@ class TicketOfSellController extends Controller
         $total = $subtotal - $discount;
         $balance = $total - $paid;
 
-        $pdf = PDF::loadView('user.ticketOfSell.pdf', compact('ticketOfSell', 'subtotal', 'total', 'paymentMethods', 'paid', 'balance', 'discount'));
+        $pdf = PDF::setPaper('c5')->loadView('user.ticketOfSell.pdf', compact('ticketOfSell', 'subtotal', 'total', 'paymentMethods', 'paid', 'balance', 'discount'));
 
         return $pdf->stream();
     }

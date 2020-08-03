@@ -56,4 +56,28 @@ class TicketOfSell extends Model
     {
         return $this->hasMany(Payment::class, 'ticket_of_sell_id');
     }
+
+    public static function textWrap($text, $wrap = ' ')
+    {
+        $len = strlen($text);
+        $response = [];
+        $level = 0;
+
+        for ($x = 0; $x < $len; $x++) {
+
+            if (! isset($response[$level])) {
+                $response[$level] = '';
+            }
+
+            $response[$level] .= $text[$x];
+
+            if (strlen($response[$level]) >= 20 && ! preg_match('/[0-9]/', $text[$x])) {
+                $level++;
+            }
+        }
+
+        $response = implode($wrap, $response);
+
+        return $response;
+    }
 }

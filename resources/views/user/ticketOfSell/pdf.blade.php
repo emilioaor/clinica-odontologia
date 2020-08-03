@@ -3,8 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <title>Ticket de venta</title>
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
 </head>
-<body style="color: #408b88;">
+<body style="color: #408b88;font-size: 12px;font-family: 'Open Sans', sans-serif;">
 
     <!-- HEADER -->
     <table style="width: 100%;">
@@ -23,7 +24,7 @@
 
 
     <!-- INFO -->
-    <table style="width: 100%;margin-top: 40px;font-size: 16px;">
+    <table style="width: 100%;margin-top: 15px;">
         <tr>
             <td style="width: 80px;">
                 <strong>Name:</strong>
@@ -55,15 +56,15 @@
     </table>
 
     <!-- DETAIL -->
-    <table style="width: 100%;margin-top: 40px;">
+    <table style="width: 100%;margin-top: 20px;">
         <tr style="background-color: #408b88; color: #ffffff;text-align: center;">
-            <th style="width: 20%;">Tooth #</th>
-            <th style="width: 60%;">Treatment</th>
+            <th style="width: 30%;">Tooth #</th>
+            <th style="width: 50%;">Treatment</th>
             <th style="width: 20%;">Price</th>
         </tr>
         @foreach($ticketOfSell->ticketOfSellDetails as $detail)
             <tr style="color: #333333;">
-                <td style="border: solid 1px #408b88;text-align: center;">{{ $detail->patientHistory->tooth }}</td>
+                <td style="border: solid 1px #408b88;text-align: center;">{{ \App\TicketOfSell::textWrap($detail->patientHistory->tooth) }}</td>
                 <td style="border: solid 1px #408b88;padding: 0 10px;">{{ $detail->patientHistory->product->name }}</td>
                 <td style="border: solid 1px #408b88;text-align: center">
                     ${{ number_format($detail->patientHistory->price, 2) }}
@@ -72,7 +73,7 @@
         @endforeach
     </table>
 
-    <table style="width: 100%;margin-top: 15px;">
+    <table style="width: 100%;margin-top: 5px;">
         @if($discount > 0)
             <tr>
                 <td style="width: 80%; text-align: right;">
@@ -101,7 +102,7 @@
         </tr>
     </table>
 
-    <table style="width: 100%;margin-top: 15px;">
+    <table style="width: 100%;margin-top: 10px;">
         <tr>
             <td style="width: 80px;">
                 <strong>Payment:</strong>
@@ -147,7 +148,7 @@
     </table>
 
     <!-- WARRANTY -->
-    <table style="width: 100%;margin-top: 50px;">
+    <table style="width: 100%;margin-top: 20px;">
         <tr>
             <td colspan="2" style="text-align: justify;background-color: #408b88; color: #ffffff;padding: 10px;">
                 ***WARRANTY. Dental Solutions offers an extended warranty of up to 1
@@ -161,7 +162,7 @@
     </table>
 
     <!-- SIGNATURE -->
-    <table style="width: 100%;margin-top: 35px;">
+    <table style="width: 100%;margin-top: 25px;">
         <tr>
             <td style="width: 140px;">
                 <strong>Patient's Signature:</strong>

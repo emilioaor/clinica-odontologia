@@ -87,6 +87,7 @@ Vue.component('register-tracking', require('./components/RegisterTracking.vue'))
 Vue.component('list-tracking', require('./components/ListTracking.vue'));
 Vue.component('register-ticket-of-sell', require('./components/RegisterTicketOfSell.vue'));
 Vue.component('report-login-history', require('./components/ReportLoginHistory.vue'));
+Vue.component('report-campaign', require('./components/ReportCampaign.vue'));
 Vue.component('send-lab-notification', require('./components/SendLabNotification.vue'));
 Vue.component('call-budget-notification', require('./components/CallBudgetNotification.vue'));
 Vue.component('graphics-payment', require('./components/GraphicsPayment.vue'));

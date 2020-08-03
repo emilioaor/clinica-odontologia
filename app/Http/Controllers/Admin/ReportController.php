@@ -1265,4 +1265,47 @@ class ReportController extends Controller
 
         return new JsonResponse(['success' => true, 'histories' => $histories]);
     }
+
+    /**
+     * Reporte de campaña
+     *
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function campaign()
+    {
+        return view('admin.report.campaign');
+    }
+
+    /**
+     * Reporte de campaña
+     *
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function campaignData(Request $request)
+    {
+        $start = new \DateTime("{$request->start} 00:00:00");
+        $end = new \DateTime("{$request->end} 23:59:59");
+
+        $patients = Patient::query()->campaign($start, $end)->get();
+
+        return new JsonResponse(['success' => true, 'patients' => $patients]);
+    }
+
+    /**
+     * Reporte de campaña
+     *
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function campaignExcel(Request $request)
+    {
+        $start = new \DateTime("{$request->start} 00:00:00");
+        $end = new \DateTime("{$request->end} 23:59:59");
+
+        $patients = Patient::query()->campaign($start, $end)->get();
+        $view = \View::make('admin.report.campaignExcel', compact('patients'));
+
+        return Response($view, 200);
+    }
 }

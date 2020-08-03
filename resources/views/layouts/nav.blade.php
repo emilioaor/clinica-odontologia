@@ -422,6 +422,7 @@
                         Auth::user()->hasPermission('report.sellManagerPatients') ||
                         Auth::user()->hasPermission('report.callLog') || 
                         Auth::user()->hasPermission('report.loginHistory') ||
+                        Auth::user()->hasPermission('report.campaign') ||
                         Auth::user()->last_service
                         )
 
@@ -580,6 +581,14 @@
                                         <a href="{{ route('report.loginHistory') }}">
                                             <i class="glyphicon glyphicon-file"></i>
                                             Accesos
+                                        </a>
+                                    </li>
+                                @endif
+                                @if(Auth::user()->hasPermission('report.campaign'))
+                                    <li>
+                                        <a href="{{ route('report.campaign') }}">
+                                            <i class="glyphicon glyphicon-file"></i>
+                                            Campañas
                                         </a>
                                     </li>
                                 @endif

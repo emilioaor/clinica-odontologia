@@ -158,4 +158,21 @@ class Patient extends Model
             $query->whereNotNull('sell_manager_id');
         }
     }
+
+    /**
+     * Pacientes con servicios para una campaña
+     *
+     * @param $query
+     * @param $start
+     * @param $end
+     */
+    public function scopeCampaign($query, $start, $end)
+    {
+        $query
+            ->select(['patients.*'])
+            ->join('patient_history', 'patient_history.patient_id', '=', 'patients.id')
+            ->whereBetween('patient_history.created_at', [$start, $end])
+            ->distinct()
+        ;
+    }
 }

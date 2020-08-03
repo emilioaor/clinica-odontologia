@@ -189,6 +189,9 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function () {
     Route::get('report/callLogExport', 'Admin\ReportController@callLogExport');
     Route::get('report/loginHistory', 'Admin\ReportController@loginHistory')->name('report.loginHistory');
     Route::get('report/loginHistoryData', 'Admin\ReportController@loginHistoryData');
+    Route::get('report/campaign', 'Admin\ReportController@campaign')->name('report.campaign');
+    Route::get('report/campaignData', 'Admin\ReportController@campaignData');
+    Route::get('report/campaignExcel', 'Admin\ReportController@campaignExcel');
 
     // Graphics 
     Route::get('/grafica/pagos', 'Admin\GraphicsController@paymentCharts')->name('grafiCapagos');

@@ -363,6 +363,7 @@
                                         <thead>
                                         <tr>
                                             <th>Fecha</th>
+                                            <th>ID Servicio</th>
                                             <th>Servicio</th>
                                             <th>Registrado por</th>
                                             <th>Tipo</th>
@@ -391,7 +392,28 @@
                                                 </span>
                                             </td>
                                             <td>
-                                                {{ payment.patient_history ? payment.patient_history.product.name : '' }}
+                                                <select
+                                                        :name="'service' + id"
+                                                        :id="'service' + id"
+                                                        class="form-control"
+                                                        v-model="payment.patient_history_id"
+                                                        v-if="paymentEdit === payment.id && (user.hasRole.admin || user.edit_date_of_payments) && payment.patient_history"
+                                                >
+                                                    <option
+                                                            v-for="service in data.services"
+                                                            :value="service.id"
+                                                            v-if="service.pending_amount >= payment.amount || service.id === payment.patient_history.id"
+                                                    >
+                                                        {{ service.public_id + ' - ' + service.product.name }}
+                                                    </option>
+                                                </select>
+
+                                                <span v-else>
+                                                    {{ payment.patient_history ? payment.patient_history.public_id : '' }}
+                                                </span>
+                                            </td>
+                                            <td>
+                                                {{ getServiceDescription(payment.patient_history_id) }}
                                             </td>
                                             <td>
                                                 <select
@@ -918,6 +940,12 @@
             changePatientHistory: function () {
                 this.paymentModal.data.amount = null;
                 this.paymentModal.data.type = null;
+            },
+
+            getServiceDescription: function (id) {
+                const service = this.data.services.find(s => s.id === id);
+
+                return service ? service.product.name : ''
             },
 
             search: function () {

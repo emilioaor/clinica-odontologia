@@ -118,6 +118,7 @@ class PaymentController extends Controller
         $payment->date = new \DateTime($request->date);
         $payment->user_created_id = $request->user_created_id;
         $payment->type = $request->type;
+        $payment->patient_history_id = $request->patient_history_id;
         $payment->amount = $request->amount;
         $payment->save();
 

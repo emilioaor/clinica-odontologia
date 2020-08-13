@@ -472,7 +472,9 @@ class User extends Authenticatable
                 'budget.index',
                 'service.search',
                 'supplyRequest.create',
-                'question.index'
+                'question.index',
+                'patient.create',
+                'patient.index',
             ])) {
             return true;
         }

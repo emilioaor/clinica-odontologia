@@ -23,7 +23,7 @@ class PatientController extends Controller
     {
         $this->middleware(function ($request, $next) {
 
-            if (! Auth::user()->isAdmin() && ! Auth::user()->isDoctor() && ! Auth::user()->isSellManager()) {
+            if (! Auth::user()->isAdmin() && ! Auth::user()->isDoctor() && ! Auth::user()->isSellManager() && ! Auth::user()->isAssistant()) {
                 if ($request->ajax()) {
                     return new JsonResponse(null, 403);
                 }
@@ -34,10 +34,6 @@ class PatientController extends Controller
             return $next($request);
         })->except([
             'index',
-            'search'
-        ]);
-
-        $this->middleware('noAssistant')->except([
             'search'
         ]);
 

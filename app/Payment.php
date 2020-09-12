@@ -23,7 +23,8 @@ class Payment extends Model
         'type',
         'patient_history_id',
         'date',
-        'ticket_of_sell_id'
+        'ticket_of_sell_id',
+        'checked_in_ticket'
     ];
 
     protected $dates = ['deleted_at', 'date'];

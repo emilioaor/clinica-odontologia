@@ -84,6 +84,7 @@ Route::group(['prefix' => 'user', 'middleware' => 'auth'], function () {
 
     // Pagos
     Route::get('payment/{patient}/search', 'Secretary\PaymentController@search');
+    Route::put('payment/{payment}/checked', 'Secretary\PaymentController@updateChecked');
     Route::resource('payment', 'Secretary\PaymentController');
 
     // Gastos

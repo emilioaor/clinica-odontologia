@@ -120,6 +120,7 @@ class PaymentController extends Controller
         $payment->type = $request->type;
         $payment->patient_history_id = $request->patient_history_id;
         $payment->amount = $request->amount;
+        $payment->checked_in_ticket = $request->checked_in_ticket;
         $payment->save();
 
         return new JsonResponse(['success' => true]);
@@ -205,5 +206,20 @@ class PaymentController extends Controller
             'services' => $services,
             'payments' => $payments
         ]);
+    }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function updateChecked($id)
+    {
+        $payment = Payment::findOrFail($id);
+        $payment->checked_in_ticket = ! $payment->checked_in_ticket;
+        $payment->save();
+
+        return new JsonResponse(['success' => true]);
     }
 }

@@ -368,6 +368,7 @@
                                             <th>Registrado por</th>
                                             <th>Tipo</th>
                                             <th>Monto</th>
+                                            <th class="text-center">Revisado</th>
                                             <th width="5%" v-if="user.hasRole.admin || user.edit_date_of_payments"></th>
                                             <th width="5%" v-if="user.hasRole.admin || user.edit_date_of_payments"></th>
                                         </tr>
@@ -479,6 +480,25 @@
                                                 <span v-else>
                                                     {{ '$' + payment.amount }}
                                                 </span>
+                                            </td>
+                                            <td class="text-center">
+                                                <div v-if="user.hasRole.admin">
+                                                    <input
+                                                            class="payment-checkbox"
+                                                            :id="'checked_in_ticket' + id"
+                                                            :name="'checked_in_ticket' + id"
+                                                            type="checkbox"
+                                                            v-model="payment.checked_in_ticket"
+                                                            @change="updateChecked(payment)"
+                                                            v-if="loadingChecked !== payment.id"
+                                                            :disabled="loadingChecked !== false"
+                                                    >
+                                                    <img src="/img/loading.gif" v-else>
+                                                </div>
+                                                <div v-else>
+                                                    <span class="label label-success" v-if="payment.checked_in_ticket">SI</span>
+                                                    <span class="label label-danger" v-else>NO</span>
+                                                </div>
                                             </td>
                                             <td v-if="user.hasRole.admin || user.edit_date_of_payments">
                                                 <!-- Editar pago -->
@@ -808,6 +828,7 @@
         data: function () {
           return {
               loading: false,
+              loadingChecked: false,
               patient: null,
               initStart: new Date(),
               initEnd: new Date(),
@@ -1085,6 +1106,24 @@
                     })
             },
 
+            updateChecked: function (payment) {
+                this.loadingChecked = payment.id;
+
+                axios.put('/user/payment/' + payment.id + '/checked')
+                    .then((res) => {
+
+                        if (res.data.success) {
+                            this.loadingChecked = false;
+                        }
+                    })
+                    .catch((err) => {
+                        if (err.response.status === 403 || err.response.status === 405) {
+                            location.href = '/';
+                        }
+                        console.log(err);
+                    })
+            },
+
             updatePatientHistory: function (service) {
                 this.serviceLoading = service.id;
 
@@ -1149,3 +1188,10 @@
         }
     }
 </script>
+
+<style scoped>
+    .payment-checkbox {
+        width: 100%;
+        height: 20px;
+    }
+</style>

@@ -177,6 +177,7 @@
                                             <th>Registrado por</th>
                                             <th>Tipo</th>
                                             <th>Monto</th>
+                                            <th class="text-center">Revisado</th>
                                         </tr>
                                         </thead>
                                         <tbody>
@@ -191,6 +192,25 @@
                                                 <span v-if="payment.type === 4">Descuento</span>
                                             </td>
                                             <td>{{ '$' + payment.amount }}</td>
+                                            <td>
+                                                <div v-if="user.hasRole.admin" class="text-center">
+                                                    <input
+                                                            class="payment-checkbox"
+                                                            :id="'checked_in_ticket' + payment.id"
+                                                            :name="'checked_in_ticket' + payment.id"
+                                                            type="checkbox"
+                                                            v-model="payment.checked_in_ticket"
+                                                            @change="updateChecked(payment)"
+                                                            v-if="loadingChecked !== payment.id"
+                                                            :disabled="loadingChecked !== false"
+                                                    >
+                                                    <img src="/img/loading.gif" v-else>
+                                                </div>
+                                                <div v-else>
+                                                    <span class="label label-success" v-if="payment.checked_in_ticket">SI</span>
+                                                    <span class="label label-danger" v-else>NO</span>
+                                                </div>
+                                            </td>
                                         </tr>
                                         </tbody>
                                         <tfoot>
@@ -223,9 +243,16 @@
         components: {
             Datepicker
         },
+        props: {
+            user: {
+                required: true,
+                type: Object
+            }
+        },
         data: function () {
             return {
                 loading: false,
+                loadingChecked: false,
                 initStart: new Date(),
                 initEnd: new Date(),
                 data: {
@@ -261,6 +288,24 @@
                 let year = date.getFullYear();
 
                 this.data.end = year + '-' + month + '-' + day;
+            },
+
+            updateChecked: function (payment) {
+                this.loadingChecked = payment.id;
+
+                axios.put('/user/payment/' + payment.id + '/checked')
+                    .then((res) => {
+
+                        if (res.data.success) {
+                            this.loadingChecked = false;
+                        }
+                    })
+                    .catch((err) => {
+                        if (err.response.status === 403 || err.response.status === 405) {
+                            location.href = '/';
+                        }
+                        console.log(err);
+                    })
             },
 
             search: function () {
@@ -344,3 +389,10 @@
         }
     }
 </script>
+
+<style scoped>
+    .payment-checkbox {
+        width: 100%;
+        height: 20px;
+    }
+</style>

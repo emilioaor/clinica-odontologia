@@ -109,6 +109,33 @@ class Payment extends Model
         return trans('message.paymentMethod.' . $this->type);
     }
 
+    /**
+     * Pagos sin revisar
+     *
+     * @return array
+     */
+    public static function paymentsWithoutCheck()
+    {
+        $paymentsWithoutCheck = [
+            'payments' => 0,
+            'start' => '',
+            'end' => ''
+        ];
+
+        $payments = Payment::query()
+            ->where('checked_in_ticket', false)
+            ->orderBy('date')
+            ->get(['date'])
+        ;
+
+        if ($paymentsWithoutCheck['payments'] = count($payments)) {
+            $paymentsWithoutCheck['start'] = $payments[0]->date;
+            $paymentsWithoutCheck['end'] = $payments[ count($payments) -1 ]->date;
+        }
+
+        return $paymentsWithoutCheck;
+    }
+
     public function scopeGetTotalAmountForType($query, $dateRange, $type)
     {
         if ($type != 0) {

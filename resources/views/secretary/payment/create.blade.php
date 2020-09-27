@@ -1,5 +1,9 @@
 @extends('layouts.app')
 
+@section('alerts')
+    @include('alerts.paymentsWithoutCheck')
+@endsection
+
 @section('content')
     <register-payment
         :user = "{{ json_encode(Auth::user()) }}"

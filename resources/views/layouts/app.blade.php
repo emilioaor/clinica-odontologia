@@ -25,23 +25,9 @@
                 </div>
             </div>
         @endif
-        @if(Auth::check() && Auth::user()->isAdmin() && Request::route()->getName() == 'home' )
-            <div class="container">
-                <div class="alert alert-success alert-dismissible" role="alert">
-                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                    @if($trackingNumbers)
-                        <strong>
-                            <h4>Actualmente hay {{ $trackingNumbers }} 
-                                @if($trackingNumbers == 1) seguimiento pendiente @endif 
-                                @if($trackingNumbers > 1) seguimientos pendientes @endif 
-                            </h4>
-                        </strong>
-                    @else
-                        <strong><h4>No hay seguimientos pendientes</h4></strong>
-                    @endif
-                </div>
-            </div>
-        @endif
+
+        @yield('alerts')
+
         @yield('content')
 
         @if(Auth::check())

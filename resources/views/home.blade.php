@@ -1,5 +1,25 @@
 @extends('layouts.app')
 
+@section('alerts')
+    @if(Auth::user()->isAdmin())
+        <div class="container">
+            <div class="alert alert-success alert-dismissible" role="alert">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                @if($trackingNumbers)
+                    <h4>Actualmente hay {{ $trackingNumbers }}
+                        @if($trackingNumbers == 1) seguimiento pendiente @endif
+                        @if($trackingNumbers > 1) seguimientos pendientes @endif
+                    </h4>
+                @else
+                    <h4>No hay seguimientos pendientes</h4>
+                @endif
+            </div>
+        </div>
+    @endif
+
+    @include('alerts.paymentsWithoutCheck')
+@endsection
+
 @section('content')
 <div class="container">
     <div class="row">

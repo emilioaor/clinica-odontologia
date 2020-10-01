@@ -88,12 +88,14 @@ Vue.component('list-tracking', require('./components/ListTracking.vue'));
 Vue.component('register-ticket-of-sell', require('./components/RegisterTicketOfSell.vue'));
 Vue.component('report-login-history', require('./components/ReportLoginHistory.vue'));
 Vue.component('report-campaign', require('./components/ReportCampaign.vue'));
+Vue.component('report-payment-unchecked', require('./components/ReportPaymentUnchecked.vue'));
 Vue.component('send-lab-notification', require('./components/SendLabNotification.vue'));
 Vue.component('call-budget-notification', require('./components/CallBudgetNotification.vue'));
 Vue.component('graphics-payment', require('./components/GraphicsPayment.vue'));
 Vue.component('graphics-commission', require('./components/GraphicsCommission.vue'));
 Vue.component('line-chart', require('./components/LineChart.vue'));
 Vue.component('line-chart-simple', require('./components/LineChartSimple.vue'));
+
 const app = new Vue({
     el: '#app'
 });

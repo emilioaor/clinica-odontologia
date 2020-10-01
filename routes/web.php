@@ -193,6 +193,8 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function () {
     Route::get('report/campaign', 'Admin\ReportController@campaign')->name('report.campaign');
     Route::get('report/campaignData', 'Admin\ReportController@campaignData');
     Route::get('report/campaignExcel', 'Admin\ReportController@campaignExcel');
+    Route::get('report/paymentUnchecked', 'Admin\ReportController@paymentUnchecked')->name('report.paymentUnchecked');
+    Route::get('report/paymentUncheckedData', 'Admin\ReportController@paymentUncheckedData');
 
     // Graphics 
     Route::get('/grafica/pagos', 'Admin\GraphicsController@paymentCharts')->name('grafiCapagos');

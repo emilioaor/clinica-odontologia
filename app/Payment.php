@@ -29,6 +29,8 @@ class Payment extends Model
 
     protected $dates = ['deleted_at', 'date'];
 
+    protected $appends = ['paymentMethod'];
+
     /**
      * Usuario que registro el pago
      *
@@ -107,6 +109,16 @@ class Payment extends Model
     public function paymentMethod()
     {
         return trans('message.paymentMethod.' . $this->type);
+    }
+
+    /**
+     * Retorna el metodo de pago
+     *
+     * @string
+     */
+    public function getPaymentMethodAttribute()
+    {
+        return $this->paymentMethod();
     }
 
     /**

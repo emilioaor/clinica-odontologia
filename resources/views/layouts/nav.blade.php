@@ -592,6 +592,14 @@
                                         </a>
                                     </li>
                                 @endif
+                                @if(Auth::user()->hasPermission('report.paymentUnchecked'))
+                                    <li>
+                                        <a href="{{ route('report.paymentUnchecked') }}">
+                                            <i class="glyphicon glyphicon-file"></i>
+                                            Pacientes con pago sin revisar
+                                        </a>
+                                    </li>
+                                @endif
                             </ul>
                         </li>
                     @endif

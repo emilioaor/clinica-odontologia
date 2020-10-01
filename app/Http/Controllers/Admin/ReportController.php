@@ -1308,4 +1308,41 @@ class ReportController extends Controller
 
         return Response($view, 200);
     }
+
+    /**
+     * Reporte de pagos sin revisar
+     *
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function paymentUnchecked()
+    {
+        return view('admin.report.paymentUnchecked');
+    }
+
+    /**
+     * Reporte de pagos sin revisar
+     *
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function paymentUncheckedData(Request $request)
+    {
+        $payments = Payment::query()
+            ->with([
+                'patientHistory.patient',
+                'patientHistory.product'
+            ])
+            ->where('checked_in_ticket', false)
+            ->orderBy('date')
+        ;
+
+        if ($request->filter === 'true') {
+            $start = new \DateTime("{$request->start} 00:00:00");
+            $end = new \DateTime("{$request->end} 23:59:59");
+
+            $payments->whereBetween('date', [$start, $end]);
+        }
+
+        return new JsonResponse(['success' => true, 'payments' => $payments->get()]);
+    }
 }

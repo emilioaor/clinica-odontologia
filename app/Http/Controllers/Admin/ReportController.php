@@ -331,7 +331,11 @@ class ReportController extends Controller
             }
 
             $patient = $history->patient;
-            $payments = $history->payments()->where('payments.date', '<=', $end)->get();
+            $payments = $history
+                ->payments()
+                ->where('payments.date', '<=', $end)
+                ->where('payments.checked_in_ticket', true)
+                ->get();
 
             if ($patient->trashed()) {
                 continue;

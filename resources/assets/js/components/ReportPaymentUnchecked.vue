@@ -87,6 +87,7 @@
                                                 <th>Tipo</th>
                                                 <th>Servicio</th>
                                                 <th class="text-center">Monto</th>
+                                                <th class="text-center">Revisado</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -96,6 +97,19 @@
                                                 <td>{{ payment.paymentMethod }}</td>
                                                 <td>{{ payment.patient_history.product.name }}</td>
                                                 <td class="text-center">${{ payment.amount }}</td>
+                                                <td class="text-center">
+                                                    <input
+                                                            class="payment-checkbox"
+                                                            :id="'checked_in_ticket' + payment.id"
+                                                            :name="'checked_in_ticket' + payment.id"
+                                                            type="checkbox"
+                                                            v-model="payment.checked_in_ticket"
+                                                            @change="updateChecked(payment)"
+                                                            v-if="loadingChecked !== payment.id"
+                                                            :disabled="loadingChecked !== false"
+                                                    >
+                                                    <img src="/img/loading.gif" v-else>
+                                                </td>
                                             </tr>
                                         </tbody>
                                     </table>
@@ -122,6 +136,7 @@
         data: function () {
             return {
                 loading: false,
+                loadingChecked: false,
                 initStart: new Date(),
                 initEnd: new Date(),
                 data: {
@@ -186,6 +201,24 @@
                     })
             },
 
+            updateChecked: function (payment) {
+                this.loadingChecked = payment.id;
+
+                axios.put('/user/payment/' + payment.id + '/checked')
+                    .then((res) => {
+
+                        if (res.data.success) {
+                            this.loadingChecked = false;
+                        }
+                    })
+                    .catch((err) => {
+                        if (err.response.status === 403 || err.response.status === 405) {
+                            location.href = '/';
+                        }
+                        console.log(err);
+                    })
+            },
+
             dateFormat: function (date) {
                 let format = date.split(' ');
                 format = format[0].split('-');
@@ -195,3 +228,10 @@
         }
     }
 </script>
+
+<style scoped>
+    .payment-checkbox {
+        width: 100%;
+        height: 20px;
+    }
+</style>

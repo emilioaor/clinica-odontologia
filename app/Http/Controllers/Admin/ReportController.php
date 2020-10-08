@@ -565,7 +565,6 @@ class ReportController extends Controller
         $end->setTime(23, 59, 59);
 
         $paymentIds = Payment::query()
-            ->select(['payments.id'])
             ->where('date', '>=', $start)
             ->where('date', '<=', $end)
         ;
@@ -585,7 +584,7 @@ class ReportController extends Controller
         }
 
         $payments = Payment::query()
-            ->whereIn('id', $paymentIds->get()->toArray())
+            ->whereIn('id', $paymentIds->get(['payments.id'])->pluck('id'))
             ->with([
                 'patientHistory',
                 'patientHistory.patient',

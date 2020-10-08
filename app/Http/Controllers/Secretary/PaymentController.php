@@ -160,7 +160,6 @@ class PaymentController extends Controller
             ])
         ;
         $paymentIds = Payment::query()
-            ->select('payments.id')
             ->join('patient_history', 'patient_history.id', '=', 'payments.patient_history_id')
             ->where('patient_history.patient_id', $patient->id)
         ;
@@ -188,7 +187,7 @@ class PaymentController extends Controller
         $services = $services->get();
         $payments = Payment::query()
             ->orderBy('date')
-            ->whereIn('id', $paymentIds->get()->toArray())
+            ->whereIn('id', $paymentIds->get(['payments.id'])->pluck('id'))
             ->with([
                 'userCreated',
                 'patientHistory',

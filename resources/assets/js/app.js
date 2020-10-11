@@ -89,6 +89,7 @@ Vue.component('register-ticket-of-sell', require('./components/RegisterTicketOfS
 Vue.component('report-login-history', require('./components/ReportLoginHistory.vue'));
 Vue.component('report-campaign', require('./components/ReportCampaign.vue'));
 Vue.component('report-payment-unchecked', require('./components/ReportPaymentUnchecked.vue'));
+Vue.component('report-commission-unchecked', require('./components/ReportCommissionUnchecked.vue'));
 Vue.component('send-lab-notification', require('./components/SendLabNotification.vue'));
 Vue.component('call-budget-notification', require('./components/CallBudgetNotification.vue'));
 Vue.component('graphics-payment', require('./components/GraphicsPayment.vue'));

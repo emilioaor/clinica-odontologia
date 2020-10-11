@@ -388,6 +388,16 @@ class User extends Authenticatable
     }
 
     /**
+     * Listado de doctores
+     *
+     * @param Builder $query
+     */
+    public function scopeDoctors(Builder $query)
+    {
+        return $query->hasRole('doctor');
+    }
+
+    /**
      * Filter by role
      *
      * @param Builder $query

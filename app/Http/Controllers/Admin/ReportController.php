@@ -264,225 +264,15 @@ class ReportController extends Controller
      */
     public function doctorCommissionsData(Request $request)
     {
-        $doctor = User::where('public_id', $request->doctor)->with('commissionProducts')->firstOrFail();
-        $start = new \DateTime($request->start);
-        $start->setTime(00, 00, 00);
-        $end = new \DateTime($request->end);
-        $end->setTime(23, 59, 59);
+        $start = (new \DateTime($request->start))->setTime(00, 00, 00);
+        $end = (new \DateTime($request->end))->setTime(23, 59, 59);
         $paymentType = (int) $request->payment_type;
+        $doctor = $request->doctor;
+        $balance = $request->balance === 'true';
 
-        // Obtengo todos los servicios registrados o con un pago
-        // registrado en el rango de fechas
-        $patientHistory = PatientHistory::select('patient_history.*')
-            ->with([
-                'patient',
-                'product',
-                'expenses',
-                'payments'
-            ])
-            ->leftJoin('payments', 'patient_history.id', '=', 'payments.patient_history_id')
-            ->leftJoin('expenses', 'patient_history.id', '=', 'expenses.patient_history_id')
-            ->where('doctor_id', $doctor->id)
-            ->where(function ($query) use ($start, $end) {
+        $response = $this->buildDoctorCommissionData($start, $end, $doctor, $paymentType, $balance);
 
-                $query->where([
-                    ['payments.date', '>=', $start],
-                    ['payments.date', '<=', $end]
-                ])
-                ->orWhere([
-                    ['patient_history.created_at', '>=', $start],
-                    ['patient_history.created_at', '<=', $end]
-                ])
-                ->orWhere([
-                    ['expenses.date', '>=', $start],
-                    ['expenses.date', '<=', $end]
-                ]);
-            })
-            ->distinct()
-            ->get();
-
-        $response = [
-            'patients' => [],
-            'totalPayments' => 0,
-            'totalPaymentsCreditCard' => 0,
-            'totalPaymentsCash' => 0,
-            'totalPaymentsCheck' => 0,
-            'totalCommission' => 0,
-            'totalCommissionCreditCard' => 0,
-            'totalCommissionCash' => 0,
-            'totalCommissionCheck' => 0
-        ];
-
-        foreach ($patientHistory as $history) {
-
-            $patientPayments = 0;
-            $patientPaymentsCreditCard = 0;
-            $patientPaymentsCash = 0;
-            $patientPaymentsCheck = 0;
-            $patientExpenses = 0;
-            $history->isComplete = $history->isCompleteToDate($end);
-
-            if ($request->balance === 'true' && ! $history->isComplete) {
-                // Si se pide solo balance 0 y este servicio tiene un monto pendiente, paso al siguiente
-                continue;
-            }
-
-            $patient = $history->patient;
-            $payments = $history
-                ->payments()
-                ->where('payments.date', '<=', $end)
-                ->where('payments.checked_in_ticket', true)
-                ->get();
-
-            if ($patient->trashed()) {
-                continue;
-            }
-
-            if ($paymentType > 0) {
-                $hasRequiredPaymentType = false;
-                foreach ($payments as $payment) {
-                    if ($payment->type === $paymentType) {
-                        $hasRequiredPaymentType = true;
-                        break;
-                    }
-                }
-
-                if (! $hasRequiredPaymentType) {
-                    continue;
-                }
-            }
-
-            if (! isset($response['patients'][$patient->id])) {
-                $response['patients'][$patient->id] = [
-                    'patient' => $patient,
-                    'totalServices' => 0,
-                    'totalPayments' => 0,
-                    'totalDiscounts' => 0,
-                    'totalExpenses' => 0,
-                    'balance' => 0,
-                    'totalCommission' => 0,
-                    'data' => [$history->id => []]
-                ];
-            }
-
-            // Obtengo la comision configurada para este doctor y producto
-            $commission = $doctor->commissionProducts()->where('product_id', $history->product->id)->first()->pivot->commission;
-
-            $response['patients'][$patient->id]['totalServices'] += $history->price;
-
-            $response['patients'][$patient->id]['data'][$history->id]['commission'] = $commission;
-            $response['patients'][$patient->id]['data'][$history->id]['price'] = $history->price;
-            $response['patients'][$patient->id]['data'][$history->id]['pendingAmount'] = $history->pendingAmount();
-            $response['patients'][$patient->id]['data'][$history->id]['services'][] = [
-                'date' => $history->created_at->format('Y-m-d H:i:s'),
-                'classification' => trans('message.report.classification.service'),
-                'description' => $history->product->name,
-                'amount' => $history->price,
-                'isComplete' => $history->isComplete,
-                'id' => $history->id,
-                'mark_as_payed' => $history->mark_as_payed
-            ];
-
-            // Todos los gastos asociados al servicio y al laboratorio
-            $expenses = $history->expenses()
-                ->join('suppliers', 'suppliers.id', '=', 'expenses.supplier_id')
-                ->where('expenses.date', '<=', $end)
-                ->get();
-
-            //gastos
-            foreach ($expenses as $expense) {
-
-                if($history->price > 0) {
-                    $response['patients'][$patient->id]['data'][$history->id]['services'][] = [
-                        'date' => $expense->date->format('Y-m-d H:i:s'),
-                        'classification' => trans('message.report.classification.expense'),
-                        'description' => $expense->description,
-                        'amount' => $expense->amount
-                    ];
-
-                    $response['patients'][$patient->id]['totalExpenses'] += $expense->amount;
-                    $patientExpenses += $expense->amount;
-                }
-                
-            }
-            
-            // pagos
-            foreach ($payments as $payment) {
-
-                if ($paymentType > 0 && $payment->type !== $paymentType) {
-                    // Filtro por tipo de pago
-                    continue;
-                }
-
-                if ($payment->isDiscount()) {
-                    $type = 'discount';
-                    $response['patients'][$patient->id]['totalDiscounts'] += $payment->amount;
-                } else {
-                    $type = 'payment';
-                    $response['patients'][$patient->id]['totalPayments'] += $payment->amount;
-                    $patientPayments += $payment->amount;
-
-                    $response['totalPayments'] += $payment->amount;
-
-                    if ($payment->isCreditCard()) {
-                        $response['totalPaymentsCreditCard'] += $payment->amount;
-                        $patientPaymentsCreditCard += $payment->amount;
-                    } elseif ($payment->isCash()) {
-                        $response['totalPaymentsCash'] += $payment->amount;
-                        $patientPaymentsCash += $payment->amount;
-                    } elseif ($payment->isCheck()) {
-                        $response['totalPaymentsCheck'] += $payment->amount;
-                        $patientPaymentsCheck += $payment->amount;
-                    }
-                }
-                
-                $response['patients'][$patient->id]['data'][$history->id]['services'][] = [
-                    'date' => $payment->date->format('Y-m-d H:i:s'),
-                    'classification' => trans('message.report.classification.' . $type),
-                    'description' => trans('message.report.classification.' . $type),
-                    'paymentType' => $payment->type,
-                    'amount' => $payment->amount
-                ];
-            }
-
-            $totalServices = $response['patients'][$patient->id]['totalServices'];
-            $totalPayments = $response['patients'][$patient->id]['totalPayments'];
-            $totalDiscounts = $response['patients'][$patient->id]['totalDiscounts'];
-
-            $response['patients'][$patient->id]['balance'] = $totalServices - ($totalPayments + $totalDiscounts);
-            $response['patients'][$patient->id]['totalCommission'] += ($patientPayments - $patientExpenses) * ($commission / 100);
-
-            $response['totalCommission'] += ($patientPayments - $patientExpenses) * ($commission / 100);
-
-            if ($patientPayments > 0) {
-
-                $percentage = ($patientPaymentsCreditCard * 100) / $patientPayments;
-                $expenseToPercentage = $patientExpenses * ($percentage / 100);
-                $response['totalCommissionCreditCard'] += ($patientPaymentsCreditCard - $expenseToPercentage) * ($commission / 100);
-
-                $percentage = ($patientPaymentsCash * 100) / $patientPayments;
-                $expenseToPercentage = $patientExpenses * ($percentage / 100);
-                $response['totalCommissionCash'] += ($patientPaymentsCash - $expenseToPercentage) * ($commission / 100);
-
-                $percentage = ($patientPaymentsCheck * 100) / $patientPayments;
-                $expenseToPercentage = $patientExpenses * ($percentage / 100);
-                $response['totalCommissionCheck'] += ($patientPaymentsCheck - $expenseToPercentage) * ($commission / 100);
-            }
-        }
-
-        $response['totalCommission'] = round($response['totalCommission'], 2);
-        $response['totalCommissionCreditCard'] = round($response['totalCommissionCreditCard'], 2);
-        $response['totalCommissionCash'] = round($response['totalCommissionCash'], 2);
-        $response['totalCommissionCheck'] = round($response['totalCommissionCheck'], 2);
-
-        foreach ($response['patients'] as $i => $patient) {
-            $response['patients'][$i]['totalCommission'] = round($patient['totalCommission'], 2);
-        }
-
-        return new JsonResponse([
-            'success' => true,
-            'response' => $response
-        ]);
+        return new JsonResponse(['success' => true, 'response' => $response]);
     }
 
     /**
@@ -1347,5 +1137,259 @@ class ReportController extends Controller
         }
 
         return new JsonResponse(['success' => true, 'payments' => $payments->get()]);
+    }
+
+    /**
+     * Reporte de comisiones sin pagar
+     *
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function commissionUnchecked()
+    {
+        return view('admin.report.commissionUnchecked');
+    }
+
+    /**
+     * Reporte de pagos sin revisar
+     *
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function commissionUncheckedData(Request $request)
+    {
+        if ($request->filter === 'true') {
+            $start = new \DateTime("{$request->start} 00:00:00");
+            $end = new \DateTime("{$request->end} 23:59:59");
+        } else {
+            $start = new \DateTime('1900-01-01');
+            $end = new \DateTime('2100-01-01');
+        }
+
+        $response = [];
+        $doctors = User::query()->doctors()->get();
+
+        foreach ($doctors as $doctor) {
+
+            $data = $temp['response'] = $this->buildDoctorCommissionData($start, $end, $doctor->public_id, 0, false);
+
+            $temp = $doctor->toArray();
+            $temp['services'] = [];
+
+            foreach ($data['patients'] as $patient) {
+                foreach ($patient['data'] as $services) {
+                    foreach ($services['services'] as $line) {
+                        if ($line['classification'] === 'Servicio' && ! $line['mark_as_payed']) {
+                            $line['patient'] = $patient['patient'];
+                            $temp['services'][] = $line;
+                        }
+                    }
+                }
+            }
+
+            if (count($temp['services']) > 0) {
+                $response[] = $temp;
+            }
+        }
+
+        return new JsonResponse(['success' => true, 'doctors' => $response]);
+    }
+
+    /**
+     * Construye el reporte de comision
+     *
+     * @param \DateTime $start, Fecha inicio
+     * @param \DateTime $end, Fecha fin
+     * @param string $doctor, Public ID del doctor
+     * @param int $paymentType, Tipo de pago (0 === todos)
+     * @param boolean $balance, Traer unicamente servicios con balance 0
+     * @return array
+     */
+    private function buildDoctorCommissionData(\DateTime $start, \DateTime $end, string $doctor, int $paymentType, bool $balance)
+    {
+        $doctor = User::query()->where('public_id', $doctor)->with('commissionProducts')->firstOrFail();
+
+        // Obtengo todos los servicios registrados o con un pago
+        // registrado en el rango de fechas
+        $patientHistory = PatientHistory::servicesToCommission($start, $end, $doctor->id);
+
+        $response = [
+            'patients' => [],
+            'totalPayments' => 0,
+            'totalPaymentsCreditCard' => 0,
+            'totalPaymentsCash' => 0,
+            'totalPaymentsCheck' => 0,
+            'totalCommission' => 0,
+            'totalCommissionCreditCard' => 0,
+            'totalCommissionCash' => 0,
+            'totalCommissionCheck' => 0
+        ];
+
+        foreach ($patientHistory as $history) {
+
+            $patientPayments = 0;
+            $patientPaymentsCreditCard = 0;
+            $patientPaymentsCash = 0;
+            $patientPaymentsCheck = 0;
+            $patientExpenses = 0;
+            $history->isComplete = $history->isCompleteToDate($end);
+
+            if ($balance && ! $history->isComplete) {
+                // Si se pide solo balance 0 y este servicio tiene un monto pendiente, paso al siguiente
+                continue;
+            }
+
+            $patient = $history->patient;
+            $payments = $history
+                ->payments()
+                ->where('payments.date', '<=', $end)
+                ->where('payments.checked_in_ticket', true)
+                ->get();
+
+            if ($patient->trashed()) {
+                continue;
+            }
+
+            if ($paymentType > 0) {
+                $hasRequiredPaymentType = false;
+                foreach ($payments as $payment) {
+                    if ($payment->type === $paymentType) {
+                        $hasRequiredPaymentType = true;
+                        break;
+                    }
+                }
+
+                if (! $hasRequiredPaymentType) {
+                    continue;
+                }
+            }
+
+            if (! isset($response['patients'][$patient->id])) {
+                $response['patients'][$patient->id] = [
+                    'patient' => $patient,
+                    'totalServices' => 0,
+                    'totalPayments' => 0,
+                    'totalDiscounts' => 0,
+                    'totalExpenses' => 0,
+                    'balance' => 0,
+                    'totalCommission' => 0,
+                    'data' => [$history->id => []]
+                ];
+            }
+
+            // Obtengo la comision configurada para este doctor y producto
+            $commission = $doctor->commissionProducts()->where('product_id', $history->product->id)->first()->pivot->commission;
+
+            $response['patients'][$patient->id]['totalServices'] += $history->price;
+
+            $response['patients'][$patient->id]['data'][$history->id]['commission'] = $commission;
+            $response['patients'][$patient->id]['data'][$history->id]['price'] = $history->price;
+            $response['patients'][$patient->id]['data'][$history->id]['pendingAmount'] = $history->pendingAmount();
+            $response['patients'][$patient->id]['data'][$history->id]['services'][] = [
+                'date' => $history->created_at->format('Y-m-d H:i:s'),
+                'classification' => trans('message.report.classification.service'),
+                'description' => $history->product->name,
+                'amount' => $history->price,
+                'isComplete' => $history->isComplete,
+                'id' => $history->id,
+                'mark_as_payed' => $history->mark_as_payed
+            ];
+
+            // Todos los gastos asociados al servicio y al laboratorio
+            $expenses = $history->expenses()
+                ->join('suppliers', 'suppliers.id', '=', 'expenses.supplier_id')
+                ->where('expenses.date', '<=', $end)
+                ->get();
+
+            //gastos
+            foreach ($expenses as $expense) {
+
+                if($history->price > 0) {
+                    $response['patients'][$patient->id]['data'][$history->id]['services'][] = [
+                        'date' => $expense->date->format('Y-m-d H:i:s'),
+                        'classification' => trans('message.report.classification.expense'),
+                        'description' => $expense->description,
+                        'amount' => $expense->amount
+                    ];
+
+                    $response['patients'][$patient->id]['totalExpenses'] += $expense->amount;
+                    $patientExpenses += $expense->amount;
+                }
+
+            }
+
+            // pagos
+            foreach ($payments as $payment) {
+
+                if ($paymentType > 0 && $payment->type !== $paymentType) {
+                    // Filtro por tipo de pago
+                    continue;
+                }
+
+                if ($payment->isDiscount()) {
+                    $type = 'discount';
+                    $response['patients'][$patient->id]['totalDiscounts'] += $payment->amount;
+                } else {
+                    $type = 'payment';
+                    $response['patients'][$patient->id]['totalPayments'] += $payment->amount;
+                    $patientPayments += $payment->amount;
+
+                    $response['totalPayments'] += $payment->amount;
+
+                    if ($payment->isCreditCard()) {
+                        $response['totalPaymentsCreditCard'] += $payment->amount;
+                        $patientPaymentsCreditCard += $payment->amount;
+                    } elseif ($payment->isCash()) {
+                        $response['totalPaymentsCash'] += $payment->amount;
+                        $patientPaymentsCash += $payment->amount;
+                    } elseif ($payment->isCheck()) {
+                        $response['totalPaymentsCheck'] += $payment->amount;
+                        $patientPaymentsCheck += $payment->amount;
+                    }
+                }
+
+                $response['patients'][$patient->id]['data'][$history->id]['services'][] = [
+                    'date' => $payment->date->format('Y-m-d H:i:s'),
+                    'classification' => trans('message.report.classification.' . $type),
+                    'description' => trans('message.report.classification.' . $type),
+                    'paymentType' => $payment->type,
+                    'amount' => $payment->amount
+                ];
+            }
+
+            $totalServices = $response['patients'][$patient->id]['totalServices'];
+            $totalPayments = $response['patients'][$patient->id]['totalPayments'];
+            $totalDiscounts = $response['patients'][$patient->id]['totalDiscounts'];
+
+            $response['patients'][$patient->id]['balance'] = $totalServices - ($totalPayments + $totalDiscounts);
+            $response['patients'][$patient->id]['totalCommission'] += ($patientPayments - $patientExpenses) * ($commission / 100);
+
+            $response['totalCommission'] += ($patientPayments - $patientExpenses) * ($commission / 100);
+
+            if ($patientPayments > 0) {
+
+                $percentage = ($patientPaymentsCreditCard * 100) / $patientPayments;
+                $expenseToPercentage = $patientExpenses * ($percentage / 100);
+                $response['totalCommissionCreditCard'] += ($patientPaymentsCreditCard - $expenseToPercentage) * ($commission / 100);
+
+                $percentage = ($patientPaymentsCash * 100) / $patientPayments;
+                $expenseToPercentage = $patientExpenses * ($percentage / 100);
+                $response['totalCommissionCash'] += ($patientPaymentsCash - $expenseToPercentage) * ($commission / 100);
+
+                $percentage = ($patientPaymentsCheck * 100) / $patientPayments;
+                $expenseToPercentage = $patientExpenses * ($percentage / 100);
+                $response['totalCommissionCheck'] += ($patientPaymentsCheck - $expenseToPercentage) * ($commission / 100);
+            }
+        }
+
+        $response['totalCommission'] = round($response['totalCommission'], 2);
+        $response['totalCommissionCreditCard'] = round($response['totalCommissionCreditCard'], 2);
+        $response['totalCommissionCash'] = round($response['totalCommissionCash'], 2);
+        $response['totalCommissionCheck'] = round($response['totalCommissionCheck'], 2);
+
+        foreach ($response['patients'] as $i => $patient) {
+            $response['patients'][$i]['totalCommission'] = round($patient['totalCommission'], 2);
+        }
+
+        return $response;
     }
 }

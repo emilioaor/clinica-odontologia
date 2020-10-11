@@ -2,6 +2,7 @@
 
 namespace App;
 
+use FontLib\TrueType\Collection;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -291,5 +292,48 @@ class PatientHistory extends Model
             ->selectRaw('SUM(price) as amount')
             ->where('patient_id', $patientId)
         ;
+    }
+
+    /**
+     * Servicios en el rango de fechas o con pagos en el rango de fechas
+     * para el calculo de la comision del doctor
+     *
+     * @param \DateTime $start
+     * @param \DateTime $end
+     * @param int $doctorId
+     * @return \Illuminate\Support\Collection
+     */
+    public static function servicesToCommission(\DateTime $start, \DateTime $end, int $doctorId)
+    {
+        $patientHistory = PatientHistory::query()
+            ->select('patient_history.*')
+            ->with([
+                'patient',
+                'product',
+                'expenses',
+                'payments'
+            ])
+            ->leftJoin('payments', 'patient_history.id', '=', 'payments.patient_history_id')
+            ->leftJoin('expenses', 'patient_history.id', '=', 'expenses.patient_history_id')
+            ->where('doctor_id', $doctorId)
+            ->where(function ($query) use ($start, $end) {
+
+                $query->where([
+                    ['payments.date', '>=', $start],
+                    ['payments.date', '<=', $end]
+                ])
+                    ->orWhere([
+                        ['patient_history.created_at', '>=', $start],
+                        ['patient_history.created_at', '<=', $end]
+                    ])
+                    ->orWhere([
+                        ['expenses.date', '>=', $start],
+                        ['expenses.date', '<=', $end]
+                    ]);
+            })
+            ->distinct()
+            ->get();
+
+        return $patientHistory;
     }
 }

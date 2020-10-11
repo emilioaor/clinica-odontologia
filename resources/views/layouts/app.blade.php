@@ -46,7 +46,7 @@
     </div>
 
     <!-- Scripts -->
-    <script src="{{ asset('js/app.js') }}?v=2.0.0"></script>
+    <script src="{{ asset('js/app.js') }}?v=2.1.0"></script>
     @if(Auth::check() && Auth::user()->isAdmin())
         <script>
             $('.alert').alert()

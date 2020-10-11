@@ -600,6 +600,14 @@
                                         </a>
                                     </li>
                                 @endif
+                                @if(Auth::user()->hasPermission('report.commissionUnchecked'))
+                                    <li>
+                                        <a href="{{ route('report.commissionUnchecked') }}">
+                                            <i class="glyphicon glyphicon-file"></i>
+                                            Comisiones sin pagar
+                                        </a>
+                                    </li>
+                                @endif
                             </ul>
                         </li>
                     @endif

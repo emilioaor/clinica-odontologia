@@ -22,7 +22,8 @@ class PatientHistory extends Model
         'qty',
         'unit_price',
         'diagnostic_id',
-        'creator_user'
+        'creator_user',
+        'mark_as_payed'
     ];
 
     protected $dates = ['deleted_at'];
@@ -207,7 +208,7 @@ class PatientHistory extends Model
      * @param $topDate
      * @return bool
      */
-    public function hasCompleteToDate($topDate)
+    public function isCompleteToDate($topDate)
     {
         if ($this->pendingAmountToDate($topDate) > 0) {
             // Si no tiene el balance en 0 no esta completo

@@ -520,4 +520,13 @@ class PatientHistoryController extends Controller
 
         return redirect()->route('service.upload', $id);
     }
+
+    public function updatePayed($id)
+    {
+        $patientHistory = PatientHistory::findOrFail($id);
+        $patientHistory->mark_as_payed = ! $patientHistory->mark_as_payed;
+        $patientHistory->save();
+
+        return new JsonResponse(['success' => true]);
+    }
 }

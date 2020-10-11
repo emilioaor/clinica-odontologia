@@ -197,6 +197,7 @@
                                                 <th>Tipo</th>
                                                 <th>Descripci&oacute;n</th>
                                                 <th>Monto</th>
+                                                <th class="text-center">Pagado</th>
                                             </tr>
                                         </thead>
                                         <tbody v-for="(d, di) in p.data" :key="di">
@@ -219,6 +220,21 @@
                                                 </td>
                                                 <td>{{ line.description }}</td>
                                                 <td>{{ line.amount }}</td>
+                                                <td class="text-center">
+                                                    <div v-if="line.classification === 'Servicio' && line.isComplete">
+                                                        <input
+                                                                class="payment-checkbox"
+                                                                :id="'mark_as_payed' + line.id"
+                                                                :name="'mark_as_payed' + line.id"
+                                                                type="checkbox"
+                                                                v-model="line.mark_as_payed"
+                                                                @change="updatePayed(line)"
+                                                                v-if="loadingPayed !== line.id"
+                                                                :disabled="loadingPayed !== false"
+                                                        >
+                                                        <img src="/img/loading.gif" v-else>
+                                                    </div>
+                                                </td>
                                             </tr>
                                         </tbody>
                                     </table>
@@ -421,6 +437,7 @@
         data: function () {
             return {
                 loading: false,
+                loadingPayed: false,
                 doctor: null,
                 initStart: new Date(),
                 initEnd: new Date(),
@@ -590,8 +607,25 @@
                 }
 
                 this.pagination.current = this.pagination.build[0];
-            }
+            },
 
+            updatePayed: function (service) {
+                this.loadingPayed = service.id;
+
+                axios.put('/user/service/' + service.id + '/payed')
+                    .then((res) => {
+
+                        if (res.data.success) {
+                            this.loadingPayed = false;
+                        }
+                    })
+                    .catch((err) => {
+                        if (err.response.status === 403 || err.response.status === 405) {
+                            location.href = '/';
+                        }
+                        console.log(err);
+                    })
+            },
         }
     }
 </script>
@@ -603,5 +637,9 @@
     #doctorModal .space-table {
         max-height: 480px;
         overflow: auto;
+    }
+    .payment-checkbox {
+        width: 100%;
+        height: 20px;
     }
 </style>

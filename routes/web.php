@@ -31,7 +31,8 @@ Route::group(['prefix' => 'user', 'middleware' => 'auth'], function () {
     Route::delete('service/note/{note}', 'User\PatientHistoryController@deleteNote');
     Route::delete('service/image/{note}', 'User\PatientHistoryController@deleteImage');
     Route::put('service/{service}/updateService', 'User\PatientHistoryController@updatePatientHistory');
-    
+    Route::put('service/{service}/payed', 'User\PatientHistoryController@updatePayed');
+
     Route::post('service/register/patientHistory', 'User\PatientHistoryController@registerPatientHistory');
     Route::get('service/{service}/uploadImage', 'User\PatientHistoryController@uploadImage')->name('service.upload');
     Route::post('service/{service}/uploadImage', 'User\PatientHistoryController@storeImage');

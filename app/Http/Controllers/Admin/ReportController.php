@@ -271,9 +271,15 @@ class ReportController extends Controller
         $end->setTime(23, 59, 59);
         $paymentType = (int) $request->payment_type;
 
-        // Obtengo el ID de todos los servicios registrados o con un pago
+        // Obtengo todos los servicios registrados o con un pago
         // registrado en el rango de fechas
-        $patientHistoryIds = PatientHistory::select('patient_history.id')
+        $patientHistory = PatientHistory::select('patient_history.*')
+            ->with([
+                'patient',
+                'product',
+                'expenses',
+                'payments'
+            ])
             ->leftJoin('payments', 'patient_history.id', '=', 'payments.patient_history_id')
             ->leftJoin('expenses', 'patient_history.id', '=', 'expenses.patient_history_id')
             ->where('doctor_id', $doctor->id)
@@ -295,16 +301,6 @@ class ReportController extends Controller
             ->distinct()
             ->get();
 
-        // Consulto los servicios
-        $patientHistory = PatientHistory::whereIn('id', $patientHistoryIds->toArray())
-            ->with([
-                'patient',
-                'product',
-                'expenses',
-                'payments'
-            ])
-            ->get();
-
         $response = [
             'patients' => [],
             'totalPayments' => 0,
@@ -324,8 +320,9 @@ class ReportController extends Controller
             $patientPaymentsCash = 0;
             $patientPaymentsCheck = 0;
             $patientExpenses = 0;
+            $history->isComplete = $history->isCompleteToDate($end);
 
-            if ($request->balance === 'true' && ! $history->hasCompleteToDate($end)) {
+            if ($request->balance === 'true' && ! $history->isComplete) {
                 // Si se pide solo balance 0 y este servicio tiene un monto pendiente, paso al siguiente
                 continue;
             }
@@ -380,7 +377,10 @@ class ReportController extends Controller
                 'date' => $history->created_at->format('Y-m-d H:i:s'),
                 'classification' => trans('message.report.classification.service'),
                 'description' => $history->product->name,
-                'amount' => $history->price
+                'amount' => $history->price,
+                'isComplete' => $history->isComplete,
+                'id' => $history->id,
+                'mark_as_payed' => $history->mark_as_payed
             ];
 
             // Todos los gastos asociados al servicio y al laboratorio

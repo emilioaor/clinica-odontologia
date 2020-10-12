@@ -80,6 +80,16 @@ class PatientHistory extends Model
     }
 
     /**
+     * Gasto registrado por el pago de la comision de este servicio
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
+    public function expenseCommission()
+    {
+        return $this->hasOne(Expense::class, 'commission_id');
+    }
+
+    /**
      * Pagos asociados al servicio
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
@@ -147,14 +157,17 @@ class PatientHistory extends Model
     /**
      * Indica el monto restante por pagar para este servicio
      *
+     * @param $needChecked
      * @return mixed
      */
-    public function pendingAmount()
+    public function pendingAmount($needChecked = false)
     {
         $pending = $this->price;
 
         foreach ($this->payments as $payment) {
-            $pending -= $payment->amount;
+            if (! $needChecked || $payment->checked_in_ticket) {
+                $pending -= $payment->amount;
+            }
         }
 
         return $pending;
@@ -163,15 +176,19 @@ class PatientHistory extends Model
     /**
      * Indica el monto restante por pagar para este servicio en la fecha indicada
      *
+     * @param $topDate
+     * @param $needChecked
      * @return mixed
      */
-    public function pendingAmountToDate($topDate)
+    public function pendingAmountToDate($topDate, $needChecked = false)
     {
         $pending = $this->price;
         $payments = $this->payments()->where('date', '<=', $topDate)->get();
 
         foreach ($payments as $payment) {
-            $pending -= $payment->amount;
+            if (! $needChecked || $payment->checked_in_ticket) {
+                $pending -= $payment->amount;
+            }
         }
 
         return $pending;
@@ -183,11 +200,12 @@ class PatientHistory extends Model
      * ademas si el servicio requiere gastos de laboratorio estos ya deben
      * estar asociados o se considera incompleto
      *
+     * @param bool $needChecked
      * @return bool
      */
-    public function hasComplete()
+    public function isComplete($needChecked = false)
     {
-        if ($this->pendingAmount() > 0) {
+        if ($this->pendingAmount($needChecked) > 0) {
             // Si no tiene el balance en 0 no esta completo
             return false;
         }
@@ -207,11 +225,12 @@ class PatientHistory extends Model
      * estar asociados o se considera incompleto
      *
      * @param $topDate
+     * @param bool $needChecked
      * @return bool
      */
-    public function isCompleteToDate($topDate)
+    public function isCompleteToDate($topDate, $needChecked = false)
     {
-        if ($this->pendingAmountToDate($topDate) > 0) {
+        if ($this->pendingAmountToDate($topDate, $needChecked) > 0) {
             // Si no tiene el balance en 0 no esta completo
             return false;
         }

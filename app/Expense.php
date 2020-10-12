@@ -16,7 +16,8 @@ class Expense extends Model
         'description',
         'date',
         'amount',
-        'patient_history_id'
+        'patient_history_id',
+        'commission_id'
     ];
 
     protected $dates = ['date'];
@@ -39,6 +40,16 @@ class Expense extends Model
     public function patientHistory()
     {
         return $this->belongsTo(PatientHistory::class, 'patient_history_id')->withTrashed();
+    }
+
+    /**
+     * Servicio cuya comision registro este gasto
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function patientHistoryCommission()
+    {
+        return $this->belongsTo(PatientHistory::class, 'commission_id')->withTrashed();
     }
 
     /**

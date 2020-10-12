@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\User;
 
 use App\Appointment;
+use App\Expense;
 use App\Mail\ServiceRegisterEmail;
 use App\EmailSpooler;
 use App\Note;
@@ -521,11 +522,38 @@ class PatientHistoryController extends Controller
         return redirect()->route('service.upload', $id);
     }
 
-    public function updatePayed($id)
+    /**
+     * Cambia el estatus pagado de la comision
+     *
+     * @param int $id
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function updatePayed($id, Request $request)
     {
-        $patientHistory = PatientHistory::findOrFail($id);
+        DB::beginTransaction();
+
+        $patientHistory = PatientHistory::query()->findOrFail($id);
         $patientHistory->mark_as_payed = ! $patientHistory->mark_as_payed;
         $patientHistory->save();
+
+        if ($patientHistory->mark_as_payed) {
+
+            $supplier = Supplier::query()->where('doctor_commission', true)->first();
+
+            $expense = new Expense();
+            $expense->amount = $request->amount;
+            $expense->date = new \DateTime();
+            $expense->description = trans('message.expense.doctor.commission');
+            $expense->supplier_id = $supplier->id;
+            $expense->doctor_commission_id = $patientHistory->doctor->id;
+            $expense->commission_id = $patientHistory->id;
+            $expense->save();
+        } else {
+            Expense::query()->where('commission_id', $patientHistory->id)->delete();
+        }
+
+        DB::commit();
 
         return new JsonResponse(['success' => true]);
     }

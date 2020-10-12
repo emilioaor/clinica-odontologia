@@ -164,7 +164,7 @@
                                             Buscar
                                         </button>
 
-                                        <button
+                                        <!--<button
                                                 type="button"
                                                 class="btn btn-success"
                                                 data-toggle="modal"
@@ -173,7 +173,7 @@
                                         >
                                             <i class="glyphicon glyphicon-plus"></i>
                                             Registrar gasto por la comisi&oacute;n
-                                        </button>
+                                        </button>-->
 
                                         <img src="/img/loading.gif" v-if="loading">
                                     </div>
@@ -196,7 +196,8 @@
                                                 <th>Fecha</th>
                                                 <th>Tipo</th>
                                                 <th>Descripci&oacute;n</th>
-                                                <th>Monto</th>
+                                                <th class="text-center">Monto</th>
+                                                <th class="text-center">Comisión</th>
                                                 <th class="text-center">Pagado</th>
                                             </tr>
                                         </thead>
@@ -219,7 +220,12 @@
                                                     </span>
                                                 </td>
                                                 <td>{{ line.description }}</td>
-                                                <td>{{ line.amount }}</td>
+                                                <td class="text-center">{{ line.amount }}</td>
+                                                <td class="text-center">
+                                                    <div v-if="line.classification === 'Servicio'">
+                                                        {{ d.commissionAmount }}
+                                                    </div>
+                                                </td>
                                                 <td class="text-center">
                                                     <div v-if="line.classification === 'Servicio' && line.isComplete">
                                                         <input
@@ -228,7 +234,7 @@
                                                                 :name="'mark_as_payed' + line.id"
                                                                 type="checkbox"
                                                                 v-model="line.mark_as_payed"
-                                                                @change="updatePayed(line)"
+                                                                @change="updatePayed(line, d.commissionAmount)"
                                                                 v-if="loadingPayed !== line.id"
                                                                 :disabled="loadingPayed !== false"
                                                         >
@@ -609,10 +615,10 @@
                 this.pagination.current = this.pagination.build[0];
             },
 
-            updatePayed: function (service) {
+            updatePayed: function (service, amount) {
                 this.loadingPayed = service.id;
 
-                axios.put('/user/service/' + service.id + '/payed')
+                axios.put('/user/service/' + service.id + '/payed', {amount})
                     .then((res) => {
 
                         if (res.data.success) {

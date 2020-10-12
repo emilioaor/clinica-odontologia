@@ -87,6 +87,7 @@
                                                 <th>Paciente</th>
                                                 <th>Descripción</th>
                                                 <th class="text-center">Monto</th>
+                                                <th class="text-center">Comisión</th>
                                                 <th class="text-center">Pagado</th>
                                             </tr>
                                         </thead>
@@ -97,7 +98,8 @@
                                                     <td>{{ doctor.name }}</td>
                                                     <td>{{ service.patient.name }}</td>
                                                     <td>{{ service.description }}</td>
-                                                    <td class="text-center">${{ service.amount }}</td>
+                                                    <td class="text-center">{{ service.amount }}</td>
+                                                    <td class="text-center">{{ service.commissionAmount }}</td>
                                                     <td class="text-center">
                                                         <div v-if="service.isComplete">
                                                             <input
@@ -208,7 +210,7 @@
             updatePayed: function (service) {
                 this.loadingPayed = service.id;
 
-                axios.put('/user/service/' + service.id + '/payed')
+                axios.put('/user/service/' + service.id + '/payed', {amount: service.commissionAmount})
                     .then((res) => {
 
                         if (res.data.success) {

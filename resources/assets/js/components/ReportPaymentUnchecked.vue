@@ -96,7 +96,7 @@
                                                 <td>{{ payment.patient_history.patient.name }}</td>
                                                 <td>{{ payment.paymentMethod }}</td>
                                                 <td>{{ payment.patient_history.product.name }}</td>
-                                                <td class="text-center">${{ payment.amount }}</td>
+                                                <td class="text-center">{{ payment.amount }}</td>
                                                 <td class="text-center">
                                                     <input
                                                             class="payment-checkbox"

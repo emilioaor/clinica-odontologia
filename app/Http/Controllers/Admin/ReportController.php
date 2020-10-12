@@ -1180,6 +1180,8 @@ class ReportController extends Controller
                     foreach ($services['services'] as $line) {
                         if ($line['classification'] === 'Servicio' && ! $line['mark_as_payed']) {
                             $line['patient'] = $patient['patient'];
+                            $line['commission'] = $services['commission'];
+                            $line['commissionAmount'] = $services['commissionAmount'];
                             $temp['services'][] = $line;
                         }
                     }
@@ -1231,7 +1233,7 @@ class ReportController extends Controller
             $patientPaymentsCash = 0;
             $patientPaymentsCheck = 0;
             $patientExpenses = 0;
-            $history->isComplete = $history->isCompleteToDate($end);
+            $history->isComplete = $history->isCompleteToDate($end, true);
 
             if ($balance && ! $history->isComplete) {
                 // Si se pide solo balance 0 y este servicio tiene un monto pendiente, paso al siguiente
@@ -1356,14 +1358,17 @@ class ReportController extends Controller
                 ];
             }
 
+            $commissionAmount = ($patientPayments - $patientExpenses) * ($commission / 100);
+            $response['patients'][$patient->id]['data'][$history->id]['commissionAmount'] = round($commissionAmount, 2);
+
             $totalServices = $response['patients'][$patient->id]['totalServices'];
             $totalPayments = $response['patients'][$patient->id]['totalPayments'];
             $totalDiscounts = $response['patients'][$patient->id]['totalDiscounts'];
 
             $response['patients'][$patient->id]['balance'] = $totalServices - ($totalPayments + $totalDiscounts);
-            $response['patients'][$patient->id]['totalCommission'] += ($patientPayments - $patientExpenses) * ($commission / 100);
+            $response['patients'][$patient->id]['totalCommission'] += $commissionAmount;
 
-            $response['totalCommission'] += ($patientPayments - $patientExpenses) * ($commission / 100);
+            $response['totalCommission'] += $commissionAmount;
 
             if ($patientPayments > 0) {
 

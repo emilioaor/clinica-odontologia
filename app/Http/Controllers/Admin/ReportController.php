@@ -1161,8 +1161,8 @@ class ReportController extends Controller
             $start = new \DateTime("{$request->start} 00:00:00");
             $end = new \DateTime("{$request->end} 23:59:59");
         } else {
-            $start = new \DateTime('1900-01-01');
-            $end = new \DateTime('2100-01-01');
+            $start = new \DateTime('2000-01-01 00:00:00');
+            $end = new \DateTime('+10 years 23:59:59');
         }
 
         $response = [];

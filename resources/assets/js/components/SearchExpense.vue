@@ -198,7 +198,19 @@
                                                         {{ expense.description }}
                                                     </span>
                                                     <span v-else>
-                                                        <input type="text" v-model="expense.description" :name="description">
+                                                        <input
+                                                                type="text"
+                                                                class="form-control"
+                                                                :class="{'input-error': errors.has('description' + expense.id)}"
+                                                                v-model="expense.description"
+                                                                :name="'description' + expense.id"
+                                                                :id="'description' + expense.id"
+                                                                v-validate
+                                                                data-vv-rules="required"
+                                                        >
+                                                        <span class="error" v-if="errors.firstByRule('description' + expense.id, 'required')">
+                                                            Requerido
+                                                        </span>
                                                     </span>
                                                 </td>
                                                 <td>
@@ -206,7 +218,20 @@
                                                         {{ expense.amount }}
                                                     </span>
                                                     <span v-else>
-                                                        <input type="text" v-model="expense.amount" :name="amount">
+                                                        <input
+                                                                type="text"
+                                                                class="form-control"
+                                                                :class="{'input-error': errors.has('description' + expense.id)}"
+                                                                v-model="expense.amount"
+                                                                :name="'amount' + expense.id"
+                                                                :id="'amount' + expense.id"
+                                                                v-validate
+                                                                data-vv-rules="required"
+                                                        >
+
+                                                        <span class="error" v-if="errors.firstByRule('amount' + expense.id, 'required')">
+                                                            Requerido
+                                                        </span>
                                                     </span>
                                                 </td>
                                                 <td>
@@ -475,13 +500,15 @@
                 axios.get('/user/expense/' + this.patient.public_id + '/search?start=' + this.data.start + '&end=' + this.data.end)
                     .then((res) => {
                         this.loading = false;
-                        console.log(res.data)
-                        if (res.data.success) {
-                            this.data.expenses = res.data.expenses;
 
-                            for (let i in this.data.expenses) {
-                                this.data.expenses[i].datePicker = new Date(this.data.expenses[i].date);
-                            }
+                        if (res.data.success) {
+                            this.data.expenses = res.data.expenses.map(expense => {
+                                let dateSplit = expense.date.split(' ')[0].split('-');
+
+                                expense.datePicker = (new Date()).setFullYear(dateSplit[0], parseInt(dateSplit[1]) - 1, dateSplit[2]);
+
+                                return expense;
+                            });
                         }
                     })
                     .catch((err) => {
@@ -532,18 +559,24 @@
             },
 
             saveExpense: function (index) {
-                this.editLoading = index;
-                const expense = this.data.expenses[index];
+                this.$validator.validateAll().then(res => {
 
-                axios.put('/user/expense/' + expense.id, expense)
-                    .then((res) => {
-                        this.editExpense = null;
-                        this.editLoading = null;
-                    })
-                    .catch((err) => {
-                        this.editLoading = null;
-                        console.log(err);
-                    })
+                    if (res) {
+
+                        this.editLoading = index;
+                        const expense = this.data.expenses[index];
+
+                        axios.put('/user/expense/' + expense.id, expense)
+                            .then((res) => {
+                                this.editExpense = null;
+                                this.editLoading = null;
+                            })
+                            .catch((err) => {
+                                this.editLoading = null;
+                                console.log(err);
+                            })
+                    }
+                });
             }
         }
     }

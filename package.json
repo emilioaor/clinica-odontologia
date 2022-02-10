@@ -25,7 +25,7 @@
     "apexcharts": "^3.10.1",
     "chart.js": "^2.9.1",
     "gulp-sass": "^3.1.0",
-    "node-sass": "^4.13.0",
+    "node-sass": "^7.0.0",
     "v-money": "^0.8.1",
     "vue-chartjs": "^3.4.2",
     "webpack": "^3.11.0"

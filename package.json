@@ -19,7 +19,7 @@
     "vee-validate": "~2.0.4",
     "vue": "^2.1.10",
     "vuejs-datepicker": "^0.9.29",
-    "webpack-cli": "^3.3.10"
+    "webpack-cli": "^3.3.12"
   },
   "dependencies": {
     "apexcharts": "^3.10.1",

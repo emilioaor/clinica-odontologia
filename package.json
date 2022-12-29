@@ -14,12 +14,12 @@
     "bootstrap-sass": "^3.3.7",
     "cross-env": "^5.0.1",
     "jquery": "^3.1.1",
-    "laravel-mix": "^1.0",
+    "laravel-mix": "^6.0",
     "lodash": "^4.17.4",
     "vee-validate": "~2.0.4",
     "vue": "^2.1.10",
     "vuejs-datepicker": "^0.9.29",
-    "webpack-cli": "^3.3.10"
+    "webpack-cli": "^5.0.1"
   },
   "dependencies": {
     "apexcharts": "^3.10.1",
@@ -28,6 +28,6 @@
     "node-sass": "^4.13.0",
     "v-money": "^0.8.1",
     "vue-chartjs": "^3.4.2",
-    "webpack": "^3.11.0"
+    "webpack": "^5.75.0"
   }
 }
